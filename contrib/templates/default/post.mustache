@@ -1,0 +1,37 @@
+  <div class="{{{CSSClass}}}" id="post_{{PostHash}}">
+  <p class="intro">
+    <label for="delete_{{PostHash}}">
+      <span class="subject">
+        {{Subject}}
+      </span>
+      <span class="name">
+        {{#Sage}}
+          <a href="mailto:sage">
+            {{Name}}
+          </a>
+        {{/Sage}}
+        {{^Sage}}
+          {{Name}}
+        {{/Sage}}
+      </span>
+      <span class="postdate">
+        {{Date}}
+      </span>
+    </label>
+    <a href="{{PostURL}}" onclick="">No. {{ShortHash}}</a>
+    {{#OP}}
+      <a href="{{PostURL}}">[reply]</a>
+    {{/OP}}
+  </p>
+  <p class="frontend">
+    [[ {{Frontend}} ]]
+  </p>
+  <div class="files">
+    {{#Attachments}}
+      <a class="file" href="{{Source}}" title="{{Filename}}">
+        <img class="file-thumbnail" src="{{Thumbnail}}" alt="{{Filename}}" />
+      </a>
+    {{/Attachments}}
+  </div>
+  <div class="post_body">{{{RenderBody}}}</div>
+</div>

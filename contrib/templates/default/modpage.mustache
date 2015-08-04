@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="{{prefix}}static/site.css"></link>
+    <!-- yes it uses js -->
+    <script type="text/javascript" src="{{prefix}}static/mod.js"></script>
+    <title> nntpchan mod page </title>
+  </head>
+  <body>
+    <div>
+      <div> post actions </div>
+      <hr />
+      <div>
+        <label for="nntpchan_mod_delete">delete by url</label>
+        <input id="nntpchan_mod_delete" type="text" />
+      </div>
+      <button id="nntpchan_mod" onclick="nntpchan_delete()">go</button>
+      <span id="nntpchan_mod_result"></span>
+    </div>
+    <noscript>
+      <b>enable js to use the mod panel kthx</b>
+    </noscript>
+  </body>
+</html>

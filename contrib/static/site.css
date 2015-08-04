@@ -1,0 +1,59 @@
+.thread {
+    margin_right: 20px;
+    margin_bottom: 5px;
+}
+
+.frontend , .subject {
+    color: #0f0d2d;
+}
+
+.name {
+    color: #117743;
+}
+
+
+.name , .subject {
+    font-weight: bold;
+}
+
+.post {
+    background: #d6daf0;
+    padding: 10px;
+}
+
+body {
+    background: #eef2ff;
+}
+
+.reply {
+    margin-left: 1.8em;
+    display: inline-block;
+}
+
+.frontend {
+    margin-top: 0px;
+    background: #e0f0f0;
+    display: inline-block;
+}
+
+.op {
+    background: #eef2ff;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.post, .post_body {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-right: 3em;
+    padding-bottom: 0.3em;
+}
+
+
+.tripcode {
+    color: #de04ef;
+}
+
+.memearrows {
+    color: green;
+}

@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="{{board.Prefix}}static/captcha.js"></script>
+    <link rel="stylesheet" href="{{board.Prefix}}static/site.css"></link>
+    <title>{{board.Board}}</title>
+  </head>
+  <body>
+    <!-- begin header -->
+    {{{board.RenderNavbar}}}
+    <!-- end header -->
+
+    <!-- postform -->
+    <div id="postform_container">
+      {{{form}}}
+    </div>
+    <hr />
+    <div id="threads_container">
+      {{#board.Threads}}
+        <div class="thread" id="thread_{{OP.PostHash}}">
+          <div clsss="thread_header">
+          </div>
+          {{{OP.RenderPost}}}
+          {{#Replies}}
+            {{{RenderPost}}}
+            <br />
+          {{/Replies}}
+        </div>
+        <br/>
+        <hr/>
+      {{/board.Threads}}
+    </div>
+  </body>
+</html>

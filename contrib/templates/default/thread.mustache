@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="{{thread.Prefix}}static/captcha.js"></script>
+    <link rel="stylesheet" href="{{thread.Prefix}}static/site.css"></link>
+    <title> {{thread.OP.Subject}} </title>
+  </head>
+  <body>
+    <!-- postform -->
+    <div id="postform_container">
+      {{{form}}}
+    </div>
+    <hr />
+    <div class="thread" id="thread_{{thread.OP.PostHash}}">
+      <div class="thread_header">
+      </div>
+      {{{thread.OP.RenderPost}}}
+      {{# repls}}
+        {{{RenderPost}}}
+        <br/>
+      {{/ repls}}
+    </div>
+    <br/>
+    <hr/>
+    </body>
+</html>

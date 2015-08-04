@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title> ukko </title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{{prefix}}static/site.css"></link>
+  </head>
+  <body>
+    <div id="ukko_threads" class="threads_container">
+      {{#threads}}
+        <div class="ukko_thread_header">
+          <p> Posted on <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></p>
+        </div>
+        <div class="thread" id="thread_{{OP.PostHash}}">
+          <div clsss="thread_header">
+          </div>
+          {{{OP.RenderPost}}}
+          {{#Replies}}
+            {{{RenderPost}}}
+            <br />
+          {{/Replies}}
+        </div>
+        <hr/>
+      {{/threads}}
+    </div>
+  </body>
+</html>
