@@ -24,4 +24,4 @@ Then open http://127.0.0.1:18000/ukko.html in your browser.
 
 For questions or support find me on [IRC](https://qchat.rizon.net/?channels=#8chan-dev):
 
-   __uguu__ on irc.rizon.net usually in #8chan-dev
+  \__uguu\__ on irc.rizon.net usually in #8chan-dev
