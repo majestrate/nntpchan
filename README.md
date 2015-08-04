@@ -22,6 +22,4 @@ Then open http://127.0.0.1:18000/ukko.html in your browser.
 
 *PLEASE* report any bugs you find while setting up or building [(here)](https://github.com/majestrate/nntpchan/issues) so that the problems get fixed (^:
 
-For questions or support find me on [IRC](https://qchat.rizon.net/?channels=#8chan-dev):
-
-  \__uguu\__ on irc.rizon.net usually in #8chan-dev
+For questions or support find me on [rizon](https://qchat.rizon.net/?channels=#8chan-dev) as \__uguu\__
