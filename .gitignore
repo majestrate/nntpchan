@@ -1,0 +1,17 @@
+#
+# .gitignore for nntpchan repo
+#
+
+# emacs temp files
+*~
+\#*
+.\#*
+
+# srnd config files
+*.ini
+
+# default article store directory
+articles
+
+# generated files
+webroot
