@@ -1,23 +1,27 @@
-# nntpchan #
+# NNTPChan #
 
-## requirements ##
+NNTPChan (previously known as overchan) is a decentralized imageboard that uses nntp to synchronize content between many different servers. It utilizes cryptograpghicly signed posts to perform optional/opt-in decentralized moderation (currently work-in-progress)
 
-* linux or freebsd
-* go 1.4 or higher
-* libsodium 1.0 or higher
-* imagemagick
-* postgresql
+## getting started ##
 
-## setting up ##
+If you don't want to compile from source, you can download a precompiled binary [here](https://github.com/majestrate/srndv2/releases) when they are released.
 
-### debian jessie/wheezy ###
+After you [built and installed the daemon](build-daemon.md) and [set up your database](database-setup.md), clone this repository and start up the daemon
 
-Debian doesn't has go 1.3, we need 1.4 or higher to build the nntpchan daemon.
+    # clone it
+    git clone https://github.com/majestrate/nntpchan
+    cd nntpchan
 
-If you don't want to compile from source download a precompiled binary [here](#)
+    # set up the workspace
+    srndv2 setup
 
-## building the daemon ##
+    # run the daemon
+    srndv2 run
 
-after you have satisfied the dependancies, run:
+Then open http://127.0.0.1:18000/ukko.html in your browser.
 
-    go install github.com/majestrate/srndv2
+*PLEASE* report any bugs you find while setting up or building [(here)](https://github.com/majestrate/nntpchan/issues) so that the problems get fixed (^:
+
+For questions or support find me on [IRC](https://qchat.rizon.net/?channels=#8chan-dev):
+
+   __uguu__ on irc.rizon.net usually in #8chan-dev
