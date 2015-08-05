@@ -1,3 +1,11 @@
+{{!
+ modlogin_result.mustache -- shows the result of a login attempt
+ template parameters:
+ - prefix ( the site prefix )
+ - mod_prefix ( the prefix to the mod panel, could be something like https://mod.site.tld/ or /mod/ )
+ - message ( the message returned from the login attempt )
+ - fail ( present if the login failed )
+}}
 <html>
   <head>
     <link ref="stylesheet" href="{{prefix}}static/site.css"></link>

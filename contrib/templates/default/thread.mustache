@@ -1,3 +1,16 @@
+{{!
+ thread.mustache -- renders to a thread-*.html page, shows the entire thread
+ template parameters:
+ - board ( the Board Model of the board this thread was posted in )
+ - thread ( the Thread Model of the current thread being rendered )
+ - form ( the post form markup )
+ 
+ Thread Model attributes:
+ - OP , the Post Model of the original poster
+ - Replies , a list of all the replies or empty if none
+ - Board , the name of the Board this thread is on
+ - BoardURL , the url that points to the board index page
+}}
 <html>
   <head>
     <meta charset="utf-8" />
@@ -6,6 +19,11 @@
     <title> {{thread.OP.Subject}} </title>
   </head>
   <body>
+
+    <!-- begin navbar -->
+    {{{thread.Navbar}}}
+    <!-- end navbar -->
+    
     <!-- postform -->
     <div id="postform_container">
       {{{form}}}
@@ -15,10 +33,10 @@
       <div class="thread_header">
       </div>
       {{{thread.OP.RenderPost}}}
-      {{# repls}}
+      {{# thread.Replies}}
         {{{RenderPost}}}
         <br/>
-      {{/ repls}}
+      {{/ thread.Replies}}
     </div>
     <br/>
     <hr/>

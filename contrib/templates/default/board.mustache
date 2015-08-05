@@ -1,3 +1,16 @@
+{{!
+ board.mustache, displays the contents of page N of the board
+
+ template parameters:
+ - board ( the model of the current page )
+ - page ( the page number of the current page )
+ 
+ board has the properties:
+  - Prefix ( absolute path like //site.tld/ or /path/ )
+  - Board ( the name of the board )
+  - Navar ( a function that renders the navbar, should not be escaped )
+  - Threads ( a list of Thread Models with the last few replies )
+}}
 <html>
   <head>
     <meta charset="utf-8" />
@@ -7,7 +20,7 @@
   </head>
   <body>
     <!-- begin header -->
-    {{{board.RenderNavbar}}}
+    {{{board.Navbar}}}
     <!-- end header -->
 
     <!-- postform -->
