@@ -49,6 +49,9 @@ body {
     padding-bottom: 0.3em;
 }
 
+.post_body > p {
+    word-wrap: break-word;
+}
 
 .tripcode {
     color: #de04ef;
