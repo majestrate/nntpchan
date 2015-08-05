@@ -8,7 +8,7 @@
  board has the properties:
   - Prefix ( absolute path like //site.tld/ or /path/ )
   - Board ( the name of the board )
-  - Navar ( a function that renders the navbar, should not be escaped )
+  - Navbar ( a function that renders the navbar, should not be escaped )
   - Threads ( a list of Thread Models with the last few replies )
 }}
 <html>
@@ -19,9 +19,9 @@
     <title>{{board.Board}}</title>
   </head>
   <body>
-    <!-- begin header -->
+    <!-- begin navbar -->
     {{{board.Navbar}}}
-    <!-- end header -->
+    <!-- end navbar -->
 
     <!-- postform -->
     <div id="postform_container">
