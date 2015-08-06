@@ -44,8 +44,15 @@ textarea {
     padding: 10px 10px;
 }
 
-.post, th, .ukko_thread_header {
+.reply, th, .ukko_thread_header {
     background: #d6daf0;
+}
+
+hr {
+    height: 0px;
+    border-width: 1px medium medium;
+    border-color: #b7c5d9;
+    border-style: solid none none;
 }
 
 .ukko_thread_header {
@@ -62,7 +69,7 @@ th {
 }
 
 body {
-    background: #eef2ff;
+    background: linear-gradient(to top, #eef2ff, #eaf1ff) repeat scroll;
     font-family: arial,helvetica,sans-serif;
     font-size: 10pt;
     margin: 0 4px;
@@ -83,7 +90,6 @@ body {
 }
 
 .op {
-    background: #eef2ff;
     margin-right: 20px;
     margin-bottom: 10px;
 }
