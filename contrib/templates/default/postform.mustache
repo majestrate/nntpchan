@@ -9,56 +9,62 @@
  <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post">
  <input type="hidden" name="reference" value="{{reference}}" />
  <input type="hidden" name="captcha" value="" id="captcha_input" />
- <table class="postform">
-   <tbody>
-     <tr>
-       <th>
-         Name
-       </th>
-       <td>
-         <input type="text" name="name" value="" />
-       </td>
-     </tr>
-     <tr>
-       <th>
-         Subject
-       </th>
-       <td>
-         <input type="text" name="subject" value="" />
-         <input type="submit" value="{{button}}" />
-       </td>
-     </tr>
-     <tr>
-       <th>
-         Comment
-       </th>
-       <td>
-         <textarea type="text" name="message" cols=35 rows=5></textarea>
-       </td>
-     </tr>
-     <tr>
-       <th>
-         File
-       </th>
-       <td>
-         <input type="file" name="attachment" />
-       </td>
-     </tr>
-     <tr>
-       <th>
-         Captcha
-       </th>
-       <td>
-         <img id="captcha_img" src="" alt="captcha" />
-       </td>
-     </tr>
-     <tr>
-       <th>
-       </th>
-       <td>
-         <input type="text" name="captcha_solution" />
-       </td>
-     </tr>
-   </tbody>
- </table>
+ <div id="postform-outer">
+   <div id="postform-inner">
+     <table class="postform">
+       <tbody>
+         <tr>
+           <th>
+             Name
+           </th>
+           <td>
+             <input type="text" name="name" value="" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             Subject
+           </th>
+           <td>
+             <input type="text" name="subject" value="" />
+             <input type="submit" value="{{button}}" class="button" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             Comment
+           </th>
+           <td>
+             <textarea type="text" name="message" cols=40 rows=5></textarea>
+           </td>
+         </tr>
+         <tr>
+           <th>
+             File
+           </th>
+           <td>
+             <input type="file" name="attachment" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             Captcha
+           </th>
+           <td>
+             <img id="captcha_img" src="" alt="captcha" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             Solution
+           </th>
+           <td>
+             <input type="text" name="captcha_solution" />
+           </td>
+         </tr>
+       </tbody>
+     </table>
+   </div>
+ </div>
  </form>
+ 

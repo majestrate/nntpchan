@@ -1,6 +1,9 @@
 .thread {
-    margin_right: 20px;
-    margin_bottom: 5px;
+    margin-right: 20px;
+    margin-bottom: 1em;
+    display: inline-block;
+    word-wrap: break-word;
+    width: 100%;
 }
 
 .frontend , .subject {
@@ -16,18 +19,61 @@
     font-weight: bold;
 }
 
+#postform-outer {
+    text-align: center;
+}
+
+
+input {
+    width: 70%;
+}
+
+input.button {
+    width: 25%;
+}
+
+textarea {
+    width: 350px;
+}
+
+#postform-inner {
+    display: inline-block;
+}
+
 .post {
+    padding: 10px 10px;
+}
+
+.post, th, .ukko_thread_header {
     background: #d6daf0;
-    padding: 10px;
+}
+
+.ukko_thread_header {
+    padding: 5px 5px;
+    margin: 5px 5px;
+    display: inline-block;
+    border-radius: 10px;
+}
+
+th {
+    font-size: 10pt;
+    padding-left: 10px;
+    padding-right: 15px;
 }
 
 body {
     background: #eef2ff;
+    font-family: arial,helvetica,sans-serif;
+    font-size: 10pt;
+    margin: 0 4px;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 
 .reply {
     margin-left: 1.8em;
     display: inline-block;
+    border-radius: 3px;
 }
 
 .frontend {
@@ -43,14 +89,12 @@ body {
 }
 
 .post, .post_body {
-    margin-top: 5px;
     margin-bottom: 5px;
-    padding-right: 3em;
-    padding-bottom: 0.3em;
+
 }
 
 .post_body > p {
-    word-wrap: break-word;
+    margin: 2px;
 }
 
 .tripcode {
@@ -59,4 +103,20 @@ body {
 
 .memearrows {
     color: green;
+}
+
+.intro {
+    margin-bottom: 0.75em;
+}
+
+.file:not(.multiple) .file-thumbnail {
+    float: left;
+}
+
+.file-thumbnail {
+    display: block;
+    margin: 5px 20px 10px;
+    border: medium none;
+    max-width: 300px;
+    max-height: 200px;
 }

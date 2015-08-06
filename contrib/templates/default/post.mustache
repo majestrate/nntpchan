@@ -1,6 +1,9 @@
   <div class="{{{CSSClass}}}" id="post_{{PostHash}}">
   <p class="intro">
     <label for="delete_{{PostHash}}">
+      <span class="frontend">
+        [[ {{Frontend}} ]]
+      </span>
       <span class="subject">
         {{Subject}}
       </span>
@@ -23,14 +26,16 @@
       <a href="{{PostURL}}">[reply]</a>
     {{/OP}}
   </p>
-  <p class="frontend">
-    [[ {{Frontend}} ]]
-  </p>
   <div class="files">
     {{#Attachments}}
-      <a class="file" href="{{Source}}" title="{{Filename}}">
-        <img class="file-thumbnail" src="{{Thumbnail}}" alt="{{Filename}}" />
-      </a>
+      <div class="file">
+        <p class="file_info">
+          <span>File: {{Filename}}</span>
+        </p>
+        <a target="_blank" class="file-link" href="{{Source}}" title="{{Filename}}">
+          <img class="file-thumbnail" src="{{Thumbnail}}" alt="{{Filename}}" />
+        </a>
+      </div>
     {{/Attachments}}
   </div>
   <div class="post_body">{{{RenderBody}}}</div>
