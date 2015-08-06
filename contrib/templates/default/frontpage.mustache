@@ -1,0 +1,53 @@
+{{!
+  frontpage.mustache -- template for index.html
+  template parameters:
+  - graph ( a list of 4 string tuples: (board, posts_per_hour, posts_per_day, total_posts) )
+  - totalposts ( the number of total posts we have ever seen )
+  - frontend ( the name of the frontend )
+  - prefix ( the site's prefix )
+}}
+
+<html>
+  <head>
+    <link rel="stylesheet" href="{{prefix}}static/site.css"></link>
+    <title> {{frontend}} on nntpchan </title>
+  </head>
+  <body>
+    <center>
+    <div class="index-outer">
+      <div class="index-inner">
+        <h1> {{frontend}} on nntpchan </h1>
+        <h3>Read the <a href="{{prefix}}static/faq.html">FAQ</a></h3>
+      </div>
+      <div class="index-inner">
+        <table id="board_graph">
+          <tbody>
+            <tr>
+              <th> Board </th>
+              <th> Post per Hour </th>
+              <th> Post per Day </th>
+              <th> Total </th>
+            </tr>
+            {{# graph}}
+            <tr>
+              <td>
+                <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
+              </td>
+              <td>
+                {{Hour}}
+              </td>
+              <td>
+                {{Day}}
+              </td>
+              <td>
+                {{All}}
+              </td>
+            </tr>
+            {{/ graph}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </center>
+  </body>
+</html>

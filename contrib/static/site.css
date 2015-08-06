@@ -19,7 +19,7 @@
     font-weight: bold;
 }
 
-#postform-outer {
+#postform-outer , .index-outer {
     text-align: center;
 }
 
