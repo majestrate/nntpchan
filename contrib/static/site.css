@@ -55,6 +55,40 @@ hr {
     border-style: solid none none;
 }
 
+
+a:hover , a:visited:hover {
+    color: #f13333;
+}
+
+a {
+    color: blue;
+}
+
+a:visited {
+    color: #414383;
+}
+
+.navbar {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    margin-top: 0px;
+    z-index: 20;
+    box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.15);
+    background: #CFD8EF;
+    color: #616383;
+
+}
+
+.navbar-sep {
+    color: black;
+}
+
+#postform_container {
+    margin-top: 5em;
+}
+
 .ukko_thread_header {
     padding: 5px 5px;
     margin: 5px 5px;
