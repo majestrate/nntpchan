@@ -102,14 +102,14 @@ function nntpchan_mod(mod_action) {
             alert("mod action has no handler");
           }
         }
+      } else {
+        // nah
+        // http error
+        elem.innerHTML = "error: HTTP "+status;
       }
-    } else {
-      // nah
-      // http error
-      elem.innerHTML = "error: HTTP "+status;
+      // clear input
+      input.value = "";
     }
-    // clear input
-    input.value = "";
   }
   if (mod_action.name) {
     var url = mod_action.name + "/" + longhash;
