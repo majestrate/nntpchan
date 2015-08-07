@@ -102,7 +102,7 @@ function nntpchan_mod(mod_action) {
             alert("mod action has no handler");
           }
         }
-      } else {
+      } else if (status) {
         // nah
         // http error
         elem.innerHTML = "error: HTTP "+status;
