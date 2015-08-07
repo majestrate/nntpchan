@@ -16,11 +16,14 @@
       <div> post actions </div>
       <hr />
       <div>
-        <label for="nntpchan_mod_target">url</label>
+        <label for="nntpchan_mod_target">target</label>
         <input id="nntpchan_mod_target" type="text" />
       </div>
-      <button onclick="nntpchan_ban()">ban</button>
-      <button onclick="nntpchan_delete()">delete</button>
+      <div>
+        <button onclick="nntpchan_ban()">ban (url)</button>
+        <button onclick="nntpchan_delete()">delete (url)</button>
+        <button onclock="nntpchan_unban()">unban (ip)</button>
+      </div>
     </div>
     <div id="nntpchan_mod_result"></div>
     <noscript>

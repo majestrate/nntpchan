@@ -21,6 +21,7 @@ function get_longhash(str) {
 // handle ban command
 function nntpchan_ban() {
   nntpchan_mod({
+    parser: get_longhash,
     name: "ban",
     handle: function(j) {
       if (j.banned) {
@@ -30,10 +31,21 @@ function nntpchan_ban() {
   });
 }
 
+function nntpchan_unban() {
+  nntpchan_mod({
+    name: "unban",
+    handle: function(j) {
+      if (j.result) {
+        return document.createTextNode(j.result);
+      }
+    }
+  })
+}
 
 // handle delete command
 function nntpchan_delete() {
   nntpchan_mod({
+    parser: get_longhash,
     name: "del",
     handle: function(j) {
       var elem = document.createElement("div");
@@ -65,8 +77,10 @@ function nntpchan_mod(mod_action) {
 
   // get the element
   var input = document.getElementById("nntpchan_mod_target");
-  // get the long hash
-  var longhash = get_longhash(input.value);
+  var target = input.value;
+  if (mod_action.parser) {
+    target = mod_action.parser(target);
+  }
 
   var elem = document.getElementById("nntpchan_mod_result");
   // clear old results
@@ -112,7 +126,7 @@ function nntpchan_mod(mod_action) {
     }
   }
   if (mod_action.name) {
-    var url = mod_action.name + "/" + longhash;
+    var url = mod_action.name + "/" + target;
     ajax.open("GET", url);
     ajax.send();
   } else {
