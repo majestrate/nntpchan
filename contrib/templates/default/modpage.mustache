@@ -16,12 +16,13 @@
       <div> post actions </div>
       <hr />
       <div>
-        <label for="nntpchan_mod_delete">delete by url</label>
-        <input id="nntpchan_mod_delete" type="text" />
+        <label for="nntpchan_mod_target">url</label>
+        <input id="nntpchan_mod_target" type="text" />
       </div>
-      <button id="nntpchan_mod" onclick="nntpchan_delete()">go</button>
-      <span id="nntpchan_mod_result"></span>
+      <button onclick="nntpchan_delete()">delete</button>
+      <button onclick="nntpchan_ban()">ban</button>
     </div>
+    <div id="nntpchan_mod_result"></div>
     <noscript>
       <b>enable js to use the mod panel kthx</b>
     </noscript>
