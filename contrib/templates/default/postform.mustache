@@ -8,7 +8,6 @@
  }}
  <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post">
  <input type="hidden" name="reference" value="{{reference}}" />
- <input type="hidden" name="captcha" value="" id="captcha_input" />
  <div id="postform-outer">
    <div id="postform-inner">
      <table class="postform">
@@ -51,7 +50,7 @@
              Captcha
            </th>
            <td>
-             <img id="captcha_img" src="" alt="captcha" />
+             <img id="captcha_img" src="{{prefix}}captcha/img" alt="captcha" />
            </td>
          </tr>
          <tr>
