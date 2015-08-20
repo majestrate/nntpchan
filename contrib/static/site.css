@@ -160,3 +160,7 @@ body {
     max-width: 300px;
     max-height: 200px;
 }
+
+pre > p {
+    margin: 0px 0px;
+}
