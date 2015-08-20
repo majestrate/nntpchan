@@ -93,7 +93,6 @@ a:visited {
     padding: 5px 5px;
     margin: 5px 5px;
     display: inline-block;
-    border-radius: 10px;
 }
 
 th {
@@ -165,7 +164,7 @@ pre > p {
     margin: 0px 0px;
 }
 
-.reply , .post_body > pre {
+.reply , .post_body > pre , .ukko_thread_header {
     padding: 7px 7px;
     border-radius: 5px;
     box-shadow: 1px 1px 3px black;                    
