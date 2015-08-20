@@ -166,6 +166,9 @@ pre > p {
 }
 
 .post_body > pre {
+    padding: 7px 7px;
+    border-radius: 5px;
+    box-shadow: 10px 10px 4px black;
     background: #3f3f3f;
     color: #d17600;
 }
