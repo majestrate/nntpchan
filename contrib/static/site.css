@@ -165,10 +165,13 @@ pre > p {
     margin: 0px 0px;
 }
 
-.post_body > pre {
+.reply , .post_body > pre {
     padding: 7px 7px;
     border-radius: 5px;
     box-shadow: 2px 2px 3px black;                    
+}
+
+.post_body > pre {
     background: #3f3f3f;
     color: #d17600;
 }
