@@ -168,7 +168,7 @@ pre > p {
 .reply , .post_body > pre {
     padding: 7px 7px;
     border-radius: 5px;
-    box-shadow: 2px 2px 3px black;                    
+    box-shadow: 1px 1px 3px black;                    
 }
 
 .post_body > pre {
