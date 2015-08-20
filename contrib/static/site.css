@@ -168,7 +168,7 @@ pre > p {
 .post_body > pre {
     padding: 7px 7px;
     border-radius: 5px;
-    box-shadow: 1px 1px 4px #ddd;
+    box-shadow: 3px 3px 4px #ddd;
     background: #3f3f3f;
     color: #d17600;
 }
