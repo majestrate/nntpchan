@@ -49,6 +49,7 @@ We'll also need to install some dependancies that come with debian:
 
 Now you can build the daemon:
 
+    go get github.com/majestrate/srndv2
     go install github.com/majestrate/srndv2
 
 It will create an executable at $GOPATH/bin/srndv2 which is already in our $PATH so it can be run by typing ``srndv2``

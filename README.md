@@ -4,13 +4,7 @@ NNTPChan (previously known as overchan) is a decentralized imageboard that uses 
 
 ## getting started ##
 
-If you don't want to compile from source, you can download a precompiled binary [here](https://github.com/majestrate/srndv2/releases) when they are released.
-
 After you [built and installed the daemon](build-daemon.md) and [set up your database](database-setup.md), clone this repository and start up the daemon
-
-    # build it
-    go get github.com/majestrate/srndv2
-    go install github.com/majestrate/srndv2
 
     # clone it
     git clone https://github.com/majestrate/nntpchan
