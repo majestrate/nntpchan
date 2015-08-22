@@ -4,7 +4,7 @@ NNTPChan (previously known as overchan) is a decentralized imageboard that uses 
 
 ## getting started ##
 
-After you [built and installed the daemon](build-daemon.md) and [set up your database](database-setup.md), clone this repository and start up the daemon
+After you [built and installed the daemon](doc/build.md) and [set up your database](doc/database.md), clone this repository and start up the daemon
 
     # clone it
     git clone https://github.com/majestrate/nntpchan
