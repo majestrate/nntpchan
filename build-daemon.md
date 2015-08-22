@@ -22,7 +22,7 @@ Debian Jessie has go 1.3, we need 1.4 or higher to build the nntpchan daemon so 
 
     # set up a directory for our go distribution
     mkdir -p $HOME/local
-    cd $$HOME/local
+    cd $HOME/local
     
     # obtain and unpack go binary distribution
     wget https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz -O go-stable.tar.gz
