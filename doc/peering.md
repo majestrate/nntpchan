@@ -48,3 +48,5 @@ then add to feeds.ini the following:
     ctl=1
 
 then restart srndv2
+
+**TODO:** firewalling
