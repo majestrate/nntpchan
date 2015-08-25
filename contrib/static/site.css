@@ -174,3 +174,9 @@ pre > p {
     background: #3f3f3f;
     color: #d17600;
 }
+
+#faq > div {
+    margin-left: 20%;
+    width: 50%;
+    padding: 10px;
+}
