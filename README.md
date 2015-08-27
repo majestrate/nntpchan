@@ -14,7 +14,7 @@ After you [built and installed the daemon](doc/build.md) and [set up your databa
 
     # set up the workspace
     srndv2 setup
-
+    
     # run the daemon
     srndv2 run
 
