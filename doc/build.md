@@ -7,6 +7,7 @@
 * go 1.4 or higher
 * libsodium 1.0 or higher
 * imagemagick
+* RabbitMQ
 
 ## debian ##
 
@@ -43,11 +44,10 @@ We'll also need to install some dependancies that come with debian:
 
     # as root
 
-    apt-get update
-    apt-get install libmagickwand-dev libsodium-dev
+    apt update
+    apt install imagemagick libsodium-dev
 
-
-Now you can build the daemon:
+Now build the daemon:
 
     go get github.com/majestrate/srndv2
     go install github.com/majestrate/srndv2

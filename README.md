@@ -9,14 +9,18 @@ This repository contains resources used by the core daemon which is located [her
 After you [built and installed the daemon](doc/build.md) and [set up your database](doc/database.md), clone this repository and start up the daemon
 
     # clone it
-    git clone https://github.com/majestrate/nntpchan
-    cd nntpchan
+    git clone https://github.com/majestrate/nntpchan ~/nntpchan
+    cd ~/nntpchan
 
     # set up the workspace
     srndv2 setup
 
-    # run the daemon
+    # run the core daemon
     srndv2 run
+
+    # run the worker threads
+    srndv2 worker
+
 
 Then open http://127.0.0.1:18000/ukko.html in your browser.
 
