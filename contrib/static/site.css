@@ -149,6 +149,20 @@ body {
     font-weight: bold;
 }
 
+.spoiler {
+    display: inline-block;
+}
+
+.spoiler > p {
+    background: black;
+    color: black;
+}
+
+.spoiler:hover > p {
+    background: black;
+    color: white;
+}
+
 .intro {
     margin-bottom: 0.75em;
 }
