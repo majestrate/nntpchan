@@ -144,6 +144,11 @@ body {
     color: green;
 }
 
+.redtext {
+    color: #d50505;
+    font-weight: bold;
+}
+
 .intro {
     margin-bottom: 0.75em;
 }
