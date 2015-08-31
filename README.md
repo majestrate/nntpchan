@@ -10,7 +10,9 @@ After you [built and installed the daemon](doc/build.md) and [set up your databa
 
     # clone it
     git clone https://github.com/majestrate/nntpchan ~/nntpchan
-    cd ~/nntpchan
+    # get the latest stable release
+    cd ~/nntpchan/
+    git checkout tags/0.2
 
     # set up the workspace
     srndv2 setup
