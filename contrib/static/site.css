@@ -140,6 +140,28 @@ body {
     color: #de04ef;
 }
 
+@keyframes psych
+{
+    0%   {background-color: red; color: blue; }
+    10%  {background-color: yellow; color: red; }
+    20%  {background-color: blue; color: green; }
+    30% {background-color: green; color: yellow; }
+    40%   {background-color: red; color: blue; }
+    50%  {background-color: yellow; color: green; }
+    60%  {background-color: blue; color: yellow; }
+    70% {background-color: green; color: blue; }
+    80%   {background-color: red; color: green; }
+    90%  {background-color: yellow; color: red; }
+    95%  {background-color: blue; color: yellow; }
+    100% {background-color: green; color: white; }
+}
+
+.psy > p {
+    animation: psych 2s linear infinite;
+    display: inline-block;
+}
+
+
 .memearrows {
     color: green;
 }
