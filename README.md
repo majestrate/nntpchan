@@ -15,11 +15,8 @@ After you [built and installed the daemon](doc/build.md) and [set up your databa
     # set up the workspace
     srndv2 setup
 
-    # run the core daemon
+    # run the daemon
     srndv2 run
-
-    # run the worker threads
-    srndv2 worker
 
 
 Then open http://127.0.0.1:18000/ukko.html in your browser.
