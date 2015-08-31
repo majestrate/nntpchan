@@ -23,10 +23,10 @@
           <div clsss="thread_header">
           </div>
           {{{OP.RenderPost}}}
-          {{#Replies}}
-            {{{RenderPost}}}
+          {{#Truncate.Replies}}
+            {{{Truncate.RenderPost}}}
             <br />
-          {{/Replies}}
+          {{/Truncate.Replies}}
         </div>
         <hr/>
       {{/threads}}
