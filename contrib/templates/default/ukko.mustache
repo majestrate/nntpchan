@@ -11,9 +11,6 @@
     <link rel="stylesheet" href="{{prefix}}static/site.css"></link>
   </head>
   <body>
-    <div id="ukko-topbar">
-      <a href="{{prefix}}">Front Page</a>
-    </div>
     <div id="ukko_threads" class="threads_container">
       {{#threads}}
         <div class="ukko_thread_header">
@@ -22,11 +19,11 @@
         <div class="thread" id="thread_{{OP.PostHash}}">
           <div clsss="thread_header">
           </div>
-          {{{OP.RenderPost}}}
-          {{#Replies}}
-            {{{RenderPost}}}
+          {{{OP.Truncate.RenderPost}}}
+          {{#Truncate.Replies}}
+            {{{Truncate.RenderPost}}}
             <br />
-          {{/Replies}}
+          {{/Truncate.Replies}}
         </div>
         <hr/>
       {{/threads}}

@@ -32,11 +32,11 @@
         <div class="thread" id="thread_{{OP.PostHash}}">
           <div clsss="thread_header">
           </div>
-          {{{OP.RenderPost}}}
-          {{#Replies}}
-            {{{RenderPost}}}
+          {{{OP.Truncate.RenderPost}}}
+          {{#Truncate.Replies}}
+            {{{Truncate.RenderPost}}}
             <br />
-          {{/Replies}}
+          {{/Truncate.Replies}}
         </div>
         <br/>
         <hr/>
