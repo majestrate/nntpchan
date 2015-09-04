@@ -7,6 +7,7 @@
 * go 1.4 or higher
 * libsodium 1.0 or higher
 * imagemagick
+* RabbitMQ
 
 ## debian ##
 
@@ -22,7 +23,7 @@ Debian Jessie has go 1.3, we need 1.4 or higher to build the nntpchan daemon so 
 
     # set up a directory for our go distribution
     mkdir -p $HOME/local
-    cd $$HOME/local
+    cd $HOME/local
     
     # obtain and unpack go binary distribution
     wget https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz -O go-stable.tar.gz
@@ -43,12 +44,12 @@ We'll also need to install some dependancies that come with debian:
 
     # as root
 
-    apt-get update
-    apt-get install libmagickwand-dev libsodium-dev
+    apt update
+    apt install imagemagick libsodium-dev
 
+Now build the daemon:
 
-Now you can build the daemon:
-
+    go get github.com/majestrate/srndv2
     go install github.com/majestrate/srndv2
 
 It will create an executable at $GOPATH/bin/srndv2 which is already in our $PATH so it can be run by typing ``srndv2``
