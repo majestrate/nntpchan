@@ -17,7 +17,7 @@ else
          -exec mogrify \
          -define jpeg:size=500x500 \
          -thumbnail '250>x250>' \
-         -path thm/ \
+         -path 'thm/{}.jpg' \
          -strip \
          '{}' \;
 fi
