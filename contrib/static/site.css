@@ -127,13 +127,10 @@ body {
     margin-bottom: 10px;
 }
 
-.post, .post_body {
+.post {
+    display: inline;
     margin-bottom: 5px;
 
-}
-
-.post_body > p {
-    margin: 2px;
 }
 
 .tripcode {
@@ -201,11 +198,7 @@ body {
     max-height: 200px;
 }
 
-pre > p {
-    margin: 0px 0px;
-}
-
-.reply , .post_body > pre , .ukko_thread_header {
+.reply, .ukko_thread_header {
     padding: 7px 7px;
     border-radius: 5px;
     box-shadow: 1px 1px 3px black;                    
@@ -217,7 +210,12 @@ pre > p {
 }
 
 .post_body {
+    display: inherit;
+}
+
+.post {
     display: inline-block;
+    width: 80%;
 }
 
 #faq > div {
