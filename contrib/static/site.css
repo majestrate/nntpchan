@@ -208,6 +208,10 @@ body {
     color: #d17600;
 }
 
+.post_body > p {
+    margin: 0px 0px;
+}
+
 .post_body {
     display: inline;
     width: inherit;
