@@ -210,7 +210,7 @@ body {
 }
 
 .post_body {
-    display: inherit;
+    display: inline;
     width: inherit;
 }
 
