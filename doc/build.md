@@ -7,7 +7,8 @@
 * go 1.4 or higher
 * libsodium 1.0 or higher
 * imagemagick
-* RabbitMQ
+* ffmpegthumbnailer
+* sox
 
 ## debian ##
 
@@ -45,7 +46,7 @@ We'll also need to install some dependancies that come with debian:
     # as root
 
     apt update
-    apt install imagemagick libsodium-dev
+    apt install imagemagick libsodium-dev ffmpegthumbnailer sox
 
 Now build the daemon:
 
