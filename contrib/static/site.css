@@ -44,7 +44,7 @@ textarea {
 }
 
 .reply, th, .ukko_thread_header {
-    background: #d6daf0;
+    background: #202331;
 }
 
 hr {
@@ -75,7 +75,7 @@ a:visited {
     margin-top: 0px;
     z-index: 20;
     box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.15);
-    background: #CFD8EF;
+    background: #202331;
     color: #616383;
 
 }
@@ -101,7 +101,8 @@ th {
 }
 
 body {
-    background: linear-gradient(to top, #eef2ff, #eaf1ff) repeat scroll;
+    color: #ededed;
+    background: linear-gradient(to top, #001111, #001231) repeat scroll;
     font-family: arial,helvetica,sans-serif;
     font-size: 10pt;
     margin: 0 4px;
