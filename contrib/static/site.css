@@ -6,7 +6,7 @@
 }
 
 .frontend , .subject {
-    color: #0f0d2d;
+    color: #928BFF;
 }
 
 .name {
@@ -118,7 +118,7 @@ body {
 
 .frontend {
     margin-top: 0px;
-    background: #e0f0f0;
+    background: red;
     display: inline-block;
 }
 
