@@ -104,14 +104,10 @@ th {
     padding-right: 15px;
 }
 
-html {
-    background-image: url("/static/img/bg.jpg");
-    background-size: 100% 100%;
-}
-
 body {
     color: #ededed;
-    background: linear-gradient(to top, #111, #222) repeat scroll;
+    background-image: url("/static/img/bg.jpg");
+    background-size: 100% 100%;
     font-family: arial,helvetica,sans-serif;
     font-size: 10pt;
     margin: 0 4px;
