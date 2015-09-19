@@ -1,5 +1,7 @@
 # NNTPChan #
 
+![fieri](https://camo.githubusercontent.com/cdcfc87ab2268e3b216c4acc487f61e15c73f1e8/68747470733a2f2f692e696d6775722e636f6d2f51736155626a642e706e67)
+
 NNTPChan (previously known as overchan) is a decentralized imageboard that uses nntp to synchronize content between many different servers. It utilizes cryptographically signed posts to perform optional/opt-in decentralized moderation.
 
 This repository contains resources used by the core daemon which is located [here](https://github.com/majestrate/srndv2) along with general documentation, [here](doc/)
