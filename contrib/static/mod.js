@@ -47,7 +47,7 @@ function nntpchan_admin(method, param) {
     name:"admin",
     parser: function(target) {
       return method;
-    }
+    },
     handle: function(j) {
       if (j.msg) {
         return document.createTextNode(j.msg);
