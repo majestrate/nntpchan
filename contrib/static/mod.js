@@ -49,8 +49,8 @@ function nntpchan_admin(method, param) {
       return method;
     },
     handle: function(j) {
-      if (j.msg) {
-        return document.createTextNode(j.msg);
+      if (j.result) {
+        return document.createTextNode(j.result);
       } else {
         return "nothing happened?";
       }
