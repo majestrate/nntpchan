@@ -47,6 +47,10 @@ textarea {
     background: #202331;
 }
 
+tr {
+    background: #202123;
+}
+
 hr {
     height: 0px;
     border-width: 1px medium medium;
@@ -60,11 +64,11 @@ a:hover , a:visited:hover {
 }
 
 a {
-    color: blue;
+    color: #4A4AFF;
 }
 
 a:visited {
-    color: #414383;
+    color: #5E00A0;
 }
 
 .navbar {
