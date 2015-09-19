@@ -106,7 +106,7 @@ th {
 
 html {
     color: #ededed;
-    background: #695D81 url("/static/bg.jpg");
+    background: #695D81 url("/static/bg.png");
     height: 100%;
     background-attachment: fixed;
     background-blend-mode: overlay;
