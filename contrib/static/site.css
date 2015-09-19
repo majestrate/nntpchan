@@ -104,9 +104,9 @@ th {
     padding-right: 15px;
 }
 
-body {
+html {
     color: #ededed;
-    background: #3d3d3d url("/static/bg.jpg") repeat-x;
+    background: #3d3d3d url("/static/bg.jpg");
     background-size: 100% 100%;
     font-family: arial,helvetica,sans-serif;
     font-size: 10pt;
