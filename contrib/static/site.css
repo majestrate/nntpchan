@@ -106,11 +106,11 @@ th {
 
 html {
     color: #ededed;
-    background: #262230 url("/static/bg.png");
+    background: #262230 url("/static/fieri.png");
     height: 100%;
     background-attachment: fixed;
-    background-blend-mode: overlay;
-    background-size: 100% 100%;
+    background-position: 100% 0%;
+    background-repeat: no-repeat;
     font-family: arial,helvetica,sans-serif;
     font-size: 10pt;
     margin: 0 4px;
