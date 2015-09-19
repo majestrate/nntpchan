@@ -104,6 +104,10 @@ th {
     padding-right: 15px;
 }
 
+#captcha_img {
+    background: #d3d3d3;
+}
+
 html {
     color: #ededed;
     background: #262230 url("/static/bg.png");
