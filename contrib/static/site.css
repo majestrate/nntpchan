@@ -107,6 +107,7 @@ th {
 html {
     color: #ededed;
     background: #3d3d3d url("/static/bg.jpg");
+    height: 100%;
     background-size: 100% 100%;
     font-family: arial,helvetica,sans-serif;
     font-size: 10pt;
