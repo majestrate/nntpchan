@@ -42,6 +42,23 @@ function nntpchan_unban() {
   })
 }
 
+function nntpchan_admin(method, param) {
+  nntpchan_mod({
+    name:"admin",
+    parser: function(target) {
+      return method;
+    }
+    handle: function(j) {
+      if (j.msg) {
+        return document.createTextNode(j.msg);
+      } else {
+        return "nothing happened?";
+      }
+    }
+  })
+}
+
+
 // handle delete command
 function nntpchan_delete() {
   nntpchan_mod({
@@ -127,7 +144,7 @@ function nntpchan_mod(mod_action) {
   }
   if (mod_action.name) {
     var url = mod_action.name + "/" + target;
-    ajax.open("GET", url);
+    ajax.open(mod_action.method || "GET", url);
     ajax.send();
   } else {
     alert("mod action has no name");
