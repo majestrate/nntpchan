@@ -106,7 +106,7 @@ th {
 
 body {
     color: #ededed;
-    background: #3d3d3d url("/static/bg.jpg") repeat-x scroll 50% 0%;
+    background: #3d3d3d url("/static/bg.jpg") repeat-x scroll 0% 10%;
     background-size: 100% 100%;
     font-family: arial,helvetica,sans-serif;
     font-size: 10pt;
