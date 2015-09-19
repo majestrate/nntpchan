@@ -102,7 +102,7 @@ th {
 
 body {
     color: #ededed;
-    background: linear-gradient(to top, #001111, #001231) repeat scroll;
+    background: linear-gradient(to top, #111, #222) repeat scroll;
     font-family: arial,helvetica,sans-serif;
     font-size: 10pt;
     margin: 0 4px;
