@@ -27,12 +27,19 @@
     </div>
     <hr />
     <div>
-      <button onclick="nntpchan_admin('template.reload', {})">reload all templates</button>
+      <div>
+        lightweight actions
+      </div>
+      <div>
+        <button onclick="nntpchan_admin('template.reload', {})">reload all templates</button>
+      </div>
     </div>
     <div>
       <label>very load heavy actions, use with care</label>
-      <button onclick="nntpchan_admin('frontend.regen', {})">regenerate all pages</button>
-      <button onclick="nntpchan_admin('thumbnail.regen', {})">regenerate all thumbnails</button>
+      <div>
+        <button onclick="nntpchan_admin('frontend.regen', {})">regenerate all pages</button>
+        <button onclick="nntpchan_admin('thumbnail.regen', {})">regenerate all thumbnails</button>
+      </div>
     </div>  
     <div id="nntpchan_mod_result"></div>
     <noscript>
