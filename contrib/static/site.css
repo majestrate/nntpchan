@@ -43,6 +43,10 @@ textarea {
     padding: 10px 10px;
 }
 
+pre > p {
+    display: block-inline;
+}
+
 .reply, th, .ukko_thread_header {
     background: #202331;
 }
