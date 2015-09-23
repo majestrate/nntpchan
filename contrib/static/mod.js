@@ -160,7 +160,8 @@ function nntpchan_mod(mod_action) {
     ajax.open(mod_action.method || "GET", url);
     var data = mod_action.data;
     if (data) {
-      ajax.send(data);
+      ajax.setRequestHeader("Content-type","text/json");
+      ajax.send(json.Stringify(data));
     } else {
       ajax.send();
     }
