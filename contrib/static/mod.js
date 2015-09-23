@@ -66,7 +66,8 @@ function nntpchan_admin(method, param) {
         return "nothing happened?";
       }
     },
-    method: ( param && "POST" ) || "GET"
+    method: ( param && "POST" ) || "GET",
+    data: param
   })
 }
 
@@ -157,7 +158,12 @@ function nntpchan_mod(mod_action) {
   if (mod_action.name) {
     var url = mod_action.name + "/" + target;
     ajax.open(mod_action.method || "GET", url);
-    ajax.send();
+    var data = mod_action.data;
+    if (data) {
+      ajax.send(data);
+    } else {
+      ajax.send();
+    }
   } else {
     alert("mod action has no name");
   }
