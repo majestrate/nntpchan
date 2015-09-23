@@ -161,7 +161,7 @@ function nntpchan_mod(mod_action) {
     var data = mod_action.data;
     if (data) {
       ajax.setRequestHeader("Content-type","text/json");
-      ajax.send(JSON.Stringify(data));
+      ajax.send(JSON.stringify(data));
     } else {
       ajax.send();
     }
