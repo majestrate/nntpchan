@@ -42,6 +42,17 @@ function nntpchan_unban() {
   })
 }
 
+function get_board_target() {
+  var e = document.getElementById("nntpchan_board_target");
+  return e.value;
+}
+
+function nntpchan_admin_board(method) {
+  nntpchan_admin(method, {
+    newsgroup: get_board_target()
+  })
+}
+
 function nntpchan_admin(method, param) {
   nntpchan_mod({
     name:"admin",

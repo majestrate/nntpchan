@@ -27,6 +27,24 @@
     </div>
     <hr />
     <div>
+      <div> board actions </div>
+      <div>
+        <label for="nntpchan_board_target">board name:</label>
+        <input type="text" id="nntpchan_board_target" />
+      </div>
+      <div>
+        <button onclick="nntpchan_admin_board('frontend.regen')">regenerate</button>
+      </div>
+      <div>    
+        <button onclick="nntpchan_admin_board('frontend.ban')">ban</button>
+        <button onclick="nntpchan_admin_board('frontend.unban')">unban</button>
+      </div>
+      <div>
+        <button onclick="nntpchan_admin_board('frontend.nuke')">nuke</button>
+      </div>
+    </div>
+    <hr />
+    <div>
       <div>
         lightweight actions
       </div>
@@ -34,6 +52,7 @@
         <button onclick="nntpchan_admin('template.reload', {})">reload all templates</button>
       </div>
     </div>
+    <hr />
     <div>
       <label>very load heavy actions, use with care</label>
       <div>
