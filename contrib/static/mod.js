@@ -66,6 +66,7 @@ function nntpchan_admin(method, param) {
         return "nothing happened?";
       }
     }
+    method: ( param && "POST" ) || "GET"
   })
 }
 
