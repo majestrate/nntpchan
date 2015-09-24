@@ -110,7 +110,7 @@ th {
 
 html {
     color: #ededed;
-    background: #262230 url("/static/fieri.png");
+    background: #262230;
     height: 100%;
     background-attachment: fixed;
     background-position: 100% 0%;
