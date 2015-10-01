@@ -108,6 +108,17 @@ th {
     padding-right: 15px;
 }
 
+#captcha_img {
+    background: #d3d3d3;
+}
+
+input, textarea {
+    color: whitesmoke;
+    background: #2d2d2d;
+    border-color: #4D28CA;
+    border-radius: 3px;
+}
+
 html {
     color: #ededed;
     background: #262230;
