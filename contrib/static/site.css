@@ -112,6 +112,7 @@ html {
     color: #ededed;
     background: #262230;
     height: 100%;
+    background-image: url('/static/fieri.png');
     background-attachment: fixed;
     background-position: 100% 0%;
     background-repeat: no-repeat;
