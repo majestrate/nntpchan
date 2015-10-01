@@ -1,4 +1,4 @@
-  <div class="{{{CSSClass}}}" id="post_{{PostHash}}">
+<div class="{{CSSClass}}" id="{{PostHash}}">
   <p class="intro">
     <label for="delete_{{PostHash}}">
       <span class="frontend">
@@ -6,6 +6,17 @@
       </span>
       <span class="subject">
         {{Subject}}
+      </span>
+      <span class="origin">
+      {{#IsTor}}
+      <img src="{{Prefix}}static/i2p.jpg" alt="i2p" />
+      {{/IsTor}}
+      {{#IsI2P}}
+      <img src="{{Prefix}}static/tor.jpg" alt="tor" />
+      {{/IsI2P}}
+      {{#IsClearnet}}
+      <img src="{{Prefix}}static/clearnet.jpg" alt="clearnet" />
+      {{/IsClearnet}}
       </span>
       <span class="name">
         {{#Sage}}
