@@ -5,12 +5,12 @@
         [[ {{Frontend}} ]]
       </span>
       <span class="origin">
-      {{#IsTor}}
-      <img src="{{Prefix}}static/i2p.png" alt="post from i2p" />
-      {{/IsTor}}
       {{#IsI2P}}
-      <img src="{{Prefix}}static/tor.png" alt="post from tor" />
+      <img src="{{Prefix}}static/i2p.png" alt="post from i2p" />
       {{/IsI2P}}
+      {{#IsTor}}
+      <img src="{{Prefix}}static/tor.png" alt="post from tor" />
+      {{/IsTor}}
       {{#IsClearnet}}
       <img src="{{Prefix}}static/clearnet.png" alt="post from clearnet" />
       {{/IsClearnet}}
