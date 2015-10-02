@@ -42,6 +42,34 @@ function nntpchan_unban() {
   })
 }
 
+function get_board_target() {
+  var e = document.getElementById("nntpchan_board_target");
+  return e.value;
+}
+
+function get_key_target() {
+  var e = document.getElementById("nntpchan_key_target");
+  return e.value;
+}
+
+function nntpchan_key_del() {
+  nntpchan_admin("pubkey.del", {
+    pubkey: get_key_target()
+  });
+}
+
+function nntpchan_key_add() {
+  nntpchan_admin("pubkey.add", {
+    pubkey: get_key_target()
+  });
+}
+
+function nntpchan_admin_board(method) {
+  nntpchan_admin(method, {
+    newsgroup: get_board_target()
+  })
+}
+
 function nntpchan_admin(method, param) {
   nntpchan_mod({
     name:"admin",
@@ -54,7 +82,9 @@ function nntpchan_admin(method, param) {
       } else {
         return "nothing happened?";
       }
-    }
+    },
+    method: ( param && "POST" ) || "GET",
+    data: param
   })
 }
 
@@ -145,7 +175,13 @@ function nntpchan_mod(mod_action) {
   if (mod_action.name) {
     var url = mod_action.name + "/" + target;
     ajax.open(mod_action.method || "GET", url);
-    ajax.send();
+    var data = mod_action.data;
+    if (data) {
+      ajax.setRequestHeader("Content-type","text/json");
+      ajax.send(JSON.stringify(data));
+    } else {
+      ajax.send();
+    }
   } else {
     alert("mod action has no name");
   }

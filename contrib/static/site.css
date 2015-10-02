@@ -43,6 +43,10 @@ textarea {
     padding: 10px 10px;
 }
 
+pre > p {
+    display: block-inline;
+}
+
 .reply, th, .ukko_thread_header {
     background: #202331;
 }
@@ -242,4 +246,8 @@ html {
     margin-left: 20%;
     width: 50%;
     padding: 10px;
+}
+
+#captcha_img {
+    background: grey;
 }
