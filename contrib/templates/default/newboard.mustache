@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>create new board</title>
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <script type="text/javascript" src="{{prefix}}static/newboard.js">
+    </script>
+  </head>
+  <body>
+    <p>make your first post</p>
+    <hr />
+    <form action="{{prefix}}post/" enctype="multipart/form-data" name="post" method="post" id="postform" >
+    <div id="postform-outer">
+      <div id="postform-inner">
+        <table class="postform">
+          <tbody>
+            <tr>
+              <th>
+                Board Name
+              </th>
+              <td>
+                <input type="text" name="name" value="" id="boardname" />
+                <button onclick="createBoard()">Create Board</button>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Comment
+              </th>
+              <td>
+             <textarea id="postform_message" type="text" name="message" cols=40 rows=5></textarea>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Captcha
+              </th>
+              <td>
+                <img id="captcha_img" src="{{prefix}}captcha/img" alt="captcha" />
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Solution
+              </th>
+              <td>
+                <input type="text" name="captcha" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </form>
+  </body>
+</html>
