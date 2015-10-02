@@ -47,6 +47,23 @@ function get_board_target() {
   return e.value;
 }
 
+function get_key_target() {
+  var e = document.getElementById("nntpchan_key_target");
+  return e.value;
+}
+
+function nntpchan_key_del() {
+  nntpchan_admin("pubkey.del", {
+    pubkey: get_key_target()
+  });
+}
+
+function nntpchan_key_add() {
+  nntpchan_admin("pubkey.add", {
+    pubkey: get_key_target()
+  });
+}
+
 function nntpchan_admin_board(method) {
   nntpchan_admin(method, {
     newsgroup: get_board_target()
