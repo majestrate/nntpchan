@@ -117,11 +117,8 @@ input, textarea {
 
 html {
     color: #ededed;
-    background: #262230 url("/static/bg.png");
+    background: #262230;
     height: 100%;
-    background-attachment: fixed;
-    background-blend-mode: overlay;
-    background-size: 100% 100%;
     font-family: arial,helvetica,sans-serif;
     font-size: 10pt;
     margin: 0 4px;
