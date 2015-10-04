@@ -1,0 +1,11 @@
+# using srndv2 behind nginx with a prefix
+# make sure to set prefix=/nntpchan/ for section frontend in srnd.ini
+server {
+    listen 80;
+    location /nntpchan/(.*) {
+        client_max_body_size 50M;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://[::1]:18000/$1;
+    }
+}
