@@ -82,7 +82,7 @@ Then add to feeds.ini the following:
 
 ## Options ##
 
-#### You need one connection and one settings clock for each connection ####
+#### You need one connection and one settings block for each connection ####
 
 Here is an example entry in feeds.ini
 
