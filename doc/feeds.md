@@ -4,7 +4,7 @@
 
 In order to actually be distributed, you need another person to sync posts with, otherwise what's the point right?
 
-Right now peering information is private, there is no link level authenticatio (yet) so everything is done via either a vpn tunnel or a tor hidden service.
+Right now peering information is private, there is no link level authentication (yet) so everything is done via either a vpn tunnel or a tor hidden service.
 
 ### Peering over tor ###
 
@@ -49,7 +49,7 @@ Get your ipv6 address for cjdns
 
     ip addr show tun0
 
-Edit srnd.ini to bind nntp on that ipv6 address, make sure to use the square brances `[` and `]`
+Edit srnd.ini to bind nntp on that ipv6 address, make sure to use the square braces `[` and `]`
 
     [nntp]
     ...
@@ -86,19 +86,19 @@ Then add to feeds.ini the following:
 
 Here is an example entry in feeds.ini
 
-    [feed-aabbccddeeff1122.onion:119]
+    [feed-aabbccddeeff2233.onion:119]
     proxy-type=socks4a
     proxy-host=127.0.0.1
     proxy-port=9050
 
-    [aabbccddeeff1122.onion:119]
+    [aabbccddeeff2233.onion:119]
     overchan=1
     ano.paste=0
     ctl=1
 
 But what does it mean?
 
-    [feed-aabbccddeeff1122.onion:119]
+    [feed-aabbccddeeff2233.onion:119]
 
 Connection settings for a peer
 
@@ -108,7 +108,7 @@ Connection settings for a peer
     
 Proxy settings, straight forward. Supported proxy types are `socks4a` and `none`
 
-    [aabbccddeeff1122.onion:119]
+    [aabbccddeeff2233.onion:119]
 
 nntp synchronization settings
 
