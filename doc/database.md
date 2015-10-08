@@ -15,9 +15,9 @@ Setting up postgres (as root)
 
 You'll get a prompt, enter the following:
 
-    CREATE ROLE srnduser WITH LOGIN PASSWORD 'srndpassword';
-    CREATE DATABASE srnd WITH ENCODING 'UTF8' OWNER srnduser;
+    CREATE ROLE srnd WITH LOGIN PASSWORD 'srndpassword';
+    CREATE DATABASE srnd WITH ENCODING 'UTF8' OWNER srnd;
     \q
 
 Change the username and password as desired.
-
+The username has to be the same as the database name.
