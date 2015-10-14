@@ -37,7 +37,7 @@ class Article:
             # clean it
             m += p.text
             m += '\n'
-        if len(m) > 0:
+        if len(m.rstrip('\n')) > 0:
             return m
 
     def subject(self):
@@ -48,7 +48,7 @@ class Article:
         return self.j['name']
 
     def group(self):
-        return 'overchan.test.archive.{}.{}'.format(self.site, self.board)
+        return 'overchan.archive.{}.{}'.format(self.site, self.board)
         
     def genMessageID(self, no):
         return '<{}.{}@{}>'.format(self.board, no, self.site)
