@@ -1,9 +1,6 @@
 <div class="{{CSSClass}}" id="{{PostHash}}">
   <p class="intro">
     <label for="delete_{{PostHash}}">
-      <span class="frontend">
-        {{MessageID}}
-      </span>
       <span class="origin">
       {{#IsI2P}}
       <img src="{{Prefix}}static/i2p.png" title="post from i2p" />
@@ -32,7 +29,7 @@
         {{Date}}
       </span>
     </label>
-    <a onclick="nntpchan_backlink('{{ShortHash}}');">No. {{ShortHash}}</a>
+    <a onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">No. {{ShortHash}}</a>
     <a href="{{PostURL}}">[reply]</a>
     <span class="tripcode">{{{Pubkey}}}</span>
   </p>
