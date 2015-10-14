@@ -118,11 +118,12 @@ class Getter:
         yield a bunch of articles
         """
         r = requests.get(self.url)
-        j = r.json()
-        for t in j['threads']:
-            posts = t['posts']
-            for post in posts:
-                yield Article(post, self.board, self.site)
+        if r.status_code == 200:
+            j = r.json()
+            for t in j['threads']:
+                posts = t['posts']
+                for post in posts:
+                    yield Article(post, self.board, self.site)
 
 
 
