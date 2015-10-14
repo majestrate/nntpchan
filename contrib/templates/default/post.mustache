@@ -2,17 +2,17 @@
   <p class="intro">
     <label for="delete_{{PostHash}}">
       <span class="frontend">
-        [[ {{Frontend}} ]]
+        {{MessageID}}
       </span>
       <span class="origin">
       {{#IsI2P}}
-      <img src="{{Prefix}}static/i2p.png" alt="post from i2p" />
+      <img src="{{Prefix}}static/i2p.png" title="post from i2p" />
       {{/IsI2P}}
       {{#IsTor}}
-      <img src="{{Prefix}}static/tor.png" alt="post from tor" />
+      <img src="{{Prefix}}static/tor.png" title="post from tor" />
       {{/IsTor}}
       {{#IsClearnet}}
-      <img src="{{Prefix}}static/clearnet.png" alt="post from clearnet" />
+      <img src="{{Prefix}}static/clearnet.png" title="post from clearnet" />
       {{/IsClearnet}}
       </span>
       <span class="subject">
