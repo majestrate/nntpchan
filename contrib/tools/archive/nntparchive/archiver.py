@@ -119,11 +119,15 @@ class Getter:
         """
         r = requests.get(self.url)
         if r.status_code == 200:
-            j = r.json()
-            for t in j['threads']:
-                posts = t['posts']
-                for post in posts:
-                    yield Article(post, self.board, self.site)
+            try:
+                j = r.json()
+            except:
+                pass
+            else:
+                for t in j['threads']:
+                    posts = t['posts']
+                    for post in posts:
+                        yield Article(post, self.board, self.site)
 
 
 
