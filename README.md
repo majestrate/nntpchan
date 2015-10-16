@@ -6,6 +6,8 @@ This repository contains resources used by the core daemon which is located [her
 
 ## getting started ##
 
+start [here](doc/build.md)
+
 *PLEASE* report any bugs you find while setting up or building [(here)](https://github.com/majestrate/nntpchan/issues) so that the problems get fixed :^)
 
 For peering requests, questions or support find me on [rizon](https://qchat.rizon.net/?channels=#nntpchan) as \__uguu\__
