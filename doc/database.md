@@ -3,7 +3,7 @@ Postgres on Debian:
 
 
     # install
-    apt-get install postgresql postgresql-client
+    apt-get install --no-install-recommends postgresql postgresql-client
 
 
 Setting up postgres (as root)
@@ -15,7 +15,7 @@ Setting up postgres (as root)
 
 You'll get a prompt, enter the following:
 
-    CREATE ROLE srnd WITH LOGIN PASSWORD 'srndpassword';
+    CREATE ROLE srnd WITH LOGIN PASSWORD 'srnd';
     CREATE DATABASE srnd WITH ENCODING 'UTF8' OWNER srnd;
     \q
 
