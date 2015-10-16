@@ -19,5 +19,7 @@ You'll get a prompt, enter the following:
     CREATE DATABASE srnd WITH ENCODING 'UTF8' OWNER srnd;
     \q
 
-Change the username and password as desired.
-The username has to be the same as the database name.
+For demo purposes we'll use these credentials.
+These are default values, please change them later.
+
+Now run it, [next](running.md)
