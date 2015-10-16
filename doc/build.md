@@ -27,7 +27,7 @@ Debian Jessie has go 1.3, we need 1.4 or higher to build the nntpchan daemon so 
     cd $HOME/local
     
     # obtain and unpack go binary distribution
-    wget https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz -O go-stable.tar.gz
+    wget https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz -O go-stable.tar.gz
     tar -xzvf go-stable.tar.gz
 
     # set up environmental variables for go
@@ -46,12 +46,11 @@ We'll also need to install some dependancies that come with debian:
     # as root
 
     apt update
-    apt install imagemagick libsodium-dev ffmpegthumbnailer sox
+    apt-get --no-install-recommends install imagemagick libsodium-dev ffmpegthumbnailer sox build-essential
 
 Now build the daemon:
 
-    go get github.com/majestrate/srndv2
-    go install github.com/majestrate/srndv2
+    go get -u github.com/majestrate/srndv2
 
 It will create an executable at $GOPATH/bin/srndv2 which is already in our $PATH so it can be run by typing ``srndv2``
 
