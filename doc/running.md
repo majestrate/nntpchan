@@ -20,7 +20,7 @@ add yourself as admin by adding your ``public key`` to the ``frontend`` section 
     ...
     [frontend]
     enable=1
-    add_admin=yourpublickeygoeshere
+    admin_key=yourpublickeygoeshere
     ... # leave the rest of the config values alone for now
 
     
