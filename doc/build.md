@@ -54,4 +54,4 @@ Now build the daemon:
 
 It will create an executable at $GOPATH/bin/srndv2 which is already in our $PATH so it can be run by typing ``srndv2``
 
-Now configure the database. [next](build.md)
+Now configure the database. [next](database.md)
