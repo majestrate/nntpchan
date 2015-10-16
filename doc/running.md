@@ -33,3 +33,5 @@ run it:
 Now open the browser up to http://127.0.0.1:18000/
 
 To access the mod panel go to the [mod panel](http://127.0.0.1:18000/mod/) and use your ``private key`` to log in
+
+Now read about [peering](feeds.md)
