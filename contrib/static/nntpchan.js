@@ -9,6 +9,6 @@ function nntpchan_backlink(shorthash)
   var elem = document.getElementById("postform_message");
   if ( elem )
   {
-    elem.value += ">>" + shorthash.substr(2,10) + "\n";
+    elem.value += ">>" + shorthash.substr(0,10) + "\n";
   }
 }
