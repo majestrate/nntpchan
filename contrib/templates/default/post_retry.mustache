@@ -8,7 +8,7 @@
   <body>    
     <form enctype="multipart/form-data" name="post" method="post">
     {{#attachment}}
-    <input style="visibility: !important;" type="file" accept="{{attachment_type}}" name="attachment" filename="{{attachment_filename}}" value="{{attachment}}" />
+    <input style="visibility: hidden" type="file" name="attachment" filename="{{attachment_filename}}" value="{{attachment}}" />
     {{/attachment}}
     <input type="hidden" name="reference" value="{{reference}}" />
     <input type="hidden" name="name" value="{{name}}" />
