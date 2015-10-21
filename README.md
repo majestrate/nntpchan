@@ -17,7 +17,7 @@ Check out this repo and build it
     cd nntpchan
     ./build.sh
 
-Now configure the database. [Next](docs/database.md)
+Now configure the database. [Next](doc/database.md)
 
 
 ---

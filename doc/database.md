@@ -10,7 +10,7 @@ Setting up postgres (as root)
     # become postgres user
     su postgres
     # spawn postgres admin shell
-    psql
+    psql 
 
 You'll get a prompt, enter the following:
 
