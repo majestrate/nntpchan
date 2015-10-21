@@ -9,6 +9,7 @@
 * imagemagick
 * ffmpegthumbnailer
 * sox
+* git
 
 ## debian ##
 
@@ -46,7 +47,7 @@ We'll also need to install some dependancies that come with debian:
     # as root
 
     apt update
-    apt-get --no-install-recommends install imagemagick libsodium-dev ffmpegthumbnailer sox build-essential
+    apt-get --no-install-recommends install imagemagick libsodium-dev ffmpegthumbnailer sox build-essential git
 
 Now build the daemon:
 
