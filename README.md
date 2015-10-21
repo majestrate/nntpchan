@@ -6,7 +6,21 @@ This repository contains resources used by the core daemon which is located [her
 
 ## getting started ##
 
-start [here](doc/build.md)
+Get the dependancies
+
+    sudo apt-get update
+    sudo apt-get --no-install-recommends install imagemagick libsodium-dev ffmpegthumbnailer sox build-essential git golang ca-certificates
+
+Check out this repo and build it
+
+    git clone https://github.com/majestrate/nntpchan
+    cd nntpchan
+    ./build.sh
+
+Now configure the database. [Next](docs/database.md)
+
+
+---
 
 *PLEASE* report any bugs you find while setting up or building [(here)](https://github.com/majestrate/nntpchan/issues) so that the problems get fixed :^)
 

@@ -1,0 +1,7 @@
+#!/usr/env/bin bash
+set -e
+root=$(readlink -e $(dirname $0))
+cd $root
+export GOPATH=$root/go
+mkdir -p $GOPATH
+go get -u github.com/majestrate/srndv2
