@@ -1,4 +1,4 @@
-#!/usr/env/bin bash
+#!/usr/bin/env bash
 set -e
 root=$(readlink -e $(dirname $0))
 cd $root
