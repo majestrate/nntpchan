@@ -9,9 +9,16 @@
 * imagemagick
 * ffmpegthumbnailer
 * sox
-* git
 
 ## debian ##
+
+
+Get the dependancies
+
+    # as root
+
+    apt update
+    apt-get --no-install-recommends install imagemagick libsodium-dev ffmpegthumbnailer sox build-essential git
 
 Debian Jessie has go 1.3, we need 1.4 or higher to build the nntpchan daemon so let's do that first, assumes 64bit linux:
 
@@ -41,16 +48,7 @@ Debian Jessie has go 1.3, we need 1.4 or higher to build the nntpchan daemon so 
     echo 'export GOPATH=$HOME/go' >> $HOME/.bash_aliases
     echo 'export PATH=$GOROOT/bin:$GOPATH/bin:$PATH' >> $HOME/.bash_aliases
 
-
-We'll also need to install some dependancies that come with debian:
-
-    # as root
-
-    apt update
-    apt-get --no-install-recommends install imagemagick libsodium-dev ffmpegthumbnailer sox build-essential git
-
-Now build the daemon:
-
+    # now build the daemon
     go get -u github.com/majestrate/srndv2
 
 It will create an executable at $GOPATH/bin/srndv2 which is already in our $PATH so it can be run by typing ``srndv2``
