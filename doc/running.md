@@ -3,17 +3,19 @@
 After you have [built the daemon](build.md) and [configured the database](database.md) you can run the daemon.
 
 
-check out the nntpchan repo
+check out the nntpchan repo and build the daemon if you already haven't
 
     git clone https://github.com/majestrate/nntpchan
+    cd nntpchan
+    ./build.sh
 
 set up the daemon:
 
-    srndv2 setup
+    ./srndv2 setup
 
 generate admin keys, don't loose them.
 
-    srndv2 tool keygen
+    ./srndv2 tool keygen
 
 add yourself as admin by adding your ``public key`` to the ``frontend`` section of ``srnd.ini``
 
@@ -27,7 +29,7 @@ add yourself as admin by adding your ``public key`` to the ``frontend`` section 
 
 run it:
 
-    srndv2 run
+    ./srndv2 run
 
 
 Now open the browser up to http://127.0.0.1:18000/

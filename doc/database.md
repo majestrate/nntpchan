@@ -1,8 +1,7 @@
 
-Postgres on Debian:
+Postgres on Debian (as root)
 
-
-    # install
+    # install as root
     apt-get install --no-install-recommends postgresql postgresql-client
 
 
