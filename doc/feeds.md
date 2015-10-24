@@ -26,12 +26,14 @@ This is your in feed address
 
 Then to peer with someone over tor add this to you feeds.ini
 
-    [feed-PeersOnionAddress.onion:119]
+    [feed-ourpeer.onion]
+    host=PeersOnionAddress.onion
+    port=119
     proxy-type=socks4a
     proxy-host=127.0.0.1
     proxy-port=9050
 
-    [PeersOnionAddress.onion:119]
+    [ourpeer.onion]
     overchan=1
     ctl=1
 
@@ -56,16 +58,14 @@ Edit srnd.ini to bind nntp on that ipv6 address, make sure to use the square bra
     bind=[xxxx:xxxx:xxxx:xxx:xx....]:1199
 
 
-Say you have 2 friends at fc33:3:3::aadd and fc03:9f:123::a3df. right now feeds.ini can't take raw ipv6 addresses so add them to `/etc/hosts`
+Say you have 2 friends at fc33:3:3::aadd and fc03:9f:123::a3df.
 
-    # add these lines to /etc/hosts
-    fc33:3:3::aadd     bob
-    fc03:9f:123::a3df  charlie
-
-Then add to feeds.ini the following:
+Add to feeds.ini the following:
 
 
     [feed-bob]
+    host=[fc33:3:3::aadd]
+    port=1199
     proxy-type=none
 
     [bob]
@@ -73,6 +73,8 @@ Then add to feeds.ini the following:
     ctl=1
     
     [feed-charlie]
+    host=[fc03:9f:123::a3df]
+    port=1199
     proxy-type=none
 
     [charlie]
@@ -86,29 +88,33 @@ Then add to feeds.ini the following:
 
 Here is an example entry in feeds.ini
 
-    [feed-aabbccddeeff2233.onion:119]
+    [feed-them.onion]
+    host=aabbccddeeff2233.onion
+    port=119
     proxy-type=socks4a
     proxy-host=127.0.0.1
     proxy-port=9050
 
-    [aabbccddeeff2233.onion:119]
+    [them.onion]
     overchan=1
     ano.paste=0
     ctl=1
 
 But what does it mean?
 
-    [feed-aabbccddeeff2233.onion:119]
+    [feed-them.onion]
 
 Connection settings for a peer
 
+    host=aabbccddeeff2233.onion
+    port=119
     proxy-type=socks4a
     proxy-host=127.0.0.1
     proxy-port=9050
     
 Proxy settings, straight forward. Supported proxy types are `socks4a` and `none`
 
-    [aabbccddeeff2233.onion:119]
+    [them.onion]
 
 nntp synchronization settings
 

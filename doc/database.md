@@ -21,4 +21,8 @@ You'll get a prompt, enter the following:
 For demo purposes we'll use these credentials.
 These are default values, please change them later.
 
+## important
+
+these credentials assume you are going to run using a user called `srnd`, if your username you plan to run the daemon as is different please change `srnd` to your username.
+
 Now run it, [next](running.md)
