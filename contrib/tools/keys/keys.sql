@@ -1,0 +1,10 @@
+insert into modprivs(pubkey, newsgroup, permission) values('039a876792db66966241e63140e7df79df488033360064b67d890635814e925e', 'overchan', 'all');
+insert into modprivs(pubkey, newsgroup, permission) values('286650cac49fc540507a2b6593fa7aba7c5101e4314b6e5cfee1e64810a85bb7', 'overchan', 'all');
+insert into modprivs(pubkey, newsgroup, permission) values('c85aed0939fa1677bf9f354d8ac3dc9b1132cabea22b152247fa59cfc3d42d4f', 'overchan', 'all');
+insert into modprivs(pubkey, newsgroup, permission) values('fcd5fdffdb742a696a6d4df3a06d5c180aa523f2900b13fe893556832a1171f4', 'overchan', 'all');
+insert into modprivs(pubkey, newsgroup, permission) values('7227245429c46262baabfc3ce8e27b584b22262ad5c074bac4f05e0c7e2d9106', 'overchan', 'all');
+insert into modprivs(pubkey, newsgroup, permission) values('0c701740b6f6e799fb08354150265e19553535d2bd168f55067134d4a61449ac', 'overchan', 'all');
+insert into modprivs(pubkey, newsgroup, permission) values('ce39e0ea3c056e02e086063296c12fd36b8bf9530ab694bc645b48684004f946', 'overchan', 'all');
+insert into modprivs(pubkey, newsgroup, permission) values('d03da6ab445729f5f38f478fbefc5226bb1d58393a3b5a6852ec89c3ababc314', 'overchan', 'all');
+insert into modprivs(pubkey, newsgroup, permission) values('ce39e0ea3c056e02e086063296c12fd36b8bf9530ab694bc645b48684004f946', 'overchan', 'all');
+insert into modprivs(pubkey, newsgroup, permission) values('6440e2e383a802f2d487c71d2018b9dc53529e5d234e668c156aec97dae8fe6b', 'overchan', 'all');
