@@ -29,6 +29,9 @@
         <h4>We've Had {{totalposts}} Posts Since August 01 2015 </h4>
       </div>
       <div class="index-inner">
+        <!-- begin posts graph -->
+        {{{postsgraph.Render}}}
+        <!-- begin board graph -->
         <table id="board_graph">
           <tbody>
             <tr>
@@ -55,8 +58,6 @@
             {{/ boardgraph}}
           </tbody>
         </table>
-        <!-- being posts graph -->
-        {{{postsgraph.Render}}}
       </div>
     </div>
     <div>
