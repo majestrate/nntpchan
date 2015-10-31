@@ -3,6 +3,7 @@
   template parameters:
   - boardgraph ( a boardPageRows instance, see srnd/model.go )
   - postgraph ( a postsGraph instance , see srnd/model.go )
+  - overview ( an overviewModel instance, see srnd/model.go )
   - totalposts ( the number of total posts we have ever seen )
   - frontend ( the name of the frontend )
   - prefix ( the site's prefix )
@@ -32,6 +33,7 @@
         <!-- begin posts graph -->
         {{{postsgraph.Render}}}
         <!-- begin board graph -->
+        {{! todo: move boardgraph into its own file like postsgraph }}
         <table id="board_graph">
           <tbody>
             <tr>
@@ -60,8 +62,9 @@
         </table>
       </div>
     </div>
-    <div>
-      
+    <!-- begin overview -->
+    <div class="index-inner">
+      {{{overview.Render}}}
     </div>
     </center>
   </body>
