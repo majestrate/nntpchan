@@ -1,7 +1,8 @@
 {{!
   frontpage.mustache -- template for index.html
   template parameters:
-  - graph ( a list of 4 string tuples: (board, posts_per_hour, posts_per_day, total_posts) )
+  - boardgraph ( a boardPageRows instance, see srnd/model.go )
+  - postgraph ( a postsGraph instance , see srnd/model.go )
   - totalposts ( the number of total posts we have ever seen )
   - frontend ( the name of the frontend )
   - prefix ( the site's prefix )
@@ -36,7 +37,7 @@
               <th> Post per Day </th>
               <th> Total </th>
             </tr>
-            {{# graph}}
+            {{# boardgraph}}
             <tr>
               <td>
                 <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
@@ -51,10 +52,11 @@
                 {{All}}
               </td>
             </tr>
-            {{/ graph}}
+            {{/ boardgraph}}
           </tbody>
         </table>
       </div>
+      {{{postgraph.Render}}}
     </div>
     </center>
   </body>
