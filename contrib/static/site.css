@@ -252,6 +252,9 @@ html {
     background: grey;
 }
 
-#posts_graph ,  #overview {
+#posts_graph , #board_graph {
     float: left;
+}
+#overview  {
+    float: right;
 }
