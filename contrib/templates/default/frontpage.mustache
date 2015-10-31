@@ -30,36 +30,45 @@
         <h4>We've Had {{totalposts}} Posts Since August 01 2015 </h4>
       </div>
       <div class="index-inner">
-        <!-- begin posts graph -->
-        {{{postsgraph.Render}}}
-        <!-- begin overview -->
-        {{{overview.Render}}}
-        <!-- begin board graph -->
-        {{! todo: move boardgraph into its own file like postsgraph }}
-        <table id="board_graph">
+        <table>
           <tbody>
             <tr>
-              <th> Board </th>
-              <th> Post per Hour </th>
-              <th> Post per Day </th>
-              <th> Total </th>
+              <td>
+                {{{postsgraph.Render}}}
+              </td>
+              <td>
+                {{{overview.Render}}}
+              </td>
+              <td>
+                {{! todo: move boardgraph into its own file like postsgraph }}
+                <table id="board_graph">
+                  <tbody>
+                    <tr>
+                      <th> Board </th>
+                      <th> Post per Hour </th>
+                      <th> Post per Day </th>
+                      <th> Total </th>
+                    </tr>
+                    {{# boardgraph}}
+                      <tr>
+                        <td>
+                          <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
+                        </td>
+                        <td>
+                          {{Hour}}
+                        </td>
+                        <td>
+                          {{Day}}
+                        </td>
+                        <td>
+                          {{All}}
+                        </td>
+                      </tr>
+                    {{/ boardgraph}}
+                  </tbody>
+                </table>
+              </td>
             </tr>
-            {{# boardgraph}}
-            <tr>
-              <td>
-                <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
-              </td>
-              <td>
-                {{Hour}}
-              </td>
-              <td>
-                {{Day}}
-              </td>
-              <td>
-                {{All}}
-              </td>
-            </tr>
-            {{/ boardgraph}}
           </tbody>
         </table>
       </div>

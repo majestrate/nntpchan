@@ -251,10 +251,3 @@ html {
 #captcha_img {
     background: grey;
 }
-
-#posts_graph , #board_graph {
-    float: left;
-}
-#overview_graph  {
-    float: right;
-}
