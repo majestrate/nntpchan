@@ -251,3 +251,7 @@ html {
 #captcha_img {
     background: grey;
 }
+
+#posts_graph {
+    float: left;
+}
