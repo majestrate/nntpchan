@@ -12,7 +12,7 @@ template parameters:
     <title> Post History</title>
   </head>
   <body>
-    <table id="posts_graph">
+    <table id="history_graph">
       <thead>
         <tr>
           <th>Month</th>
@@ -24,7 +24,7 @@ template parameters:
         {{#history.Scale}}
           <tr>
             <td>{{Date}}</td>
-            <td>{{Num}}</td>
+            <td class="history_num">{{Num}}</td>
             <td>{{OvercockGraph}}</td>
           </tr>
         {{/history.Scale}}
