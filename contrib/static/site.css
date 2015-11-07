@@ -257,9 +257,6 @@ fieldset {
     overflow: auto;
     max-width: 120ex;
 }
-legend {
-    background-color: lightgray;
-}
 
 .thread {
     float: left;
