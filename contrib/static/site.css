@@ -226,7 +226,6 @@ html {
 
 .post_body {
     display: inline;
-    width: inherit;
 }
 
 .post {
@@ -262,6 +261,7 @@ fieldset {
     float: left;
 	width: 90%;
 }
+
 .replybar {
     float: left;
     position: fixed;
