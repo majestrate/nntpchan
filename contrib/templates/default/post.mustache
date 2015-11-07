@@ -11,11 +11,11 @@
         <img src="{{Prefix}}static/clearnet.png" title="post from clearnet" />
       {{/IsClearnet}}
     </span>
-    {{Subject}} {{Name}} {{Date}}
+    <span class="subject">{{Subject}}</span> <span class="name">{{Name}}</span> {{Date}}
     No. <a onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
     <a href="{{PostURL}}">[reply]</a> <span class="tripcode">{{{Pubkey}}}</span><br />
   </legend>
-  <label>
+  <label class="post_body">
     {{{RenderBody}}}
   </label>  
   {{#Attachments}}
