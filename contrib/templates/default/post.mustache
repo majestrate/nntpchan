@@ -13,9 +13,6 @@
     No. <a onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
     <a href="{{PostURL}}">[reply]</a> <span class="tripcode">{{{Pubkey}}}</span><br />
   </legend>
-  <label class="post_body">
-    {{{RenderBody}}}
-  </label>  
   {{#Attachments}}
     <figure>
     <figcaption>
@@ -23,4 +20,7 @@
     </figcaption>
     </figure>
   {{/Attachments}}
+  <label class="post_body">
+    {{{RenderBody}}}
+  </label> 
 </fieldset>
