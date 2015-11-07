@@ -45,6 +45,10 @@ pre {
 	overflow-wrap: break-word;
 }
 
+td {
+	background-color: dimgrey;
+}
+
 .reply, .ukko_thread_header {
     background: #202331;
 }
