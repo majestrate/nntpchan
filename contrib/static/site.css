@@ -259,7 +259,7 @@ figure img {
 }
 fieldset {
     overflow: auto;
-    max-width: 120ex;
+    max-width: 90%;
 }
 
 .thread {
