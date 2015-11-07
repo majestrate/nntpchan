@@ -45,7 +45,7 @@ pre {
 	overflow-wrap: break-word;
 }
 
-.reply, th, .ukko_thread_header {
+.reply, .ukko_thread_header {
     background: #202331;
 }
 
@@ -105,6 +105,7 @@ a:visited {
 }
 
 th {
+	background: #4DA6BD;
     font-size: 10pt;
     padding-left: 10px;
     padding-right: 15px;
