@@ -44,7 +44,7 @@ pre {
 	overflow-wrap: break-word;
 }
 
-.reply, th, .ukko_thread_header {
+.reply, th, .ukko_thread_header, legend {
     background: #202331;
 }
 
