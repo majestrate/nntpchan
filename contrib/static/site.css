@@ -264,7 +264,6 @@ figure img {
 }
 fieldset {
     overflow: auto;
-    max-width: 90%;
 }
 
 fieldset > img {
