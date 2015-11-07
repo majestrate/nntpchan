@@ -1,49 +1,29 @@
-<div class="{{CSSClass}}" id="{{PostHash}}">
-  <p class="intro">
-    <label for="delete_{{PostHash}}">
-      <span class="origin">
+<fieldset>
+  <legend>
+    <span>
       {{#IsI2P}}
-      <img src="{{Prefix}}static/i2p.png" title="post from i2p" />
+        <img src="{{Prefix}}static/i2p.png" title="post from i2p" />
       {{/IsI2P}}
       {{#IsTor}}
-      <img src="{{Prefix}}static/tor.png" title="post from tor" />
+        <img src="{{Prefix}}static/tor.png" title="post from tor" />
       {{/IsTor}}
       {{#IsClearnet}}
-      <img src="{{Prefix}}static/clearnet.png" title="post from clearnet" />
+        <img src="{{Prefix}}static/clearnet.png" title="post from clearnet" />
       {{/IsClearnet}}
-      </span>
-      <span class="subject">
-        {{Subject}}
-      </span>
-      <span class="name">
-        {{#Sage}}
-          <a href="mailto:sage">
-            {{Name}}
-          </a>
-        {{/Sage}}
-        {{^Sage}}
-          {{Name}}
-        {{/Sage}}
-      </span>
-      <span class="postdate">
-        {{Date}}
-      </span>
-    </label>
-    <a onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">No. {{ShortHash}}</a>
-    <a href="{{PostURL}}">[reply]</a>
-    <span class="tripcode">{{{Pubkey}}}</span>
-  </p>
-  <div class="files">
-    {{#Attachments}}
-      <div class="file">
-        <p class="file_info">
-          <span>File: {{Filename}}</span>
-        </p>
-        <a target="_blank" class="file-link" href="{{Source}}" title="{{Filename}}">
-          <img class="file-thumbnail" src="{{Thumbnail}}" alt="{{Filename}}" />
-        </a>
-      </div>
-    {{/Attachments}}
-  </div>
-  <div class="post_body">{{{RenderBody}}}</div>
-</div>
+    </span>
+    {{Subject}} {{Name}} {{Date}}
+    No. <a onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
+    <a href="{{PostURL}}">[reply]</a> <span class="tripcode">{{{Pubkey}}}</span><br />
+  </legend>
+  <label>
+    {{{RenderBody}}}
+  </label>  
+  {{#Attachments}}
+    <figure>
+    <figcaption>
+    <a target="_blank" href="{{Source}}" title="{{Filename}}">{{Filename}}</a>
+    </figcaption>
+    <img src="{{Thumbnail}}" alt="{{Filename}}" />
+    </figure>
+  {{/Attachments}}
+</fieldset>

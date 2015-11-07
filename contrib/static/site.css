@@ -1,9 +1,3 @@
-.thread {
-    margin-bottom: 1em;
-    display: inline-block;
-    word-wrap: break-word;
-    width: 100%;
-}
 
 .frontend , .subject {
     color: #928BFF;
@@ -252,6 +246,54 @@ html {
     background: grey;
 }
 
-.history_num {
-    text-align: right;
+figure {
+    float: left;
+    margin: 1ex;
+}
+figure img {
+    max-width:256px;
+    max-height:128px;
+    max-width:100%;
+}
+fieldset {
+    overflow: auto;
+    max-width: 120ex;
+}
+legend {
+    background-color: lightgray;
+}
+
+.thread {
+    float: left;
+    width: 66%;
+}
+.replybar {
+    float: left;
+    position: fixed;
+    top: 2ex;
+    right: 0;
+    width: 34%
+    }
+@media (max-width: 100ex) {
+    .replybar, .thread {
+		width: 100%;
+		position: static;
+    }
+}
+
+.hide-reply:checked ~ div {
+    width: 100%;
+    position: static;
+}
+
+textarea#reply-text {
+    width: 100%;
+    resize: vertical;
+}
+
+.hide-reply {
+    float: right;
+    position: fixed;
+    top: 0;
+    right: 0;
 }
