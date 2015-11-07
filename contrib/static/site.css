@@ -267,6 +267,10 @@ fieldset {
     max-width: 90%;
 }
 
+fieldset > img {
+	float: right;
+}
+
 .thread {
     float: left;
 	width: 90%;
