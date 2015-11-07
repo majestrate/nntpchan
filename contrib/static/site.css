@@ -37,7 +37,9 @@ textarea {
     padding: 10px 10px;
 }
 
-pre > p {
+pre {
+    background: #3f3f3f;
+    color: #d17600;
     display: block-inline;
 	overflow-wrap: break-word;
 }
@@ -216,11 +218,6 @@ html {
     padding: 7px 7px;
     border-radius: 5px;
     box-shadow: 1px 1px 3px black;                    
-}
-
-.post_body > pre {
-    background: #3f3f3f;
-    color: #d17600;
 }
 
 .post_body > p {
