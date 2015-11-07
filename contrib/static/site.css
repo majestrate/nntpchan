@@ -39,6 +39,7 @@ textarea {
 
 pre > p {
     display: block-inline;
+	overflow-wrap: break-word;
 }
 
 .reply, th, .ukko_thread_header {
