@@ -265,6 +265,7 @@ figure img {
 }
 fieldset {
     overflow: auto;
+	border-radius: 5px 0px 5px 0px;
 }
 
 fieldset > img {
