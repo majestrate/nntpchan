@@ -41,8 +41,9 @@ pre {
 	white-space: pre-wrap;
     background: #3f3f3f;
     color: #d17600;
-    display: block-inline;
+    display: inline-block;
 	overflow-wrap: break-word;
+	word-wrap: break-word;
 }
 
 td {
