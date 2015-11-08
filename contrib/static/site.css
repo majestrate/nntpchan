@@ -116,10 +116,6 @@ th {
     padding-right: 15px;
 }
 
-#captcha_img {
-    background: #d3d3d3;
-}
-
 input, textarea {
     color: whitesmoke;
     background: #2d2d2d;
