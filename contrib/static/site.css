@@ -249,9 +249,10 @@ html {
 }
 
 #captcha_img {
-    background: #4DA6BD;
     -webkit-animation: intensetwist 2s infinite;
     animation: intensetwist 2s infinite;
+    -webkit-animation: flash .1s infinite;
+    animation: flash .1s infinite;
 }
 
 figure {
@@ -327,4 +328,9 @@ hr {
     0% {transform: rotate(5deg);}
     50% {transform: rotate(-10deg);}
     100% {transform: rotate(5deg);}
+}
+
+@keyframes flash {
+	0%	{background-color: black;}
+	100%	{background-color: orange;}
 }
