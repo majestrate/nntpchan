@@ -116,10 +116,6 @@ th {
     padding-right: 15px;
 }
 
-#captcha_img {
-    background: #d3d3d3;
-}
-
 input, textarea {
     color: whitesmoke;
     background: #2d2d2d;
@@ -136,6 +132,8 @@ html {
     margin: 0 4px;
     padding-left: 4px;
     padding-right: 4px;
+    -webkit-animation: muchtwist 10s infinite;
+    animation: muchtwist 10s infinite;
 }
 
 .reply {
@@ -251,7 +249,10 @@ html {
 }
 
 #captcha_img {
-    background: #4DA6BD;
+    -webkit-animation: intensetwist 2s infinite;
+    animation: intensetwist 2s infinite;
+    -webkit-animation: flash .1s infinite;
+    animation: flash .1s infinite;
 }
 
 figure {
@@ -315,4 +316,21 @@ textarea#reply-text {
 
 hr {
 	padding-bottom: 20px;
+}
+
+@keyframes muchtwist {
+    0% {transform: rotate(1deg);}
+    50% {transform: rotate(-1deg);}
+    100% {transform: rotate(1deg);}
+}
+
+@keyframes intensetwist {
+    0% {transform: rotate(5deg);}
+    50% {transform: rotate(-10deg);}
+    100% {transform: rotate(5deg);}
+}
+
+@keyframes flash {
+	0%	{background-color: black;}
+	100%	{background-color: orange;}
 }
