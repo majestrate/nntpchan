@@ -176,7 +176,7 @@ html {
     100% {background-color: green; color: white; }
 }
 
-.psy > p {
+.psy {
     animation: psych 2s linear infinite;
     display: inline-block;
 }
