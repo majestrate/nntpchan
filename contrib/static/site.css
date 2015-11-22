@@ -45,7 +45,7 @@ pre {
 }
 
 td {
-    background-color: dimgrey;
+    background-color: #1C1C1C;
 }
 
 .board_td {
@@ -59,7 +59,7 @@ td {
 #overview_graph {
     position: relative;
     top: 2px;
-    background: dimgrey;
+    background: #1C1C1C;
 }
 
 .reply, .ukko_thread_header {
