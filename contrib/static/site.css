@@ -36,16 +36,30 @@ textarea {
 }
 
 pre {
-	white-space: pre-wrap;
+    white-space: pre-wrap;
     background: #3f3f3f;
     color: #d17600;
     display: inline-block;
-	overflow-wrap: break-word;
-	word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 td {
-	background-color: dimgrey;
+    background-color: dimgrey;
+}
+
+.board_td {
+    position: relative; left: 2px;
+}
+
+.posts_td {
+    position: relative; left: -2px;
+}
+
+#overview_graph {
+    position: relative;
+    top: 2px;
+    background: dimgrey;
 }
 
 .reply, .ukko_thread_header {
@@ -54,10 +68,6 @@ td {
 
 legend {
 	/* background-color: #525252; */
-}
-
-tr {
-    background: #202123;
 }
 
 hr {
@@ -89,7 +99,6 @@ a:visited {
     box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.15);
     background: #202331;
     color: #616383;
-
 }
 
 .navbar-sep {
