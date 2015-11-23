@@ -82,11 +82,11 @@ a:hover , a:visited:hover {
 }
 
 a {
-    color: #0C2FF3;
+    color: cornflowerblue;
 }
 
 a:visited {
-    color: #5E00A0;
+    color: #0C2FF3;
 }
 
 .navbar {
@@ -98,11 +98,11 @@ a:visited {
     z-index: 20;
     box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.15);
     background: #202331;
-    color: #616383;
+    color: lightgray;
 }
 
 .navbar-sep {
-    color: black;
+    color: darkgray;
 }
 
 #postform_container {
