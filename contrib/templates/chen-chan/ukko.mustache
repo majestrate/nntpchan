@@ -3,24 +3,20 @@
   template parameters:
   - prefix ( site prefix )
   - threads ( a list of Thread Models that represent the latest threads )
-                                   }}
-<!doctype html>
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="/static/user.css">
-    <title>ukko/overboard</title>
-  </head>
-  <body>
-    <a href="/">frontpage</a>
-    {{#threads}}
-      <hr>
-      <p>posted on <a href="{{{BoardURL}}}">{{OP.Board}}</a></p>
-      <dl>
+}}
+<!doctype html><html><head>
+  <link rel="stylesheet" href="/static/chen-chan.css">
+  <title>ukko/overboard</title>
+</head><body>
+  <a href="/">frontpage</a>
+  {{#threads}}
+    <hr>
+    <p>posted on <a href="{{{BoardURL}}}">{{OP.Board}}</a></p>
+    <dl>
       {{{OP.Truncate.RenderPost}}}
       {{#Truncate.Replies}}
         {{{Truncate.RenderPost}}}
       {{/Truncate.Replies}}
-      </dl>
-    {{/threads}}
-  </body>
-</html>
+    </dl>
+  {{/threads}}
+</body></html>

@@ -5,36 +5,29 @@
   - frontend ( the name of the frontend )
   - prefix ( the site's prefix )
 }}
-<!doctype html>
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="/static/user.css">
-    <title>{{frontend}} boards</title>
-  </head>
-  <body>
-    <table border="1">
+<!doctype html><html><head><link rel="stylesheet" type="text/css" href="/static/chen-chan.css"><title>{{frontend}} boards</title></head><body>
+  <table>
+    <tr>
+      <th>board</th>
+      <th>posts per hour</th>
+      <th>posts per day</th>
+      <th>total</th>
+    </tr>
+    {{# graph}}
       <tr>
-        <th>board</th>
-        <th>posts per hour</th>
-        <th>posts per day</th>
-        <th>total</th>
+        <td>
+          <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
+        </td>
+        <td>
+          {{Hour}}
+        </td>
+        <td>
+          {{Day}}
+        </td>
+        <td>
+          {{All}}
+        </td>
       </tr>
-      {{# graph}}
-        <tr>
-          <td>
-            <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
-          </td>
-          <td>
-            {{Hour}}
-          </td>
-          <td>
-            {{Day}}
-          </td>
-          <td>
-            {{All}}
-          </td>
-        </tr>
-      {{/ graph}}
-    </table>
-  </body>
-</html>
+    {{/ graph}}
+  </table>
+</body></html>
