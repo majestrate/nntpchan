@@ -1,0 +1,36 @@
+{{!
+graph_history.mustache
+template parameters:
+- history ( a list of PostEntry instances, see srnd/model.go )
+
+}}
+<html>
+  <head>
+    <meta charset="utf-8"></meta>
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <link rel="stylesheet" href="{{prefix}}static/user.css" />
+    <title> Post History</title>
+  </head>
+  <body>
+    <td>
+      <table id="history_graph">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Posts</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#history.Scale}}
+            <tr>
+              <td>{{Date}}</td>
+              <td class="history_num">{{Num}}</td>
+              <td>{{OvercockGraph}}</td>
+            </tr>
+          {{/history.Scale}}
+        </tbody>
+      </table>
+    </td>
+  </body>
+</html>

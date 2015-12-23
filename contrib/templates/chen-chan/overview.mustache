@@ -1,0 +1,7 @@
+{{! overview.mustache
+paramters:
+
+- overview (list of PostModels in order of last posted)
+
+}}
+<table><tr><th>date</th><th>board</th><th>subject</th></tr>{{#overview}}<tr><td>{{Date}}</td><td><a href="{{Prefix}}{{Board}}-0.html">{{Board}}</a></td><td><a href="{{PostURL}}">{{Truncate.Subject}}</a></td></tr>{{/overview}}</table>

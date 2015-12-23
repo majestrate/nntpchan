@@ -4,4 +4,22 @@ parameters:
 
  * graph - a postsGraph instance (see srnd/model.go)
 }}
-<table><tr><th>date</th><th>posts</th><th>cock</th></tr>{{#graph.Scale}}<tr><td>{{Day}}</td><td>{{Num}}</td><td>{{OvercockGraph}}</td></tr>{{/graph.Scale}}</table>
+
+<table id="posts_graph">
+  <thead>
+    <tr>
+      <th>Day</th>
+      <th>Posts</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#graph.Scale}}
+      <tr>
+        <td>{{Day}}</td>
+        <td>{{Num}}</td>
+        <td>{{OvercockGraph}}</td>
+      </tr>
+    {{/graph.Scale}}
+  </tbody>
+</table>

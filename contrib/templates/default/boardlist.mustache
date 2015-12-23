@@ -5,36 +5,45 @@
   - frontend ( the name of the frontend )
   - prefix ( the site's prefix )
 }}
-<!doctype html>
+
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="/static/user.css">
-    <title>{{frontend}} boards</title>
+    <link rel="stylesheet" href="{{prefix}}static/site.css"></link>
+    <link rel="stylesheet" href="{{prefix}}static/user.css"></link>
+    <title> {{frontend}} board list </title>
   </head>
   <body>
-    <table border="1">
-      <tr>
-        <th>board</th>
-        <th>posts per hour</th>
-        <th>posts per day</th>
-        <th>total</th>
-      </tr>
-      {{# graph}}
-        <tr>
-          <td>
-            <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
-          </td>
-          <td>
-            {{Hour}}
-          </td>
-          <td>
-            {{Day}}
-          </td>
-          <td>
-            {{All}}
-          </td>
-        </tr>
-      {{/ graph}}
-    </table>
+    <center>
+    <div class="index-outer">
+      <div class="index-inner">
+        <table id="board_graph">
+          <tbody>
+            <tr>
+              <th> Board </th>
+              <th> Post per Hour </th>
+              <th> Post per Day </th>
+              <th> Total </th>
+            </tr>
+            {{# graph}}
+            <tr>
+              <td>
+                <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
+              </td>
+              <td>
+                {{Hour}}
+              </td>
+              <td>
+                {{Day}}
+              </td>
+              <td>
+                {{All}}
+              </td>
+            </tr>
+            {{/ graph}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </center>
   </body>
 </html>

@@ -5,16 +5,73 @@
  - post_url ( the url of the post form )
  - reference ( the post we are replying to, or empty string if it's an op )
  - button ( the text for the reply button )
-                }}
-<form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post" style="overflow:auto">
-  <input type="hidden" name="reference" value="{{reference}}">
-  <textarea id="postform_message" name="message" placeholder="text" cols="40" rows="10" style="float:left" ></textarea><br>
-  <div style="float:left">
-  <input type="file" name="attachment"><br>
-  <input type="text" name="subject" placeholder="subject"><br>
-  <input type="text" name="name" placeholder="name"><br>
-  <input type="text" name="captcha" placeholder="captcha"><br>
-  <input type="submit" value="{{button}}" class="button"><br>
-  </div>
-  <img id="captcha_img" src="{{prefix}}captcha/img" alt="captcha" style="float:left">
-</form>
+ }}
+ <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post">
+ <input type="hidden" name="reference" value="{{reference}}" />
+ <div id="postform-outer">
+   <div id="postform-inner">
+     <table class="postform">
+       <tbody>
+         <tr>
+           <th>
+             Name
+           </th>
+           <td>
+             <input type="text" name="name" value="" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             Subject
+           </th>
+           <td>
+             <input type="text" name="subject" value="" />
+             <input type="submit" value="{{button}}" class="button" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             Comment
+           </th>
+           <td>
+             <textarea id="postform_message" name="message" cols=40 rows=5></textarea>
+           </td>
+         </tr>
+         <tr>
+           <th>
+             File
+           </th>
+           <td>
+             <input type="file" name="attachment" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             Get Dubs
+           </th>
+           <td>
+             <input type="checkbox" name="dubs" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             Captcha
+           </th>
+           <td>
+             <img id="captcha_img" src="{{prefix}}captcha/img" alt="captcha" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             Solution
+           </th>
+           <td>
+             <input type="text" name="captcha" />
+           </td>
+         </tr>
+       </tbody>
+     </table>
+   </div>
+ </div>
+ </form>
+ 

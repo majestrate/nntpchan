@@ -1,0 +1,12 @@
+{{!
+ navbar.mustache -- element on the top of each nod-mod page
+
+ TODO: make this not suck, have a board list, have board page list
+ 
+ template parameters:
+ - name ( the name of whatever resource we are on, board/thread )
+ - frontend ( the name of the frontend we are on )
+ - links ( a list of Link Models to display )
+ - prefix ( site prefix )
+ }}
+<p>{{name}} on {{frontend}} | {{# links}} <a href="{{LinkURL}}">{{Text}}</a> {{/ links}} | <a href="{{prefix}}">front page</a> <a href="{{prefix}}ukko.html">overboard</a></p>

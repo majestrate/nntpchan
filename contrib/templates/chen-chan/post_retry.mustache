@@ -1,11 +1,9 @@
 <html>
   <head>
-    <title> try again </title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="{{prefix}}static/site.css" />
-    <link rel="stylesheet" href="{{prefix}}static/user.css" />
+    <link rel="stylesheet" type="text/css" href="/static/user.css">
+    <title>try again</title>
   </head>
-  <body>    
+  <body>
     <form enctype="multipart/form-data" name="post" method="post">
     {{#attachment}}
       <input type="hidden" name="attachment_data" value="{{attachment}}" />

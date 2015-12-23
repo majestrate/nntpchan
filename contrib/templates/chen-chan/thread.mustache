@@ -1,0 +1,27 @@
+{{!
+ thread.mustache -- renders to a thread-*.html page, shows the entire thread
+ template parameters:
+ - board ( the Board Model of the board this thread was posted in )
+ - thread ( the Thread Model of the current thread being rendered )
+ - form ( the post form markup )
+ 
+ Thread Model attributes:
+ - OP , the Post Model of the original poster
+ - Replies , a list of all the replies or empty if none
+ - Board , the name of the Board this thread is on
+ - BoardURL , the url that points to the board index page
+                                   }}
+<!doctype html><html><head><link rel="stylesheet" type="text/css" href="/static/user.css">
+  <title>{{thread.OP.Subject}}</title>
+  <script type="text/javascript" src="{{thread.Prefix}}static/nntpchan.js"></script>
+</head>
+<body>
+  {{{thread.Navbar}}}
+  {{{form}}}
+  <dl>
+    {{{thread.OP.RenderPost}}}
+    {{# thread.Replies}}
+      {{{RenderPost}}}
+    {{/ thread.Replies}}
+  </dl>
+</body></html>
