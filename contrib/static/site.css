@@ -7,7 +7,6 @@
     color: #117743;
 }
 
-
 .name , .subject {
     font-weight: bold;
 }
@@ -15,7 +14,6 @@
 #postform-outer {
     text-align: center;
 }
-
 
 input {
     width: 70%;
@@ -38,16 +36,30 @@ textarea {
 }
 
 pre {
-	white-space: pre-wrap;
+    white-space: pre-wrap;
     background: #3f3f3f;
     color: #d17600;
     display: inline-block;
-	overflow-wrap: break-word;
-	word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 td {
-	background-color: dimgrey;
+    background-color: #1C1C1C;
+}
+
+.board_td {
+    position: relative; left: 2px;
+}
+
+.posts_td {
+    position: relative; left: -2px;
+}
+
+#overview_graph {
+    position: relative;
+    top: 2px;
+    background: #1C1C1C;
 }
 
 .reply, .ukko_thread_header {
@@ -58,10 +70,6 @@ legend {
 	/* background-color: #525252; */
 }
 
-tr {
-    background: #202123;
-}
-
 hr {
     height: 0px;
     border-width: 1px medium medium;
@@ -69,17 +77,16 @@ hr {
     border-style: solid none none;
 }
 
-
 a:hover , a:visited:hover {
     color: #f13333;
 }
 
 a {
-    color: #0C2FF3;
+    color: cornflowerblue;
 }
 
 a:visited {
-    color: #5E00A0;
+    color: #0C2FF3;
 }
 
 .navbar {
@@ -91,12 +98,11 @@ a:visited {
     z-index: 20;
     box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.15);
     background: #202331;
-    color: #616383;
-
+    color: lightgray;
 }
 
 .navbar-sep {
-    color: black;
+    color: darkgray;
 }
 
 #postform_container {
@@ -110,7 +116,7 @@ a:visited {
 }
 
 th {
-	background: #4DA6BD;
+    background: #4DA6BD;
     font-size: 10pt;
     padding-left: 10px;
     padding-right: 15px;
@@ -176,7 +182,7 @@ html {
     100% {background-color: green; color: white; }
 }
 
-.psy > p {
+.psy {
     animation: psych 2s linear infinite;
     display: inline-block;
 }
@@ -238,6 +244,10 @@ html {
 .post {
     display: inline-block;
     width: 80%;
+}
+
+#postform_attachment {
+    max-width: 330px;
 }
 
 #faq > div {
@@ -307,7 +317,6 @@ textarea#reply-text {
     top: 0;
     right: 0;
 }
-
 
 hr {
 	padding-bottom: 20px;
