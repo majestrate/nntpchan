@@ -11,37 +11,24 @@
   - Navbar ( a function that renders the navbar, should not be escaped )
   - Threads ( a list of Thread Models with the last few replies )
 }}
+<!doctype html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1" />
-    <link rel="stylesheet" href="{{board.Prefix}}static/site.css" />
-    <link rel="stylesheet" href="{{board.Prefix}}static/user.css" />
-    <script type="text/javascript" src="{{board.Prefix}}static/nntpchan.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/user.css">
     <title>{{board.Board}}</title>
   </head>
   <body>
-    <!-- begin navbar -->
     {{{board.Navbar}}}
-    <!-- end navbar -->
-
-    <!-- postform -->
-    <div id="postform_container">
-      {{{form}}}
-    </div>
-    <hr />
-    <div id="threads_container">
-      {{#board.Threads}}
-        <div class="thread" id="thread_{{OP.PostHash}}">
-          <div clsss="thread_header">
-          </div>
-          {{{OP.Truncate.RenderPost}}}
-          {{#Truncate.Replies}}
-            {{{Truncate.RenderPost}}}
-            <br />
-          {{/Truncate.Replies}}
-        </div>
-      {{/board.Threads}}
-    </div>
+    {{{form}}}
+    <dl>
+      <hr>
+    {{#board.Threads}}
+        {{{OP.Truncate.RenderPost}}}
+        {{#Truncate.Replies}}
+          {{{Truncate.RenderPost}}}
+        {{/Truncate.Replies}}
+        <hr>
+    {{/board.Threads}}
+    </dl>
   </body>
 </html>

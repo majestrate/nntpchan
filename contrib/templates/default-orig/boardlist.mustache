@@ -1,0 +1,49 @@
+{{!
+  boardlist.mustache -- full list of every board
+  template parameters:
+  - graph ( a list of 4 string tuples: (board, posts_per_hour, posts_per_day, total_posts) )
+  - frontend ( the name of the frontend )
+  - prefix ( the site's prefix )
+}}
+
+<html>
+  <head>
+    <link rel="stylesheet" href="{{prefix}}static/site.css"></link>
+    <link rel="stylesheet" href="{{prefix}}static/user.css"></link>
+    <title> {{frontend}} board list </title>
+  </head>
+  <body>
+    <center>
+    <div class="index-outer">
+      <div class="index-inner">
+        <table id="board_graph">
+          <tbody>
+            <tr>
+              <th> Board </th>
+              <th> Post per Hour </th>
+              <th> Post per Day </th>
+              <th> Total </th>
+            </tr>
+            {{# graph}}
+            <tr>
+              <td>
+                <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
+              </td>
+              <td>
+                {{Hour}}
+              </td>
+              <td>
+                {{Day}}
+              </td>
+              <td>
+                {{All}}
+              </td>
+            </tr>
+            {{/ graph}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </center>
+  </body>
+</html>

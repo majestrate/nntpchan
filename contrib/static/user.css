@@ -1,3 +1,5 @@
-/*
-  put your custom stylesheet here
-*/
+body{font-family:monospace}
+dl{max-width:80ch}
+dd{margin-left:2ch;overflow:auto}
+.memearrows{color:green}
+pre{margin: 0 0 0 0}

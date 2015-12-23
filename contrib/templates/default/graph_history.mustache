@@ -12,23 +12,25 @@ template parameters:
     <title> Post History</title>
   </head>
   <body>
-    <table id="history_graph">
-      <thead>
-        <tr>
-          <th>Month</th>
-          <th>Posts</th>
-      <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#history.Scale}}
+    <td>
+      <table id="history_graph">
+        <thead>
           <tr>
-            <td>{{Date}}</td>
-            <td class="history_num">{{Num}}</td>
-            <td>{{OvercockGraph}}</td>
+            <th>Month</th>
+            <th>Posts</th>
+            <th></th>
           </tr>
-        {{/history.Scale}}
-      </tbody>
-    </table>  
+        </thead>
+        <tbody>
+          {{#history.Scale}}
+            <tr>
+              <td>{{Date}}</td>
+              <td class="history_num">{{Num}}</td>
+              <td>{{OvercockGraph}}</td>
+            </tr>
+          {{/history.Scale}}
+        </tbody>
+      </table>
+    </td>
   </body>
 </html>

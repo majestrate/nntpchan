@@ -5,18 +5,11 @@
  - public ( the public key in hex )
  - secret ( the secret key in hex )
  - tripcode ( html version of the public key )
-}}
-<html>
-  <head>
-    <meta charset="utf-8"></meta>
-    <link rel="stylesheet" href="{{prefix}}static/site.css" />
-    <link rel="stylesheet" href="{{prefix}}static/user.css" />
-    <style src="{{prefix}}static/user.css" type="text/css"></style>
-    <title> here is a new tripcode </title>
-  </head>
-  <body>
-    <pre>New Tripcode:
-      <div id="secret_key">secret: {{secret}}</div><div id="public_key">public: {{public}}</div><div>tripcode: <span class="tripcode" id="capcode_key">{{{tripcode}}}</span></div>
-    </pre>
-  </body>
-</html>
+                                   }}
+<!doctype html><html><head><title>new tripcode</title></head><body><pre>
+new tripcode:
+
+secret: {{secret}}
+public: {{public}}
+tripcode: {{{tripcode}}}
+</pre></body></html>

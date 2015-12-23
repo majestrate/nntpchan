@@ -3,33 +3,24 @@
   template parameters:
   - prefix ( site prefix )
   - threads ( a list of Thread Models that represent the latest threads )
-}}
+                                   }}
+<!doctype html>
 <html>
   <head>
-    <title> ukko / overboard </title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="{{prefix}}static/site.css" />
-    <link rel="stylesheet" href="{{prefix}}static/user.css" />
-    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
-    </head>
+    <link rel="stylesheet" type="text/css" href="/static/user.css">
+    <title>ukko/overboard</title>
+  </head>
   <body>
-    <div id="ukko_threads">
-      {{#threads}}
-        <!--
-        <div class="ukko_thread_header">
-          <p> Posted on <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></p>
-        </div>
-        -->
-        <div class="thread" id="thread_{{OP.PostHash}}">
-          <div clsss="thread_header">
-          </div>
-          {{{OP.Truncate.RenderPost}}}
-          {{#Truncate.Replies}}
-            {{{Truncate.RenderPost}}}
-            <br />
-          {{/Truncate.Replies}}
-        </div>
-      {{/threads}}
-    </div>
+    <a href="/">frontpage</a>
+    {{#threads}}
+      <hr>
+      <p>posted on <a href="{{{BoardURL}}}">{{OP.Board}}</a></p>
+      <dl>
+      {{{OP.Truncate.RenderPost}}}
+      {{#Truncate.Replies}}
+        {{{Truncate.RenderPost}}}
+      {{/Truncate.Replies}}
+      </dl>
+    {{/threads}}
   </body>
 </html>
