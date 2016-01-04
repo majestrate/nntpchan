@@ -15,3 +15,7 @@ articles
 
 # generated files
 webroot
+
+# built binaries
+go
+srndv2
