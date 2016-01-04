@@ -1,0 +1,40 @@
+<html><head><link rel="stylesheet" href="/static/chen-chan.css"><title>try again</title></head><body>
+  <form enctype="multipart/form-data" name="post" method="post">
+    {{#attachment}}
+      <input type="hidden" name="attachment_data" value="{{attachment}}">
+      <input type="hidden" name="attachment_filename" value="{{attachment_filename}}">
+      <input type="hidden" name="attachment_mime" value="{{attachment_type}}">
+    {{/attachment}}
+    <input type="hidden" name="reference" value="{{reference}}">
+    <input type="hidden" name="name" value="{{name}}">
+    <input type="hidden" name="subject" value="{{subject}}">
+    <input type="hidden" name="captcha_id" value="{{captcha_id}}">
+    <input type="hidden" name="message" value="{{message}}">
+    <div id="postform-outer">
+      <div id="postform-inner">
+        <div>{{fail_message}}</div>
+        <table class="postform">
+          <tbody>
+            <tr>
+              <th>
+                Captcha
+              </th>
+              <td>
+                <img id="captcha_img" src="{{prefix}}captcha/{{captcha_id}}.png" alt="captcha" />
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Solution
+              </th>
+              <td>
+                <input type="text" name="captcha" />
+                <input type="submit" value="Post" class="button" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+</body></html>

@@ -1,0 +1,79 @@
+{{!
+ modpage.mustache -- the moderator panel when logged in
+ template parameters:
+ - prefix ( the site's prefix )
+}}
+<!doctype html><html><head>
+    <link rel="stylesheet" href="{{prefix}}static/chen-chan.css">
+    <!-- yes it uses js -->
+    <script src="{{prefix}}static/mod.js"></script>
+    <title>nntpchan mod page</title>
+</head><body>
+  <dl>
+    <dt>post actions</dt>
+    <dd>
+      <div>
+        <label for="nntpchan_mod_target">target</label>
+        <input id="nntpchan_mod_target" type="text">
+      </div>
+      <div>
+        <button onclick="nntpchan_ban()">ban (url)</button>
+        <button onclick="nntpchan_delete()">delete (url)</button>
+        <button onclick="nntpchan_unban()">unban (ip)</button>
+      </div>
+    </dd>
+  </dl>
+  <dl>
+    <dt>key actions</dt>
+    <dd>
+      <div>
+        <label for="nntpchan_board_target">pubkey:</label>
+        <input type="text" id="nntpchan_key_target" />
+      </div>
+      <div>
+        <button onclick="nntpchan_key_add()">add key</button>
+        <button onclick="nntpchan_key_del()">remove key</button>
+      </div>
+    </dd>
+  </dl>
+  <dl>
+    <dt>board actions</dt>
+    <dd>
+      <div>
+        <label for="nntpchan_board_target">board name:</label>
+        <input type="text" id="nntpchan_board_target">
+      </div>
+      <div>
+        <button onclick="nntpchan_admin_board('frontend.add')">add board</button>
+        <button onclick="nntpchan_admin_board('frontend.regen')">regenerate</button>  
+        <button onclick="nntpchan_admin_board('frontend.ban')">ban</button>
+        <button onclick="nntpchan_admin_board('frontend.unban')">unban</button>
+        <button onclick="nntpchan_admin_board('frontend.nuke')">nuke</button>
+      </div>
+    </dd>
+  </dl>
+  <dl>
+    <dt>lightweight actions</dt>
+    <dd>
+      <button onclick="nntpchan_admin('template.reload')">reload all templates</button>
+    </dd>
+  </dl>
+  <dl>
+    <dt>very load heavy actions, use with care</dt>
+    <dd>
+      <div>
+        <button onclick="nntpchan_admin('frontend.regen')">regenerate all pages</button>
+        <button onclick="nntpchan_admin('thumbnail.regen')">regenerate all thumbnails</button>
+      </div>
+    </dd>
+  </dl>
+  <dl>
+    <dt>status</dt>
+    <dd>
+      <div id="nntpchan_mod_result"></div>
+      <noscript>
+        <b>enable js to use the mod panel kthx</b>
+      </noscript>
+    </dd>
+  </dl>
+</body></html>

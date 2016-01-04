@@ -1,0 +1,11 @@
+{{!
+  frontpage.mustache -- template for index.html
+  template parameters:
+  - boardgraph ( a boardPageRows instance, see srnd/model.go )
+  - postgraph ( a postsGraph instance , see srnd/model.go )
+  - overview ( an overviewModel instance, see srnd/model.go )
+  - totalposts ( the number of total posts we have ever seen )
+  - frontend ( the name of the frontend )
+  - prefix ( the site's prefix )
+}}
+<!doctype html><html><head><link rel="stylesheet" href="/static/chen-chan.css"><title>{{frontend}} on nntpchan</title></head><body><p>{{frontend}} on nntpchan</p><p><a href="ukko.html">overboard</a> <a href="{{prefix}}boards.html">boards</a> <a href="{{prefix}}static/chen-chan-faq.html">faq</a></p><dl><dt>last posts:</dt><dd>{{{overview.Render}}}</dd></dl><dl><dt>board stats:</dt><dd><table><tr><th>board</th><th>posts this hour</th><th>posts today</th><th>total</th></tr>{{# boardgraph}}<tr><td><a href="{{prefix}}{{Board}}-0.html">{{Board}}</a></td><td>{{Hour}}</td><td>{{Day}}</td><td>{{All}}</td></tr>{{/ boardgraph}}</table></dd></dl><dl><dt>total stats:</dt><dd>{{{postsgraph.Render}}}</dd></dl><p>{{totalposts}} posts total since 2015-12-23</p></body></html>

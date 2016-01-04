@@ -1,0 +1,7 @@
+{{!
+ post_success.mustache -- shown when we do a successful post
+ template parameters:
+ - redirect_url ( the url of the next page we should redirect to )
+ - message_id ( the value of the Message-ID header in the post we made, the truncated sha1 of this is the >>posthash )
+}}
+<!doctype html><html><head><meta http-equiv="refresh" content="2; {{redirect_url}}"></head><body><pre>posted as {{message_id}}</pre></body></html>
