@@ -8,6 +8,8 @@ import io
 import nntplib
 import time
 import urllib.parse
+import base64
+import random
 
 class Article:
     """
@@ -25,7 +27,6 @@ class Article:
         self.board = board
         self.site = site
         self.messageID = self.genMessageID(j['no'])
-        self.attachments = list()
         
     def formatDate(self):
         return datetime.datetime.utcfromtimestamp(self.j['time']).strftime(self.timeFormat)
@@ -62,6 +63,9 @@ class Article:
         "Path: {}\n").format(self.subject(), self.name(), self.formatDate(), self.group(), self.messageID, self.site)
         if self.j['resto'] > 0:
             hdr += "References: {}\n".format(self.genMessageID(self.j['resto']))
+        if 'filename' in self.j:
+            hdr += 'Mime-Version: 1.0\n'
+            hdr += 'Content-Type: multipart/mixed; boundary="{}"\n'.format(self.boundary)
         return hdr
 
     def bodyPlain(self):
@@ -70,10 +74,32 @@ class Article:
             return "{}\n{}".format(self.header(), msg)
 
     def bodyMultipart(self):
-        pass
+        self.boundary = '========{}'.format(random.randint(0, 10000000))
+        msg = self.header() + '\n'
+        msg += '--{}\n'.format(self.boundary)
+        msg += 'Content-Type: text/plain; encoding=UTF-8\n'
+        msg += '\n'
+        msg += self.message() + '\n'
+        msg += '--{}\n'.format(self.boundary)
+        msg += 'Content-Type: image/{}\n'.format(self.j['ext'])
+        msg += 'Content-Disposition: form-data; filename="{}{}"; name="import"\n'.format(self.j['filename'], self.j['ext'])
+        msg += 'Content-Transfer-Encoding: base64\n'        
+        msg += '\n'
+        url = 'https://{}/{}/src/{}{}'.format(self.site, self.board, self.j['tim'], self.j['ext'])
+        print ('obtain {}'.format(url))
+        
+        r = requests.get(url)
+        if r.status_code == 200:
+            msg += base64.b64encode(r.content).decode('ascii')
+            msg += '\n'
+        else:
+            print ('failed to obtain attachment: {} != 200'.format(r.status_code))
+            return
+        msg += '\n--{}--\n'.format(self.boundary)
+        return msg
 
     def body(self):
-        if len(self.attachments) > 0:
+        if 'filename' in self.j:
             return self.bodyMultipart()
         else:
             return self.bodyPlain()
@@ -124,10 +150,11 @@ class Getter:
             except:
                 pass
             else:
-                for t in j['threads']:
-                    posts = t['posts']
-                    for post in posts:
-                        yield Article(post, self.board, self.site)
+                if 'threads' in j:
+                    for t in j['threads']:
+                        posts = t['posts']
+                        for post in posts:
+                            yield Article(post, self.board, self.site)
 
 
 
