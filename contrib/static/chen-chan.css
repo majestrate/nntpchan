@@ -1,0 +1,7 @@
+body{font-family:monospace}
+dl{max-width:84ch}
+dd{margin-left:4ch;overflow:auto}
+.memearrows{color:green}
+pre{margin: 0 0 0 0}
+table,th,td{border:1px solid gray}
+table {border-collapse:collapse}

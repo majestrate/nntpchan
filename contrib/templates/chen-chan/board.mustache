@@ -1,0 +1,27 @@
+{{!
+ board.mustache, displays the contents of page N of the board
+
+ template parameters:
+ - board ( the model of the current page )
+ - page ( the page number of the current page )
+ 
+ board has the properties:
+  - Prefix ( absolute path like //site.tld/ or /path/ )
+  - Board ( the name of the board )
+  - Navbar ( a function that renders the navbar, should not be escaped )
+  - Threads ( a list of Thread Models with the last few replies )
+}}
+<!doctype html><html><head><link rel="stylesheet" href="/static/chen-chan.css"><title>{{board.Board}}</title></head><body>
+  {{{board.Navbar}}}
+  {{{form}}}
+  <dl>
+    <hr>
+    {{#board.Threads}}
+      {{{OP.Truncate.RenderPost}}}
+      {{#Truncate.Replies}}
+        {{{Truncate.RenderPost}}}
+      {{/Truncate.Replies}}
+      <hr>
+    {{/board.Threads}}
+  </dl>
+</body></html>
