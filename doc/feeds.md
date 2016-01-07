@@ -4,7 +4,64 @@
 
 In order to actually be distributed, you need another person to sync posts with, otherwise what's the point right?
 
-Right now peering information is private, there is no link level authentication (yet) so everything is done via either a vpn tunnel or a tor hidden service.
+### Peering over the regular internet ###
+
+Requirements:
+
+* Each Side's server must have a domain name
+* Each Side must have each other's certificates (.crt files) in the `certs` folder
+* Each Side's `srnd.ini` crypto section must have entry `tls-hostname = domain.tld` where domain.tld is the domain name of the server it is on
+* Each Side's `srnd.ini` nntp section must have entry `require_tls = 1`
+
+
+If Alice owns `nntp.alice.net` and Bob owns `nntp.bob.com` and are both using port 1199 the configs for each side are as follows:
+
+    # alice's srnd.ini crypto section
+    ...
+    [crypto]
+    tls-hostname = nntp.alice.net
+    tls-trust-dir = certs
+    tls-keyname = overchan-alice
+
+
+    # alice's feeds.ini
+    [feed-bob]
+    host = nntp.bob.com
+    port = 1199
+    
+    [bob]
+    overchan.* = 1
+    ctl = 1
+
+
+
+    # bob's srnd.ini crypto section
+    ...
+    [crypto]
+    tls-hostname = nntp.bob.com
+    tls-trust-dir = certs
+    tls-keyname = overchan-bob
+
+
+
+    # bob's feeds.ini
+    [feed-alice]
+    host = nntp.alice.net
+    port = 1199
+
+    [alice]
+    overchan.* = 1
+    ctl = 1
+
+each side's `certs` directory contains 2 files:
+
+* overchan-alice-nntp.alice.net.crt (alice's certificate)
+* overchan-bob-nntp.bob.com.crt (bob's certificate)
+
+Alice keeps `overchan-alice-nntp.alice.net.key` secret and never shares it
+
+Bob keeps `overchan-bob-nntp.bob.com.key` secret and never shares it
+
 
 ### Peering over tor ###
 
@@ -24,6 +81,8 @@ restart/reload tor then
 
 This is your in feed address
 
+If you use an onion with tls, `srnd.ini` crypto section should have the entry `tls-hostname = youroniongoeshere.onion`. If you don't use tls NEVER disclose the onion address to anyone not trusted.
+
 Then to peer with someone over tor add this to you feeds.ini
 
     [feed-ourpeer.onion]
@@ -34,50 +93,6 @@ Then to peer with someone over tor add this to you feeds.ini
     proxy-port=9050
 
     [ourpeer.onion]
-    overchan=1
-    ctl=1
-
-
-### Peering over cjdns ###
-
-Set up cjdns, read more [here](https://github.com/cjdelisle/cjdns/blob/master/doc/configure.md#connection-interfaces)
-
-    git clone https://github.com/cjdelisle/cjdns
-    cd cjdns && ./do
-    ./cjdroute --genconf >> cjdroute.conf
-    ./cjdroute < cjdroute.conf
-
-Get your ipv6 address for cjdns
-
-    ip addr show tun0
-
-Edit srnd.ini to bind nntp on that ipv6 address, make sure to use the square braces `[` and `]`
-
-    [nntp]
-    ...
-    bind=[xxxx:xxxx:xxxx:xxx:xx....]:1199
-
-
-Say you have 2 friends at fc33:3:3::aadd and fc03:9f:123::a3df.
-
-Add to feeds.ini the following:
-
-
-    [feed-bob]
-    host=[fc33:3:3::aadd]
-    port=1199
-    proxy-type=none
-
-    [bob]
-    overchan=1
-    ctl=1
-    
-    [feed-charlie]
-    host=[fc03:9f:123::a3df]
-    port=1199
-    proxy-type=none
-
-    [charlie]
     overchan=1
     ctl=1
 
