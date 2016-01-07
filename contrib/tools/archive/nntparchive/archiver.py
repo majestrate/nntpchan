@@ -66,6 +66,8 @@ class Article:
         if 'filename' in self.j:
             hdr += 'Mime-Version: 1.0\n'
             hdr += 'Content-Type: multipart/mixed; boundary="{}"\n'.format(self.boundary)
+        else:
+            hdr += 'Content-Type: text/plain; encoding="UTF-8"\n'
         return hdr
 
     def bodyPlain(self):
