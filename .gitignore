@@ -19,3 +19,9 @@ webroot
 # built binaries
 go
 srndv2
+
+# private key
+*.key
+
+# certificates
+certs
