@@ -64,6 +64,23 @@ function nntpchan_key_add() {
   });
 }
 
+function get_nntp_username() {
+  var e = document.getElementById("nntpchan_nntp_username");
+  return e.value;  
+}
+
+function get_nntp_passwd() {
+  var e = document.getElementById("nntpchan_nntp_passwd");
+  return e.value;  
+}
+
+function nntpchan_admin_nntp(method) {
+  nntpchan_admin(method, {
+    username: get_nntp_username(),
+    passwd: get_nntp_passwd()
+  })
+}
+
 function nntpchan_admin_board(method) {
   nntpchan_admin(method, {
     newsgroup: get_board_target()

@@ -40,10 +40,26 @@
     </div>
     <hr />
     <div>
+      <div> nntp login </div>
+      <div>
+        <label for="nntpchan_nntp_username">username:</lable>
+        <input id="nntpchan_nntp_username" />
+        <label for="nntpchan_nntp_passwd">password:</lable>
+        <input id="nntpchan_nntp_passwd" />
+      </div>
+      <div>
+        <button onclick="nntpchan_admin_nntp('nntp.login.add')">add user</button>
+      </div>
+      <div>  
+        <button onclick="nntpchan_admin_nntp('nntp.login.del')">remove user</button>        
+      </div>
+    </div>
+    <hr />
+    <div>
       <div> board actions </div>
       <div>
         <label for="nntpchan_board_target">board name:</label>
-        <input type="text" id="nntpchan_board_target" />
+        <input id="nntpchan_board_target" />
       </div>
       <div>
         <button onclick="nntpchan_admin_board('frontend.add')">add board</button>
