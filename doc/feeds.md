@@ -4,7 +4,7 @@
 
 In order to actually be distributed, you need another person to sync posts with, otherwise what's the point right?
 
-### Peering over the regular internet ###
+### Peering over the regular internet with tls ###
 
 Requirements:
 
@@ -63,6 +63,32 @@ Alice keeps `overchan-alice-nntp.alice.net.key` secret and never shares it
 Bob keeps `overchan-bob-nntp.bob.com.key` secret and never shares it
 
 
+### Peering Authentication with passwords ###
+
+adding / removing credentials via the command line:
+
+    # add an nntp login via command line
+    srndv2 tool nntp add-login user-name-here pass-word-here
+    
+    # remove an nntp login via command line
+    srndv2 tool nntp del-login user-name-here
+
+exmaple feeds.ini:
+
+    # section pair in feeds.ini
+    # connects to nntp.something.tld:1199 and authenticates with a username and password
+
+    [feed-authenticated]
+    host = nntp.something.tld
+    port = 1199
+    username = user-user-here
+    password = pass-word-here
+
+    [authenticated]
+    overchan.* = 1
+    ctl = 1
+     
+
 ### Peering over tor ###
 
 Install tor
@@ -109,6 +135,8 @@ Here is an example entry in feeds.ini
     proxy-type=socks4a
     proxy-host=127.0.0.1
     proxy-port=9050
+    username=somerandomusername
+    password=somerandompassword
 
     [them.onion]
     overchan=1
