@@ -77,12 +77,14 @@ exmaple feeds.ini:
 
     # section pair in feeds.ini
     # connects to nntp.something.tld:1199 and authenticates with a username and password
+    # sync = 1 makes you download all applicable posts from the remote server on startup
 
     [feed-authenticated]
     host = nntp.something.tld
     port = 1199
     username = user-user-here
     password = pass-word-here
+    sync = 1
 
     [authenticated]
     overchan.* = 1
