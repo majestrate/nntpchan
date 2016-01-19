@@ -1,6 +1,6 @@
 ## TODO ##
 
 * extra stylesheets
-* alternative templates
+* more alternative templates
 * javascript free mod panel
-* liveui
+* liveui 
