@@ -30,6 +30,8 @@
       {{{form}}}
     </div>
     <hr />
+    <div onload="nntpchan_inject_banners(this, '{{board.Prefix}}');">
+    </div>
     <div id="threads_container">
       {{#board.Threads}}
         <div class="thread" id="thread_{{OP.PostHash}}">
