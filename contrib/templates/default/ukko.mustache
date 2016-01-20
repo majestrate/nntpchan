@@ -10,12 +10,6 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="{{prefix}}static/site.css" />
     <link rel="stylesheet" href="{{prefix}}static/user.css" />
-    <script type="text/javascript" src="{{prefix}}static/nntpchan.js">
-      document.onload = function() {
-        var e = document.getElementById("nntpchan_banner");
-        nntpchan_inject_banners(e, "{{board.Prefix}}");
-      }
-    </script>
     </head>
     <body>
       <div id="nntpchan_banner">
@@ -38,6 +32,12 @@
           {{/Truncate.Replies}}
         </div>
       {{/threads}}
-    </div>
+      </div>
+      <script type="text/javascript" src="{{prefix}}static/nntpchan.js">
+        document.onload = function() {
+          var e = document.getElementById("nntpchan_banner");
+          nntpchan_inject_banners(e, "{{board.Prefix}}");
+        }
+    </script>
   </body>
 </html>
