@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="{{prefix}}static/user.css" />
     <script src="{{prefix}}static/nntpchan.js" type="text/javascript">
     </script>
+    <script>
+      var e = document.getElementById("nntpchan_banner");
+      nntpchan_inject_banners(e, "{{board.Prefix}}");
+    </script>
     <title> {{frontend}} on nntpchan </title>
   </head>
   <body>
@@ -30,7 +34,7 @@
         <h3>Fork on github: <a href="https://github.com/majestrate/nntpchan/">frontend</a> and <a href="https://github.com/majestrate/srndv2/">core</a></h3>
         <h4>We've Had {{totalposts}} Posts Since August 01 2015 </h4>
       </div>
-      <div onload="nntpchan_inject_banners(this, '{{prefix}}');">
+      <div id="nntpchan_banner">
         [banner]
       </div>
       <div class="index-inner">

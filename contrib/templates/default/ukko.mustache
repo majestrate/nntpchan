@@ -11,9 +11,13 @@
     <link rel="stylesheet" href="{{prefix}}static/site.css" />
     <link rel="stylesheet" href="{{prefix}}static/user.css" />
     <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+    <script>
+      var e = document.getElementById("nntpchan_banner");
+      nntpchan_inject_banners(e, "{{board.Prefix}}");
+    </script>
     </head>
     <body>
-      <div onload="nntpchan_inject_banners(this, '{{prefix}}');">
+      <div id="nntpchan_banner">
         [banner]
       </div>
       <div id="ukko_threads">
