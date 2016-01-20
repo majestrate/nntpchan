@@ -43,10 +43,10 @@
       {{/ thread.Replies}}
     </div>
     <br/>
-      <script src="{{prefix}}static/nntpchan.js" type="text/javascript">
+      <script src="{{thread.Prefix}}static/nntpchan.js" type="text/javascript">
         document.onload = function() {
           var e = document.getElementById("nntpchan_banner");
-          nntpchan_inject_banners(e, "{{board.Prefix}}");
+          nntpchan_inject_banners(e, "{{thread.Prefix}}");
         }
       </script>
 
