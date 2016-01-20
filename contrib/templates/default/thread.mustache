@@ -17,9 +17,8 @@
     <meta name="viewport" content="initial-scale=1" />
     <link rel="stylesheet" href="{{thread.Prefix}}static/site.css" />
     <link rel="stylesheet" href="{{thread.Prefix}}static/user.css" />
-    <script type="text/javascript" src="{{thread.Prefix}}static/nntpchan.js"></script>
-    <script>
-      document.onload = function() {
+    <script type="text/javascript" src="{{thread.Prefix}}static/nntpchan.js">
+     document.onload = function() {
         var e = document.getElementById("nntpchan_banner");
         nntpchan_inject_banners(e, "{{board.Prefix}}");
       }
