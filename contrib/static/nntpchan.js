@@ -21,6 +21,6 @@ function nntpchan_inject_banners(elem, prefix) {
   var banner = prefix + "static/banner_"+n+".jpg";
   var e = document.createElement("img");
   e.src = banner;
-  e.setAttribute("class", "nntpchan_banner");
+  e.id = "nntpchan_banner";
   elem.appendChild(e);
 }

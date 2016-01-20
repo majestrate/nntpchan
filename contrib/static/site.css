@@ -321,3 +321,8 @@ textarea#reply-text {
 hr {
 	padding-bottom: 20px;
 }
+
+
+#nntpchan_banner {
+    align: center;
+}
