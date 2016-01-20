@@ -23,14 +23,13 @@
     <!-- begin navbar -->
     {{{board.Navbar}}}
     <!-- end navbar -->
-
+    <div id="nntpchan_banner">
+    </div>
     <!-- postform -->
     <div id="postform_container">
       {{{form}}}
     </div>
     <hr />
-    <div id="nntpchan_banner">
-    </div>
     <div id="threads_container">
       {{#board.Threads}}
         <div class="thread" id="thread_{{OP.PostHash}}">
@@ -45,10 +44,10 @@
       {{/board.Threads}}
     </div>
     <script type="text/javascript" src="{{board.Prefix}}static/nntpchan.js">
-    document.onload = function() {
+
       var e = document.getElementById("nntpchan_banner");
       nntpchan_inject_banners(e, "{{board.Prefix}}");
-    }
+
     </script>
   </body>
 </html>
