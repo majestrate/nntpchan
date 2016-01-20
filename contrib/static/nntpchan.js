@@ -22,5 +22,5 @@ function nntpchan_inject_banners(elem, prefix) {
   var e = document.createElement("img");
   e.src = banner;
   e.id = "nntpchan_banner";
-  elem.value = e;
+  elem.appendChild(e);
 }
