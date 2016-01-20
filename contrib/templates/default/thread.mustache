@@ -19,8 +19,10 @@
     <link rel="stylesheet" href="{{thread.Prefix}}static/user.css" />
     <script type="text/javascript" src="{{thread.Prefix}}static/nntpchan.js"></script>
     <script>
-      var e = document.getElementById("nntpchan_banner");
-      nntpchan_inject_banners(e, "{{board.Prefix}}");
+      document.onload = function() {
+        var e = document.getElementById("nntpchan_banner");
+        nntpchan_inject_banners(e, "{{board.Prefix}}");
+      }
     </script>
     <title> {{thread.OP.Subject}} </title>
   </head>

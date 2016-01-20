@@ -16,8 +16,10 @@
     <script src="{{prefix}}static/nntpchan.js" type="text/javascript">
     </script>
     <script>
-      var e = document.getElementById("nntpchan_banner");
-      nntpchan_inject_banners(e, "{{board.Prefix}}");
+      document.onload = function() {
+        var e = document.getElementById("nntpchan_banner");
+        nntpchan_inject_banners(e, "{{board.Prefix}}");
+      }
     </script>
     <title> {{frontend}} on nntpchan </title>
   </head>
