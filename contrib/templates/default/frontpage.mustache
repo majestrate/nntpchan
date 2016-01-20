@@ -13,6 +13,7 @@
   <head>
     <link rel="stylesheet" href="{{prefix}}static/site.css" />
     <link rel="stylesheet" href="{{prefix}}static/user.css" />
+    <script src="{{prefix}}static/nntpchan.js" type="text/javascript"></script>
     <title> {{frontend}} on nntpchan </title>
   </head>
   <body>
@@ -73,7 +74,7 @@
       </div>
     </div>
     </center>
-    <script src="{{prefix}}static/nntpchan.js" type="text/javascript">
+    <script type="text/javascript">
         var e = document.getElementById("nntpchan_banner");
         nntpchan_inject_banners(e, "{{prefix}}");
     </script>

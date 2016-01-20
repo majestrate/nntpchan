@@ -10,11 +10,12 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="{{prefix}}static/site.css" />
     <link rel="stylesheet" href="{{prefix}}static/user.css" />
-    </head>
-    <body>
-      <div id="nntpchan_banner">
-      </div>
-      <div id="ukko_threads">
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+  </head>
+  <body>
+    <div id="nntpchan_banner">
+    </div>
+    <div id="ukko_threads">
       {{#threads}}
         <!--
         <div class="ukko_thread_header">
@@ -32,8 +33,7 @@
         </div>
       {{/threads}}
       </div>
-      <script type="text/javascript" src="{{prefix}}static/nntpchan.js">
-
+      <script type="text/javascript" >
           var e = document.getElementById("nntpchan_banner");
           nntpchan_inject_banners(e, "{{prefix}}");
 

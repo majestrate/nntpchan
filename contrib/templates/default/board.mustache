@@ -17,6 +17,7 @@
     <meta name="viewport" content="initial-scale=1" />
     <link rel="stylesheet" href="{{board.Prefix}}static/site.css" />
     <link rel="stylesheet" href="{{board.Prefix}}static/user.css" />
+    <script type="text/javascript" src="{{board.Prefix}}static/nntpchan.js"></script>
     <title>{{board.Board}}</title>
   </head>
   <body>
@@ -43,7 +44,7 @@
         </div>
       {{/board.Threads}}
     </div>
-    <script type="text/javascript" src="{{board.Prefix}}static/nntpchan.js">
+    <script type="text/javascript">
 
       var e = document.getElementById("nntpchan_banner");
       nntpchan_inject_banners(e, "{{board.Prefix}}");
