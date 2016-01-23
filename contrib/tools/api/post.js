@@ -15,9 +15,10 @@ req = {
   email: "sage",
   ip: "8.8.8.8",
   dubs: false,
+  newsgroup: "overchan.test",
+
   // only include if we are replying to someone
-  reference: "<b7dee1453564515@benis.tld>",
-  newsgroup: "overchan.test"
+  reference: "<b7dee1453564515@benis.tld>"
 }
 
 j = JSON.stringify(req);
