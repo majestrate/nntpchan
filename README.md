@@ -9,7 +9,7 @@ This repository contains resources used by the core daemon which is located [her
 Get the dependancies
 
     sudo apt-get update
-    sudo apt-get --no-install-recommends install imagemagick libsodium-dev ffmpegthumbnailer sox build-essential git golang ca-certificates
+    sudo apt-get --no-install-recommends install imagemagick libsodium-dev ffmpeg sox build-essential git golang ca-certificates
 
 Check out this repo and build it
 
