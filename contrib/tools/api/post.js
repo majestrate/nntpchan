@@ -15,6 +15,7 @@ req = {
   email: "sage",
   ip: "8.8.8.8",
   dubs: false,
+  // only include if we are replying to someone
   reference: "<b7dee1453564515@benis.tld>",
   newsgroup: "overchan.test"
 }
