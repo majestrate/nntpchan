@@ -5,6 +5,7 @@
  - post_url ( the url of the post form )
  - reference ( the post we are replying to, or empty string if it's an op )
  - button ( the text for the reply button )
+ - files ( bool, do we allow attachments ? )
  }}
  <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post">
  <input type="hidden" name="reference" value="{{reference}}" />
@@ -37,6 +38,7 @@
              <textarea id="postform_message" name="message" cols=40 rows=5></textarea>
            </td>
          </tr>
+         {{#files}}
          <tr>
            <th>
              File
@@ -45,8 +47,9 @@
              <input id="postform_attachment" type="file" name="attachment" />
            </td>
          </tr>
+         {{/files}}
          <tr>
-           <th>
+          <th>
              Get Dubs
            </th>
            <td>
