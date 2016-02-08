@@ -26,7 +26,7 @@ var makeGroupName = function(board) {
 }
 
 // call function for each op on a board
-var foreachOpsOnBoard = function(db, board, callback) {
+var foreachOpsOnBoard = function(db, board, callback, done) {
   var cur = db.collection("threads").find({boardUri: board});
   var ops = [];
   cur.each(function(err, doc) {
@@ -34,20 +34,18 @@ var foreachOpsOnBoard = function(db, board, callback) {
       ops.push(doc)
     } else {
       for (var idx = 0 ; ops.length > idx ; idx ++ ) {
-        callback(op[idx]);
+        callback(ops[idx]);
       }
+      if(done)
+        done();
     }
   });
 }
 
 // call a callback for each reply to op
 // pass in the memegod post
-var foreachReplyForOP = function(db, op, callback) {
-  checkViaHeader("X-Mememgod-Id", idPrefix+op._id, function(msgid) {
-    // we do already has got it
-    callback(null);
-  }, function(msgid) {
-    // we don't has got it
+var foreachReplyForOP = function(db, op, callback, done) {
+  var doit = function(op, msgid) {// we don't has got it
     var cur = db.collection("posts").find({ threadId: op.threadId});
     var repls = [];
     cur.each(function(err, doc) {
@@ -57,9 +55,12 @@ var foreachReplyForOP = function(db, op, callback) {
         for (var idx = 0 ; repls.length > idx ; idx ++ ) {
           callback(repls[idx]);
         }
+        if(done)
+          done();
       }
     });
-  });
+  }
+  checkPostExists(op, doit, doit);
 }
 
 // find all boards in memegod
@@ -74,7 +75,8 @@ var foreachBoard = function(db, callback, done) {
       for (var idx = 0 ; boards.length > idx ; idx ++ ) {
         callback(boards[idx]);
       }
-      done(db);
+      if(done)
+        done();
     }
   });
 };
@@ -83,11 +85,14 @@ var foreachBoard = function(db, callback, done) {
 // convert a memegod post from board into an overchan article
 // call a callback with the created post
 var createArticle = function(post, board, callback) {
-  if (post == null) return;
-      
+  if (post == null) {
+    callback(null);
+    return
+  }
   var article = {
     ip: post.ip.join("."),
     message: post.message || " ",
+    subject: post.subject || "MongoDB is web scale",
     frontend: frontendName,
     newsgroup: makeGroupName(board),
     headers: {
@@ -102,14 +107,13 @@ var createArticle = function(post, board, callback) {
   article.headers["X-Memegod-Id"] = idPrefix+post._id;
   article.headers["X-Migrated-From"] = "MemeGod";
   article.name = post.name || "Stephen Lynx";
-  article.subject = post.subject || "MongoDB is Web Scale";
   callback(article);
 }
 
 // post an overchan article via the api
 // call callback passing in the message-id of the new post
 var postArticle = function(article, callback) {
-
+  if (article == null) { callback(null); return; }
   checkViaHeader("X-Memegod-Id", article.headers["X-Memegod-Id"], function(msgid) {
     // we has got it already
     callback(msgid);
@@ -131,14 +135,11 @@ var postArticle = function(article, callback) {
       res.on("end", function() {
         var j = JSON.parse(data)
         var msgid = j.id;
-        callback(msgid);
-        
+        callback(msgid);        
       })
     });
     req.write(JSON.stringify(article));
     req.end();
-  }, function(msgid) {
-    // not there
   });
 }
 
@@ -174,26 +175,28 @@ var checkPostExists = function(post, yescb, nocb) {
                  function() { nocb(post); });
 }
 
-var putBoard = function(db, board) {
-  foreachOpsOnBoard(db, board.boardUri, function(op) {
-    // create OP
-    createArticle(op, board, function(opArticle) {
-      // post OP
-      postArticle(opArticle, function (opMsgId) {
-        // for each reply for OP
-        foreachReplyForOP(db, op, function(post) {
-          if (post) {
-            // put create reply
-            createArticle(post, board, function(article) {
-              // set references header
-              article.headers["References"] = opMsgId;
-              // post reply
-              postArticle(article, function() {});
+var putBoard = function(db, board, done) {
+  foreachOpsOnBoard(db, board.boardUri, function(originalPost) {
+    var doit = function(op) {
+      createArticle(op, board, function(opArticle) {
+        postArticle(opArticle, function(opMsgId) {
+          // for each reply for OP
+          foreachReplyForOP(db, op, function(post) {
+            checkPostExists(post , function(msgid) {
+              // we have this post
+            }, function(post, msgid) {
+              // put create reply
+              createArticle(post, board, function(article) {
+                // set references header
+                article.headers["References"] = opMsgId;
+                postArticle(article, function(msgid) {});
+              });
             });
-          }
+          });
         });
-      });              
-    });
+      });
+    }    
+    checkPostExists(originalPost, doit, doit);
   });
 }
 
@@ -202,8 +205,5 @@ memegodClient.connect(url, function(err, db) {
   foreachBoard(db, function(board) {
     console.log("updating "+board.boardUri);
     putBoard(db, board);
-  }, function(db) {
-    console.log("the meme god has spoken");
-    db.close();
   });
 });
