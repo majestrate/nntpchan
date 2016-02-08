@@ -117,7 +117,7 @@ var postArticle = function(article, callback) {
       }
     })
   });
-  req.write(json.stringify(article));
+  req.write(JSON.stringify(article));
   req.end();
 }
 
