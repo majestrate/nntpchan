@@ -28,8 +28,15 @@ var makeGroupName = function(board) {
 // call function for each op on a board
 var foreachOpsOnBoard = function(db, board, callback) {
   var cur = db.collection("threads").find({boardUri: board});
+  var ops = [];
   cur.each(function(err, doc) {
-    callback(doc);
+    if (doc) {
+      ops.push(doc)
+    } else {
+      for (var idx = 0 ; ops.length > idx ; idx ++ ) {
+        callback(op[idx]);
+      }
+    }
   });
 }
 
@@ -42,21 +49,34 @@ var foreachReplyForOP = function(db, op, callback) {
   }, function(msgid) {
     // we don't has got it
     var cur = db.collection("posts").find({ threadId: op.threadId});
-    cur.each(function (err, doc) {
-      callback(doc);
+    var repls = [];
+    cur.each(function(err, doc) {
+      if (doc) {
+        repls.push(doc)
+      } else {
+        for (var idx = 0 ; repls.length > idx ; idx ++ ) {
+          callback(repls[idx]);
+        }
+      }
     });
   });
 }
 
 // find all boards in memegod
 // call callback for each board
-var foreachBoard = function(db, callback) {
-   var cursor = db.collection('boards').find();
-   cursor.each(function(err, doc) {
-     if (doc) {
-       callback(doc)
-     }
-   });
+var foreachBoard = function(db, callback, done) {
+  var cursor = db.collection('boards').find();
+  var boards = [];
+  cursor.each(function(err, doc) {
+    if (doc) {
+      boards.push(doc)
+    } else {
+      for (var idx = 0 ; boards.length > idx ; idx ++ ) {
+        callback(boards[idx]);
+      }
+      done(db);
+    }
+  });
 };
 
 
@@ -172,7 +192,6 @@ var putBoard = function(db, board) {
             });
           }
         });
-        
       });              
     });
   });
@@ -183,7 +202,8 @@ memegodClient.connect(url, function(err, db) {
   foreachBoard(db, function(board) {
     console.log("updating "+board.boardUri);
     putBoard(db, board);
+  }, function(db) {
+    console.log("the meme god has spoken");
+    db.close();
   });
-  console.log("the meme god has spoken");
-  db.close();
 });
