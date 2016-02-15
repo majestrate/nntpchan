@@ -141,8 +141,8 @@ a, a:visited {
 }
 
 .ukko_thread_header {
-    padding: 5px 5px;
-    margin: 5px 5px;
+    margin-left: 10%;
+    float: left;
     display: inline-block;
 }
 
