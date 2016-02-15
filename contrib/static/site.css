@@ -289,10 +289,9 @@ figure {
     float: left;
     margin: 1ex;
 }
-figure img {
-    max-width:256px;
-    max-height:128px;
-    max-width:100%;
+img.thumbnail {
+    max-width: 350px;
+    max-height: 350px;
 }
 
 .thread {
