@@ -34,13 +34,6 @@ section {
     text-align: center;
 }
 
-input {
-    width: 70%;
-}
-
-input.button {
-    width: 25%;
-}
 
 textarea {
     width: 350px;
@@ -63,23 +56,31 @@ pre {
     word-wrap: break-word;
 }
 
-td {
-    background-color: #1C1C1C;
+table {
+	margin: auto;
+}
+table.board-list-table {
+	width: 100%;
+}
+table tbody td {
+	margin: 0;
+	padding: 4px 15px 4px 4px;
+	
+	text-align: left;
+}
+table thead th {
+	border: 1px solid #000333;
+	padding: 4px 15px 5px 5px;
+	
+	background: #98E;
+	color: #000333;
+	text-align: left;
+	white-space: nowrap;
+}
+table tbody tr:nth-of-type( even ) {
+	background-color: #D6DAF0;
 }
 
-.board_td {
-    position: relative; left: 2px;
-}
-
-.posts_td {
-    position: relative; left: -2px;
-}
-
-#overview_graph {
-    position: relative;
-    top: 2px;
-    background: #1C1C1C;
-}
 
 .reply, .ukko_thread_header {
     background: #D6DAF0;
@@ -141,17 +142,9 @@ a, a:visited {
     display: inline-block;
 }
 
-th {
-    background: #4DA6BD;
-    font-size: 10pt;
-    padding-left: 10px;
-    padding-right: 15px;
-}
 
 input, textarea {
-    color: whitesmoke;
-    background: #2d2d2d;
-    border-color: #4D28CA;
+
 }
 
 
@@ -204,12 +197,14 @@ input, textarea {
 
 .memearrows {
     color: #789922;
+    margin-left: none;
 }
 
 .redtext {
     color: #AF0A0F;
     font-size: 12pt;
     font-weight: bold;
+    margin-left: none;
 }
 
 .spoiler {
@@ -246,12 +241,17 @@ input, textarea {
     padding: 3px 5px 3px 5px; 
 }
 
-.post_body > p {
-    margin: 0px 0px;
-}
-
 .post_body {
-    display: inline;
+    margin-left: 15px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.post_body_line {
+    margin-left: inherit;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .post {
@@ -260,8 +260,15 @@ input, textarea {
     width: 80%;
 }
 
+.backlink, .backlink:hover, .backlink:visited, .backlink:visited:hover {
+    margin-left: none;
+    color: #D00
+}
+
 .origin {
     float: right;
+    padding-right: 5px;
+    padding-top: 5px;
 }
 
 #postform_attachment {
@@ -275,7 +282,7 @@ input, textarea {
 }
 
 #captcha_img {
-    background: #4DA6BD;
+    background: white;
 }
 
 figure {
