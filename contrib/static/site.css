@@ -1,3 +1,26 @@
+body {
+  background: #EEF2FF url('bg.png') repeat-x 50% 0%;
+  color: black;
+  font-family: arial,helvetica,sans-serif;
+  font-size: 10pt;
+  margin: 0 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+
+main,
+aside,
+section {
+	display: block;
+	margin: 0 auto;
+	width: 100%;
+}
+
+main {
+	max-width: 1110px;
+}
+
 
 .frontend , .subject {
     color: #928BFF;
@@ -63,7 +86,7 @@ td {
 }
 
 .reply, .ukko_thread_header {
-    background: #202331;
+    background: #D6DAF0;
 }
 
 legend {
@@ -96,9 +119,10 @@ a:visited {
     right: 0px;
     margin-top: 0px;
     z-index: 20;
-    box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.15);
-    background: #202331;
-    color: lightgray;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid;
+    background: #D6DAF0;
+    color: #34345C;
 }
 
 .navbar-sep {
@@ -129,16 +153,6 @@ input, textarea {
     border-radius: 3px;
 }
 
-html {
-    color: #ededed;
-    background: black;
-    height: 100%;
-    font-family: arial,helvetica,sans-serif;
-    font-size: 10pt;
-    margin: 0 4px;
-    padding-left: 4px;
-    padding-right: 4px;
-}
 
 .reply {
     margin-left: 1.8em;
@@ -284,7 +298,6 @@ fieldset > img {
 	padding-left: 10px;
 	margin-top: 10px;
 	margin-bottom: 10px;
-	background-color: #252525;
 }
 
 .replybar {
