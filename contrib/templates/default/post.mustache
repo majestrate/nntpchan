@@ -11,8 +11,8 @@
   {{/IsClearnet}}
   <legend>
     <span class="subject">{{Subject}}</span> <span class="name">{{Name}}</span><time datetime="{{DateRFC}}">{{Date}}</time>
-    No. <a onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
-    <a href="{{PostURL}}">{{#OP}}[Reply]{{/OP}}</a> <span class="tripcode">{{{Pubkey}}}</span><br />
+    <a href="{{PostURL}}">No.</a><a onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
+    {{#OP}}<a href="{{PostURL}}">[Reply]</a>{{/OP}} <span class="tripcode">{{{Pubkey}}}</span><br />
   </legend>
   {{#Attachments}}
     <figure>
