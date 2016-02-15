@@ -82,7 +82,7 @@ table tbody tr:nth-of-type( even ) {
 }
 
 
-.reply, .thread_header {
+.reply, .ukko_thread_header {
     background: #D6DAF0;
 }
 

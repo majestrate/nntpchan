@@ -19,10 +19,10 @@
     </center>
     <div id="ukko_threads">
       {{#threads}}
-        <div class="thread" id="thread_{{OP.PostHash}}">
-          <div class="ukko_thread_header">
+        <div class="thread ukko_thread_header">
           <p>Posted on <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></p>
-          </div>
+        </div>
+        <div class="thread" id="thread_{{OP.PostHash}}">
           {{{OP.Truncate.RenderPost}}}
           {{#Truncate.Replies}}
             {{{Truncate.RenderPost}}}
