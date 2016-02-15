@@ -19,7 +19,7 @@ section {
 
 
 .frontend , .subject {
-    color: #928BFF;
+    color: #0F0C5D;
 }
 
 .name {
@@ -97,15 +97,11 @@ hr {
 }
 
 a:hover , a:visited:hover {
-    color: #f13333;
+    color: #ff0000;
 }
 
-a {
-    color: cornflowerblue;
-}
-
-a:visited {
-    color: #0C2FF3;
+a,a:visited {
+    color: #34345C;
 }
 
 .navbar {
@@ -161,7 +157,7 @@ input, textarea {
 
 .op {
     margin-right: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
 }
 
 .post {
@@ -197,11 +193,12 @@ input, textarea {
 
 
 .memearrows {
-    color: #29D029;
+    color: #789922;
 }
 
 .redtext {
-    color: #d50505;
+    color: #AF0A0F;
+    ont-size: 11pt;
     font-weight: bold;
 }
 
@@ -236,7 +233,7 @@ input, textarea {
 }
 
 .reply, .ukko_thread_header , pre {
-    padding: 7px 7px;                    
+    padding: 3px 5px 3px 5px; 
 }
 
 .post_body > p {
@@ -285,8 +282,8 @@ figure img {
     float: left;
 	width: 99%;
 	padding-left: 10px;
-	margin-top: 10px;
-	margin-bottom: 10px;
+	margin-top: -10px;
+	margin-bottom: 1px;
 }
 
 .replybar {
