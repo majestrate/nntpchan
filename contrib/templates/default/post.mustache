@@ -1,5 +1,5 @@
 <div id="{{PostHash}}" class="{{CSSClass}}">
-<fieldset>
+  <div class="origin">
   {{#IsI2P}}
     <img src="{{Prefix}}static/i2p.png" title="post from i2p" />
   {{/IsI2P}}
@@ -9,9 +9,10 @@
   {{#IsClearnet}}
     <img src="{{Prefix}}static/clearnet.png" title="post from clearnet" />
   {{/IsClearnet}}
+  </div>
   <legend>
     <span class="subject">{{Subject}}</span> <span class="name">{{Name}}</span><time datetime="{{DateRFC}}">{{Date}}</time>
-    <a href="{{PostURL}}">No.</a><a onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
+    <a href="{{PostURL}}" class="postno">No.</a><a onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
     {{#OP}}<a href="{{PostURL}}">[Reply]</a>{{/OP}} <span class="tripcode">{{{Pubkey}}}</span><br />
   </legend>
   {{#Attachments}}
@@ -24,5 +25,4 @@
   <label class="post_body">
     {{{RenderBody}}}
   </label> 
-</fieldset>
 </div>

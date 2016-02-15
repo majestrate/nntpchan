@@ -17,10 +17,6 @@ section {
 	width: 100%;
 }
 
-main {
-	max-width: 1110px;
-}
-
 
 .frontend , .subject {
     color: #928BFF;
@@ -150,14 +146,12 @@ input, textarea {
     color: whitesmoke;
     background: #2d2d2d;
     border-color: #4D28CA;
-    border-radius: 3px;
 }
 
 
 .reply {
     margin-left: 1.8em;
     display: inline-block;
-    border-radius: 3px;
 }
 
 .frontend {
@@ -242,9 +236,7 @@ input, textarea {
 }
 
 .reply, .ukko_thread_header , pre {
-    padding: 7px 7px;
-    border-radius: 5px;
-    box-shadow: 1px 1px 3px black;                    
+    padding: 7px 7px;                    
 }
 
 .post_body > p {
@@ -257,7 +249,12 @@ input, textarea {
 
 .post {
     display: inline-block;
+    overflow: auto;
     width: 80%;
+}
+
+.origin {
+    float: right;
 }
 
 #postform_attachment {
@@ -283,18 +280,10 @@ figure img {
     max-height:128px;
     max-width:100%;
 }
-fieldset {
-    overflow: auto;
-	border-radius: 5px 0px 5px 0px;
-}
-
-fieldset > img {
-	float: right;
-}
 
 .thread {
     float: left;
-	width: 90%;
+	width: 99%;
 	padding-left: 10px;
 	margin-top: 10px;
 	margin-bottom: 10px;
