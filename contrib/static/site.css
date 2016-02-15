@@ -280,7 +280,7 @@ input, textarea {
 }
 
 .origin {
-    float: right;
+    float: left;
     padding-right: 5px;
     padding-top: 5px;
 }
