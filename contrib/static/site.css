@@ -105,6 +105,10 @@ a, a:visited {
     color: #34345C;
 }
 
+.postno {
+    font-style: italic;
+}
+
 .postno, .postnol, .postnol:visited {
     color: black;
     text-decoration: none;
@@ -112,7 +116,7 @@ a, a:visited {
 
 .postno:hover, .postnol:hover, .postnol:visited:hover {
     color: #ff0000;
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 .navbar {
@@ -151,6 +155,12 @@ input, textarea {
 .reply {
     margin-left: 1.8em;
     display: inline-block;
+    border-color: #C0C3D4;
+    border-top-left-radius: 0px
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 0px;
+    border-style: dashed;
 }
 
 .frontend {
@@ -166,7 +176,11 @@ input, textarea {
 .post {
     display: inline;
     margin-bottom: 5px;
+    min-height: 10%;
+}
 
+.postheader {
+    padding: 5px;
 }
 
 .tripcode {
@@ -296,10 +310,11 @@ img.thumbnail {
 
 .thread {
     float: left;
-	width: 99%;
-	padding-left: 10px;
-	margin-top: 1px;
-	margin-bottom: 1px;
+	  width: 100%;
+	  padding-left: 10%;
+	  margin-top: 1px;
+	  margin-bottom: 1px;
+    max-width: 90%
 }
 
 .replybar {
@@ -308,7 +323,7 @@ img.thumbnail {
     top: 2ex;
     right: 0;
     width: 34%
-    }
+}
 @media (max-width: 100ex) {
     .replybar, .thread {
 		width: 100%;

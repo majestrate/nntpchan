@@ -1,5 +1,12 @@
 <div id="{{PostHash}}" class="{{CSSClass}}">
-  <div class="origin">
+  <legend class="postheader">
+    <span class="subject">{{Subject}}</span>
+    <span class="name">{{Name}}</span>
+    <time datetime="{{DateRFC}}">{{Date}}</time>
+    <a href="{{PostURL}}" class="postnol">No.</a><a class="postno" onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
+    {{#OP}}<a href="{{PostURL}}">[Reply]</a>{{/OP}}
+    <span class="tripcode">{{{Pubkey}}}</span>
+    <span class="origin">
   {{#IsI2P}}
     <img src="{{Prefix}}static/i2p.png" title="post from i2p" />
   {{/IsI2P}}
@@ -9,14 +16,7 @@
   {{#IsClearnet}}
     <img src="{{Prefix}}static/clearnet.png" title="post from clearnet" />
   {{/IsClearnet}}
-  </div>
-  <legend>
-    <span class="subject">{{Subject}}</span>
-    <span class="name">{{Name}}</span>
-    <time datetime="{{DateRFC}}">{{Date}}</time>
-    <a href="{{PostURL}}" class="postnol">No.</a><a class="postno" onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
-    {{#OP}}<a href="{{PostURL}}">[Reply]</a>{{/OP}}
-    <span class="tripcode">{{{Pubkey}}}</span>
+    </span>  
   </legend>
   {{#Attachments}}
     <figure>
