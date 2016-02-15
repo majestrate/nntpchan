@@ -100,8 +100,18 @@ a:hover , a:visited:hover {
     color: #ff0000;
 }
 
-a,a:visited {
+a, a:visited {
     color: #34345C;
+}
+
+.postno, .postnol, .postnol:visited {
+    color: black;
+    text-decoration: none;
+}
+
+.postno:hover, .postnol:hover, .postnol:visited:hover {
+    color: #ff0000;
+    text-decoration: none;
 }
 
 .navbar {
@@ -198,7 +208,7 @@ input, textarea {
 
 .redtext {
     color: #AF0A0F;
-    ont-size: 11pt;
+    font-size: 12pt;
     font-weight: bold;
 }
 
@@ -282,7 +292,7 @@ figure img {
     float: left;
 	width: 99%;
 	padding-left: 10px;
-	margin-top: -10px;
+	margin-top: 1px;
 	margin-bottom: 1px;
 }
 
@@ -317,9 +327,6 @@ textarea#reply-text {
     right: 0;
 }
 
-hr {
-	padding-bottom: 20px;
-}
 
 
 #nntpchan_banner {
