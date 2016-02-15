@@ -151,16 +151,18 @@ input, textarea {
 
 }
 
-
-.reply {
-    margin-left: 1.8em;
-    display: inline-block;
+.reply , .ukko_thread_header {
     border-color: #C0C3D4;
     border-top-left-radius: 0px
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 0px;
     border-style: dashed;
+}
+
+.reply {
+    margin-left: 1.8em;
+    display: inline-block;
 }
 
 .frontend {
