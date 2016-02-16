@@ -84,6 +84,11 @@ table tbody tr:nth-of-type( even ) {
 
 .reply {
     background: #D6DAF0;
+    border-width: 1px;
+    border-style: none solid solid none;
+    border-color: #B7C5D9;
+    display: inline-block;
+    max-width: 94%!important;
 }
 
 .reply, .ukko_thread_header {
@@ -156,7 +161,7 @@ input, textarea {
 
 }
 
-.reply , .ukko_thread_header {
+.ukko_thread_header {
     border-color: #C0C3D4;
     border-top-left-radius: 0px
     border-top-right-radius: 3px;
@@ -166,8 +171,7 @@ input, textarea {
 }
 
 .reply {
-    margin-left: 1.8em;
-    display: inline-block;
+    
 }
 
 .frontend {
@@ -187,7 +191,7 @@ input, textarea {
 }
 
 .postheader {
-    padding: 5px;
+    padding-top: 3px;
 }
 
 .tripcode {
@@ -264,8 +268,8 @@ input, textarea {
 
 .post_body {
     margin-left: 15px;
-    margin-top: 10px;
-    margin-bottom: 5px;
+    margin-top: 3px;
+    margin-bottom: 10px;
 }
 .post_body_line {
     margin-left: inherit;
