@@ -287,9 +287,13 @@ input, textarea {
 }
 
 .origin {
-    margin: 10px;
     padding-right: 5px;
     padding-top: 5px;
+}
+
+.origin > img{
+    height: 20px;
+    vertical-align: text-top;
 }
 
 #postform_attachment {
