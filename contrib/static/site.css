@@ -93,7 +93,6 @@ table tbody tr:nth-of-type( even ) {
 
 .reply, .ukko_thread_header {
     background: #D6DAF0;
-    margin-right: 40%;
     margin-left: 24px;
 }
 
@@ -106,6 +105,7 @@ hr {
     border-width: 1px medium medium;
     border-color: #b7c5d9;
     border-style: solid none none;
+    clear: both;
 }
 
 a:hover , a:visited:hover {
@@ -180,14 +180,13 @@ input, textarea {
 }
 
 .op {
-    margin-right: 20px;
     margin-bottom: 1px;
+    float: left;
+    clear: both;
 }
 
 .post {
-    display: inline;
     margin-bottom: 5px;
-    min-height: 10%;
     min-width: 460px;
 }
 
@@ -264,8 +263,10 @@ input, textarea {
     max-height: 200px;
 }
 
-.reply, .ukko_thread_header , pre {
-    padding: 3px 5px 3px 5px; 
+.reply, .ukko_thread_header  {
+    padding: 3px 5px 3px 5px;
+    float: left;
+    clear: both;
 }
 
 .post_body {
@@ -283,9 +284,8 @@ input, textarea {
 
 .post {
     display: inline-block;
-    overflow: auto;
+    overflow: hidden;
     max-width: 80%;
-    margin-right: 40%;
 
 }
 
@@ -323,12 +323,6 @@ img.thumbnail {
     max-height: 350px;
 }
 
-.thread {
-    width: 100%;
-    margin-top: 1px;
-    margin-bottom: 1px;
-    max-width: 99%;
-}
 
 .replybar {
     float: left;
@@ -338,7 +332,7 @@ img.thumbnail {
     width: 34%
 }
 @media (max-width: 100ex) {
-    .replybar, .thread {
+    .replybar {
 		width: 100%;
 		position: static;
     }
