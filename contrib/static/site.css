@@ -82,8 +82,14 @@ table tbody tr:nth-of-type( even ) {
 }
 
 
+.reply {
+    background: #D6DAF0;
+}
+
 .reply, .ukko_thread_header {
     background: #D6DAF0;
+    margin-right: 200px;
+    margin-left: 24px;
 }
 
 legend {
@@ -141,7 +147,6 @@ a, a:visited {
 }
 
 .ukko_thread_header {
-    margin-left: 10%;
     float: left;
     display: inline-block;
 }
@@ -311,11 +316,9 @@ img.thumbnail {
 }
 
 .thread {
-    float: left;
-	  width: 100%;
-	  padding-left: 10%;
-	  margin-top: 1px;
-	  margin-bottom: 1px;
+    width: 100%;
+    margin-top: 1px;
+    margin-bottom: 1px;
     max-width: 90%
 }
 
