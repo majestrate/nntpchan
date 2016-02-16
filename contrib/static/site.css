@@ -93,7 +93,7 @@ table tbody tr:nth-of-type( even ) {
 
 .reply, .ukko_thread_header {
     background: #D6DAF0;
-    margin-right: 200px;
+    margin-right: 40%;
     margin-left: 24px;
 }
 
@@ -188,10 +188,12 @@ input, textarea {
     display: inline;
     margin-bottom: 5px;
     min-height: 10%;
+    min-width: 460px;
 }
 
 .postheader {
     padding-top: 3px;
+    padding-right: 5px
 }
 
 .tripcode {
@@ -282,7 +284,9 @@ input, textarea {
 .post {
     display: inline-block;
     overflow: auto;
-    width: 80%;
+    max-width: 80%;
+    margin-right: 40%;
+
 }
 
 .backlink, .backlink:hover, .backlink:visited, .backlink:visited:hover {
@@ -323,7 +327,7 @@ img.thumbnail {
     width: 100%;
     margin-top: 1px;
     margin-bottom: 1px;
-    max-width: 90%
+    max-width: 99%;
 }
 
 .replybar {
