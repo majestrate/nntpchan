@@ -14,8 +14,8 @@
     <span class="subject">{{Subject}}</span>
     <span class="name">{{Name}}</span>
     <time datetime="{{DateRFC}}">{{Date}}</time>
-    <a href="{{PostURL}}" class="postnol">No.</a><a class="postno" onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
-    {{#OP}}<a href="{{PostURL}}">[Reply]</a>{{/OP}}
+    <a href="#" class="postnol">No.</a><a class="postno" onclick="nntpchan_backlink('{{ShortHash}}');" title="{{MessageID}}">{{ShortHash}}</a>
+    <a href="{{PostURL}}">[Reply]</a>
     <span class="tripcode">{{{Pubkey}}}</span>  
   </legend>
   {{#Attachments}}
