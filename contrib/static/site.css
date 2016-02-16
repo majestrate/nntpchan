@@ -153,7 +153,10 @@ a, a:visited {
 
 .ukko_thread_header {
     float: left;
+    clear: both;
     display: inline-block;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 
 
@@ -163,7 +166,7 @@ input, textarea {
 
 .ukko_thread_header {
     border-color: #C0C3D4;
-    border-top-left-radius: 0px
+    border-top-left-radius: 0px;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 0px;
@@ -263,7 +266,7 @@ input, textarea {
     max-height: 200px;
 }
 
-.reply, .ukko_thread_header  {
+.reply  {
     padding: 3px 5px 3px 5px;
     float: left;
     clear: both;
@@ -285,7 +288,6 @@ input, textarea {
 .post {
     display: inline-block;
     overflow: hidden;
-    max-width: 80%;
 
 }
 
