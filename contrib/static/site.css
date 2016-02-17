@@ -82,7 +82,7 @@ table tbody tr:nth-of-type( even ) {
 }
 
 
-.reply {
+.reply, .pagelist {
     background: #D6DAF0;
     border-width: 1px;
     border-style: none solid solid none;
@@ -296,6 +296,18 @@ input, textarea {
 .post {
     display: inline-block;
     overflow: hidden;
+
+}
+
+.pagelist {
+    display: inline-block;
+    overflow: hidden;
+    margin-left: 15px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    padding: 10px 10px 10px 10px;
+    font-size: 12pt;
+    font-weight: medium;
 
 }
 
