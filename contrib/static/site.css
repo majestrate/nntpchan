@@ -421,8 +421,11 @@ textarea#reply-text {
     right: 0;
 }
 
-
-
 #nntpchan_banner {
     align: center;
+}
+
+.legal {
+    font-size: 10px;
+    text-align: center;
 }
