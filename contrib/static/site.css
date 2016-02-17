@@ -141,6 +141,17 @@ hr {
     clear: both;
 }
 
+.board_header {
+  font-family: tahoma;
+  letter-spacing: -2px;
+  font-size: 20pt;
+  margin: 0;
+  color: #AF0A0F;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 2em;
+}
+
 a:hover , a:visited:hover {
     color: #ff0000;
 }
@@ -181,7 +192,7 @@ a, a:visited {
 }
 
 #postform_container {
-    margin-top: 5em;
+    margin-top: 1em;
 }
 
 #board_graph {
