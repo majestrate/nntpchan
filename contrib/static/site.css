@@ -155,6 +155,10 @@ a, a:visited {
     margin-top: 5em;
 }
 
+.navLinks {
+     padding-bottom: 50px;
+}
+
 .ukko_thread_header {
     float: left;
     clear: both;
@@ -194,7 +198,7 @@ input, textarea {
 
 .post {
     margin-bottom: 5px;
-    min-width: 460px;
+    min-width: 500px;
 }
 
 .postheader {
