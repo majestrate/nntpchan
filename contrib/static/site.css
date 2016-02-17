@@ -96,7 +96,8 @@ table tbody tr:nth-of-type( even ) {
      padding-left: 4px;
 }
 
-.postfrom  tbody,tr {
+
+#postform-inner tr {
 	background-color: transparent!important;
 }
 
