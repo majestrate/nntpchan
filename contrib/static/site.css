@@ -151,6 +151,10 @@ a, a:visited {
     margin-top: 5em;
 }
 
+#board_graph {
+    margin-top: 5em;
+}
+
 .ukko_thread_header {
     float: left;
     clear: both;
