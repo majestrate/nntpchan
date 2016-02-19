@@ -18,7 +18,7 @@ section {
 }
 
 
-.frontend , .subject {
+.frontend , .subject, .catalog_subject {
     color: #0F0C5D;
 }
 
@@ -150,6 +150,30 @@ hr {
   text-align: center;
   font-weight: bold;
   margin-top: 2em;
+}
+
+.board_header_catalog {
+  text-align: center;
+  margin-top: 1em;
+}
+
+.catalog_thread {
+  float: left;
+  width: 256px;
+  text-align: center;
+  padding: 2px;
+  height: 256px;
+  overflow: hidden;
+  background-color: #D6DAF0;
+  margin: 2px;
+  border-style: solid;
+  border-width: 1px;
+  border-style: solid;
+  height: 256px;
+}
+
+.catalog_header, .catalog_subject {
+    font-weight: bold;
 }
 
 a:hover , a:visited:hover {
