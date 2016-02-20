@@ -1,8 +1,8 @@
 var http = require('http');
 
-var makeIpBan = function(cidr, privkey, cb) {
+var makeIpBans = function(cidrs, privkey, cb) {
   cb({
-    message: "overchan-inet-ban "+cidr;
+    message: cidrs.join("\noverchan-inet-ban "),
     name: "mod#"+privkey,
     frontend: "memegod.censor",
     newsgroup: "ctl"
@@ -11,7 +11,7 @@ var makeIpBan = function(cidr, privkey, cb) {
 
 var makeDeletePosts = function(msgids, privkey, cb) {
   cb({
-    message: "\ndelete ".join(msgids)
+    message: msgids.join("\ndelete "),
     name: "mod#"+privkey,
     frontend: "memegod.censor",
     newsgroup: "ctl",
@@ -46,6 +46,6 @@ var moderate = function(req) {
 var privateKey = "longhexgoestripcodegoeshere";
 
 // ban 192.168.0.1/16 and sign with private key
-moderate(makeIpBan("192.168.0.1/16", privateKey));
+moderate(makeIpBans(["192.168.0.1/16"], privateKey));
 // delete <msg1@place.tld> and <msg2@otherplace.tld> and sign with private key
 moderate(makeDeletPosts(["<msg1@place.tld>", "<msg2@otherplace.tld>"], privateKey));
