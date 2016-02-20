@@ -46,6 +46,6 @@ var moderate = function(req) {
 var privateKey = "longhexgoestripcodegoeshere";
 
 // ban 192.168.0.1/16 and sign with private key
-moderate(makeIpBans(["192.168.0.1/16"], privateKey));
+makeIpBans(["192.168.0.1/16"], privateKey, moderate);
 // delete <msg1@place.tld> and <msg2@otherplace.tld> and sign with private key
-moderate(makeDeletPosts(["<msg1@place.tld>", "<msg2@otherplace.tld>"], privateKey));
+makeDeletPosts(["<msg1@place.tld>", "<msg2@otherplace.tld>"], privateKey, moderate);
