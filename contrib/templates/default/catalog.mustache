@@ -18,10 +18,10 @@
     <div class="board_header">Catalog for {{board.Name}}</div>
     <!-- postform -->
     <hr />
-    <div id="threads_container">
+    <div id="catalog_container">
       {{#board.Threads}}
         <div class="catalog_thread">
-          <a href="{{OP.PostURL}}">[Open]</a>
+          <a class="linkThumb" href="{{OP.PostURL}}"><img src="{{OP.RepresentativeThumb}}"></a>
           <div class="catalog_header">R: {{ReplyCount}} / P: {{Page}}</div>
           <div class="catalog_subject">{{OP.Subject}}</div>
           <div class="catalog_body">
