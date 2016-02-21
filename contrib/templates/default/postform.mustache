@@ -6,8 +6,10 @@
  - reference ( the post we are replying to, or empty string if it's an op )
  - button ( the text for the reply button )
  - files ( bool, do we allow attachments ? )
+ - csrf ( csrf token )
  }}
  <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post">
+ {{{csrf}}}
  <input type="hidden" name="reference" value="{{reference}}" />
  <div id="postform-outer">
    <div id="postform-inner">
