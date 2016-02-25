@@ -1,9 +1,9 @@
 {{!
   frontpage.mustache -- template for index.html
   template parameters:
-  - boardgraph ( a boardPageRows instance, see srnd/model.go )
-  - postgraph ( a postsGraph instance , see srnd/model.go )
-  - overview ( an overviewModel instance, see srnd/model.go )
+  - boardgraph ( markup of boardPageRows instance, see srnd/model.go )
+  - postgraph ( markup of postsGraph instance , see srnd/model.go )
+  - overview ( markup of overviewModel instance , see srnd/model.go )
   - totalposts ( the number of total posts we have ever seen )
   - frontend ( the name of the frontend )
   - prefix ( the site's prefix )
@@ -36,7 +36,7 @@
           <tbody>
             <tr>
               <td class="posts_td">
-                {{{postsgraph.Render}}}
+                {{{postsgraph}}}
               </td>
               <td class="board_td">
                 {{! todo: move boardgraph into its own file like postsgraph }}
@@ -72,7 +72,7 @@
             </tr>
           </tbody>
         </table>
-        {{{overview.Render}}}        
+        {{{overview}}}        
       </div>
     </div>
     </center>
