@@ -314,6 +314,47 @@ The following part is signed:
 Above example in octets:
 
     Content-Type: text/plain; charset=UTF-8\\r\\nDate: Thu, 02 May 2013 12:16:44 +0000\\r\\n\\r\\ndelete-x-all <message-ID>\\r\\ndelete <message-ID>\\r\\n\\r\\ndelete <message-ID>
+    
+## RPC 
+Remote procedure calls can be sent via ``ctl`` or on a group basis by using the group ``ctl.overchan.*``, where * is the group for which you want to execute a certain operation.
+
+### Default format
+The default format uses the MIME type ``text/plain`` where the first line of the body opens an array with ``[`` the next line is the name of the procedure you want to call, and on the lines following you can add one or more parameters. Each of these lines is terminated with `,` and indention can be added as well. The arry is closed with `]`.
+
+#### Exapmple
+    Content-Type: text/plain; charset=UTF-8
+    Content-Transfer-Encoding: 8bit
+    From: anonymous <foo@bar.ano>
+    Date: Thu, 02 May 2013 12:16:44 +0000
+    Message-ID: <h2cykk1lwlmuqao2qiy@foo.bar>
+    Newsgroups: ctl.overchan.foo
+    Subject: RPC
+    Path: hschan.ano
+
+    [
+        setSetting,
+        bumplimit,
+        350,
+    ]
+    
+    
+### JSON RPC
+If the MIME type is specified as ``application/json`` the body is interpreted as [JSON RPC](http://json-rpc.org/).
+
+#### Exapmple
+    Content-Type: application/json; charset=UTF-8
+    Content-Transfer-Encoding: 8bit
+    From: anonymous <foo@bar.ano>
+    Date: Thu, 02 May 2013 12:16:44 +0000
+    Message-ID: <h2cykk1lwlmuqao2qiy@foo.bar>
+    Newsgroups: ctl.overchan.foo
+    Subject: RPC
+    Path: hschan.ano
+
+    {"method": "setSetting", "params": ["bumplimit", "350"], "id": null}
+    
+### Additional details
+As described above, muliple RPC's can be sent via the multipart format. It is also expected that these articles are signed.
 
 # Glossary 
 
