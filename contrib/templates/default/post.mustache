@@ -2,20 +2,20 @@
   <legend class="postheader">
     <span class="origin">
   {{#post.IsI2P}}
-    <img src="{{post.Prefix}}static/i2p.png" title="post from i2p" />
+    <img src="{{post.Prefix}}static/i2p.png" title="{{#i18n.Translations}}{{from_i2p}}{{/i18n.Translations}}" />
   {{/post.IsI2P}}
   {{#post.IsTor}}
-    <img src="{{post.Prefix}}static/tor.png" title="post from tor" />
+    <img src="{{post.Prefix}}static/tor.png" title="{{#i18n.Translations}}{{from_tor}}{{/i18n.Translations}}" />
   {{/post.IsTor}}
   {{#post.IsClearnet}}
-    <img src="{{post.Prefix}}static/clearnet.png" title="post from clearnet" />
+    <img src="{{post.Prefix}}static/clearnet.png" title="{{#i18n.Translations}}{{from_clearnet}}{{/i18n.Translations}}" />
   {{/post.IsClearnet}}
     </span>  
     <span class="subject">{{post.Subject}}</span>
     <span class="name">{{post.Name}}</span>
     <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
     <a href="#" class="postnol">No.</a><a class="postno" onclick="nntpchan_backlink('{{post.ShortHash}}');" title="{{post.MessageID}}">{{post.ShortHash}}</a>
-    <a href="{{post.PostURL}}">[Reply]</a>
+    <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
     <span class="tripcode">{{{post.Pubkey}}}</span>  
   </legend>
   {{#post.Attachments}}

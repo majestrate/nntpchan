@@ -17,7 +17,7 @@
        <tbody>
          <tr>
            <th>
-             Name
+             {{#i18n.Translations}}{{name}}{{/i18n.Translations}}
            </th>
            <td>
              <input type="text" name="name" value="" />
@@ -25,7 +25,7 @@
          </tr>
          <tr>
            <th>
-             Subject
+             {{#i18n.Translations}}{{subject}}{{/i18n.Translations}}
            </th>
            <td>
              <input type="text" name="subject" value="" />
@@ -34,7 +34,7 @@
          </tr>
          <tr>
            <th>
-             Comment
+             {{#i18n.Translations}}{{comment}}{{/i18n.Translations}}
            </th>
            <td>
              <textarea id="postform_message" name="message" cols=40 rows=5></textarea>
@@ -43,7 +43,7 @@
          {{#files}}
          <tr>
            <th>
-             File
+             {{#i18n.Translations}}{{file}}{{/i18n.Translations}}
            </th>
            <td>
              <input id="postform_attachment" type="file" name="attachment" />
@@ -52,7 +52,7 @@
          {{/files}}
          <tr>
           <th>
-             Get Dubs
+             {{#i18n.Translations}}{{dubs}}{{/i18n.Translations}}
            </th>
            <td>
              <input type="checkbox" name="dubs" />
@@ -60,7 +60,7 @@
          </tr>
          <tr>
            <th>
-             Captcha
+             {{#i18n.Translations}}{{captcha}}{{/i18n.Translations}}
            </th>
            <td>
              <img id="captcha_img" src="{{prefix}}captcha/img" alt="captcha" />
@@ -68,7 +68,7 @@
          </tr>
          <tr>
            <th>
-             Solution
+             {{#i18n.Translations}}{{solution}}{{/i18n.Translations}}
            </th>
            <td>
              <input type="text" name="captcha" autocomplete="off" />

@@ -9,15 +9,15 @@ template parameters:
     <meta charset="utf-8"></meta>
     <link rel="stylesheet" href="{{prefix}}static/site.css" />
     <link rel="stylesheet" href="{{prefix}}static/user.css" />
-    <title> Post History</title>
+    <title>{{#i18n.Translations}}{{post_history_title}}{{/i18n.Translations}}</title>
   </head>
   <body>
     <td>
       <table id="history_graph">
         <thead>
           <tr>
-            <th>Month</th>
-            <th>Posts</th>
+            <th>{{#i18n.Translations}}{{month}}{{/i18n.Translations}}</th>
+            <th>{{#i18n.Translations}}{{posts}}{{/i18n.Translations}}</th>
             <th></th>
           </tr>
         </thead>

@@ -11,11 +11,11 @@
     <meta charset="utf-8"></meta>
     <link rel="stylesheet" href="{{prefix}}static/site.css" />
     <link rel="stylesheet" href="{{prefix}}static/user.css" />
-    <title> here is a new tripcode </title>
+    <title>{{#i18n.Translations}}{{new_tripcode_title}}{{/i18n.Translations}}</title>
   </head>
   <body>
-    <pre>New Tripcode:
-      <div id="secret_key">secret: {{secret}}</div><div id="public_key">public: {{public}}</div><div>tripcode: <span class="tripcode" id="capcode_key">{{{tripcode}}}</span></div>
+    <pre>{{#i18n.Translations}}{{new_tripcode_label}}{{/i18n.Translations}}:
+      <div id="secret_key">{{#i18n.Translations}}{{secret_key}}{{/i18n.Translations}}: {{secret}}</div><div id="public_key">{{#i18n.Translations}}{{public_key}}{{/i18n.Translations}}: {{public}}</div><div>{{#i18n.Translations}}{{tripcode}}{{/i18n.Translations}}: <span class="tripcode" id="capcode_key">{{{tripcode}}}</span></div>
     </pre>
   </body>
 </html>

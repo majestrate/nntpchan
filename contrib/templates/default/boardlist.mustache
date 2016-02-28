@@ -10,7 +10,7 @@
   <head>
     <link rel="stylesheet" href="{{prefix}}static/site.css"></link>
     <link rel="stylesheet" href="{{prefix}}static/user.css"></link>
-    <title> {{frontend}} board list </title>
+    <title> {{frontend}} {{#i18n.Translations}}{{board_list_title}}{{/i18n.Translations}} </title>
   </head>
   <body>
     <center>
@@ -19,10 +19,10 @@
         <table id="board_graph">
           <thead>
             <tr>
-              <th> Board </th>
-              <th> Post per Hour </th>
-              <th> Post per Day </th>
-              <th> Total </th>
+              <th> {{#i18n.Translations}}{{board_label}}{{/i18n.Translations}} </th>
+              <th> {{#i18n.Translations}}{{pph_label}}{{/i18n.Translations}} </th>
+              <th> {{#i18n.Translations}}{{ppd_label}}{{/i18n.Translations}} </th>
+              <th> {{#i18n.Translations}}{{total}}{{/i18n.Translations}} </th>
             </tr>
            </thead>
            <tbody>

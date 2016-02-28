@@ -29,7 +29,7 @@
       </div>
     </center>
     <div class="board_header">{{board.Board}}</div>
-    <div class="board_header_catalog"><a href="{{board.Prefix}}catalog-{{board.Name}}.html"> Catalog </a></div>
+    <div class="board_header_catalog"><a href="{{board.Prefix}}catalog-{{board.Name}}.html"> {{#i18n.Translations}}{{catalog_label}}{{/i18n.Translations}} </a></div>
     <!-- postform -->
     <div id="postform_container">
       {{{form}}}
@@ -38,7 +38,7 @@
     <div id="threads_container">
       {{#board.Threads}}
         <div class="thread" id="thread_{{OP.PostHash}}">
-          <div clsss="thread_header">
+          <div class="thread_header">
           </div>
           {{{OP.Truncate.RenderPost}}}
           {{#Truncate.Replies}}
@@ -52,7 +52,7 @@
     <span class="navbar-sep">
      |
     </span>
-    <a href="{{board.Prefix}}catalog-{{board.Name}}.html"> Catalog </a>
+    <a href="{{board.Prefix}}catalog-{{board.Name}}.html"> {{#i18n.Translations}}{{catalog_label}}{{/i18n.Translations}} </a>
     </div>
     <script type="text/javascript">
 

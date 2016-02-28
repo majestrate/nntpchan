@@ -10,93 +10,93 @@
     <link rel="stylesheet" href="{{prefix}}static/user.css" />
     <!-- yes it uses js -->
     <script type="text/javascript" src="{{prefix}}static/mod.js"></script>
-    <title> nntpchan mod page </title>
+    <title> {{#i18n.Translations}}{{modpage_title}}{{/i18n.Translations}} </title>
   </head>
   <body>
     <div>
-      <div> post actions </div>
+      <div> {{#i18n.Translations}}{{post_actions_label}}{{/i18n.Translations}} </div>
       <hr />
       <div>
-        <label for="nntpchan_mod_target">target</label>
+        <label for="nntpchan_mod_target">{{#i18n.Translations}}{{target_label}}{{/i18n.Translations}}</label>
         <input id="nntpchan_mod_target" type="text" />
       </div>
       <div>
-        <button onclick="nntpchan_ban()">ban (url)</button>
-        <button onclick="nntpchan_delete()">delete (url)</button>
-        <button onclick="nntpchan_unban()">unban (ip)</button>
+        <button onclick="nntpchan_ban()">{{#i18n.Translations}}{{ban_url_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_delete()">{{#i18n.Translations}}{{delete_url_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_unban()">{{#i18n.Translations}}{{unban_ip_prompt}}{{/i18n.Translations}}</button>
       </div>
     </div>
     <hr />
     <div>
-      <div> key actions </div>
+      <div> {{#i18n.Translations}}{{key_actions_label}}{{/i18n.Translations}} </div>
       <div>
-        <label for="nntpchan_board_target">pubkey:</label>
+        <label for="nntpchan_board_target">{{#i18n.Translations}}{{pubkey_label}}{{/i18n.Translations}}:</label>
         <input type="text" id="nntpchan_key_target" />
       </div>
       <div>
-        <button onclick="nntpchan_key_add()">add key</button>
-        <button onclick="nntpchan_key_del()">remove key</button>
+        <button onclick="nntpchan_key_add()">{{#i18n.Translations}}{{add_key_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_key_del()">{{#i18n.Translations}}{{remove_key_prompt}}{{/i18n.Translations}}</button>
       </div>
     </div>
     <hr />
     <div>
-      <div> nntp login </div>
+      <div> {{#i18n.Translations}}{{nntp_login_label}}{{/i18n.Translations}} </div>
       <div>
-        <label for="nntpchan_nntp_username">username:</label>
+        <label for="nntpchan_nntp_username">{{#i18n.Translations}}{{username}}{{/i18n.Translations}}:</label>
         <input id="nntpchan_nntp_username" />
       </div>
       <div>
-        <label for="nntpchan_nntp_passwd">password:</label>
+        <label for="nntpchan_nntp_passwd">{{#i18n.Translations}}{{password}}{{/i18n.Translations}}:</label>
         <input type="password" id="nntpchan_nntp_passwd" />
       </div>
       <div>
-        <button onclick="nntpchan_admin_nntp('nntp.login.add')">add user</button>
+        <button onclick="nntpchan_admin_nntp('nntp.login.add')">{{#i18n.Translations}}{{add_user_prompt}}{{/i18n.Translations}}</button>
       </div>
       <div>  
-        <button onclick="nntpchan_admin_nntp('nntp.login.del')">remove user</button>        
+        <button onclick="nntpchan_admin_nntp('nntp.login.del')">{{#i18n.Translations}}{{remove_user_prompt}}{{/i18n.Translations}}</button>        
       </div>
     </div>
     <hr />
     <div>
-      <div> board actions </div>
+      <div> {{#i18n.Translations}}{{board_actions_label}}{{/i18n.Translations}} </div>
       <div>
-        <label for="nntpchan_board_target">board name:</label>
+        <label for="nntpchan_board_target">{{#i18n.Translations}}{{board_name_title}}{{/i18n.Translations}}:</label>
         <input id="nntpchan_board_target" />
       </div>
       <div>
-        <button onclick="nntpchan_admin_board('frontend.add')">add board</button>
+        <button onclick="nntpchan_admin_board('frontend.add')">{{#i18n.Translations}}{{add_board_prompt}}{{/i18n.Translations}}</button>
       </div>
       <div>
-        <button onclick="nntpchan_admin_board('frontend.regen')">regenerate</button>
+        <button onclick="nntpchan_admin_board('frontend.regen')">{{#i18n.Translations}}{{regenerate_prompt}}{{/i18n.Translations}}</button>
       </div>
       <div>    
-        <button onclick="nntpchan_admin_board('frontend.ban')">ban</button>
-        <button onclick="nntpchan_admin_board('frontend.unban')">unban</button>
+        <button onclick="nntpchan_admin_board('frontend.ban')">{{#i18n.Translations}}{{ban_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_admin_board('frontend.unban')">{{#i18n.Translations}}{{unban_prompt}}{{/i18n.Translations}}</button>
       </div>
       <div>
-        <button onclick="nntpchan_admin_board('frontend.nuke')">nuke</button>
-      </div>
-    </div>
-    <hr />
-    <div>
-      <div>
-        lightweight actions
-      </div>
-      <div>
-        <button onclick="nntpchan_admin('template.reload')">reload all templates</button>
+        <button onclick="nntpchan_admin_board('frontend.nuke')">{{#i18n.Translations}}{{nuke_prompt}}{{/i18n.Translations}}</button>
       </div>
     </div>
     <hr />
     <div>
-      <label>very load heavy actions, use with care</label>
       <div>
-        <button onclick="nntpchan_admin('frontend.regen')">rengenerate all markup</button>
-        <button onclick="nntpchan_admin('thumbnail.regen')">regenerate all thumbnails</button>
+        {{#i18n.Translations}}{{light_actions_label}}{{/i18n.Translations}}
+      </div>
+      <div>
+        <button onclick="nntpchan_admin('template.reload')">{{#i18n.Translations}}{{reload_templates_prompt}}{{/i18n.Translations}}</button>
+      </div>
+    </div>
+    <hr />
+    <div>
+      <label>{{#i18n.Translations}}{{heavy_actions_label}}{{/i18n.Translations}}</label>
+      <div>
+        <button onclick="nntpchan_admin('frontend.regen')">{{#i18n.Translations}}{{regenerate_markup_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_admin('thumbnail.regen')">{{#i18n.Translations}}{{regenerate_thumbs_prompt}}{{/i18n.Translations}}</button>
       </div>
     </div>  
     <div id="nntpchan_mod_result"></div>
     <noscript>
-      <b>enable js to use the mod panel kthx</b>
+      <b>{{#i18n.Translations}}{{nojs_info}}{{/i18n.Translations}}</b>
     </noscript>
   </body>
 </html>
