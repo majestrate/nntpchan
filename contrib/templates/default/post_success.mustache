@@ -10,6 +10,6 @@
   <link rel="stylesheet" href="{{prefix}}static/user.css" />
   <meta http-equiv="refresh" content="2; {{redirect_url}}" />
   <body>
-    <pre>posted as {{message_id}}</pre>
+    <pre>{{#i18n.Translations}}{{posted_as_label}}{{/i18n.Translations}} {{message_id}}</pre>
   </body>
 </html>

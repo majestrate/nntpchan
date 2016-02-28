@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{board.Prefix}}static/site.css" />
     <link rel="stylesheet" href="{{board.Prefix}}static/user.css" />
     <script type="text/javascript" src="{{board.Prefix}}static/nntpchan.js"></script>
-    <title>Catalog for {{board.Name}}</title>
+    <title>{{#i18n.Translations}}{{catalog_title}}{{/i18n.Translations}} {{board.Name}}</title>
   </head>
   <body>
     <!-- begin navbar -->
@@ -15,14 +15,14 @@
       <div id="nntpchan_banner">
       </div>
     </center>
-    <div class="board_header">Catalog for {{board.Name}}</div>
+    <div class="board_header">{{#i18n.Translations}}{{catalog_title}}{{/i18n.Translations}} {{board.Name}}</div>
     <!-- postform -->
     <hr />
     <div id="catalog_container">
       {{#board.Threads}}
         <div class="catalog_thread">
           <a class="linkThumb" href="{{OP.PostURL}}"><img src="{{OP.RepresentativeThumb}}"></a>
-          <div class="catalog_header">R: {{ReplyCount}} / P: {{Page}}</div>
+          <div class="catalog_header">{{#i18n.Translations}}{{replies_short_label}}{{/i18n.Translations}}: {{ReplyCount}} / {{#i18n.Translations}}{{pictures_short_label}}{{/i18n.Translations}}: {{Page}}</div>
           <div class="catalog_subject">{{OP.Subject}}</div>
           <div class="catalog_body">
             {{{OP.RenderBody}}}

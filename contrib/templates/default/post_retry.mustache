@@ -24,7 +24,7 @@
           <tbody>
             <tr>
               <th>
-                Captcha
+                {{#i18n.Translations}}{{captcha}}{{/i18n.Translations}}
               </th>
               <td>
                 <img id="captcha_img" src="{{prefix}}captcha/{{captcha_id}}.png" alt="captcha" />
@@ -32,7 +32,7 @@
             </tr>
             <tr>
               <th>
-                Solution
+                {{#i18n.Translations}}{{solution}}{{/i18n.Translations}}
               </th>
               <td>
                 <input type="text" name="captcha" />

@@ -12,7 +12,7 @@
  <div class="navbar">
    <span class="navbar-name">
      <span class="board_title">{{name}}</span>
-     on
+     {{#i18n.Translations}}{{navbar_on}}{{/i18n.Translations}}
      <span class="frontend_title">{{frontend}}</span>
    </span>
    <span class="navbar-sep">
@@ -31,13 +31,13 @@
      |
    </span>
    <span class="navbar-links"> 
-     <span class="navbar-link"><a href="{{prefix}}">front page</a></span>
+     <span class="navbar-link"><a href="{{prefix}}">{{#i18n.Translations}}{{front_page_title}}{{/i18n.Translations}}</a></span>
    </span>
    <span class="navbar-sep">
      |
    </span>
    <span class="navbar-links"> 
-     <span class="navbar-link"><a href="{{prefix}}ukko.html">overboard</a></span>
+     <span class="navbar-link"><a href="{{prefix}}ukko.html">{{#i18n.Translations}}{{overboard_label}}{{/i18n.Translations}}</a></span>
    </span>
    <span class="navbar-sep">
      |

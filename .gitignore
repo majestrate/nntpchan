@@ -8,7 +8,8 @@
 .\#*
 
 # srnd config files
-*.ini
+srnd.ini
+feeds.ini
 
 # default article store directory
 articles

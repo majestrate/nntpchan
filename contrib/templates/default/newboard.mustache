@@ -1,13 +1,13 @@
 <html>
   <head>
-    <title>create new board</title>
+    <title>{{#i18n.Translations}}{{new_board_title}}{{/i18n.Translations}}</title>
     <link rel="stylesheet" href="{{prefix}}static/site.css" />
     <link rel="stylesheet" href="{{prefix}}static/user.css" />
     <script type="text/javascript" src="{{prefix}}static/newboard.js">
     </script>
   </head>
   <body>
-    <p>make your first post</p>
+    <p>{{#i18n.Translations}}{{first_post_label}}{{/i18n.Translations}}</p>
     <hr />
     <form action="{{prefix}}post/" enctype="multipart/form-data" name="post" method="post" id="postform" >
     <div id="postform-outer">
@@ -16,7 +16,7 @@
           <tbody>
             <tr>
               <th>
-                Board Name
+                {{#i18n.Translations}}{{board_name_title}}{{/i18n.Translations}}
               </th>
               <td>
                 <input type="text" name="name" value="" id="boardname" />
@@ -25,7 +25,7 @@
             </tr>
             <tr>
               <th>
-                Comment
+                {{#i18n.Translations}}{{comment}}{{/i18n.Translations}}
               </th>
               <td>
              <textarea id="postform_message" name="message" cols=40 rows=5></textarea>
@@ -33,7 +33,7 @@
             </tr>
             <tr>
               <th>
-                Captcha
+                {{#i18n.Translations}}{{captcha}}{{/i18n.Translations}}
               </th>
               <td>
                 <img id="captcha_img" src="{{prefix}}captcha/img" alt="captcha" />
@@ -41,7 +41,7 @@
             </tr>
             <tr>
               <th>
-                Solution
+                {{#i18n.Translations}}{{solution}}{{/i18n.Translations}}
               </th>
               <td>
                 <input type="text" name="captcha" />
