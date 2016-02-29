@@ -41,12 +41,20 @@
            </td>
          </tr>
          {{#files}}
+           <tr>
+           <th>
+             {{#i18n.Translations}}{{file}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <input class="postform_attachment" id="postform_attachment_0" type="file" name="attachment_0" />
+           </td>
+         </tr>
          <tr>
            <th>
              {{#i18n.Translations}}{{file}}{{/i18n.Translations}}
            </th>
            <td>
-             <input id="postform_attachment" type="file" name="attachment" />
+             <input class="postform_attachment" id="postform_attachment_1" type="file" name="attachment_1" />
            </td>
          </tr>
          {{/files}}

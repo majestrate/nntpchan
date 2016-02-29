@@ -401,7 +401,7 @@ input, textarea {
     vertical-align: text-top;
 }
 
-#postform_attachment {
+.postform_attachment {
     max-width: 330px;
 }
 
