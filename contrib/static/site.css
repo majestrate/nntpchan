@@ -464,3 +464,7 @@ textarea#reply-text {
     font-size: 10px;
     text-align: center;
 }
+
+.attachments {
+    float: left;
+}
