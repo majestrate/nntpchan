@@ -199,13 +199,7 @@ function nntpchan_mod(mod_action) {
             var result = mod_action.handle(j);
             if (result) {
               elem.appendChild(result);
-            } else {
-              // fail
-              alert("mod action failed, handler returned nothing");
             }
-          } else {
-            // fail
-            alert("mod action has no handler");
           }
         }
       } else if (status) {
