@@ -100,9 +100,9 @@
       // start nntp feed stats ticker
       var e = document.getElementById("nntpchan_feeds");
       if (e) {
-        setInterval(2000, function() {
+        setInterval(function() {
           update_nntpchan_feed_ticker(e);
-        });
+        }, 2000);
       }
     </script>
     <noscript>
