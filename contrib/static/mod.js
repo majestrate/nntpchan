@@ -142,6 +142,24 @@ function nntpchan_delete() {
   });
 }
 
+function inject_nntp_feed_element(feed, elem) {
+  var name = document.createElement("span");
+  var name_elem = document.createElement("span");
+  name_elem.value = document.createTextNode("Name:");
+  name.appendChild(name_elem);
+  name_elem = document.createElement("span");
+  name_elem.value = document.createTextNode(feed.State.Config.Name);
+  name.appendChild(name_elem);
+  var conns = document.createElement("span");
+  var conns_elem = document.createElement("span");
+  conns_elem = document.createTextNode("Connections:");
+  conns.appendChild(conns_elem);
+  conns_elem = document.createTextNode(feed.State.Conns.length);
+  conns.appendChild(conns_elem);
+  elem.appendChild(name);
+  elem.appendChild(conns);
+}
+
 function update_nntpchan_feed_ticker(elem) {
   nntpchan_admin("feed.list", null, function(j) {
     if (j) {
@@ -157,7 +175,7 @@ function update_nntpchan_feed_ticker(elem) {
         for (var idx = 0; idx < result.length; idx++) {
           var item = result[idx];
           var entry = document.createElement("div");
-          console.log(item);
+          inject_nntp_feed_element(item, entry);
           elem.appendChild(entry);
         }
       }
