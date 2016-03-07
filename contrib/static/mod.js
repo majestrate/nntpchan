@@ -144,19 +144,12 @@ function nntpchan_delete() {
 
 function inject_nntp_feed_element(feed, elem) {
   var name = document.createElement("span");
-  var name_elem = document.createElement("span");
-  name_elem.value = document.createTextNode("Name: ");
-  name.appendChild(name_elem);
-  name_elem = document.createElement("span");
-  name_elem.value = document.createTextNode(feed.State.Config.Name);
+  name_elem = document.createTextNode("Name: "+feed.State.Config.Name);
   name.appendChild(name_elem);
   elem.appendChild(name);
 
   var conns = document.createElement("span");
-  var conns_elem = document.createElement("span");
-  conns_elem = document.createTextNode("Connections: ");
-  conns.appendChild(conns_elem);
-  conns_elem = document.createTextNode(feed.Conns.length);
+  conns_elem = document.createTextNode("Connections: "+feed.Conns.length);
   conns.appendChild(conns_elem);
   elem.appendChild(conns);
 }
