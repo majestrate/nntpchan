@@ -154,7 +154,7 @@ function inject_nntp_feed_element(feed, elem) {
   var conns_elem = document.createElement("span");
   conns_elem = document.createTextNode("Connections:");
   conns.appendChild(conns_elem);
-  conns_elem = document.createTextNode(feed.State.Conns.length);
+  conns_elem = document.createTextNode(feed.Conns.length);
   conns.appendChild(conns_elem);
   elem.appendChild(name);
   elem.appendChild(conns);
