@@ -87,19 +87,25 @@ function nntpchan_admin_board(method) {
   })
 }
 
-function nntpchan_admin(method, param) {
-  nntpchan_mod({
-    name:"admin",
-    parser: function(target) {
-      return method;
-    },
-    handle: function(j) {
+function nntpchan_admin(method, param, handler_cb) {
+  if (handler_cb) {
+    // we got a handler already set
+  } else {
+    // no handler set
+    var handler_cb = function(j) {
       if (j.result) {
         return document.createTextNode(j.result);
       } else {
         return "nothing happened?";
       }
+    }
+  }
+  nntpchan_mod({
+    name:"admin",
+    parser: function(target) {
+      return method;
     },
+    handle: handler_cb,
     method: ( param && "POST" ) || "GET",
     data: param
   })
@@ -136,6 +142,28 @@ function nntpchan_delete() {
   });
 }
 
+function update_nntpchan_feed_ticker(elem) {
+  nntpchan_admin("feed.list", null, function(j) {
+    if (j) {
+      if (j.error) {
+        console.log("nntpchan_feed_ticker: error, "+j.error);
+      } else {
+        // remove all children
+        while(elem.children.length) {
+          elem.children[0].remove();
+        }
+        
+        var result = j.result;
+        for (var idx = 0; idx < result.length; idx++) {
+          var item = result[idx];
+          var entry = document.createElement("div");
+          console.log(item);
+          elem.appendChild(entry);
+        }
+      }
+    }
+  });
+}
 
 function nntpchan_mod(mod_action) {
 
