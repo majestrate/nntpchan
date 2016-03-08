@@ -77,3 +77,7 @@ table thead th {
 .navbar-link > label:hover {
     color: red;
 }
+
+.origin > img {
+    filter: invert(100%);
+}
