@@ -25,10 +25,33 @@ function nntpchan_inject_banners(elem, prefix) {
   elem.appendChild(e);
 }
 
+function get_storage() {
+  var st = null;
+  if (window.localStorage) {
+    st = window.localStorage;
+  } else if (localStorage) {
+    st = localStorage;
+  }
+  return st;
+}
+
 function enable_theme(prefix, name) {
 
   var theme = document.getElementById("current_theme");
   if (theme) {
     theme.href = prefix + "static/"+ name + ".css";
+    var st = get_storage();
+    if (st.nntpchan === undefined) {
+      st.nntpchan = {};
+    }
+    st.nntpchan.theme = name;
+    st.nntpchan.prefix = prefix;
+  }
+}
+
+document.body.onload = function() {
+  var st = get_storage();
+  if (st.nntpchan) {
+    enable_theme(st.nntpchan.prefix, st.nntpchan.theme);
   }
 }
