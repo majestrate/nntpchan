@@ -144,7 +144,7 @@ function nntpchan_delete() {
 
 function inject_nntp_feed_element(feed, elem) {
   var name = document.createElement("div");
-  conns.setAttribute("class", "feeds_name");
+  name.setAttribute("class", "feeds_name");
   name_elem = document.createTextNode("Name: "+feed.State.Config.Name);
   name.appendChild(name_elem);
   elem.appendChild(name);
