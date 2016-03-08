@@ -7,6 +7,11 @@ body {
     background: #111;
 }
 
+.navbar {
+    background: #4E0000;
+    color: black;
+}
+
 .reply, .ukko_thread_header {
     border-color: #CA0101;
 }
