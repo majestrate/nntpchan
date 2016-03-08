@@ -12,6 +12,10 @@ body {
     background-image: url('maymface.png');
 }
 
-.reply, .ukko_thread_header {
-    background-color: #FBFFC9;
+.reply, .ukko_thread_header, th, .postform > tr {
+    background: #FBFFC9;
+}
+
+.navbar {
+    background: #FFECBE;
 }
