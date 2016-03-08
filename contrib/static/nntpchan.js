@@ -49,7 +49,7 @@ function enable_theme(prefix, name) {
   }
 }
 
-document.body.onload = function() {
+document.onload = function() {
   var st = get_storage();
   if (st.nntpchan) {
     enable_theme(st.nntpchan.prefix, st.nntpchan.theme);
