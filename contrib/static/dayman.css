@@ -8,6 +8,10 @@ body {
     background-color: #FFEFC9;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-position: 100% 100%;
+    background-size: 100% 100%;
     background-image: url('maymface.png');
+}
+
+.reply, .ukko_thread_header {
+    color: #FBFFC9;
 }
