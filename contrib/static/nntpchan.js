@@ -41,17 +41,14 @@ function enable_theme(prefix, name) {
   if (theme) {
     theme.href = prefix + "static/"+ name + ".css";
     var st = get_storage();
-    if (st.nntpchan === undefined) {
-      st.nntpchan = {};
-    }
-    st.nntpchan.theme = name;
-    st.nntpchan.prefix = prefix;
+    st.setItem("nntpchan_prefix", prefix);
+    st.setItem("nntpchan_theme", name);
   }
 }
 
 document.onload = function() {
   var st = get_storage();
   if (st.nntpchan) {
-    enable_theme(st.nntpchan.prefix, st.nntpchan.theme);
+    enable_theme(st.nntpchan_prefix, st.nntpchan_theme);
   }
 }
