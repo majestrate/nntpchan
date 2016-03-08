@@ -11,6 +11,7 @@ body {
 input, textarea, button {
     color: #666;
     background: #050505;
+    border-color: #D80000;
 }
 
 .navbar {
