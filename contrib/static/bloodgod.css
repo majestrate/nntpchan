@@ -27,7 +27,7 @@ hr, .name {
 }
 
 .reply , .ukko_thread_header {
-    color: #0C0C0C;
+    background: #0C0C0C;
 }
 
 a {
