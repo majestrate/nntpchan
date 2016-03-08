@@ -12,10 +12,10 @@ body {
     background-image: url('maymface.png');
 }
 
-.reply, .ukko_thread_header, th, .postform > tr {
+.reply, .ukko_thread_header, th, .postform > tr , tbody > tr:nth-of-type( even )  {
     background: #FBFFC9;
 }
 
-.navbar, table, thead, th {
+.navbar, table, thead, th, table {
     background: #FFECBE;
 }
