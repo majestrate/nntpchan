@@ -41,8 +41,8 @@ function enable_theme(prefix, name) {
   if (theme) {
     theme.href = prefix + "static/"+ name + ".css";
     var st = get_storage();
-    st.setItem("nntpchan_prefix", prefix);
-    st.setItem("nntpchan_theme", name);
+    st.nntpchan_prefix = prefix;
+    st.nntpchan_theme = name;
   }
 }
 
