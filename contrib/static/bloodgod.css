@@ -17,7 +17,7 @@ input[type="button"] {
 }
 
 .navbar {
-    background: #4E0000;
+    background: #980000;
     color: black;
 }
 
@@ -66,4 +66,6 @@ table tbody tr:nth-of-type( even ) {
 
 table thead th {
     color: #6B1919;
+    background: #430000;
+    border-color: #270000;
 }
