@@ -8,7 +8,9 @@ body {
 }
 
 
-input, textarea, button, input[type="text"], input[type="password"], input[type="checkbox"], input[type="file"], input[type="submit"] {
+input, textarea, button, input[type="text"], input[type="password"],
+input[type="checkbox"], input[type="file"], input[type="submit"],
+input[type="button"] {
     color: #666;
     background: #050505;
     border-color: #D80000;
