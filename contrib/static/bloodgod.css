@@ -69,3 +69,7 @@ table thead th {
     background: #430000;
     border-color: #270000;
 }
+
+.navbar-sep {
+    color: #270000;
+}

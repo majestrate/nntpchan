@@ -195,7 +195,7 @@ a:hover , a:visited:hover {
     color: #ff0000;
 }
 
-a, a:visited {
+a, a:visited, .navbar-link > label {
     color: #34345C;
 }
 
@@ -228,6 +228,10 @@ a, a:visited {
 
 .navbar-sep {
     color: darkgray;
+}
+
+.navbarlink > label {
+    text-decoration: underline;    
 }
 
 #postform_container {
