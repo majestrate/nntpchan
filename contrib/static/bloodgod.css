@@ -7,9 +7,19 @@ body {
     background: #111;
 }
 
+
+input, textarea {
+    color: #666;
+    background: #050505;
+}
+
 .navbar {
     background: #4E0000;
     color: black;
+}
+
+#captcha_img {
+    background: #D80000;
 }
 
 .reply, .ukko_thread_header {
