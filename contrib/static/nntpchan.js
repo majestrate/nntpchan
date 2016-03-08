@@ -47,7 +47,9 @@ function enable_theme(prefix, name) {
 }
 
 function main() {
-  // apply themes
-  var st = get_storage();
-  enable_theme(st.nntpchan_prefix, st.nntpchan_theme);
+  // do other initialization here
 }
+
+// apply themes
+var st = get_storage();
+enable_theme(st.nntpchan_prefix, st.nntpchan_theme);
