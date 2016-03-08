@@ -143,12 +143,14 @@ function nntpchan_delete() {
 }
 
 function inject_nntp_feed_element(feed, elem) {
-  var name = document.createElement("span");
+  var name = document.createElement("div");
+  conns.setAttribute("class", "feeds_name");
   name_elem = document.createTextNode("Name: "+feed.State.Config.Name);
   name.appendChild(name_elem);
   elem.appendChild(name);
 
-  var conns = document.createElement("span");
+  var conns = document.createElement("div");
+  conns.setAttribute("class", "feeds_connections");
   conns_elem = document.createTextNode("Connections: "+feed.Conns.length);
   conns.appendChild(conns_elem);
   elem.appendChild(conns);

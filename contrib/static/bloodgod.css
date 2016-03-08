@@ -1,0 +1,51 @@
+/**
+  bloodgod theme css override
+*/
+
+body {
+    color: #666;
+    background: #111;
+}
+
+.reply, .ukko_thread_header {
+    border-color: #CA0101;
+}
+
+.ukko_thread_header {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+}
+
+
+hr, .name {
+    color: #6B1919;
+}
+
+.subject {
+    color: #4E0000;
+}
+
+.reply , .ukko_thread_header {
+    color: #0C0C0C;
+}
+
+a {
+    color: #500707;
+}
+
+.postno, .postnol {
+    color: #B700000;
+}
+
+.postform >tr, th {
+     background: #6B1919;
+}
+
+table tbody tr:nth-of-type( even ) {
+	  background-color: #430000;
+}
+
+table thead th {
+    color: #6B1919;
+}
