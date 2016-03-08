@@ -230,7 +230,7 @@ a, a:visited, .navbar-link > label {
     color: darkgray;
 }
 
-.navbarlink > label {
+.navbar-link > label {
     text-decoration: underline;    
 }
 
