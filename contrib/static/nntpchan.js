@@ -48,7 +48,5 @@ function enable_theme(prefix, name) {
 
 document.onload = function() {
   var st = get_storage();
-  if (st.nntpchan) {
-    enable_theme(st.nntpchan_prefix, st.nntpchan_theme);
-  }
+  enable_theme(st.nntpchan_prefix, st.nntpchan_theme);
 }
