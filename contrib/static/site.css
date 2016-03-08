@@ -191,7 +191,7 @@ hr {
     margin-bottom: 5px;
 }
 
-a:hover , a:visited:hover {
+a:hover , a:visited:hover, .navbar-link > label:hover {
     color: #ff0000;
 }
 

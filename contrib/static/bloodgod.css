@@ -73,3 +73,7 @@ table thead th {
 .navbar-sep {
     color: #270000;
 }
+
+.navbar-link > label:hover {
+    color: red;
+}
