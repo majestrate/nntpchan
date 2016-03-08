@@ -29,12 +29,6 @@ function enable_theme(prefix, name) {
 
   var theme = document.getElementById("current_theme");
   if (theme) {
-    theme.remove();
-  }
-  if (name) {
-    var style = document.createElement("style");
-    style.setAttribute("id", "current_theme");
-    style.innerHTML='@import("'+prefix+"static/"+name+'.css")';
-    document.head.appendChild(style);
+    theme.href = prefix + "static/"+ name + ".css";
   }
 }
