@@ -78,7 +78,7 @@ table thead th {
     color: red;
 }
 
-.origin > img {
+.origin > img , .not_found > img {
     -webkit-filter: invert(1);
     filter: invert(1);
 }
