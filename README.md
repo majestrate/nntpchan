@@ -16,6 +16,7 @@ This repository contains resources used by the core daemon which is located [her
 IRC:
 
 [freenode: #nntpchan](https://webchat.freenode.net/?channels=#nntpchan)
+
 [rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan)
 
 
