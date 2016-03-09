@@ -10,8 +10,9 @@
   <head>
     <meta charset="utf-8"></meta>
     <link rel="stylesheet" href="{{prefix}}static/site.css" />
-    <link rel="stylesheet" href="{{prefix}}static/user.css" />
-    <title>{{#i18n.Translations}}{{new_tripcode_title}}{{/i18n.Translations}}</title>
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+  <title>{{#i18n.Translations}}{{new_tripcode_title}}{{/i18n.Translations}}</title>
   </head>
   <body>
     <pre>{{#i18n.Translations}}{{new_tripcode_label}}{{/i18n.Translations}}:

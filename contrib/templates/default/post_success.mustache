@@ -7,7 +7,8 @@
 <html>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="{{prefix}}static/site.css" />
-  <link rel="stylesheet" href="{{prefix}}static/user.css" />
+  <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+  <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
   <meta http-equiv="refresh" content="2; {{redirect_url}}" />
   <body>
     <pre>{{#i18n.Translations}}{{posted_as_label}}{{/i18n.Translations}} {{message_id}}</pre>
