@@ -13,7 +13,10 @@ This repository contains resources used by the core daemon which is located [her
 
 *PLEASE* report any bugs you find while setting up or building [(here)](https://github.com/majestrate/nntpchan/issues) so that the problems get fixed :^)
 
-For peering requests, questions or support find me on [rizon](https://qchat.rizon.net/?channels=#nntpchan) as \__uguu\__
+IRC:
+
+[freenode: #nntpchan](https://webchat.freenode.net/?channels=#nntpchan)
+[rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan)
 
 
 Like this project? Fund it:
