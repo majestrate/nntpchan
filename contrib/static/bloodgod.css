@@ -21,7 +21,7 @@ input[type="button"] {
     color: black;
 }
 
-#captcha_img {
+#captcha_img, pre {
     background: #D80000;
 }
 
