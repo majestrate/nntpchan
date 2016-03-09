@@ -4,7 +4,7 @@ root=$(readlink -e $(dirname $0))
 
 prefix="/opt/nntpchan"
 
-help_text="usage: $0 [--prefix /opt/nntpchan]"
+help_text="usage: $0 [--prefix /opt/nntpchan] [-q|--quiet] [-r|--rebuild] [--disable-redis]"
 
 # check for help flags first
 for arg in $@ ; do
@@ -19,7 +19,9 @@ done
 _next=""
 want_rebuild="0"
 want_quiet="0"
-# check for build flags
+build_args=""
+
+# check for main flags
 for arg in $@ ; do
     case $arg in
         -q|--quiet)
@@ -33,6 +35,9 @@ for arg in $@ ; do
             ;;
         --prefix=*)
             prefix=$(echo $arg | cut -d'=' -f2)
+            ;;
+        --disable-redis)
+            build_args="$build_args --disable-redis"
             ;;
         *)
             if [ "X$_next" == "Xprefix" ] ; then
@@ -54,13 +59,13 @@ _cmd() {
 
 if [ "X$want_rebuild" == "X1" ] ; then
     _cmd echo "rebuilding daemon";
-    _cmd $root/build.sh
+    _cmd $root/build.sh $build_args
 fi
 
 if [ ! -e $root/srndv2 ] ; then
     _cmd echo "building daemon"
     # TODO: use different GOPATH for root?
-    _cmd $root/build.sh
+    _cmd $root/build.sh $build_args
 fi
 
 
