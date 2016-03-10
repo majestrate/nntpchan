@@ -75,6 +75,28 @@ class Article:
         if msg:
             return "{}\n{}".format(self.header(), msg)
 
+    def getAttachmentPart(self, j):
+        msg = ''
+        mtype = 'image'
+        if j['ext'] in ['.mp4', '.webm']:
+            mtype = 'video'
+        url = 'https://{}/{}/src/{}{}'.format(self.site, self.board, j['tim'], j['ext'])
+        print ('obtain {}'.format(url))
+        
+        r = requests.get(url)
+        if r.status_code == 200:
+            msg += '--{}\n'.format(self.boundary)
+            msg += 'Content-Type: {}/{}\n'.format(mtype, j['ext'])
+            msg += 'Content-Disposition: form-data; filename="{}{}"; name="import"\n'.format(j['filename'], j['ext'])
+            msg += 'Content-Transfer-Encoding: base64\n'        
+            msg += '\n'
+            msg += base64.b64encode(r.content).decode('ascii')
+            msg += '\n'
+        else:
+            print ('failed to obtain attachment: {} != 200'.format(r.status_code))
+        return msg
+        
+        
     def bodyMultipart(self):
         self.boundary = '========{}'.format(random.randint(0, 10000000))
         msg = self.header() + '\n'
@@ -82,24 +104,10 @@ class Article:
         msg += 'Content-Type: text/plain; encoding=UTF-8\n'
         msg += '\n'
         msg += self.message() + '\n'
-        msg += '--{}\n'.format(self.boundary)
-        mtype = 'image'
-        if self.j['ext'] in ['.mp4', '.webm']:
-            mtype = 'video'
-        msg += 'Content-Type: {}/{}\n'.format(mtype, self.j['ext'])
-        msg += 'Content-Disposition: form-data; filename="{}{}"; name="import"\n'.format(self.j['filename'], self.j['ext'])
-        msg += 'Content-Transfer-Encoding: base64\n'        
-        msg += '\n'
-        url = 'https://{}/{}/src/{}{}'.format(self.site, self.board, self.j['tim'], self.j['ext'])
-        print ('obtain {}'.format(url))
-        
-        r = requests.get(url)
-        if r.status_code == 200:
-            msg += base64.b64encode(r.content).decode('ascii')
-            msg += '\n'
-        else:
-            print ('failed to obtain attachment: {} != 200'.format(r.status_code))
-            return
+        msg += self.getAttachmentPart(self.j)
+        if 'extra_files' in self.j:
+            for j in self.j['extra_files']:
+                msg += self.getAttachmentPart(j)
         msg += '\n--{}--\n'.format(self.boundary)
         return msg
 
@@ -111,8 +119,9 @@ class Article:
         
 class Poster:
 
-    def __init__(self, host, port):
+    def __init__(self, host, port, user, passwd):
         self.host, self.port = host, port
+        self.user, self.passwd = user, passwd
         
     def post(self, articles):
         """
@@ -121,7 +130,7 @@ class Poster:
         if isinstance(articles, Article):
             return self.post([articles])
         else:
-            n = nntplib.NNTP(self.host, self.port)
+            n = nntplib.NNTP(self.host, self.port, self.user, self.passwd)
             for article in articles:
                 body = article.body()
                 if body:
@@ -144,7 +153,7 @@ class Getter:
         self.site = url_parse(url).hostname
         self.board = url_parse(url).path.split('/')[1]
 
-    def get(self):
+    def get(self, thread=False):
         """
         yield a bunch of articles
         """
@@ -155,12 +164,17 @@ class Getter:
             except:
                 pass
             else:
-                if 'threads' in j:
-                    for t in j['threads']:
-                        posts = t['posts']
-                        for post in posts:
+                if thread:
+                    if 'posts' in j:
+                        for post in j['posts']:
                             yield Article(post, self.board, self.site)
-
+                else:
+                    if 'threads' in j:
+                        for t in j['threads']:
+                            posts = t['posts']
+                            for post in posts:
+                                yield Article(post, self.board, self.site)
+                
 
 
 def main():
@@ -169,11 +183,21 @@ def main():
     ap.add_argument('--server', type=str, required=True)
     ap.add_argument('--port', type=int, required=True)
     ap.add_argument('--board', type=str, required=True)
+    ap.add_argument('--thread', type=str, required=False)
+    ap.add_argument('--user', type=str, required=True)
+    ap.add_argument('--passwd', type=str, requried=True)
     args = ap.parse_args()
-    poster = Poster(args.server, args.port)
-    for n in range(10):
-        getter = Getter('https://8ch.net/{}/{}.json'.format(args.board, n))
-        poster.post(getter.get())
+    poster = Poster(args.server, args.port, args.user, args.passwd)
+    
+    if args.thread:
+        # only archive 1 thread
+        getter = Getter('https://8ch.net/{}/res/{}.json'.format(args.board, thread))
+        poster.post(getter.get(thread=True))
+    else:
+        # archive the entire board
+        for n in range(10):
+            getter = Getter('https://8ch.net/{}/{}.json'.format(args.board, n))
+            poster.post(getter.get())
     
     
 if __name__ == "__main__":
