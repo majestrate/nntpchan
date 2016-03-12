@@ -181,12 +181,12 @@ function createConnectionElement(j) {
 }
 
 function inject_nntp_feed_element(feed, elem) {
+  elem.appendChild(document.createElement("hr"));
   var name = document.createElement("div");
   name.setAttribute("class", "feeds_name");
   name_elem = document.createTextNode("Name: "+feed.State.Config.Name);
   name.appendChild(name_elem);
   elem.appendChild(name);
-
   var conns = document.createElement("div");
   conns.setAttribute("class", "connections");
   for ( var idx = 0 ; idx < feed.Conns.length; idx ++ ) {
