@@ -146,6 +146,7 @@ function createConnectionElement(j) {
   var e = document.createElement("div");
   e.setAttribute("class", "connection");
   var auth = document.createElement("span");
+  auth.appendChild(document.createTextNode("Connection: "));
   // authentication state
   if (j.authed) {
     auth.setAttribute("class", "authed");
@@ -157,14 +158,15 @@ function createConnectionElement(j) {
 
   // connection mode
   var mode = document.createElement("span");
-  mode.appendChild(document.createTextNode("mode"));
-  mode.appendChild(document.createTextNode(j.mode));
+  mode.setAttribute("class", "mode");
+  mode.appendChild(document.createTextNode("mode: "+j.mode));
   e.appendChild(mode);
 
   var pending = document.createElement("div");
   pending.setAttribute("class", "pending");
   // pending articles
   var articles = Object.keys(j.pending);
+  pending.appendChild(document.createTextNode("pending articles: "+articles.length));
   for ( var idx = 0 ; idx < articles.length; idx ++ ) {
     var msgid = articles[idx];
     var state = j.pending[msgid];
