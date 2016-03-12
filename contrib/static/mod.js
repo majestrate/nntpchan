@@ -145,7 +145,36 @@ function nntpchan_delete() {
 function createConnectionElement(j) {
   var e = document.createElement("div");
   e.setAttribute("class", "connection");
-  e.appendChild(document.createTextNode(JSON.stringify(j)));
+  var auth = document.createElement("span");
+  // authentication state
+  if (j.authed) {
+    auth.setAttribute("class", "authed");
+    auth.appendChild(document.createTextNode("authenticated"));
+  } else {
+    auth.appendChild(document.createTextNode("not authenticated"));
+  }
+  e.appendChild(auth);
+
+  // connection mode
+  var mode = document.createElement("span");
+  mode.appendChild(document.createTextNode("mode"));
+  mode.appendChild(document.createTextNode(j.mode));
+  e.appendChild(mode);
+
+  var pending = document.createElement("div");
+  pending.setAttribute("class", "pending");
+  // pending articles
+  var articles = Object.keys(j.pending);
+  for ( var idx = 0 ; idx < articles.length; idx ++ ) {
+    var msgid = articles[idx];
+    var state = j.pending[msgid];
+    var elem = document.createElement("div");
+    elem.appendChild(document.createTextNode(msgid + ": " + state));
+    elem.setAttribute("class", "pending_item "+state);
+    pending.appendChild(elem);
+  }
+  e.appendChild(pending);
+  // e.appendChild(document.createTextNode(JSON.stringify(j)));
   return e;
 }
 
