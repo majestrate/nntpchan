@@ -145,7 +145,7 @@ function nntpchan_delete() {
 function createConnectionElement(j) {
   var e = document.createElement("div");
   e.setAttribute("class", "connection");
-  var auth = document.createElement("span");
+  var auth = document.createElement("div");
   auth.appendChild(document.createTextNode("Connection: "));
   // authentication state
   if (j.authed) {
@@ -157,7 +157,7 @@ function createConnectionElement(j) {
   e.appendChild(auth);
 
   // connection mode
-  var mode = document.createElement("span");
+  var mode = document.createElement("div");
   mode.setAttribute("class", "mode");
   mode.appendChild(document.createTextNode("mode: "+j.mode));
   e.appendChild(mode);
