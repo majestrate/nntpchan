@@ -161,7 +161,6 @@ function inject_nntp_feed_element(feed, elem) {
   for ( var idx = 0 ; idx < feed.Conns.length; idx ++ ) {
     conns.appendChild(createConnectionElement(feed.Conns[idx]));
   }
-  conns.appendChild(conns_elem);
   elem.appendChild(conns);
 }
 
