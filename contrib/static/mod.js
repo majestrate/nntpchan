@@ -142,6 +142,13 @@ function nntpchan_delete() {
   });
 }
 
+function createConnectionElement(j) {
+  var e = document.createElement("div");
+  e.setAttribute("class", "connection");
+  e.appendChild(document.createTextNode(JSON.stringify(j)));
+  return e;
+}
+
 function inject_nntp_feed_element(feed, elem) {
   var name = document.createElement("div");
   name.setAttribute("class", "feeds_name");
@@ -150,8 +157,10 @@ function inject_nntp_feed_element(feed, elem) {
   elem.appendChild(name);
 
   var conns = document.createElement("div");
-  conns.setAttribute("class", "feeds_connections");
-  conns_elem = document.createTextNode("Connections: "+feed.Conns.length);
+  conns.setAttribute("class", "connections");
+  for ( var idx = 0 ; idx < feed.Conns.length; idx ++ ) {
+    conns.appendChild(createConnectionElement(feed.Conns[idx]));
+  }
   conns.appendChild(conns_elem);
   elem.appendChild(conns);
 }
