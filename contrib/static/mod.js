@@ -146,13 +146,13 @@ function createConnectionElement(j) {
   var e = document.createElement("div");
   e.setAttribute("class", "connection");
   var auth = document.createElement("div");
-  auth.appendChild(document.createTextNode("Connection: "));
+  auth.appendChild(document.createTextNode("Connection: "+j.name));
   // authentication state
   if (j.authed) {
     auth.setAttribute("class", "authed");
-    auth.appendChild(document.createTextNode("authenticated"));
+    auth.appendChild(document.createTextNode("(authenticated)"));
   } else {
-    auth.appendChild(document.createTextNode("not authenticated"));
+    auth.appendChild(document.createTextNode("(not authenticated)"));
   }
   e.appendChild(auth);
 
