@@ -3,6 +3,8 @@
 
 0) Install redis
 
+Redis 3.x or higher is required
+
 0.A) debian/ubuntu
 
     # apt update
