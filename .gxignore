@@ -1,0 +1,31 @@
+#
+# .gitignore for nntpchan repo
+#
+
+# emacs temp files
+*~
+\#*
+.\#*
+
+# srnd config files
+srnd.ini
+feeds.ini
+
+# default article store directory
+articles
+
+# generated files
+webroot
+
+# built binaries
+go
+srndv2
+
+# private key
+*.key
+
+# certificates
+certs
+
+
+rebuild.sh
