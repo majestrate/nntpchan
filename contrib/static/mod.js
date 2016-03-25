@@ -146,7 +146,10 @@ function nntpchan_mod(mod_action, result_elem) {
 
   // get the element
   var input = document.getElementById("nntpchan_mod_target");
-  var target = input.value;
+  var target = null;
+  if (input) {
+    target = input.value;
+  }
   if (mod_action.parser) {
     target = mod_action.parser(target);
   }
