@@ -193,7 +193,9 @@ function nntpchan_mod(mod_action, result_elem) {
         elem.innerHTML = "error: HTTP "+status;
       }
       // clear input
-      input.value = "";
+      if (input) {
+        input.value = "";
+      }
     }
   }
   if (mod_action.name) {
