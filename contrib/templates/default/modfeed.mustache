@@ -33,7 +33,10 @@
       <button onclick="nntp_feed_del()">Remove</button>
     </div>
     <div id="nntpchan_feed_result"></div>
-    <div id="nntpchan_feeds" onload="nntp_feed_update()"></div>
+    <div id="nntpchan_feeds"></div>
+    <script>
+      nntp_feed_update();
+    </script>
     <noscript>
       <b>{{#i18n.Translations}}{{nojs_info}}{{/i18n.Translations}}</b>
     </noscript>
