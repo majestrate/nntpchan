@@ -32,6 +32,10 @@
       <input id="del_feed_name" />
       <button onclick="nntp_feed_del()">Remove</button>
     </div>
+    <div class="nntpchan_feed_pane">
+      <pre> Sync Feeds </pre>
+      <button onclick="nntpchan_admin('feed.sync')">Sync All</button>
+    </div>
     <div id="nntpchan_feed_result"></div>
     <div id="nntpchan_feeds"></div>
     <script>
