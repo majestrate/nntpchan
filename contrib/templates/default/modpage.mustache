@@ -96,7 +96,10 @@
         <button onclick="nntpchan_admin('feed.sync')">{{#i18n.Translations}}{{feed_sync_prompt}}{{/i18n.Translations}}</button>
         <button onclick="nntpchan_admin('store.expire')">{{#i18n.Translations}}{{expire_old_prompt}}{{/i18n.Translations}}</button>    
       </div>
-    </div>  
+    </div>
+    <div>
+      <a href={{prefix}}mod/feeds">nntp feed management</a>
+    </div>
     <div id="nntpchan_mod_result"></div>
     <noscript>
       <b>{{#i18n.Translations}}{{nojs_info}}{{/i18n.Translations}}</b>
