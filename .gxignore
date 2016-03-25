@@ -1,5 +1,5 @@
 #
-# .gitignore for nntpchan repo
+# .gxignore for nntpchan repo
 #
 
 # emacs temp files
@@ -27,5 +27,6 @@ srndv2
 # certificates
 certs
 
-
 rebuild.sh
+
+.git

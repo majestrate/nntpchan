@@ -1,0 +1,11 @@
+{
+  "name": "nntpchan",
+  "author": "jeff",
+  "version": "0.0.0",
+  "gxDependencies": [
+  ],
+  "language": "go",
+  "issues_url": "https://github.com/majestrate/nntpchan",
+  "gx_version": "0.4.0",
+  "gx": {}
+}
