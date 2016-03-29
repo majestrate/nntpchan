@@ -5,32 +5,48 @@
     <link rel="stylesheet" href="{{board.Prefix}}static/site.css" />
     <link rel="stylesheet" href="{{board.Prefix}}static/user.css" />
     <script type="text/javascript" src="{{board.Prefix}}static/nntpchan.js"></script>
-    <title>{{#i18n.Translations}}{{db_install_title}}{{/i18n.Translations}}</title>
+    <title>{{#i18n.Translations}}{{postgres_db_install_title}}{{/i18n.Translations}}</title>
   </head>
   <body>
- <div class="installer_header">{{#i18n.Translations}}{{db_install_title}}{{/i18n.Translations}}</div>
+ <div class="installer_header">{{#i18n.Translations}}{{postgres_db_install_title}}{{/i18n.Translations}}</div>
  {{#dialog.HasError}}
    <p class="installer_error">{{dialog.Error}}</p>
  {{/dialog.HasError}}
- <form action="" method="post">
+ <form action="" method="post" autocomplete="off">
  <div id="install-outer">
    <div id="installer-inner">
      <table class="installer-tab">
        <tbody>
          <tr>
            <th>
-             
+             {{#i18n.Translations}}{{host_name}}{{/i18n.Translations}}
            </th>
            <td>
-             <input type="radio" name="db" value="postgres"> {{#i18n.Translations}}{{postgres_name}}{{/i18n.Translations}}
+             <input type="text" name="host" value="{{dialog.Host}}">
            </td>
          </tr>
          <tr>
            <th>
-             
+             {{#i18n.Translations}}{{port_name}}{{/i18n.Translations}}
            </th>
            <td>
-             <input type="radio" name="db" value="redis" checked> {{#i18n.Translations}}{{redis_name}}{{/i18n.Translations}}
+             <input type="text" name="port" value="{{dialog.Port}}">
+           </td>
+         </tr>
+          <tr>
+           <th>
+             {{#i18n.Translations}}{{username_name}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <input type="text" name="user" value="{{dialog.Username}}">
+           </td>
+         </tr>
+         <tr>
+           <th>
+             {{#i18n.Translations}}{{password_name}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <input type="password" name="password" value="">
            </td>
          </tr>
        </tbody>
