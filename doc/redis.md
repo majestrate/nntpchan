@@ -3,18 +3,7 @@
 
 0) Install redis
 
-Redis 3.x or higher is required
-
-0.A) debian/ubuntu
-
-    # apt update
-    # apt install redis-server
-
-0.B) redhat
-
-    # yum install redis
-
-0.C) from source
+Redis 3.x or higher is required, [stable release](http://download.redis.io/releases/redis-stable.tar.gz) recommend
 
 * see http://redis.io/download
 
