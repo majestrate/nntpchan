@@ -35,4 +35,4 @@ If you want to build without supporting redis then build with the `--no-redis` f
 
     ./build.sh --no-redis
 
-Now configure the database. [next](database.md)
+To run eiter run `./srndv2 setup` and browse to http://127.0.0.1:18000 or configure [by hand](database.md)
