@@ -202,10 +202,11 @@ function nntpchan_mod(mod_action, result_elem) {
           }
         }
       }
-      ajax.setRequestHeader("X-CSRF-Token", csrf);
       if (mod_action.name) {
+
         var url = mod_action.name + "/" + target;
         ajax.open(mod_action.method || "GET", url);
+        ajax.setRequestHeader("X-CSRF-Token", csrf);
         var data = mod_action.data;
         if (data) {
           ajax.setRequestHeader("Content-type","text/json");
