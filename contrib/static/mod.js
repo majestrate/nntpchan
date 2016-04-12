@@ -218,6 +218,6 @@ function nntpchan_mod(mod_action, result_elem) {
       }
     }
   }
-  csrf_ajax.open("");
+  csrf_ajax.open("GET", "");
   csrf_ajax.send();
 }
