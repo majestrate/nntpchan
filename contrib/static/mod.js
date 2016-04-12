@@ -143,7 +143,7 @@ function nntpchan_delete() {
 }
 
 function nntpchan_mod(mod_action, result_elem) {
-
+  
   // get the element
   var input = document.getElementById("nntpchan_mod_target");
   var target = null;
@@ -165,50 +165,59 @@ function nntpchan_mod(mod_action, result_elem) {
     elem.removeChild(elem.firstChild);
   }
 
-
-  // fire off ajax
-  var ajax = new XMLHttpRequest();
-  ajax.onreadystatechange = function() {
-    if (ajax.readyState == XMLHttpRequest.DONE) {
-      var status = ajax.status;
-      // we gud?
-      if (status == 200) {
-        // yah
-        var txt = ajax.responseText;
-        var j = JSON.parse(txt);
-        if (j.error) {
-          var e = document.createTextNode(j.error);
-          elem.appendChild(e);
-        } else {
-          if (mod_action.handle) {
-            var result = mod_action.handle(j);
-            if (result) {
-              elem.appendChild(result);
+  var csrf_ajax = new XMLHttpRequest();
+  csrf_ajax.onreadystatechange = function() {
+    if (csrf_ajax.readyState == XMLHttpRequest.DONE) {
+      // get csrf token
+      var csrf = csrf_ajax.getResponseHeader("X-CSRF-Token");
+      // fire off ajax
+      var ajax = new XMLHttpRequest();
+      ajax.onreadystatechange = function() {
+        if (ajax.readyState == XMLHttpRequest.DONE) {
+          var status = ajax.status;
+          // we gud?
+          if (status == 200) {
+            // yah
+            var txt = ajax.responseText;
+            var j = JSON.parse(txt);
+            if (j.error) {
+              var e = document.createTextNode(j.error);
+              elem.appendChild(e);
+            } else {
+              if (mod_action.handle) {
+                var result = mod_action.handle(j);
+                if (result) {
+                  elem.appendChild(result);
+                }
+              }
             }
+          } else if (status) {
+            // nah
+            // http error
+            elem.innerHTML = "error: HTTP "+status;
+          }
+          // clear input
+          if (input) {
+            input.value = "";
           }
         }
-      } else if (status) {
-        // nah
-        // http error
-        elem.innerHTML = "error: HTTP "+status;
       }
-      // clear input
-      if (input) {
-        input.value = "";
+      ajax.setRequestHeader("X-CSRF-Token", csrf);
+      if (mod_action.name) {
+        var url = mod_action.name + "/" + target;
+        ajax.open(mod_action.method || "GET", url);
+        var data = mod_action.data;
+        if (data) {
+          ajax.setRequestHeader("Content-type","text/json");
+          ajax.send(JSON.stringify(data));
+        } else {
+          ajax.send();
+        }
+      } else {
+        alert("mod action has no name");
       }
     }
   }
-  if (mod_action.name) {
-    var url = mod_action.name + "/" + target;
-    ajax.open(mod_action.method || "GET", url);
-    var data = mod_action.data;
-    if (data) {
-      ajax.setRequestHeader("Content-type","text/json");
-      ajax.send(JSON.stringify(data));
-    } else {
-      ajax.send();
-    }
-  } else {
-    alert("mod action has no name");
-  }
+  csrf_ajax.open("");
+  csrf_ajax.send();
 }
