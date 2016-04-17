@@ -24,3 +24,10 @@ Like this project? Fund it:
 
 bitcoin: 15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE
 
+active nodes:
+
+[2hu-ch.org](https://2hu-ch.org)
+
+[nsfl.tk](https://nsfl.tk)
+
+[i2p.rocks](https://i2p.rocks/ib/)
