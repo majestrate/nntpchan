@@ -49,7 +49,7 @@ mkdir -p $GOPATH
 echo "obtaining gx"
 go get -v github.com/whyrusleeping/gx
 go get -v github.com/whyrusleeping/gx-go
-gx install --global
+$GOPATH/bin/gx install --global
 go get -v gx/ipfs/$rev/srndv2
 cp $GOPATH/bin/srndv2 $root
 echo "Built"
