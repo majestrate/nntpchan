@@ -47,6 +47,5 @@ cd $root
 echo "obtaining gx"
 go get -v github.com/whyrusleeping/gx
 go get -v github.com/whyrusleeping/gx-go
-gx install
-go build -v
+gx install --global && go build -v
 echo "Built"
