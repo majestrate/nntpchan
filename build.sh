@@ -44,12 +44,9 @@ if [ "x$rev" == "x" ] ; then
 fi
 
 cd $root
-export GOPATH=$root/go
-mkdir -p $GOPATH
 echo "obtaining gx"
 go get -v github.com/whyrusleeping/gx
 go get -v github.com/whyrusleeping/gx-go
-export GO15VENDOREXPERIMENT=1
-$GOPATH/bin/gx install
+gx install
 go build -v
 echo "Built"
