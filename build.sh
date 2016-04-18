@@ -44,8 +44,12 @@ if [ "x$rev" == "x" ] ; then
 fi
 
 cd $root
-echo "obtaining gx"
-go get -v github.com/whyrusleeping/gx
-go get -v github.com/whyrusleeping/gx-go
-gx install --global && go build -v
+#echo "obtaining gx"
+#go get -v github.com/whyrusleeping/gx
+#go get -v github.com/whyrusleeping/gx-go
+#gx install --global && go build -v
+export GOPATH=$PWD/go
+mkdir -p $GOPATH
+go get -u -v github.com/majestrate/srndv2
+cp $GOPATH/bin/srndv2 $root
 echo "Built"
