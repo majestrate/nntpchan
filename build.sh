@@ -50,6 +50,5 @@ echo "obtaining gx"
 go get -v github.com/whyrusleeping/gx
 go get -v github.com/whyrusleeping/gx-go
 $GOPATH/bin/gx install --global
-go get -v gx/ipfs/$rev/srndv2
-cp $GOPATH/bin/srndv2 $root
+go build -v
 echo "Built"
