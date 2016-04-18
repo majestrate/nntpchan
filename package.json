@@ -3,6 +3,12 @@
   "author": "jeff",
   "version": "0.0.0",
   "gxDependencies": [
+    {
+      "author": "jeff",
+      "name": "srndv2",
+      "hash": "QmSLsdX9BQ1f9sBeuMeLnrmFEWQiNJG9nRmgi4Pua2Ui3y",
+      "version": "0.0.0"
+    }
   ],
   "language": "go",
   "issues_url": "https://github.com/majestrate/nntpchan",

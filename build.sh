@@ -16,18 +16,39 @@ for arg in $@ ; do
     esac
 done
 
+rev="QmSLsdX9BQ1f9sBeuMeLnrmFEWQiNJG9nRmgi4Pua2Ui3y"
+
+_next=""
 # check for build flags
 for arg in $@ ; do
     case $arg in
         "--disable-redis")
             tags="$tags -tags disable_redis"
             ;;
+        "--revision")
+            _next="rev"
+            ;;
+        "--revision=*")
+            rev=$(echo $arg | cut -d'=' -f2)
+            ;;
+        *)
+            if [ "x$_next" == "xrev" ] ; then
+                rev="$arg"
+            fi
     esac
 done
+
+if [ "x$rev" == "x" ] ; then
+    echo "revision not specified"
+    exit 1
+fi
 
 cd $root
 export GOPATH=$root/go
 mkdir -p $GOPATH
-go get -v -u $tags github.com/majestrate/srndv2
-cp -a $GOPATH/bin/srndv2 $root
+echo "obtaining gx"
+go get -v github.com/whyrusleeping/gx-go
+gx install --global
+go get -v gx/ipfs/$rev/srndv2
+cp $GOPATH/bin/srndv2 $root
 echo "Built"

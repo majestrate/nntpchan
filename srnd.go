@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/majestrate/srndv2/src/srnd"
+	"gx/ipfs/QmSLsdX9BQ1f9sBeuMeLnrmFEWQiNJG9nRmgi4Pua2Ui3y/srndv2/src/srnd"
 	"log"
 	"os"
 	"os/signal"
