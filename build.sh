@@ -49,6 +49,7 @@ mkdir -p $GOPATH
 echo "obtaining gx"
 go get -v github.com/whyrusleeping/gx
 go get -v github.com/whyrusleeping/gx-go
-$GOPATH/bin/gx install --global
+export GO15VENDOREXPERIMENT=1
+$GOPATH/bin/gx install
 go build -v
 echo "Built"
