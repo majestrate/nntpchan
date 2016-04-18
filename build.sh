@@ -47,6 +47,7 @@ cd $root
 export GOPATH=$root/go
 mkdir -p $GOPATH
 echo "obtaining gx"
+go get -v github.com/whyrusleeping/gx
 go get -v github.com/whyrusleeping/gx-go
 gx install --global
 go get -v gx/ipfs/$rev/srndv2
