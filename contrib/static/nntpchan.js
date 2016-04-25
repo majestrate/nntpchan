@@ -126,7 +126,7 @@ function inject_hover(prefix, el, parent) {
 
 function livechan_got_post(widget, j) {
   // do scroll
-  while (widget.children.length > 20) {
+  while (widget.children.length > 5) {
     // remove top element
     widget.removeChild(widget.children[0]);
   }
@@ -153,7 +153,7 @@ function inject_livechan_widget(prefix, parent) {
     };
     progress("initialize");
     socket.onopen = function () {
-      progress("streaming");
+      progress("streaming (read only)");
     }
     socket.onmessage = function(ev) {
       var j = null;
