@@ -394,7 +394,11 @@ input, textarea {
 
 }
 
-.backlink, .backlink:hover, .backlink:visited, .backlink:visited:hover {
+.backlink_rewritten {
+    z-index: 5;
+}
+
+.backlink, .backlink:hover, .backlink:visited, .backlink:visited:hover, .backlink_rewritten {
     margin-left: none;
     color: #D00
 }
