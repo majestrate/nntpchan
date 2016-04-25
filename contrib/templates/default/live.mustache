@@ -1,0 +1,36 @@
+{{!
+  live.mustache -- live ui 
+  template parameters:
+  - prefix ( site prefix )
+}}
+<html>
+  <head>
+    <title> {{#i18n.Translations}}{{overboard_title}}{{/i18n.Translations}} </title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+  </head>
+  <body>
+    <center>
+      <div id="nntpchan_banner">
+      </div>
+    </center>
+    <!-- begin navbar -->
+    {{{navbar}}}
+    <!-- end navbar -->
+    <div onload="inject_livechan_widget('{{prefix}}', this)">
+    </div>
+    <script type="text/javascript" >
+    var prefix = "{{prefix}}";
+    var e = document.getElementById("nntpchan_banner");
+    nntpchan_inject_banners(e, prefix);
+    init(prefix);
+    </script>
+    <hr/>
+    <footer>
+      <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
+      <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
+    </footer>
+  </body>
+</html>
