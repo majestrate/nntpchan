@@ -169,6 +169,9 @@ function inject_livechan_widget(prefix, parent) {
     }
     socket.onclose = function(ev) {
       progress("connection closed");
+      setTimeout(function() {
+        inject_livechan_widget(prefix, parent);
+      }, 1000);
     }
   } else {
     parent.innerHTML = "<pre>livechan mode requires websocket support</pre>";
