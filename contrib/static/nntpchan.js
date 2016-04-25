@@ -128,7 +128,7 @@ function livechan_got_post(widget, j) {
   // do scroll
   while (widget.children.length > 20) {
     // remove top element
-    widget.children.removeChild(widget.children[0]);
+    widget.removeChild(widget.children[0]);
   }
   nntpchan_buildpost(widget, j);
   // scroll to bottom
@@ -153,7 +153,7 @@ function inject_livechan_widget(prefix, parent) {
     };
     progress("initialize");
     socket.onopen = function () {
-      progress("connected");
+      progress("streaming");
     }
     socket.onmessage = function(ev) {
       var j = null;
@@ -169,7 +169,6 @@ function inject_livechan_widget(prefix, parent) {
     }
     socket.onclose = function(ev) {
       progress("connection closed");
-      setTimeout(function(){ parent.innerHTML = ""; }, 5000);
     }
   } else {
     parent.innerHTML = "<pre>livechan mode requires websocket support</pre>";
