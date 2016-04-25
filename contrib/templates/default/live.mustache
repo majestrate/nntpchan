@@ -19,14 +19,17 @@
     <!-- begin navbar -->
     {{{navbar}}}
     <!-- end navbar -->
-    <div onload="inject_livechan_widget('{{prefix}}', this)">
-      livechan
+    <div id="livechan">
     </div>
     <script type="text/javascript" >
     var prefix = "{{prefix}}";
     var e = document.getElementById("nntpchan_banner");
     nntpchan_inject_banners(e, prefix);
     init(prefix);
+    e = document.getElementById("livechan");
+    if (e) {
+        inject_livechan_widget(prefix, e);
+    }
     </script>
     <hr/>
     <footer>
