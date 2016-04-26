@@ -68,6 +68,7 @@ function nntpchan_buildpost(parent, j) {
   if (j) {
     // huehuehue
     post.innerHTML = j.PostMarkup;
+    inject_hover_for_element(post);
   } else {
     post.setAttribute("class", "notfound post");
     post.appendChild(document.createTextNode("post not found"));
@@ -78,21 +79,21 @@ function nntpchan_buildpost(parent, j) {
 // inject post hover behavior
 function inject_hover(prefix, el, parent) {
   if (!prefix) { throw "prefix is not defined"; }
-  console.log(el, parent);
-  var timeout;
-  var idx = -2;
+  var linkhash = el.getAttribute("backlinkhash");
+  if (!linkhash) { throw "linkhash undefined"; }
+  console.log("rewrite linkhash "+linkhash);
 
-  var linkhash = el.backlinkhash;
-  
   var elem = document.createElement("span");
   elem.setAttribute("class", "backlink_rewritten");
   elem.appendChild(document.createTextNode(">>"+linkhash.substr(0,10)));
-
-  parent.appendChild(elem);
+  if (!parent) {
+    parent = el.parentNode;
+  }
   parent.removeChild(el);
+  parent.appendChild(elem);
   
   elem.onclick = function(ev) {
-    if(elem.backlink) {
+    if(parent.backlink) {
       nntpchan_apicall(prefix+"api/find?hash="+linkhash, function(j) {
         var wrapper = document.createElement("div");
         wrapper.setAttribute("class", "hover "+linkhash);
@@ -103,14 +104,14 @@ function inject_hover(prefix, el, parent) {
           // wrap backlink
           nntpchan_buildpost(wrapper, j);
         }
-        elem.appendChild(wrapper);
-        elem.backlink = false;
+        parent.appendChild(wrapper);
+        parent.backlink = false;
       }, function(msg) {
         var wrapper = document.createElement("div");
         wrapper.setAttribute("class", "hover "+linkhash);
         wrapper.appendChild(document.createTextNode(msg));
-        elem.appendChild(wrapper);
-        elem.backlink = false;
+        parent.appendChild(wrapper);
+        parent.backlink = false;
       });
     } else {
       var elems = document.getElementsByClassName(linkhash);
@@ -118,10 +119,10 @@ function inject_hover(prefix, el, parent) {
       for (var idx = 0 ; idx < elems.length; idx ++ ) {
         elems[idx].parentNode.removeChild(elems[idx]);
       }
-      elem.backlink = true;
+      parent.backlink = true;
     }
   };
-  elem.backlink = true;
+  parent.backlink = true;
 }
 
 function livechan_got_post(widget, j) {
@@ -202,14 +203,23 @@ function nntpchan_inject_banners(elem, prefix) {
   elem.appendChild(e);
 }
 
+// inject post hover for all backlinks in an element
+function inject_hover_for_element(elem) {  
+  var elems = elem.getElementsByClassName("backlink");
+  var ls = [];
+  var l = elems.length;
+  for ( var idx = 0 ; idx < l ; idx ++ ) {
+    var e = elems[idx];
+    ls.push(e);
+  }
+  for( var elem in ls ) {
+      inject_hover(prefix, ls[elem]);
+  }
+}
+
 function init(prefix) {
   // inject posthover ...
-  var elems = document.getElementsByClassName("backlink");
-  // ... for backlinks
-  for ( var idx = 0 ; idx < elems.length ; idx ++ ) {
-    // uncomment to do reply hover
-    //inject_hover(prefix, elems[idx], elems[idx].parentNode);
-  }
+  inject_hover_for_element(document);
 }
   
 // apply themes

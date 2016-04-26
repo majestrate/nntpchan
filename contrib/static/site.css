@@ -17,6 +17,13 @@ section {
 	width: 100%;
 }
 
+.hover {
+    position: absolute;
+}
+
+.hover > div > .post {
+    box-shadow: 0 0 10px rgba(0,0,0,0.55);
+}
 
 .frontend , .subject, .catalog_subject {
     color: #0F0C5D;
@@ -277,6 +284,10 @@ input, textarea {
     margin-bottom: 1px;
     float: left;
     clear: both;
+}
+
+.post:focus {
+    background-color: #A99AFF;
 }
 
 .post {
