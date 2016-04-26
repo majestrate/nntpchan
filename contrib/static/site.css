@@ -292,7 +292,7 @@ input, textarea {
     clear: both;
 }
 
-.post:focus , .post:active  {
+.post:target {
     background-color: #A99AFF;
 }
 
