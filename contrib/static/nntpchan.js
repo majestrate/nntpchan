@@ -99,6 +99,7 @@ function inject_hover(prefix, el, parent) {
         wrapper.setAttribute("class", "hover "+linkhash);
         if (j == null) {
           // not found?
+          wrapper.setAttribute("class", "hover notfound-hover "+linkhash);
           wrapper.appendChild(document.createTextNode("not found"));
         } else {
           // wrap backlink
