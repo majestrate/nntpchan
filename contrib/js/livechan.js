@@ -37,7 +37,6 @@ function inject_livechan_widget(prefix, parent) {
         // ignore
       }
       if (j) {
-        console.log(j);
         livechan_got_post(parent, j);
       }
     }
