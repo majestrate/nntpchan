@@ -277,8 +277,8 @@ function init(prefix) {
   }, false);
   
   e.addEventListener("dragend", function(ev) {
-    var x = originalX + ev.clientX - mouseDownX
-    var y = originalY + ev.clientY - mouseDownY
+    var x = originalX + ev.clientX - mouseDownX;
+    var y = originalY + ev.clientY - mouseDownY;
     rpl.moveTo(x, y);
     originalX = x;
     originalY = y;
