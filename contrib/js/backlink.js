@@ -264,8 +264,11 @@ function init(prefix) {
   e.setAttribute("draggable", "true");
   e.ondragend = function(ev) {
     ev.preventDefault();
+    var x = 0;
+    var y = 0;
+    console.log(ev);
     var el = document.getElementById("postform_container");
-    el.setAttribute("style", "top: "+ev.windowY+"px; left: "+ev.windowX+ "px; position: fixed; ");
+    el.setAttribute("style", "top: "+y+"px; left: "+x+ "px; position: fixed; ");
   }
 }
 
