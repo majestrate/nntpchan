@@ -3,6 +3,10 @@
 var configRoot = "";
 
 
+if (typeof _ == 'undefined') {
+  var _ = function(a) { return a; };
+}
+
 function setupVideo(thumb, url) {
     if (thumb.videoAlreadySetUp) return;
     thumb.videoAlreadySetUp = true;
@@ -208,8 +212,8 @@ function setupVideosIn(element) {
         if (/(\.webm)|(\.mp4)$/.test(thumbs[i].pathname)) {
             setupVideo(thumbs[i], thumbs[i].href);
         } else {
-            var url = thumbs[i].href
-            if (/(\.webm)|(\.mp4)$/.test(url)) setupVideo(thumbs[i], url);
+          var url = thumbs[i].href;
+          if (/(\.webm)|(\.mp4)$/.test(url)) setupVideo(thumbs[i], url);
         }
     }
 }

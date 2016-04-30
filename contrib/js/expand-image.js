@@ -17,7 +17,7 @@ function setupInlineImage(thumb, url) {
   var expanded = false;
   var oldurl = img.src;
   thumb.href = "#";
-  thumb.target = "";
+  thumb.target = undefined;
   img.addEventListener("click", function(ev) {
     if (expanded) {
       img.setAttribute("class", "thumbnail");
