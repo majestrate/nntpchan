@@ -139,6 +139,7 @@ DynReply.prototype.update = function() {
 }
 
 DynReply.prototype.show = function() {
+  console.log("show dynreply");
   this.update();
   this.elem.style.display = 'inline';
 }
