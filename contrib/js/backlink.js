@@ -265,7 +265,7 @@ function init(prefix) {
   var rpl = getReplyTo();
   rpl.setPrefix(prefix);
   var e = rpl.elem;
-
+  e.setAttribute("draggable", "true");
   var mouseDownX, mouseDownY;
 
   var originalX = window.width - 300;
