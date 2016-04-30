@@ -216,6 +216,7 @@ DynReply.prototype.showError = function(msg) {
   console.log("error in dynreply: "+msg);
   this._error.setAttribute("class", "error");
   this._error.appendChild(document.createTextNode(msg));
+  this.updateCaptcha();
 }
 
 DynReply.prototype.showMessage = function(msg) {
@@ -356,6 +357,7 @@ function init(prefix) {
       } else {
         // we're good
         r.showMessage("posted as "+j.message_id);
+        r.updateCaptcha();
       }
     }, function(err) {
       r.showError(err);
