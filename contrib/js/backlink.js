@@ -265,7 +265,7 @@ function init(prefix) {
   e.ondragend = function(ev) {
     ev.preventDefault();
     var el = document.getElementById("postform_container");
-    el.setAttribute("style", "top: "+ev.y+"px; left: "+ev.x+ "px; position: fixed; ");
+    el.setAttribute("style", "top: "+ev.windowY+"px; left: "+ev.windowX+ "px; position: fixed; ");
   }
 }
 
