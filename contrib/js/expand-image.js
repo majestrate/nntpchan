@@ -16,7 +16,7 @@ function setupInlineImage(thumb, url) {
   var img = thumb.querySelector("img.thumbnail");
   var expanded = false;
   var oldurl = img.src;
-  img.onclick = function(ev) {
+  thumb.onclick = function(ev) {
     if (expanded) {
       img.setAttribute("class", "thumbnail");
       img.src = oldurl;
