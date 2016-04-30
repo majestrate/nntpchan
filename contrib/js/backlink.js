@@ -262,7 +262,8 @@ function init(prefix) {
   rpl.setPrefix(prefix);
   var e = rpl.elem;
   e.setAttribute("draggable", "true");
-  e.ondrop = function(ev) {
+  e.ondragend = function(ev) {
+    console.log(ev);
     e.style.top = ev.y;
     e.style.left = ev.x;
   }
