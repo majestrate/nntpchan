@@ -18,11 +18,12 @@ function setupInlineImage(thumb, url) {
   var oldurl = img.src;
   thumb.onclick = function() {
     if (expanded) {
+      thumb.
       img.setAttribute("class", "thumbnail");
       img.src = oldurl;
       expanded = false;
     } else {
-      img.setAttribute("class", "thumbnail expanded");
+      img.setAttribute("class", "expanded-thumbnail");
       img.src = url;
       expanded = true;
     }

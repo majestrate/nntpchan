@@ -366,7 +366,8 @@ input, textarea {
     float: left;
 }
 
-.expanded {
+.expanded-thumbnail {
+    display: inline;
     max-width: 100%;
     max-height: 100%;
     margin: 10px 10px 10px;
