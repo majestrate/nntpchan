@@ -110,7 +110,7 @@ table tbody tr:nth-of-type( even ) {
 }
 
 
-#postform_container > tr , #postform-inner > tr {
+#postform_container tr {
 	background-color: transparent!important;
 }
 
