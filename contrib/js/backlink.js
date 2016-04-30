@@ -3,7 +3,7 @@ var dynreply;
 
 function getReplyTo() {
   if(!dynreply) {
-    var e = document.getElementById("postform-container");
+    var e = document.getElementById("postform_container");
     if (e) {
       // use existing postform
       dynreply = new DynReply(e);
@@ -44,7 +44,7 @@ function DynReply(existingElem) {
   // build new post form
   
   var elem = document.createElement("div");
-  elem.setAttribute("id", "postform-container");
+  elem.setAttribute("id", "postform_container");
   this.elem = elem;
   // build post form
   this.form = document.createElement("form");
