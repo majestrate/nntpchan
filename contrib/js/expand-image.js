@@ -33,7 +33,7 @@ function setupInlineImage(thumb, url) {
 function setupInlineImageIn(element) {
   var thumbs = element.querySelectorAll("a.file");
   for ( var i = 0 ; i < thumbs.length ; i++ ) {
-    var url = thumbs[i].children[0].src;
+    var url = thumbs[i].href;
     if (filenameIsImage(url)) {
       // match
       console.log("matched url", url);
