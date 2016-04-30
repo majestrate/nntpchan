@@ -352,13 +352,13 @@ function init(prefix) {
     r.post(function(j) {
       if(j.error) {
         // an error happened
-        r.showError(h.error);
+        r.showError(j.error);
       } else {
         // we're good
         r.showMessage("posted as "+j.message_id);
       }
     }, function(err) {
-      alert(err);
+      r.showError(err);
     });
     r.showMessage("posting... ");
   }
