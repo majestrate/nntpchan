@@ -257,5 +257,12 @@ function inject_hover_for_element(elem) {
 function init(prefix) {
   // inject posthover ...
   inject_hover_for_element(document);
+  // dynamic post reply draggable
+  var rpl = getReplyTo();
+  var e = rpl.elem;
+  e.setAttribute("draggable", "true");
+  e.ondragover = function(ev) {
+    console.log(ev);
+  }
 }
 
