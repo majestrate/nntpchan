@@ -267,7 +267,7 @@ function init(prefix) {
   e.setAttribute("draggable", "true");
   var mouseDownX, mouseDownY;
 
-  var originalX = 300;
+  var originalX = 10;
   var originalY = 10;
   rpl.moveTo(originalX, originalY);
   
