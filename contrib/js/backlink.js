@@ -72,7 +72,7 @@ function DynReply(existingElem) {
   elem.setAttribute("value", "Anonymous");
   var err_elem = document.createElement("span");
   err_elem.setAttribute("id", "postform_msg");
-  this._error = error_elem;
+  this._error = err_elem;
   table_insert_row(tbody, document.createTextNode("Name"), [elem, err_elem])
   
   // subject
