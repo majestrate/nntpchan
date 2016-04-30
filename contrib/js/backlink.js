@@ -130,7 +130,7 @@ DynReply.prototype.update = function() {
     if (this.board && this.roothash) {
       // update post form
       var ref = document.getElementById("postform_reference");
-      ref.value = this.roothash;
+      ref.setAttribute("value", this.roothash);
       this.form.action = this.prefix + "post/" + this.board;
     }
   }
