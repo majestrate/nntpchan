@@ -282,8 +282,8 @@ function init(prefix) {
     var y = originalY + ev.clientY - mouseDownY;
     console.log(x,y);
     //rpl.moveTo(x, y);
-    originalX = x;
-    originalY = y;
+    //originalX = x;
+    //originalY = y;
   }, false);
 }
 
