@@ -39,6 +39,7 @@ function DynReply(existingElem) {
     this.elem = existingElem;
     this.form = this.elem.querySelector("form");
     this._error = document.getElementById("postform_msg");
+    this.url = this.form.action + "?t=json";
     var e = document.getElementById("postform_submit");
     e.setAttribute("type", "button");
     return;
