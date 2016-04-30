@@ -16,7 +16,7 @@ function setupInlineImage(thumb, url) {
   var img = thumb.querySelector("img.thumbnail");
   var expanded = false;
   var oldurl = img.src;
-  thumb.onclick = function(ev) {
+  img.addEventListener("click", function(ev) {
     if (expanded) {
       img.setAttribute("class", "thumbnail");
       img.src = oldurl;
@@ -26,7 +26,7 @@ function setupInlineImage(thumb, url) {
       img.src = url;
       expanded = true;
     }
-  }
+  }, false);
 }
 
 // set up image inlining for all applicable children in an element
