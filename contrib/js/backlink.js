@@ -45,7 +45,7 @@ function DynReply(existingElem) {
   
   var elem = document.createElement("div");
   elem.setAttribute("id", "postform-container");
-
+  elem.setAttribute("class", "postform-inner");
   this.elem = elem;
   // build post form
   this.form = document.createElement("form");
