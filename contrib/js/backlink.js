@@ -280,10 +280,11 @@ function init(prefix) {
   e.addEventListener("dragend", function(ev) {
     var x = originalX + ev.clientX - mouseDownX;
     var y = originalY + ev.clientY - mouseDownY;
-    console.log(x,y);
-    //rpl.moveTo(x, y);
-    //originalX = x;
-    //originalY = y;
+    x -= window.screenLeft;
+    y -= window.screenTop;
+    rpl.moveTo(x, y);
+    originalX = x;
+    originalY = y;
   }, false);
 }
 
