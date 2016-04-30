@@ -373,7 +373,7 @@ input, textarea {
 }
 
 .thumbnail {
-    display: flex;
+    display: block;                      
     margin: 5px 20px 10px;
     border: medium none;
     max-width: 300px;
@@ -400,8 +400,7 @@ input, textarea {
 }
 
 .post {
-    display: flex;
-    flex-direction: column;
+    display: inline-block;
     overflow: hidden;
 }
 
