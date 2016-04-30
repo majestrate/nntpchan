@@ -133,7 +133,6 @@ input[type="text"],input[type="password"],textarea {
     border-width: 1px;
     border-style: none solid solid none;
     border-color: #B7C5D9;
-    display: inline-block;
     max-width: 94%!important;
 }
 
@@ -374,7 +373,7 @@ input, textarea {
 }
 
 .thumbnail {
-    display: block;
+    display: flex;
     margin: 5px 20px 10px;
     border: medium none;
     max-width: 300px;
@@ -401,9 +400,9 @@ input, textarea {
 }
 
 .post {
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-
 }
 
 .pagelist {
