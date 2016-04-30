@@ -117,7 +117,7 @@ function DynReply(existingElem) {
   table.appendChild(tbody);
   this.form.appendChild(table);
   this.elem.appendChild(this.form);
-  document.appendChild(this.elem);
+  document.body.appendChild(this.elem);
   this.board = null;
   this.roothash = null;
   this.prefix = null;
