@@ -37,7 +37,7 @@ parent.appendChild(wrapper);parent.backlink=false;},function(msg){var wrapper=do
 parent.backlink=true;}};parent.backlink=true;}
 function inject_hover_for_element(elem){var elems=elem.getElementsByClassName("backlink");var ls=[];var l=elems.length;for(var idx=0;idx<l;idx++){var e=elems[idx];ls.push(e);}
 for(var elem in ls){inject_hover(prefix,ls[elem]);}}
-function init(prefix){inject_hover_for_element(document);var rpl=getReplyTo();var e=rpl.elem;e.setAttribute("draggable","true");e.ondragover=function(ev){console.log(ev);}}
+function init(prefix){inject_hover_for_element(document);var rpl=getReplyTo();var e=rpl.elem;e.setAttribute("draggable","true");e.ondragover=function(ev){e.style.top=ev.y;e.style.left=ev.x;}}
 /* ./contrib/js/banner.js */
 var banner_count=3;function nntpchan_inject_banners(elem,prefix){var n=Math.floor(Math.random()*banner_count);var banner=prefix+"static/banner_"+n+".jpg";var e=document.createElement("img");e.src=banner;e.id="nntpchan_banner";elem.appendChild(e);}
 /* ./contrib/js/expand-image.js */
