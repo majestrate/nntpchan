@@ -25,11 +25,6 @@ echo -e "//For source code and license information please check https://github.c
 
 mini ./contrib/js/main.js_ $outfile
 
-if [ ! -e ./contrib/js/contrib/MathJax/MathJax.js ] ; then
-    git submodule update --init
-fi
-mini ./contrib/js/contrib/MathJax/MathJax.js $outfile
-
 # local js
 for f in ./contrib/js/*.js ; do
   mini $f $outfile
