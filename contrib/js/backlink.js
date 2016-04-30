@@ -259,9 +259,10 @@ function init(prefix) {
   inject_hover_for_element(document);
   // dynamic post reply draggable
   var rpl = getReplyTo();
+  rpl.setPrefix(prefix);
   var e = rpl.elem;
   e.setAttribute("draggable", "true");
-  e.ondragover = function(ev) {
+  e.ondrop = function(ev) {
     e.style.top = ev.y;
     e.style.left = ev.x;
   }
