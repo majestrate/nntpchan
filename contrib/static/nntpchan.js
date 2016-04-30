@@ -25,7 +25,7 @@ DynReply.prototype.setPrefix=function(prefix){this.prefix=prefix;}
 DynReply.prototype.hide=function(){this.elem.style.display='none';}
 DynReply.prototype.setBoard=function(boardname){if(boardname){this.board=boardname;}}
 DynReply.prototype.setRoot=function(roothash){if(roothash){this.roothash=roothash;}}
-function nntpchan_reply(prefix,parent,shorthash){console.log(parent);if(prefix&&parent&&parent.roothash&&parent.boardname){var boardname=parent.boardname;var roothash=parent.roothash;var replyto=getReplyTo();replyto.setBoard(boardname);replyto.setRoot(roothash);replyto.setPrefix(prefix);replyto.show();}
+function nntpchan_reply(prefix,parent,shorthash){console.log(parent.roothash,parent.boardname);if(prefix&&parent&&parent.roothash&&parent.boardname){var boardname=parent.boardname;var roothash=parent.roothash;var replyto=getReplyTo();replyto.setBoard(boardname);replyto.setRoot(roothash);replyto.setPrefix(prefix);replyto.show();}
 var elem=document.getElementById("postform_message");if(elem)
 {elem.value+=">>"+shorthash.substr(0,10)+"\n";}}
 function inject_hover(prefix,el,parent){if(!prefix){throw"prefix is not defined";}
