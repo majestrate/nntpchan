@@ -25,7 +25,7 @@ echo -e "//For source code and license information please check https://github.c
 
 mini ./contrib/js/main.js_ $outfile
 
-if [ ! -e ./contrib/js/contrib/MathJax/ ] ; then
+if [ ! -e ./contrib/js/contrib/MathJax/MathJax.js ] ; then
     git submodule --init update .
 fi
 mini ./contrib/js/contrib/MathJax/MathJax.js $outfile
