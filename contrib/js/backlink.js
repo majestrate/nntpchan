@@ -263,11 +263,9 @@ function init(prefix) {
   var e = rpl.elem;
   e.setAttribute("draggable", "true");
   e.ondragend = function(ev) {
-    var el = document.getElementById("postform_container");
-    el.style.top = "" + ev.y;
-    el.style.left = "" + ev.x;
-    console.log(el);
     ev.preventDefault();
+    var el = document.getElementById("postform_container");
+    el.setAttribute("style", "top: "+ev.y+"; left: "+ev.x);
   }
 }
 
