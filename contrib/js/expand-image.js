@@ -36,6 +36,7 @@ function setupInlineImageIn(element) {
     var url = thumbs[i].children[0].src;
     if (filenameIsImage(url)) {
       // match
+      console.log("matched url", url);
       setupInlineImage(thumbs[i], url);
     }
   }
