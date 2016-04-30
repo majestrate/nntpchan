@@ -174,6 +174,7 @@ DynReply.prototype.setRoot = function(roothash) {
 
 // reply box function
 function nntpchan_reply(prefix, parent, shorthash) {
+  console.log(parent);
   if (prefix && parent && parent.roothash && parent.boardname) {
     var boardname = parent.boardname;
     var roothash = parent.roothash;
