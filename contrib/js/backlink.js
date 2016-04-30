@@ -124,7 +124,7 @@ function DynReply(existingElem) {
 }
 
 DynReply.prototype.moveTo = function(x,y) {
-  this.elem.setAttribute("style", "top: "+y+"px; left: "+x+"px;");
+  this.elem.setAttribute("style", "top: "+y+"px; right: "+x+"px;");
 }
 
 DynReply.prototype.update = function() {
@@ -277,7 +277,7 @@ function init(prefix) {
   }, false);
   
   e.addEventListener("dragend", function(ev) {
-    var x = originalX + ev.clientX - mouseDownX;
+    var x = originalX - ev.clientX + mouseDownX;
     var y = originalY + ev.clientY - mouseDownY;
     rpl.moveTo(x, y);
     originalX = x;
