@@ -329,24 +329,10 @@ function init(prefix) {
   var originalY = 10;
   rpl.moveTo(originalX, originalY);
 
-  var keyDown = false;
-  
-  e.addEventListener("keydown", function(ev) {
-    if (ev.shiftKey) {
-      keyDown = true;
-    }
-  });
-
-  e.addEventListener("keyup", function(ev) {
-    if (ev.shiftKey) {
-      keyDown = false;
-    }
-  });
-  
   e.addEventListener("dragstart", function(ev) {
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
-    if (keyDown) {
+    if (!ev.ctrlKey) {
       ev.preventDefault();
     }
   }, false);
@@ -359,9 +345,6 @@ function init(prefix) {
     rpl.moveTo(x, y);
     originalX = x;
     originalY = y;
-    if (keyDown) {
-      ev.preventDefault();
-    }
   }, false);
 
   // add replyto post handlers
