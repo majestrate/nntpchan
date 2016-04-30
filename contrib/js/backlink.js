@@ -124,7 +124,7 @@ function DynReply(existingElem) {
 }
 
 DynReply.prototype.moveTo = function(x,y) {
-  x = window.screenX - x;
+  x = window.screenX - x ;
   this.elem.setAttribute("style", "top: "+y+"px; right: "+x+"px;");
 }
 
@@ -268,7 +268,7 @@ function init(prefix) {
   e.setAttribute("draggable", "true");
   var mouseDownX, mouseDownY;
 
-  var originalX = 10;
+  var originalX = window.screenX - 300;
   var originalY = 10;
   rpl.moveTo(originalX, originalY);
   
