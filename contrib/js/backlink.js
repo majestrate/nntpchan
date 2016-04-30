@@ -272,19 +272,22 @@ function init(prefix) {
   var originalY = 10;
   rpl.moveTo(originalX, originalY);
   
-  e.addEventListener("mousedown", function(ev) {
+  e.addEventListener("dragstart", function(ev) {
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
     ev.stopPropagation();
-  });
+    ev.preventDefault();
+    
+  }, false);
   
-  e.addEventListener("mouseup", function(ev) {
-    ev.stopPropagation();
+  e.addEventListener("dragend", function(ev) {
     var x = originalX + ev.clientX - mouseDownX
     var y = originalY + ev.clientY - mouseDownY
     rpl.moveTo(x, y);
     originalX = x;
     originalY = y;
-  });
+    ev.stopPropagation();
+    ev.preventDefault();
+  }, false);
 }
 
