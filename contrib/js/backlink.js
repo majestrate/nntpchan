@@ -215,12 +215,12 @@ DynReply.prototype.setRoot = function(roothash) {
 DynReply.prototype.showError = function(msg) {
   console.log("error in dynreply: "+msg);
   this._error.setAttribute("class", "error");
-  this._error.value = document.createTextNode(msg);
+  this._error.appendChild(document.createTextNode(msg));
 }
 
 DynReply.prototype.showMessage = function(msg) {
   this._error.setAttribute("class", "message");
-  this._error.value = document.createTextNode(msg);
+  this._error.appendChild(document.createTextNode(msg));
   var e = this._error;
   setTimeout(function() {
     // clear it
