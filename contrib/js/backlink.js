@@ -275,8 +275,6 @@ function init(prefix) {
   e.addEventListener("dragstart", function(ev) {
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
-    ev.preventDefault();
-    
   }, false);
   
   e.addEventListener("dragend", function(ev) {
@@ -285,7 +283,6 @@ function init(prefix) {
     rpl.moveTo(x, y);
     originalX = x;
     originalY = y;
-    ev.preventDefault();
   }, false);
 }
 
