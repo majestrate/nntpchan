@@ -221,9 +221,10 @@ DynReply.prototype.showError = function(msg) {
 DynReply.prototype.showMessage = function(msg) {
   this._error.setAttribute("class", "message");
   this._error.value = document.createTextNode(msg);
+  var e = this._error;
   setTimeout(function() {
     // clear it
-    this._error.innerHTML = "";
+    e.innerHTML = "";
   }, 2000);
 }
 

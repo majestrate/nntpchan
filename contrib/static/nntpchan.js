@@ -31,7 +31,7 @@ DynReply.prototype.hide=function(){this.elem.style.display='none';}
 DynReply.prototype.setBoard=function(boardname){if(boardname){this.board=boardname;}}
 DynReply.prototype.setRoot=function(roothash){if(roothash){this.roothash=roothash;}}
 DynReply.prototype.showError=function(msg){console.log("error in dynreply: "+msg);this._error.setAttribute("class","error");this._error.value=document.createTextNode(msg);}
-DynReply.prototype.showMessage=function(msg){this._error.setAttribute("class","message");this._error.value=document.createTextNode(msg);setTimeout(function(){this._error.innerHTML="";},2000);}
+DynReply.prototype.showMessage=function(msg){this._error.setAttribute("class","message");this._error.value=document.createTextNode(msg);var e=this._error;setTimeout(function(){e.innerHTML="";},2000);}
 function nntpchan_reply(parent,shorthash){if(parent){var boardname=parent.getAttribute("boardname");var roothash=parent.getAttribute("root");var replyto=getReplyTo();replyto.setBoard(boardname);replyto.setRoot(roothash);replyto.show();}
 var elem=document.getElementById("postform_message");if(elem)
 {elem.value+=">>"+shorthash.substr(0,10)+"\n";}}
