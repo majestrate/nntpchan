@@ -346,7 +346,7 @@ function init(prefix) {
   e.addEventListener("dragstart", function(ev) {
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
-    if (!keyDown) {
+    if (keyDown) {
       ev.preventDefault();
     }
   }, false);
@@ -359,7 +359,7 @@ function init(prefix) {
     rpl.moveTo(x, y);
     originalX = x;
     originalY = y;
-    if (!keyDown) {
+    if (keyDown) {
       ev.preventDefault();
     }
   }, false);
