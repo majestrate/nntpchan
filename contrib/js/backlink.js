@@ -124,7 +124,7 @@ function DynReply(existingElem) {
 }
 
 DynReply.prototype.moveTo = function(x,y) {
-  this.elem.setAttribute("style", "top: "+y+"px; left: "+x+"px");
+  this.elem.setAttribute("style", "top: "+y+"px; left: "+x+"px;");
 }
 
 DynReply.prototype.update = function() {
