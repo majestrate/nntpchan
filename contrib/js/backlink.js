@@ -39,6 +39,8 @@ function DynReply(existingElem) {
     this.elem = existingElem;
     this.form = this.elem.querySelector("form");
     this._error = document.getElementById("postform_msg");
+    var e = document.getElementById("postform_submit");
+    e.setAttribute("type", "button");
     return;
   }
 
@@ -76,7 +78,6 @@ function DynReply(existingElem) {
   elem = document.createElement("input");
   elem.setAttribute("name", "subject");
   elem.setAttribute("value", "");
-
   // submit
   var submit = document.createElement("input");
   submit.setAttribute("value", "reply");
