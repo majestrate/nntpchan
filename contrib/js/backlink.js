@@ -360,6 +360,7 @@ function init(prefix) {
     }, function(err) {
       alert(err);
     });
+    r.showMessage("posting...");
   }
 }
 
