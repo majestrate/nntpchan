@@ -30,7 +30,7 @@ section {
     background-color: #EEF2FF;
     box-shadow: 0 0 10px rgba(0,0,0,0.55);
     position: fixed;
-    right: 0px;
+    right: 10px;
     top: 25px;
 }
 
