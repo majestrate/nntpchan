@@ -4,10 +4,6 @@
 // released into the public domain by Jeff on 2016-04-30
 //
 
-if (typeof _ == 'undefined') {
-  var _ = function(a) { return a; }
-}
-
 // is the filename matching an image?
 function filenameIsImage(fname) {
   return /\.(gif|jpeg|jpg|png|webp)/.test(fname);
@@ -19,7 +15,7 @@ function setupInlineImage(thumb, url) {
   thumb.inlineIsSetUp = true;
   var img = thumb.querySelector("img.thumbnail");
   var expanded = false;
-  var oldurl = img.href;
+  var oldurl = img.src;
   img.onclick = function(ev) {
     if (expanded) {
       img.setAttribute("class", "thumbnail");
@@ -69,4 +65,4 @@ onready(function(){
     observer.observe(document.body, {childList: true, subtree: true});
   }
   
-})
+});

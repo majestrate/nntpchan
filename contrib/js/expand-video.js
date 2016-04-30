@@ -3,10 +3,6 @@
 var configRoot = "";
 
 
-if (typeof _ == 'undefined') {
-  var _ = function(a) { return a; };
-}
-
 function setupVideo(thumb, url) {
     if (thumb.videoAlreadySetUp) return;
     thumb.videoAlreadySetUp = true;
