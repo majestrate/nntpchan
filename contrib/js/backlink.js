@@ -124,6 +124,7 @@ function DynReply(existingElem) {
 }
 
 DynReply.prototype.moveTo = function(x,y) {
+  x = window.screenX - x;
   this.elem.setAttribute("style", "top: "+y+"px; right: "+x+"px;");
 }
 
