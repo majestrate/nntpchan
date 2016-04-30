@@ -268,7 +268,7 @@ function init(prefix) {
   e.setAttribute("draggable", "true");
   var mouseDownX, mouseDownY;
 
-  var originalX = window.screenX - 300;
+  var originalX = window.screenX - 150;
   var originalY = 10;
   rpl.moveTo(originalX, originalY);
   
@@ -280,7 +280,8 @@ function init(prefix) {
   e.addEventListener("dragend", function(ev) {
     var x = originalX + ev.clientX - mouseDownX;
     var y = originalY + ev.clientY - mouseDownY;
-    rpl.moveTo(x, y);
+    console.log(x,y);
+    //rpl.moveTo(x, y);
     originalX = x;
     originalY = y;
   }, false);
