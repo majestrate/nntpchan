@@ -14,12 +14,30 @@ if [ ! -f $GOPATH/bin/minify ]; then
 fi
 outfile=$(readlink -e ./contrib/static/nntpchan.js)
 
+lint() {
+    if [ "x$(which jslint)" == "x" ] ; then
+        # no jslint
+        true
+    else
+        echo "jslint: $1"
+        jslint --browser $1
+    fi
+}
+
 mini() {
     echo "minify $1"
     echo "" >> $2
     echo "/* $1 */" >> $2
     $GOPATH/bin/minify --mime=text/javascript >> $2 < $1
 }
+
+# do linting too
+if [ "x$1" == "xlint" ] ; then
+    echo "linting..."
+    for f in ./contrib/js/*.js ; do
+        lint $f
+    done
+fi
 
 echo -e "//For source code and license information please check https://github.com/majestrate/nntpchan \n" > $outfile
 

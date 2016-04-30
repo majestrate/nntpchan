@@ -1,9 +1,193 @@
-// insert a backlink for a post given its short hash
-function nntpchan_backlink(shorthash) {
+
+var dynreply;
+
+function getReplyTo() {
+  if(!dynreply) {
+    var e = document.getElementById("postform-container");
+    if (e) {
+      // use existing postform
+      dynreply = new DynReply(e);
+    } else {
+      // build a new postform
+      dynreply = new DynReply();
+    }
+  }
+  return dynreply;
+}
+
+function table_insert_row(table, header, items) {
+  var tr = document.createElement("tr");
+  // insert header element
+  var th = document.createElement("th");
+  th.appendChild(header);
+  tr.appendChild(th);
+  // insert the rest of the elements
+  for (var idx = 0; idx < items.length; idx ++ ) {
+    var elem = document.createElement("td");
+    elem.appendChild(items[idx]);
+    tr.appendChild(elem);
+  }
+}
+
+/**
+   build dynamic reply box
+*/
+function DynReply(existingElem) {
+  if (existingElem) {
+    // wrap existing post form
+    this.elem = existingElem;
+    this.form = this.elem.querySelector("form");
+    return;
+  }
+
+  // build new post form
+  
+  var elem = document.createElement("div");
+  elem.setAttribute("id", "postform-container");
+
+  this.elem = elem;
+  // build post form
+  this.form = document.createElement("form");
+  this.form.enctype = "multipart/form-data";
+  this.form.name = "post";
+  this.form.method = "post";
+  // reference
+  elem = document.createElement("input");
+  elem.setAttribute("id", "postform_reference");
+  elem.name = "reference";
+  elem.type = "hidden";
+  this.form.appendChild(elem);
+  
+  var table = document.createElement("table");
+  table.setAttribute("class", "postform");
+  var tbody = document.createElement("tbody");
+
+  // name 
+  elem = document.createElement("input");
+  elem.setAttribute("name", "name");
+  elem.setAttribute("value", "Anonymous");
+  table_insert_row(tbody, document.createTextNode("Name"), [elem])
+  
+  // subject
+  elem = document.createElement("input");
+  elem.setAttribute("name", "subject");
+  elem.setAttribute("value", "");
+  // submit
+  var submit = document.createElement("input");
+  submit.setAttribute("type", "submit");
+  submit.setAttribute("value", "reply");
+  submit.setAttribute("class", "button");
+  table_insert_row(tbody, document.createTextNode("Subject"), [elem, submit]);
+
+  // Comment
+  elem = document.createElement("textarea");
+  elem.setAttribute("id", "postform_message");
+  elem.setAttribute("name", "message");
+  elem.setAttribute("cols", "40");
+  elem.setAttribute("rows", "5");
+  table_insert_row(tbody, document.createTextNode("Comment"), [elem]);
+  
+  // file
+  elem = document.createElement("input");
+  elem.setAttribute("class", "postform_attachment");
+  elem.setAttribute("id", "postform_attachments");
+  elem.setAttribute("type", "file");
+  elem.setAttribute("name", "attachment_uploaded");
+  elem.setAttribute("multiple", "multiple");
+  table_insert_row(tbody, document.createTextNode("Files"), [elem]);
+
+  // dubs
+  elem = document.createElement("input");
+  elem.setAttribute("type", "checkbox");
+  elem.setAttribute("name", "dubs");
+  table_insert_row(tbody, document.createTextNode("Get Dubs"), [elem]);
+
+  // captcha
+  elem = document.createElement("img");
+  elem.setAttribute("id", "captcha_img");
+  elem.alt = "captcha";
+  table_insert_row(tbody, document.createTextNode("Captcha"), [elem]);
+
+  // captcha solution
+  elem = document.createElement("input");
+  elem.name = "captcha";
+  elem.autocomplete = "off";
+  table_insert_row(tbody, document.createTextNode("Name"), [elem])
+    
+  table.appendChild(tbody);
+  this.form.appendChild(table);
+  this.elem.appendChild(this.form);
+  
+  parent.appendChild(this.elem);
+
+  this.board = null;
+  this.roothash = null;
+  this.prefix = null;
+}
+
+DynReply.prototype.update = function() {
+  if (this.prefix) {
+    // update captcha
+    this.updateCaptcha();
+    if (this.board && this.roothash) {
+      // update post form
+      var ref = document.getElementById("postform_reference");
+      ref.value = this.roothash;
+      this.form.action = this.prefix + "post/" + this.board;
+    }
+  }
+}
+
+DynReply.prototype.show = function() {
+  this.update();
+  this.elem.style.display = 'inline';
+}
+
+DynReply.prototype.updateCaptcha = function() {
+  if (this.prefix) {
+    var captcha_img = document.getElementById("captcha_img");
+    captcha_img.src = this.prefix + "captcha/img";
+  }
+}
+
+DynReply.prototype.setPrefix = function(prefix) {
+  this.prefix = prefix;
+}
+
+DynReply.prototype.hide = function() {
+  this.elem.style.display = 'none';
+}
+
+
+DynReply.prototype.setBoard = function(boardname) {
+  if (boardname) {
+    this.board = boardname;
+  }
+}
+
+DynReply.prototype.setRoot = function(roothash) {
+  if (roothash) {
+    this.roothash = roothash;
+  }
+}
+
+// reply box function
+function nntpchan_reply(prefix, parent, shorthash) {
+  if (prefix && parent && parent.roothash && parent.boardname) {
+    var boardname = parent.boardname;
+    var roothash = parent.roothash;
+    var replyto = getReplyTo();
+    // set target
+    replyto.setBoard(boardname);
+    replyto.setRoot(roothash);
+    replyto.setPrefix(prefix);
+    // show it
+    replyto.show();
+  }
   var elem = document.getElementById("postform_message");
   if ( elem )
   {
-    elem.value += ">>" + shorthash.substr(0,10) + "\n";
+      elem.value += ">>" + shorthash.substr(0,10) + "\n";
   }
 }
 
