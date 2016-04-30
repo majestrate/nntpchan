@@ -47,6 +47,10 @@ section {
     color: #117743;
 }
 
+.error {
+    color: red;
+}
+
 .name , .subject {
     font-weight: bold;
 }
