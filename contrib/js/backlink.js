@@ -275,12 +275,16 @@ function init(prefix) {
   e.addEventListener("mousedown", function(ev) {
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
+    ev.stopPropagation();
   });
   
   e.addEventListener("mouseup", function(ev) {
+    ev.stopPropagation();
     var x = originalX + ev.clientX - mouseDownX
     var y = originalY + ev.clientY - mouseDownY
     rpl.moveTo(x, y);
+    originalX = x;
+    originalY = y;
   });
 }
 
