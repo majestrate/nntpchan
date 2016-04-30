@@ -264,8 +264,9 @@ function init(prefix) {
   e.setAttribute("draggable", "true");
   e.ondragend = function(ev) {
     console.log(ev);
-    e.style.top = ev.y;
-    e.style.left = ev.x;
+    var el = document.getElementById("postform_container");
+    el.style.top = "" + ev.y;
+    el.style.left = "" + ev.x;
   }
 }
 
