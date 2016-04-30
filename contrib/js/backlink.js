@@ -27,6 +27,7 @@ function table_insert_row(table, header, items) {
     elem.appendChild(items[idx]);
     tr.appendChild(elem);
   }
+  table.appendChild(tr);
 }
 
 /**
