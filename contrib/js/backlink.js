@@ -38,6 +38,7 @@ function DynReply(existingElem) {
     // wrap existing post form
     this.elem = existingElem;
     this.form = this.elem.querySelector("form");
+    this._error = document.getElementById("postform_msg");
     return;
   }
 
@@ -66,19 +67,25 @@ function DynReply(existingElem) {
   elem = document.createElement("input");
   elem.setAttribute("name", "name");
   elem.setAttribute("value", "Anonymous");
-  table_insert_row(tbody, document.createTextNode("Name"), [elem])
+  var err_elem = document.createElement("span");
+  err_elem.setAttribute("id", "postform_msg");
+  this._error = error_elem;
+  table_insert_row(tbody, document.createTextNode("Name"), [elem, err_elem])
   
   // subject
   elem = document.createElement("input");
   elem.setAttribute("name", "subject");
   elem.setAttribute("value", "");
+
   // submit
   var submit = document.createElement("input");
-  submit.setAttribute("type", "submit");
   submit.setAttribute("value", "reply");
   submit.setAttribute("class", "button");
+  submit.setAttribute("type", "button");
+  submit.setAttribute("id", "postform_submit");
   table_insert_row(tbody, document.createTextNode("Subject"), [elem, submit]);
 
+  
   // Comment
   elem = document.createElement("textarea");
   elem.setAttribute("id", "postform_message");
@@ -121,6 +128,7 @@ function DynReply(existingElem) {
   this.board = null;
   this.roothash = null;
   this.prefix = null;
+  this.url = null;
 }
 
 DynReply.prototype.moveTo = function(x,y) {
@@ -136,7 +144,7 @@ DynReply.prototype.update = function() {
       // update post form
       var ref = document.getElementById("postform_reference");
       ref.setAttribute("value", this.roothash);
-      this.form.action = this.prefix + "post/" + this.board;
+      this.url = this.prefix + "post/" + this.board + "?t=json";
     }
   }
 }
@@ -145,6 +153,33 @@ DynReply.prototype.show = function() {
   console.log("show dynreply");
   this.update();
   this.elem.style.display = 'inline';
+}
+
+DynReply.prototype.hide = function() {
+  console.log("hide dynreply");
+  this.elem.style.display = "none";
+}
+
+DynReply.prototype.post = function(cb, err_cb) {
+  if (this.url && this.form) {
+    var data = new FormData(this.form);
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function(ev) {
+      if (ajax.readyState == XMLHttpRequest.DONE) {
+        var j = null;
+        try {
+          j = JSON.parse(ajax.responseText);
+          cb(j);
+        } catch (e) {
+          if(err_cb) {
+            err_cb(e);
+          }
+        }
+      }
+    }
+    ajax.open("POST", this.url);
+    ajax.send(data);
+  }
 }
 
 DynReply.prototype.updateCaptcha = function() {
@@ -174,6 +209,22 @@ DynReply.prototype.setRoot = function(roothash) {
     this.roothash = roothash;
   }
 }
+
+DynReply.prototype.showError = function(msg) {
+  console.log("error in dynreply: "+msg);
+  this._error.setAttribute("class", "error");
+  this._error.value = document.createTextNode(msg);
+}
+
+DynReply.prototype.showMessage = function(msg) {
+  this._error.setAttribute("class", "message");
+  this._error.value = document.createTextNode(msg);
+  setTimeout(function() {
+    // clear it
+    this._error.innerHTML = "";
+  }, 2000);
+}
+
 
 // reply box function
 function nntpchan_reply(parent, shorthash) {
@@ -261,9 +312,11 @@ function inject_hover_for_element(elem) {
 function init(prefix) {
   // inject posthover ...
   inject_hover_for_element(document);
-  // dynamic post reply draggable
+  // initialize replyto widget
   var rpl = getReplyTo();
   rpl.setPrefix(prefix);
+
+  // position replyto widget
   var e = rpl.elem;
   e.setAttribute("draggable", "true");
   var mouseDownX, mouseDownY;
@@ -286,5 +339,24 @@ function init(prefix) {
     originalX = x;
     originalY = y;
   }, false);
+
+  // add replyto post handlers
+  e = document.getElementById("postform_submit");
+  e.onclick = function() {
+    var f = document.querySelector("form");
+    // do ajax request to post data
+    var r = getReplyTo();
+    r.post(function(j) {
+      if(j.error) {
+        // an error happened
+        r.showError(h.error);
+      } else {
+        // we're good
+        r.showMessage("posted as "+j.message_id);
+      }
+    }, function(err) {
+      alert(err);
+    });
+  }
 }
 
