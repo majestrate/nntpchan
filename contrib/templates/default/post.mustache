@@ -14,7 +14,7 @@
     <span class="subject">{{post.Subject}}</span>
     <span class="name">{{post.Name}}</span>
     <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
-    <a href="#" class="postnol">No.</a><a class="postno" onclick="nntpchan_reply('{{post.Prefix}}', this, '{{post.ShortHash}}');" title="{{post.MessageID}}" root="{{post.Reference}}" boardname="{{post.Board}}">{{post.ShortHash}}</a>
+    <a href="#" class="postnol">No.</a><a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" title="{{post.MessageID}}" root="{{post.Reference}}" boardname="{{post.Board}}">{{post.ShortHash}}</a>
     <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
     <span class="tripcode">{{{post.Pubkey}}}</span>  
   </legend>

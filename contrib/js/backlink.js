@@ -123,6 +123,11 @@ function DynReply(existingElem) {
   this.prefix = null;
 }
 
+DynReply.prototype.moveTo = function(x,y) {
+  this.elem.style.top = y + "px";
+  this.elem.style.left = x + "px";
+}
+
 DynReply.prototype.update = function() {
   if (this.prefix) {
     // update captcha
@@ -171,15 +176,14 @@ DynReply.prototype.setRoot = function(roothash) {
 }
 
 // reply box function
-function nntpchan_reply(prefix, parent, shorthash) {
-  if (prefix && parent) {
+function nntpchan_reply(parent, shorthash) {
+  if (parent) {
     var boardname = parent.getAttribute("boardname");
     var roothash = parent.getAttribute("root");
     var replyto = getReplyTo();
     // set target
     replyto.setBoard(boardname);
     replyto.setRoot(roothash);
-    replyto.setPrefix(prefix);
     // show it
     replyto.show();
   }
@@ -261,14 +265,22 @@ function init(prefix) {
   var rpl = getReplyTo();
   rpl.setPrefix(prefix);
   var e = rpl.elem;
-  e.setAttribute("draggable", "true");
-  e.ondragend = function(ev) {
-    ev.preventDefault();
-    var x = 0;
-    var y = 0;
-    console.log(ev);
-    var el = document.getElementById("postform_container");
-    el.setAttribute("style", "top: "+y+"px; left: "+x+ "px; position: fixed; ");
-  }
+
+  var mouseDownX, mouseDownY;
+
+  var originalX = window.width - 300;
+  var originalY = 10;
+  rpl.moveTo(originalX, originalY);
+  
+  e.addEventListener("mousedown", function(ev) {
+    mouseDownX = ev.clientX;
+    mouseDownY = ev.clientY;
+  });
+  
+  e.addEventListener("mouseup", function(ev) {
+    var x = originalX + ev.clientX - mouseDownX
+    var y = originalY + ev.clientY - mouseDownY
+    rpl.moveTo(x, y);
+  });
 }
 

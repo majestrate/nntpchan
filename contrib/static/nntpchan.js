@@ -19,6 +19,7 @@ function DynReply(existingElem){if(existingElem){this.elem=existingElem;this.for
 var elem=document.createElement("div");elem.setAttribute("id","postform_container");this.elem=elem;this.form=document.createElement("form");this.form.enctype="multipart/form-data";this.form.name="post";this.form.method="post";elem=document.createElement("input");elem.setAttribute("id","postform_reference");elem.name="reference";elem.type="hidden";this.form.appendChild(elem);var table=document.createElement("table");table.setAttribute("class","postform");var tbody=document.createElement("tbody");elem=document.createElement("input");elem.setAttribute("name","name");elem.setAttribute("value","Anonymous");table_insert_row(tbody,document.createTextNode("Name"),[elem])
 elem=document.createElement("input");elem.setAttribute("name","subject");elem.setAttribute("value","");var submit=document.createElement("input");submit.setAttribute("type","submit");submit.setAttribute("value","reply");submit.setAttribute("class","button");table_insert_row(tbody,document.createTextNode("Subject"),[elem,submit]);elem=document.createElement("textarea");elem.setAttribute("id","postform_message");elem.setAttribute("name","message");elem.setAttribute("cols","40");elem.setAttribute("rows","5");table_insert_row(tbody,document.createTextNode("Comment"),[elem]);elem=document.createElement("input");elem.setAttribute("class","postform_attachment");elem.setAttribute("id","postform_attachments");elem.setAttribute("type","file");elem.setAttribute("name","attachment_uploaded");elem.setAttribute("multiple","multiple");table_insert_row(tbody,document.createTextNode("Files"),[elem]);elem=document.createElement("input");elem.setAttribute("type","checkbox");elem.setAttribute("name","dubs");table_insert_row(tbody,document.createTextNode("Get Dubs"),[elem]);elem=document.createElement("img");elem.setAttribute("id","captcha_img");elem.alt="captcha";table_insert_row(tbody,document.createTextNode("Captcha"),[elem]);elem=document.createElement("input");elem.name="captcha";elem.autocomplete="off";table_insert_row(tbody,document.createTextNode("Name"),[elem])
 table.appendChild(tbody);this.form.appendChild(table);this.elem.appendChild(this.form);document.body.appendChild(this.elem);this.board=null;this.roothash=null;this.prefix=null;}
+DynReply.prototype.moveTo=function(x,y){this.elem.style.top=y+"px";this.elem.style.left=x+"px";}
 DynReply.prototype.update=function(){if(this.prefix){this.updateCaptcha();if(this.board&&this.roothash){var ref=document.getElementById("postform_reference");ref.setAttribute("value",this.roothash);this.form.action=this.prefix+"post/"+this.board;}}}
 DynReply.prototype.show=function(){console.log("show dynreply");this.update();this.elem.style.display='inline';}
 DynReply.prototype.updateCaptcha=function(){if(this.prefix){var captcha_img=document.getElementById("captcha_img");captcha_img.src=this.prefix+"captcha/img";}}
@@ -26,7 +27,7 @@ DynReply.prototype.setPrefix=function(prefix){this.prefix=prefix;}
 DynReply.prototype.hide=function(){this.elem.style.display='none';}
 DynReply.prototype.setBoard=function(boardname){if(boardname){this.board=boardname;}}
 DynReply.prototype.setRoot=function(roothash){if(roothash){this.roothash=roothash;}}
-function nntpchan_reply(prefix,parent,shorthash){if(prefix&&parent){var boardname=parent.getAttribute("boardname");var roothash=parent.getAttribute("root");var replyto=getReplyTo();replyto.setBoard(boardname);replyto.setRoot(roothash);replyto.setPrefix(prefix);replyto.show();}
+function nntpchan_reply(parent,shorthash){if(parent){var boardname=parent.getAttribute("boardname");var roothash=parent.getAttribute("root");var replyto=getReplyTo();replyto.setBoard(boardname);replyto.setRoot(roothash);replyto.show();}
 var elem=document.getElementById("postform_message");if(elem)
 {elem.value+=">>"+shorthash.substr(0,10)+"\n";}}
 function inject_hover(prefix,el,parent){if(!prefix){throw"prefix is not defined";}
@@ -37,7 +38,9 @@ parent.appendChild(wrapper);parent.backlink=false;},function(msg){var wrapper=do
 parent.backlink=true;}};parent.backlink=true;}
 function inject_hover_for_element(elem){var elems=elem.getElementsByClassName("backlink");var ls=[];var l=elems.length;for(var idx=0;idx<l;idx++){var e=elems[idx];ls.push(e);}
 for(var elem in ls){inject_hover(prefix,ls[elem]);}}
-function init(prefix){inject_hover_for_element(document);var rpl=getReplyTo();rpl.setPrefix(prefix);var e=rpl.elem;e.setAttribute("draggable","true");e.ondragend=function(ev){ev.preventDefault();var x=0;var y=0;console.log(ev);var el=document.getElementById("postform_container");el.setAttribute("style","top: "+y+"px; left: "+x+"px; position: fixed; ");}}
+function init(prefix){inject_hover_for_element(document);var rpl=getReplyTo();rpl.setPrefix(prefix);var e=rpl.elem;var mouseDownX,mouseDownY;var originalX=window.width-300;var originalY=10;rpl.moveTo(originalX,originalY);e.addEventListener("mousedown",function(ev){mouseDownX=ev.clientX;mouseDownY=ev.clientY;});e.addEventListener("mouseup",function(ev){var x=originalX+ev.clientX-mouseDownX
+var y=originalY+ev.clientY-mouseDownY
+rpl.moveTo(x,y);});}
 /* ./contrib/js/banner.js */
 var banner_count=3;function nntpchan_inject_banners(elem,prefix){var n=Math.floor(Math.random()*banner_count);var banner=prefix+"static/banner_"+n+".jpg";var e=document.createElement("img");e.src=banner;e.id="nntpchan_banner";elem.appendChild(e);}
 /* ./contrib/js/expand-image.js */
