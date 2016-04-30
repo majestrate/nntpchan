@@ -9,13 +9,16 @@ if [ -z "$GOPATH" ]; then
 fi
 
 if [ ! -f $GOPATH/bin/minify ]; then
-	go get github.com/tdewolff/minify/cmd/minify
+  echo "set up minifiy"  
+	go get -v github.com/tdewolff/minify/cmd/minify
 fi
 
 echo -e "//For source code and license information please check https://github.com/majestrate/nntpchan \n" > ./contrib/static/nntpchan.js
 
-
+echo -n "minify "
 cat ./contrib/js/main.js_ | $GOPATH/bin/minify --mime=text/javascript >> ./contrib/static/nntpchan.js
 for f in ./contrib/js/*.js ; do
+  echo -n "."
 	cat $f | $GOPATH/bin/minify --mime=text/javascript >> ./contrib/static/nntpchan.js
 done
+echo "ok"
