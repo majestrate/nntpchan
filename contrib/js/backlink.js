@@ -140,9 +140,6 @@ DynReply.prototype.show = function() {
   console.log("show dynreply");
   this.update();
   this.elem.style.display = 'inline';
-  this.elem.style.position = "fixed";
-  this.elem.style.right = "0px";
-  this.elem.style.top = "25px";
 }
 
 DynReply.prototype.updateCaptcha = function() {
