@@ -26,7 +26,7 @@ section {
     padding: 10px;
 }
 
-.hover > div > .post , .notfound-hover #postform_container {
+.hover > div > .post , .notfound-hover , #postform_container {
     background-color: #D6DAF0;
     box-shadow: 0 0 10px rgba(0,0,0,0.55);
 }
