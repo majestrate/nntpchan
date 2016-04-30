@@ -101,7 +101,7 @@ table tbody tr:nth-of-type( even ) {
 	background-color: #D6DAF0;
 }
 
-.postform >tr, th {
+.postform > tr, th {
      background: #98E;
      font-size: 10pt;
      text-align: left;
@@ -110,7 +110,7 @@ table tbody tr:nth-of-type( even ) {
 }
 
 
-#postform-inner tr {
+#postform_container > tr {
 	background-color: transparent!important;
 }
 
