@@ -328,11 +328,25 @@ function init(prefix) {
   var originalX = window.screenX - 150;
   var originalY = 10;
   rpl.moveTo(originalX, originalY);
+
+  var keyDown = false;
+  
+  e.addEventListener("keydown", function(ev) {
+    if (ev.shiftKey) {
+      keyDown = true;
+    }
+  });
+
+  e.addEventListener("keyup", function(ev) {
+    if (ev.shiftKey) {
+      keyDown = false;
+    }
+  });
   
   e.addEventListener("dragstart", function(ev) {
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
-    if (!ev.altKey) {
+    if (!keyDown) {
       ev.preventDefault();
     }
   }, false);
@@ -345,7 +359,7 @@ function init(prefix) {
     rpl.moveTo(x, y);
     originalX = x;
     originalY = y;
-    if (!ev.altKey) {
+    if (!keyDown) {
       ev.preventDefault();
     }
   }, false);
