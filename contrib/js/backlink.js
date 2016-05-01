@@ -396,7 +396,6 @@ function init(prefix) {
       r.clearSolution();
     });
   }
-  e.onclick = postit;
   var f = document.querySelector("form");
   f.onsubmit = function() {
     postit();
