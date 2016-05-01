@@ -40,8 +40,6 @@ function DynReply(existingElem) {
     this.form = this.elem.querySelector("form");
     this._error = document.getElementById("postform_msg");
     this.url = this.form.action + "?t=json";
-    var e = document.getElementById("postform_submit");
-    e.setAttribute("type", "button");
     return;
   }
 
@@ -83,7 +81,7 @@ function DynReply(existingElem) {
   var submit = document.createElement("input");
   submit.setAttribute("value", "reply");
   submit.setAttribute("class", "button");
-  submit.setAttribute("type", "button");
+  submit.setAttribute("type", "submit");
   submit.setAttribute("id", "postform_submit");
   table_insert_row(tbody, document.createTextNode("Subject"), [elem, submit]);
 
@@ -121,7 +119,7 @@ function DynReply(existingElem) {
   elem = document.createElement("input");
   elem.name = "captcha";
   elem.autocomplete = "off";
-  table_insert_row(tbody, document.createTextNode("Name"), [elem])
+  table_insert_row(tbody, document.createTextNode("Solution"), [elem])
     
   table.appendChild(tbody);
   this.form.appendChild(table);
@@ -349,7 +347,7 @@ function init(prefix) {
 
   // add replyto post handlers
   e = document.getElementById("postform_submit");
-  e.onclick = function() {
+  var postit = function() {
     var f = document.querySelector("form");
     // do ajax request to post data
     var r = getReplyTo();
@@ -367,5 +365,9 @@ function init(prefix) {
     });
     r.showMessage("posting... ");
   }
+  e.onclick = postit;
+  var f = document.querySelector("form");
+  f.onsubmit = postit;
+  
 }
 
