@@ -20,7 +20,7 @@
              {{#i18n.Translations}}{{name}}{{/i18n.Translations}}
            </th>
            <td>
-             <input type="text" name="name" value="" />
+             <input type="text" name="name" value="" id="postform_name" />
            </td>
            <td>
              <span id="postform_msg"></span>
@@ -31,7 +31,7 @@
              {{#i18n.Translations}}{{subject}}{{/i18n.Translations}}
            </th>
            <td>
-             <input type="text" name="subject" value="" />
+             <input type="text" name="subject" value="" id="postform_subject" />
              <input type="submit" value="{{button}}" class="button" id="postform_submit" />
            </td>
          </tr>
@@ -74,7 +74,7 @@
              {{#i18n.Translations}}{{solution}}{{/i18n.Translations}}
            </th>
            <td>
-             <input type="text" name="captcha" autocomplete="off" />
+             <input type="text" name="captcha" autocomplete="off" id="captcha_solution" />
            </td>
          </tr>
        </tbody>

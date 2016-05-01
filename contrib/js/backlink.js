@@ -68,6 +68,7 @@ function DynReply(existingElem) {
   elem = document.createElement("input");
   elem.setAttribute("name", "name");
   elem.setAttribute("value", "Anonymous");
+  elem.setAttribute("id", "postform_name");
   var err_elem = document.createElement("span");
   err_elem.setAttribute("id", "postform_msg");
   this._error = err_elem;
@@ -77,6 +78,7 @@ function DynReply(existingElem) {
   elem = document.createElement("input");
   elem.setAttribute("name", "subject");
   elem.setAttribute("value", "");
+  elem.setAttribute("id", "postform_subject");
   // submit
   var submit = document.createElement("input");
   submit.setAttribute("value", "reply");
@@ -119,6 +121,7 @@ function DynReply(existingElem) {
   elem = document.createElement("input");
   elem.name = "captcha";
   elem.autocomplete = "off";
+  elem.setAttribute("id", "captcha_solution");
   table_insert_row(tbody, document.createTextNode("Solution"), [elem])
     
   table.appendChild(tbody);
@@ -160,6 +163,28 @@ DynReply.prototype.hide = function() {
   this.elem.style.display = "none";
 }
 
+// clear all fields
+DynReply.prototype.clear = function() {
+  this.clearSolution();
+  this.clearPostbox();
+}
+
+
+// clear captcha solution
+DynReply.prototype.clearSolution = function() {
+  var e = document.getElementById("captcha_solution");
+  // reset value
+  e.value = "";
+}
+
+// clear postform elements
+DynReply.prototype.clearPostbox = function() {
+  var e = document.getElementById("postform_subject");
+  e.value = "";
+  e = document.getElementById("postform_message");
+  e.value = "";
+}
+
 DynReply.prototype.post = function(cb, err_cb) {
   if (this.url && this.form) {
     var data = new FormData(this.form);
@@ -187,6 +212,7 @@ DynReply.prototype.updateCaptcha = function() {
     var captcha_img = document.getElementById("captcha_img");
     captcha_img.src = this.prefix + "captcha/img";
   }
+  this.clearSolution();
 }
 
 DynReply.prototype.setPrefix = function(prefix) {
@@ -359,9 +385,11 @@ function init(prefix) {
         // we're good
         r.showMessage("posted as "+j.message_id);
         r.updateCaptcha();
+        r.clear();
       }
     }, function(err) {
       r.showError(err);
+      r.clearSolution();
     });
     r.showMessage("posting... ");
   }
