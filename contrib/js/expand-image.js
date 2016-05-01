@@ -6,7 +6,7 @@
 
 // is the filename matching an image?
 function filenameIsImage(fname) {
-  return /\.(gif|jpeg|jpg|png|webp)/.test(fname);
+  return /\.(gif|jpeg|jpg|png|webp)/.test(fname.toLowerCase());
 }
 
 // setup image inlining for 1 element

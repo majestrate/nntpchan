@@ -52,7 +52,7 @@ e.onclick=postit;var f=document.querySelector("form");f.onsubmit=function(){post
 /* ./contrib/js/banner.js */
 var banner_count=3;function nntpchan_inject_banners(elem,prefix){var n=Math.floor(Math.random()*banner_count);var banner=prefix+"static/banner_"+n+".jpg";var e=document.createElement("img");e.src=banner;e.id="nntpchan_banner";elem.appendChild(e);}
 /* ./contrib/js/expand-image.js */
-function filenameIsImage(fname){return/\.(gif|jpeg|jpg|png|webp)/.test(fname);}
+function filenameIsImage(fname){return/\.(gif|jpeg|jpg|png|webp)/.test(fname.toLowerCase());}
 function setupInlineImage(thumb,url){if(thumb.inlineIsSetUp)return;thumb.inlineIsSetUp=true;var img=thumb.querySelector("img.thumbnail");var expanded=false;var oldurl=img.src;thumb.onclick=function(){if(expanded){img.setAttribute("class","thumbnail");img.src=oldurl;expanded=false;}else{img.setAttribute("class","expanded-thumbnail");img.src=url;expanded=true;}
 return false;}}
 function setupInlineImageIn(element){var thumbs=element.querySelectorAll("a.file");for(var i=0;i<thumbs.length;i++){var url=thumbs[i].href;if(filenameIsImage(url)){console.log("matched url",url);setupInlineImage(thumbs[i],url);}}}
