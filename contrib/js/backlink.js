@@ -385,7 +385,7 @@ function init(prefix) {
         r.showError(j.error);
       } else {
         // we're good
-        r.showMessage("posted as "+j.message_id);
+        r.showMessage("posted :^)");
         r.updateCaptcha();
         r.clear();
       }
