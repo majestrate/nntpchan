@@ -367,7 +367,10 @@ function init(prefix) {
   }
   e.onclick = postit;
   var f = document.querySelector("form");
-  f.onsubmit = postit;
+  f.onsubmit = function() {
+    postit();
+    return false;
+  }
   
 }
 
