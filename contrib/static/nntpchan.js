@@ -25,7 +25,7 @@ DynReply.prototype.show=function(){console.log("show dynreply");this.update();th
 DynReply.prototype.hide=function(){console.log("hide dynreply");this.elem.style.display="none";}
 DynReply.prototype.clear=function(){this.clearSolution();this.clearPostbox();}
 DynReply.prototype.clearSolution=function(){var e=document.getElementById("captcha_solution");e.value="";}
-DynReply.prototype.clearPostbox=function(){var e=document.getElementById("postform_subject");e.value="";e=document.getElementById("postform_message");e.value="";e=document.getElementById("postform_attachments");e.value="";}
+DynReply.prototype.clearPostbox=function(){var e=document.getElementById("postform_subject");e.value="";e=document.getElementById("postform_message");e.value="";e=document.getElementById("postform_attachments");e.value=null;}
 DynReply.prototype.post=function(cb,err_cb){if(this.url&&this.form){var data=new FormData(this.form);var ajax=new XMLHttpRequest();ajax.onreadystatechange=function(ev){if(ajax.readyState==XMLHttpRequest.DONE){var j=null;try{j=JSON.parse(ajax.responseText);cb(j);}catch(e){if(err_cb){err_cb(e);}}}}
 ajax.open("POST",this.url);ajax.send(data);}}
 DynReply.prototype.updateCaptcha=function(){if(this.prefix){var captcha_img=document.getElementById("captcha_img");captcha_img.src=this.prefix+"captcha/img";}

@@ -184,7 +184,7 @@ DynReply.prototype.clearPostbox = function() {
   e = document.getElementById("postform_message");
   e.value = "";
   e = document.getElementById("postform_attachments");
-  e.value = "";
+  e.value = null;
 }
 
 DynReply.prototype.post = function(cb, err_cb) {
