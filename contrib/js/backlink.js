@@ -245,6 +245,7 @@ DynReply.prototype.showError = function(msg) {
 
 DynReply.prototype.showMessage = function(msg) {
   this._error.setAttribute("class", "message");
+  this._error.innerHTML = "";
   this._error.appendChild(document.createTextNode(msg));
   var e = this._error;
   setTimeout(function() {
@@ -377,6 +378,7 @@ function init(prefix) {
     var f = document.querySelector("form");
     // do ajax request to post data
     var r = getReplyTo();
+    r.showMessage("posting... ");
     r.post(function(j) {
       if(j.error) {
         // an error happened
@@ -391,7 +393,6 @@ function init(prefix) {
       r.showError(err);
       r.clearSolution();
     });
-    r.showMessage("posting... ");
   }
   e.onclick = postit;
   var f = document.querySelector("form");
