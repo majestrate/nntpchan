@@ -160,14 +160,13 @@ DynReply.prototype.translate = function(dx, dy) {
 }
 
 DynReply.prototype.moveTo = function(x,y) {
-  console.log(this);
+  console.log("moveto",x,y);
   if(x && y) {
     var nx = document.body.clientLeft - x ;
     if (nx > 0 && y > 0 && nx < document.body.clientWidth && y < document.body.clientHeight ) {
       this.elem.setAttribute("style", "top: "+y+"px; right: "+nx+"px;");
       this.x = x;
       this.y = y;
-      console.log(this, this.x, this.y);
     }
   } else {
     console.log("!!", x, y);
