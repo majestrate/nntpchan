@@ -138,10 +138,19 @@ function DynReply(existingElem) {
   this.url = null;
 }
 
+
+DynReply.prototype.translate = function(dx, dy) {
+  var x = this.x + dx;
+  var y = this.y + dy;
+  this.moveTo(x, y);
+}
+
 DynReply.prototype.moveTo = function(x,y) {
-  x = document.body.clientLeft - x ;
-  if (x > 0 && y > 0 && x < document.body.clientWidth && y < document.body.clientHeight ) {
-    this.elem.setAttribute("style", "top: "+y+"px; right: "+x+"px;");
+  var nx = document.body.clientLeft - x ;
+  if (nx > 0 && y > 0 && nx < document.body.clientWidth && y < document.body.clientHeight ) {
+    this.elem.setAttribute("style", "top: "+y+"px; right: "+nx+"px;");
+    this.x = x;
+    this.y = y;
   }
 }
 
@@ -374,15 +383,9 @@ function init(prefix) {
   
   e.addEventListener("dragend", function(ev) {
     console.log(ev);
-    var x = ev.clientX - ( mouseDownX );
-    var y = ev.clientY - ( mouseDownY );
-    //x = ev.movementX + mouseDownX;
-    //x = ev.movementY + mouseDownY;
-    //x -= window.screenLeft;
-    //y -= window.screenTop;
-    rpl.moveTo(x, y);
-    originalX = x;
-    originalY = y; 
+    var dx = ev.clientX - mouseDownX;
+    var dy = ev.clientY - mouseDownY;
+    rpl.translate(dx, dy);
   }, false);
   
   // add replyto post handlers
