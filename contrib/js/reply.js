@@ -382,9 +382,9 @@ function init(prefix) {
   }, false);
   
   e.addEventListener("dragend", function(ev) {
-    console.log(ev);
     var dx = ev.clientX - mouseDownX;
     var dy = ev.clientY - mouseDownY;
+    console(dx, dy);
     rpl.translate(dx, dy);
   }, false);
   
