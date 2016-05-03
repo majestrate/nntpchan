@@ -30,7 +30,7 @@ lint() {
 mini() {
     echo "minify $1"
     echo "" >> $2
-    echo "/* $1 */" >> $2
+    echo "/* local file: $1 */" >> $2
     $GOPATH/bin/minify --mime=text/javascript >> $2 < $1
 }
 
@@ -44,6 +44,12 @@ fi
 
 echo -e "//For source code and license information please check https://github.com/majestrate/nntpchan \n" > $outfile
 
+if [ -e ./contrib/js/contrib/*.js ] ; then
+    for f in ./contrib/js/contrib/*.js ; do
+        mini $f $outfile
+    done
+fi
+    
 mini ./contrib/js/main.js_ $outfile
 
 # local js

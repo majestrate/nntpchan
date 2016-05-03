@@ -387,16 +387,25 @@ function init(prefix) {
   var oy = 10;
   rpl.moveTo(ox, oy);
 
-  e.setAttribute("draggable", "true");
-  
-  e.addEventListener("dragstart", function(ev) {
-    if(ev.shiftKey) {
-      rpl.translate(ev.offsetX, ev.offsetY);
-      ev.stopPropagation();
-    } else {
-      ev.preventDefault();
+  var $dragging = null;
+
+  $(rpl.elem).on("mousemove", function(ev) {
+    if ($dragging) {
+      $dragging.offset({
+        top: e.pageY,
+        left: e.pageX
+      });
     }
-  }, false);
+  });
+
+
+  $(rpl.elem).on("mousedown", e, function (ev) {
+    $dragging = $(ev.target);
+  });
+
+  $(rpl.elem).on("mouseup", function (e) {
+    $dragging = null;
+  });
   
   // add replyto post handlers
   e = document.getElementById("postform_submit");
