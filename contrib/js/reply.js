@@ -366,9 +366,9 @@ function init(prefix) {
   var e = rpl.elem;
   var mouseDownX, mouseDownY;
 
-  var originalX = window.screenX - 50;
-  var originalY = 10;
-  rpl.moveTo(originalX, originalY);
+  var ox = window.screenX - 50;
+  var oy = 10;
+  rpl.moveTo(ox, oy);
 
   e.setAttribute("draggable", "true");
   
@@ -382,10 +382,13 @@ function init(prefix) {
   }, false);
   
   e.addEventListener("dragend", function(ev) {
-    var dx = ev.screenX - mouseDownX;
-    var dy = ev.screenY - mouseDownY;
+    var dx = ox + ev.screenX - mouseDownX;
+    var dy = oy + ev.screenY - mouseDownY;
+    
     console.log(dx, dy);
     rpl.translate(dx, dy);
+    ox = rpl.x;
+    oy = rpl.y;
   }, false);
   
   // add replyto post handlers
