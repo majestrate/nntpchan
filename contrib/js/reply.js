@@ -402,7 +402,7 @@ function init(prefix) {
     console.log(mouseDownX, mouseDownY);
     var dx = ox + ev.screenX - mouseDownX;
     var dy = oy + ev.screenY - mouseDownY;
-    
+    var rpl = getReplyTo();
     console.log(ox, oy, dx, dy);
     rpl.translate(dx, dy);
     console.log(rpl.x, rpl.y);
