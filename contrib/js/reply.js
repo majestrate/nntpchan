@@ -382,11 +382,7 @@ function init(prefix) {
   // position replyto widget
   var e = rpl.elem;
   var mouseDownX, mouseDownY;
-
-  var ox = document.body.clientWidth - 50;
-  var oy = 10;
-  rpl.moveTo(ox, oy);
-
+  
   var $dragging = null;
 
   $(rpl.elem).on("mousemove", function(ev) {
