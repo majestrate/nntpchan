@@ -359,26 +359,23 @@ function init(prefix) {
   var originalY = 10;
   rpl.moveTo(originalX, originalY);
 
-  var mousedown = false;
+  e.setAttribute("draggable", "true");
   
-  e.addEventListener("mousedown", function(ev) {
+  e.addEventListener("dragstart", function(ev) {
     console.log(ev);
     mousedown = true;
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
   }, false);
   
-  e.addEventListener("mouseup", function(ev) {
+  e.addEventListener("dragend", function(ev) {
     var x = originalX + ev.clientX - mouseDownX;
     var y = originalY + ev.clientY - mouseDownY;
     x -= window.screenLeft;
     y -= window.screenTop;
-    if (mousedown) {
-      rpl.moveTo(x, y);
-      originalX = x;
-      originalY = y;
-      mousedown = false;
-    }
+    rpl.moveTo(x, y);
+    originalX = x;
+    originalY = y; 
   }, false);
   
   // add replyto post handlers
