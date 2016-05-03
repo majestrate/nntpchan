@@ -64,15 +64,19 @@ function DynReply(existingElem) {
   table.setAttribute("class", "postform");
   var tbody = document.createElement("tbody");
 
+  var span = document.createElement("span");
   // name 
   elem = document.createElement("input");
   elem.setAttribute("name", "name");
   elem.setAttribute("value", "Anonymous");
   elem.setAttribute("id", "postform_name");
+  span.appendChild(elem);
+  // error message
   var err_elem = document.createElement("span");
   err_elem.setAttribute("id", "postform_msg");
+  span.appendChild(err_elem);
   this._error = err_elem;
-  table_insert_row(tbody, document.createTextNode("Name"), [elem, err_elem])
+  table_insert_row(tbody, document.createTextNode("Name"), [span])
   
   // subject
   elem = document.createElement("input");
