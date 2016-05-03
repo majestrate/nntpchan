@@ -387,6 +387,7 @@ function init(prefix) {
   }, false);
   
   e.addEventListener("dragend", function(ev) {
+    console.log(mouseDownX, mouseDownY);
     var dx = ox + ev.clientX - mouseDownX;
     var dy = oy + ev.clientY - mouseDownY;
     
