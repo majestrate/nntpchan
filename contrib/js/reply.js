@@ -34,6 +34,7 @@ function table_insert_row(table, header, items) {
 function DynReply(existingElem) {
   if (existingElem) {
     // wrap existing post form
+    // XXX: wrap it here
     this.elem = existingElem;
     this.form = this.elem.querySelector("form");
     this._error = document.getElementById("postform_msg");
