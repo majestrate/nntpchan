@@ -405,7 +405,6 @@ function init(prefix) {
     var rpl = getReplyTo();
     console.log(ox, oy, dx, dy);
     rpl.translate(dx, dy);
-    console.log(rpl.x, rpl.y);
     ox = rpl.getX();
     oy = rpl.getY();
   }, false);
