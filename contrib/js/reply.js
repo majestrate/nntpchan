@@ -407,6 +407,7 @@ function init(prefix) {
     rpl.translate(dx, dy);
     ox = rpl.getX();
     oy = rpl.getY();
+    console.log(ox, oy);
   }, false);
   
   // add replyto post handlers
