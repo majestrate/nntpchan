@@ -40,7 +40,8 @@ function DynReply(existingElem) {
     this.form = this.elem.querySelector("form");
     this._error = document.getElementById("postform_msg");
     this.url = this.form.action + "?t=json";
-    this.moveTo(1,1);
+    this.x = 1;
+    this.y = 1;
     return;
   }
 
@@ -137,7 +138,9 @@ function DynReply(existingElem) {
   this.roothash = null;
   this.prefix = null;
   this.url = null;
-  this.moveTo(1,1);
+  this.x = 1;
+  this.y = 1;
+  
 }
 
 DynReply.prototype.getX = function () {
