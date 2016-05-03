@@ -389,7 +389,7 @@ function init(prefix) {
 
   e.setAttribute("draggable", "true");
   
-  e.addEventListener("dragstart", function(ev) {
+  e.addEventListener("drag", function(ev) {
     console.log(ev);
     mouseDownX = ev.screenX;
     mouseDownY = ev.screenY;
