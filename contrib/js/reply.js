@@ -153,9 +153,7 @@ DynReply.prototype.translate = function(dx, dy) {
     var x = this.x + dx;
     var y = this.y + dy;
     this.moveTo(x, y);
-  } else {
-    this.moveTo(dx, dy);
-  }
+  };
 }
 
 DynReply.prototype.moveTo = function(x,y) {
@@ -165,7 +163,7 @@ DynReply.prototype.moveTo = function(x,y) {
       this.elem.setAttribute("style", "top: "+y+"px; right: "+nx+"px;");
       this.x = x;
       this.y = y;
-      console.log(this.x, this.y);
+      console.log(this, this.x, this.y);
     }
   } else {
     console.log("!!", x, y);
