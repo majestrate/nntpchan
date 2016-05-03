@@ -363,7 +363,6 @@ function init(prefix) {
   
   e.addEventListener("dragstart", function(ev) {
     console.log(ev);
-    mousedown = true;
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
   }, false);
