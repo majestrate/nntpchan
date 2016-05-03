@@ -390,8 +390,8 @@ function init(prefix) {
       var x = ev.pageX - $(this).width() / 2,
           y = ev.pageY - $(this).height() / 2;
       $dragging.offset({
-        top: x,
-        left: y
+        top: y,
+        left: x
       });
     }
   });
