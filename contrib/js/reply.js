@@ -391,7 +391,7 @@ function init(prefix) {
           y = ev.pageY - $(this).height() / 2;
       $dragging.offset({
         top: y,
-        left: x
+        right: document.body.clientLeft - x
       });
     }
   });
