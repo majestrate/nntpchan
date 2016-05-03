@@ -373,8 +373,8 @@ function init(prefix) {
   e.addEventListener("dragend", function(ev) {
     var x = originalX + ev.clientX - mouseDownX;
     var y = originalY + ev.clientY - mouseDownY;
-    x -= window.screenLeft;
-    y -= window.screenTop;
+    //x -= window.screenLeft;
+    //y -= window.screenTop;
     rpl.moveTo(x, y);
     originalX = x;
     originalY = y; 
