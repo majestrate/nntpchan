@@ -159,7 +159,7 @@ DynReply.prototype.translate = function(dx, dy) {
 
 DynReply.prototype.moveTo = function(x,y) {
   console.log("moveto",x,y);
-  if(x && y) {
+  if(x && y && x > 0 && y > 0) {
     var nx = document.body.clientLeft - x ;
     if (nx > 0 && y > 0 && nx < document.body.clientWidth && y < document.body.clientHeight ) {
       this.elem.setAttribute("style", "top: "+y+"px; right: "+nx+"px;");
@@ -400,7 +400,7 @@ function init(prefix) {
   
   e.addEventListener("dragend", function(ev) {
     var rpl = getReplyTo(); 
-    console.log(mouseDownX, mouseDownY);
+    console.log(mouseDownX, mouseDownY, rpl);
     var ox = rpl.getX();
     var oy = rpl.getY();
     var dx = ox + ev.screenX - mouseDownX;
