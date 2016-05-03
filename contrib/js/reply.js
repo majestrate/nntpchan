@@ -1,18 +1,16 @@
 
-var dynreply;
-
 function getReplyTo() {
-  if(!dynreply) {
+  if(!document.dynreply) {
     var e = document.getElementById("postform_container");
     if (e) {
       // use existing postform
-      dynreply = new DynReply(e);
+      document.dynreply = new DynReply(e);
     } else {
       // build a new postform
-      dynreply = new DynReply();
+      document.dynreply = new DynReply();
     }
   }
-  return dynreply;
+  return document.dynreply;
 }
 
 function table_insert_row(table, header, items) {

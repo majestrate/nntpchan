@@ -45,8 +45,8 @@ function ukko_livechan(prefix){var ukko=document.getElementById("ukko_threads");
 function get_storage(){var st=null;if(window.localStorage){st=window.localStorage;}else if(localStorage){st=localStorage;}
 return st;}
 /* ./contrib/js/reply.js */
-var dynreply;function getReplyTo(){if(!dynreply){var e=document.getElementById("postform_container");if(e){dynreply=new DynReply(e);}else{dynreply=new DynReply();}}
-return dynreply;}
+function getReplyTo(){if(!document.dynreply){var e=document.getElementById("postform_container");if(e){document.dynreply=new DynReply(e);}else{document.dynreply=new DynReply();}}
+return document.dynreply;}
 function table_insert_row(table,header,items){var tr=document.createElement("tr");var th=document.createElement("th");th.appendChild(header);tr.appendChild(th);for(var idx=0;idx<items.length;idx++){var elem=document.createElement("td");elem.appendChild(items[idx]);tr.appendChild(elem);}
 table.appendChild(tr);}
 function DynReply(existingElem){if(existingElem){this.elem=existingElem;this.form=this.elem.querySelector("form");this._error=document.getElementById("postform_msg");this.url=this.form.action+"?t=json";this.x=1;this.y=1;return;}
