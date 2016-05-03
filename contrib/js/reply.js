@@ -141,36 +141,6 @@ function DynReply(existingElem) {
   
 }
 
-DynReply.prototype.getX = function () {
-  return this.x;
-}
-
-DynReply.prototype.getY = function () {
-  return this.y;
-}
-
-DynReply.prototype.translate = function(dx, dy) {
-  if (this.x && this.y) {
-    var x = this.x + dx;
-    var y = this.y + dy;
-    this.moveTo(x, y);
-  };
-}
-
-DynReply.prototype.moveTo = function(x,y) {
-  console.log("moveto",this, x,y);
-  if(x && y && x > 0 && y > 0) {
-    var nx = document.body.clientLeft - x ;
-    if (nx > 0 && y > 0 && nx < document.body.clientWidth && y < document.body.clientHeight ) {
-      this.elem.setAttribute("style", "top: "+y+"px; right: "+nx+"px;");
-      this.x = x;
-      this.y = y;
-    }
-  } else {
-    console.log("!!", x, y);
-  }
-}
-
 DynReply.prototype.update = function() {
   if (this.prefix) {
     // update captcha
