@@ -154,6 +154,8 @@ DynReply.prototype.moveTo = function(x,y) {
       this.y = y;
       console.log(this.x, this.y);
     }
+  } else {
+    console.log("!!", x, y);
   }
 }
 
@@ -390,6 +392,7 @@ function init(prefix) {
     
     console.log(ox, oy, dx, dy);
     rpl.translate(dx, dy);
+    console.log(rpl.x, rpl.y);
     ox = rpl.x;
     oy = rpl.y;
   }, false);
