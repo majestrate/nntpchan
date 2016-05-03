@@ -385,7 +385,7 @@ function init(prefix) {
     var dx = ox + ev.screenX - mouseDownX;
     var dy = oy + ev.screenY - mouseDownY;
     
-    console.log(dx, dy);
+    console.log(ox, oy, dx, dy);
     rpl.translate(dx, dy);
     ox = rpl.x;
     oy = rpl.y;
