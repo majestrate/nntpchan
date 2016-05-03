@@ -365,6 +365,9 @@ function init(prefix) {
     console.log(ev);
     mouseDownX = ev.screenX;
     mouseDownY = ev.screenY;
+    if(!ev.shiftKey) {
+      ev.preventDefault();
+    }
   }, false);
   
   e.addEventListener("dragend", function(ev) {
