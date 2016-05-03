@@ -359,7 +359,11 @@ function init(prefix) {
   var originalY = 10;
   rpl.moveTo(originalX, originalY);
 
+  var mousedown = false;
+  
   e.addEventListener("mousedown", function(ev) {
+    console.log(ev);
+    mousedown = true;
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
   }, false);
@@ -369,9 +373,12 @@ function init(prefix) {
     var y = originalY + ev.clientY - mouseDownY;
     x -= window.screenLeft;
     y -= window.screenTop;
-    rpl.moveTo(x, y);
-    originalX = x;
-    originalY = y;
+    if (mousedown) {
+      rpl.moveTo(x, y);
+      originalX = x;
+      originalY = y;
+      mousedown = false;
+    }
   }, false);
   
   // add replyto post handlers
