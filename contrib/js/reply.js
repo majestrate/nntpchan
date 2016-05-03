@@ -400,7 +400,7 @@ function init(prefix) {
 
 
   $(rpl.elem).on("mousedown", e, function (ev) {
-    $dragging = $(ev.target);
+    $dragging = $(rpl.elem);
   });
 
   $(rpl.elem).on("mouseup", function (e) {
