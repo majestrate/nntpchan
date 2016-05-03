@@ -152,7 +152,7 @@ DynReply.prototype.moveTo = function(x,y) {
       this.elem.setAttribute("style", "top: "+y+"px; right: "+nx+"px;");
       this.x = x;
       this.y = y;
-      console(this.x, this.y);
+      console.log(this.x, this.y);
     }
   }
 }
