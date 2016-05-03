@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-set -e
 root=$(readlink -e $(dirname $0))
+set -e
+if [ "x" == "x$root" ] ; then
+    root=$PWD/${0##*}
+fi
+cd $root
 
 tags=""
 

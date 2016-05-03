@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-set -e
 root=$(readlink -e $(dirname $0))
-
+set -e
+if [ "x" == "x$root" ] ; then
+    root=$PWD/${0##*}
+fi
 cd $root
+
 if [ -z "$GOPATH" ]; then
-	export GOPATH=$PWD/go
+	export GOPATH=$root/go
 	mkdir -p $GOPATH
 fi
 
@@ -12,7 +15,7 @@ if [ ! -f $GOPATH/bin/minify ]; then
   echo "set up minifiy"  
 	go get -v github.com/tdewolff/minify/cmd/minify
 fi
-outfile=$(readlink -e ./contrib/static/nntpchan.js)
+outfile=$PWD/contrib/static/nntpchan.js
 
 lint() {
     if [ "x$(which jslint)" == "x" ] ; then
