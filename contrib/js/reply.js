@@ -389,7 +389,7 @@ function init(prefix) {
 
   e.setAttribute("draggable", "true");
   
-  e.addEventListener("drag", function(ev) {
+  e.addEventListener("dragstart", function(ev) {
     if(ev.shiftKey) {
       rpl.translate(ev.offsetX, ev.offsetY);
       ev.stopPropagation();
