@@ -392,7 +392,7 @@ function init(prefix) {
   e.addEventListener("drag", function(ev) {
     if(ev.shiftKey) {
       rpl.translate(ev.offsetX, ev.offsetY);
-      ev.preventDefault();
+      ev.stopPropagation();
     } else {
       ev.preventDefault();
     }
