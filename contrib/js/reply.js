@@ -140,8 +140,8 @@ function DynReply(existingElem) {
 
 DynReply.prototype.moveTo = function(x,y) {
   x = window.screenLeft - x ;
-  y = window.screenTop - y;
-  this.elem.setAttribute("style", "bottom: "+y+"px; right: "+x+"px;");
+  y = y - window.screenTop ;
+  this.elem.setAttribute("style", "top: "+y+"px; right: "+x+"px;");
 }
 
 DynReply.prototype.update = function() {
