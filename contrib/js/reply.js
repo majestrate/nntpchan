@@ -140,9 +140,13 @@ function DynReply(existingElem) {
 
 
 DynReply.prototype.translate = function(dx, dy) {
-  var x = this.x + dx;
-  var y = this.y + dy;
-  this.moveTo(x, y);
+  if (this.x && this.y) {
+    var x = this.x + dx;
+    var y = this.y + dy;
+    this.moveTo(x, y);
+  } else {
+    this.moveTo(dx, dy);
+  }
 }
 
 DynReply.prototype.moveTo = function(x,y) {
@@ -371,7 +375,7 @@ function init(prefix) {
   var e = rpl.elem;
   var mouseDownX, mouseDownY;
 
-  var ox = window.screenX - 50;
+  var ox = document.body.clientWidth - 50;
   var oy = 10;
   rpl.moveTo(ox, oy);
 
