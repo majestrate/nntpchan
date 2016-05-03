@@ -363,16 +363,16 @@ function init(prefix) {
   
   e.addEventListener("dragstart", function(ev) {
     console.log(ev);
-    mouseDownX = ev.screenX;
-    mouseDownY = ev.screenY;
+    mouseDownX = ev.clientX;
+    mouseDownY = ev.clientY;
     if(!ev.shiftKey) {
       ev.preventDefault();
     }
   }, false);
   
   e.addEventListener("dragend", function(ev) {
-    var x = originalX + ev.screenX - mouseDownX;
-    var y = originalY + ev.screenY - mouseDownY;
+    var x = originalX + ev.clientX - mouseDownX;
+    var y = originalY + ev.clientY - mouseDownY;
     x -= window.screenLeft;
     y -= window.screenTop;
     rpl.moveTo(x, y);
