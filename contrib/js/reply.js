@@ -40,6 +40,7 @@ function DynReply(existingElem) {
     this.form = this.elem.querySelector("form");
     this._error = document.getElementById("postform_msg");
     this.url = this.form.action + "?t=json";
+    this.moveTo(0,0);
     return;
   }
 
@@ -136,8 +137,16 @@ function DynReply(existingElem) {
   this.roothash = null;
   this.prefix = null;
   this.url = null;
+  this.moveTo(0,0);
 }
 
+DynReply.prototype.getX = function () {
+  return this.x;
+}
+
+DynReply.prototype.getY = function () {
+  return this.y;
+}
 
 DynReply.prototype.translate = function(dx, dy) {
   if (this.x && this.y) {
@@ -398,8 +407,8 @@ function init(prefix) {
     console.log(ox, oy, dx, dy);
     rpl.translate(dx, dy);
     console.log(rpl.x, rpl.y);
-    ox = rpl.x;
-    oy = rpl.y;
+    ox = rpl.getX();
+    oy = rpl.getY();
   }, false);
   
   // add replyto post handlers
