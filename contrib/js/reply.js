@@ -392,21 +392,10 @@ function init(prefix) {
   e.addEventListener("drag", function(ev) {
     if(ev.shiftKey) {
       rpl.translate(ev.offsetX, ev.offsetY);
+      ev.preventDefault();
     } else {
       ev.preventDefault();
     }
-  }, false);
-  
-  e.addEventListener("dragend", function(ev) {
-    return;
-    var rpl = getReplyTo(); 
-    console.log(mouseDownX, mouseDownY, rpl);
-    var ox = rpl.getX();
-    var oy = rpl.getY();
-    var dx = ox + ev.screenX - mouseDownX;
-    var dy = oy + ev.screenY - mouseDownY;
-    console.log(ox, oy, dx, dy);
-    rpl.translate(dx, dy);
   }, false);
   
   // add replyto post handlers
