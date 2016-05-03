@@ -139,8 +139,9 @@ function DynReply(existingElem) {
 }
 
 DynReply.prototype.moveTo = function(x,y) {
-  x = window.screenX - x ;
-  this.elem.setAttribute("style", "top: "+y+"px; right: "+x+"px;");
+  x = window.screenLeft - x ;
+  y = window.screenTop - y;
+  this.elem.setAttribute("style", "bottom: "+y+"px; right: "+x+"px;");
 }
 
 DynReply.prototype.update = function() {
