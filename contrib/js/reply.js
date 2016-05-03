@@ -399,12 +399,12 @@ function init(prefix) {
   }, false);
   
   e.addEventListener("dragend", function(ev) {
+    var rpl = getReplyTo(); 
     console.log(mouseDownX, mouseDownY);
     var ox = rpl.getX();
     var oy = rpl.getY();
     var dx = ox + ev.screenX - mouseDownX;
     var dy = oy + ev.screenY - mouseDownY;
-    var rpl = getReplyTo();
     console.log(ox, oy, dx, dy);
     rpl.translate(dx, dy);
   }, false);
