@@ -244,7 +244,7 @@ DynReply.prototype.setRoot = function(roothash) {
 
 DynReply.prototype.showError = function(msg) {
   console.log("error in dynreply: "+msg);
-  this._error.setAttribute("class", "error");
+  this._error.setAttribute("class", "error message");
   this._error.appendChild(document.createTextNode(msg));
   this.updateCaptcha();
 }
@@ -353,22 +353,18 @@ function init(prefix) {
 
   // position replyto widget
   var e = rpl.elem;
-  e.setAttribute("draggable", "true");
   var mouseDownX, mouseDownY;
 
-  var originalX = window.screenX - 150;
+  var originalX = window.screenX - 50;
   var originalY = 10;
   rpl.moveTo(originalX, originalY);
 
-  e.addEventListener("dragstart", function(ev) {
+  e.addEventListener("mousedown", function(ev) {
     mouseDownX = ev.clientX;
     mouseDownY = ev.clientY;
-    if (!ev.ctrlKey) {
-      ev.preventDefault();
-    }
   }, false);
   
-  e.addEventListener("dragend", function(ev) {
+  e.addEventListener("mouseup", function(ev) {
     var x = originalX + ev.clientX - mouseDownX;
     var y = originalY + ev.clientY - mouseDownY;
     x -= window.screenLeft;
@@ -377,7 +373,7 @@ function init(prefix) {
     originalX = x;
     originalY = y;
   }, false);
-
+  
   // add replyto post handlers
   e = document.getElementById("postform_submit");
   var postit = function() {
