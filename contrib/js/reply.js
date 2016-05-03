@@ -392,8 +392,8 @@ function init(prefix) {
   $(rpl.elem).on("mousemove", function(ev) {
     if ($dragging) {
       $dragging.offset({
-        top: e.pageY,
-        left: e.pageX
+        top: ev.pageY,
+        left: ev.pageX
       });
     }
   });
