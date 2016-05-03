@@ -379,16 +379,16 @@ function init(prefix) {
   
   e.addEventListener("dragstart", function(ev) {
     console.log(ev);
-    mouseDownX = ev.screenX;
-    mouseDownY = ev.screenY;
+    mouseDownX = ev.clientX;
+    mouseDownY = ev.clientY;
     if(!ev.shiftKey) {
       ev.preventDefault();
     }
   }, false);
   
   e.addEventListener("dragend", function(ev) {
-    var dx = ox + ev.screenX - mouseDownX;
-    var dy = oy + ev.screenY - mouseDownY;
+    var dx = ox + ev.clientX - mouseDownX;
+    var dy = oy + ev.clientY - mouseDownY;
     
     console.log(ox, oy, dx, dy);
     rpl.translate(dx, dy);
