@@ -139,9 +139,10 @@ function DynReply(existingElem) {
 }
 
 DynReply.prototype.moveTo = function(x,y) {
-  x = window.screenLeft - x ;
-  y = y - window.screenTop ;
-  this.elem.setAttribute("style", "top: "+y+"px; right: "+x+"px;");
+  x = document.body.clientLeft - x ;
+  if (x > 0 && y > 0 && x < document.body.clientWidth && y < document.body.clientHeight ) {
+    this.elem.setAttribute("style", "top: "+y+"px; right: "+x+"px;");
+  }
 }
 
 DynReply.prototype.update = function() {
@@ -372,8 +373,8 @@ function init(prefix) {
   }, false);
   
   e.addEventListener("dragend", function(ev) {
-    var x = originalX + ev.clientX - ( mouseDownX + ev.offsetX );
-    var y = originalY + ev.clientY - ( mouseDownY + ev.offsetY );
+    var x = ev.clientX - ( mouseDownX );
+    var y = ev.clientY - ( mouseDownY );
     //x -= window.screenLeft;
     //y -= window.screenTop;
     rpl.moveTo(x, y);
