@@ -384,7 +384,7 @@ function init(prefix) {
   e.addEventListener("dragend", function(ev) {
     var dx = ev.clientX - mouseDownX;
     var dy = ev.clientY - mouseDownY;
-    console(dx, dy);
+    console.log(dx, dy);
     rpl.translate(dx, dy);
   }, false);
   
