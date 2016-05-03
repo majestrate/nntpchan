@@ -469,8 +469,7 @@ img.thumbnail {
     float: left;
     position: fixed;
     top: 2ex;
-    right: 0;
-    width: 34%
+    width: 500px;
 }
 @media (max-width: 100ex) {
     .replybar {
