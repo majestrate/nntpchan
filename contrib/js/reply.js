@@ -390,15 +390,15 @@ function init(prefix) {
   e.setAttribute("draggable", "true");
   
   e.addEventListener("drag", function(ev) {
-    console.log(ev);
-    mouseDownX = ev.screenX;
-    mouseDownY = ev.screenY;
-    if(!ev.shiftKey) {
+    if(ev.shiftKey) {
+      rpl.translate(ev.offsetX, ev.offsetY);
+    } else {
       ev.preventDefault();
     }
   }, false);
   
   e.addEventListener("dragend", function(ev) {
+    return;
     var rpl = getReplyTo(); 
     console.log(mouseDownX, mouseDownY, rpl);
     var ox = rpl.getX();
