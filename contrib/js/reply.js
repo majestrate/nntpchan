@@ -158,7 +158,7 @@ DynReply.prototype.translate = function(dx, dy) {
 }
 
 DynReply.prototype.moveTo = function(x,y) {
-  console.log("moveto",x,y);
+  console.log("moveto",this, x,y);
   if(x && y && x > 0 && y > 0) {
     var nx = document.body.clientLeft - x ;
     if (nx > 0 && y > 0 && nx < document.body.clientWidth && y < document.body.clientHeight ) {
