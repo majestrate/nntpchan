@@ -353,6 +353,7 @@ function init(prefix) {
   inject_hover_for_element(document);
   if ( /\.html$/.test(document.location.pathname) ) {
     // board / thread page
+    console.log("not loading reply widget");
   } else {
     // ukko / livechan page
     var rpl  = getReplyTo();
