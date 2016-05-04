@@ -9,6 +9,7 @@ function getReplyTo() {
       // build a new postform
       document.dynreply = new DynReply();
     }
+    e = document.dynreply.elem;
     e.style.position = "fixed";
     e.setAttribute("class", "shadow");
   }
