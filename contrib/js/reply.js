@@ -354,7 +354,7 @@ function inject_hover_for_element(elem) {
 function init(prefix) {
   // inject posthover ...
   inject_hover_for_element(document);
-  if ( /\.html$/.test(document.location.pathname) && ( ! /ukko/.test(document.location.pathname)) ) {
+  if ( /\.html$/.test(document.location.pathname) && ! (/ukko/.test(document.location.pathname)) ) {
     // board / thread page
     console.log("not loading reply widget");
   } else {
