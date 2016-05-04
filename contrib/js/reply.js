@@ -146,10 +146,15 @@ DynReply.prototype.update = function() {
   if (this.prefix) {
     // update captcha
     this.updateCaptcha();
-    if (this.board && this.roothash) {
+    if (this.board) {
       // update post form
       var ref = document.getElementById("postform_reference");
-      ref.setAttribute("value", this.roothash);
+         
+      if (this.roothash) {
+        ref.setAttribute("value", this.roothash);
+      } else {
+        ref.setAttribute("value", "");
+      }
       this.url = this.prefix + "post/" + this.board + "?t=json";
     }
   }
@@ -346,63 +351,70 @@ function inject_hover_for_element(elem) {
 function init(prefix) {
   // inject posthover ...
   inject_hover_for_element(document);
-  // initialize replyto widget
-  var rpl = getReplyTo();
-  rpl.setPrefix(prefix);
+  if ( /\.html$/.test(document.location.pathname) ) {
+    // board / thread page
+  } else {
+    // ukko / livechan page
+    var rpl  = getReplyTo();
+    rpl.setPrefix(prefix);
+    // set livechan
+    rpl.setBoard("overchan.random");
+    rpl.update();
+    rpl.updateCaptcha();
+    
+    // position replyto widget
+    var e = rpl.elem;
+    var mouseDownX, mouseDownY;
+    
+    var $dragging = null;
 
-  // position replyto widget
-  var e = rpl.elem;
-  var mouseDownX, mouseDownY;
-  
-  var $dragging = null;
+    $(rpl.elem).on("mousemove", function(ev) {
+      if ($dragging) {
+        var x = ev.pageX - $(this).width() / 2,
+            y = ev.pageY - $(this).height() / 2;
+        $dragging.offset({
+          top: y,
+          left: x
+        });
+      }
+    });
 
-  $(rpl.elem).on("mousemove", function(ev) {
-    if ($dragging) {
-      var x = ev.pageX - $(this).width() / 2,
-          y = ev.pageY - $(this).height() / 2;
-      $dragging.offset({
-        top: y,
-        left: x
+
+    $(rpl.elem).on("mousedown", e, function (ev) {
+      $dragging = $(rpl.elem);
+    });
+
+    $(rpl.elem).on("mouseup", function (e) {
+      $dragging = null;
+    });
+    
+    // add replyto post handlers
+    e = document.getElementById("postform_submit");
+    var postit = function() {
+      var f = document.querySelector("form");
+      // do ajax request to post data
+      var r = getReplyTo();
+      r.showMessage("posting... ");
+      r.post(function(j) {
+        if(j.error) {
+          // an error happened
+          r.showError(j.error);
+        } else {
+          // we're good
+          r.showMessage("posted :^)");
+          r.updateCaptcha();
+          r.clear();
+        }
+      }, function(err) {
+        r.showError(err);
+        r.clearSolution();
       });
     }
-  });
-
-
-  $(rpl.elem).on("mousedown", e, function (ev) {
-    $dragging = $(rpl.elem);
-  });
-
-  $(rpl.elem).on("mouseup", function (e) {
-    $dragging = null;
-  });
-  
-  // add replyto post handlers
-  e = document.getElementById("postform_submit");
-  var postit = function() {
     var f = document.querySelector("form");
-    // do ajax request to post data
-    var r = getReplyTo();
-    r.showMessage("posting... ");
-    r.post(function(j) {
-      if(j.error) {
-        // an error happened
-        r.showError(j.error);
-      } else {
-        // we're good
-        r.showMessage("posted :^)");
-        r.updateCaptcha();
-        r.clear();
-      }
-    }, function(err) {
-      r.showError(err);
-      r.clearSolution();
-    });
-  }
-  var f = document.querySelector("form");
-  f.onsubmit = function() {
-    postit();
-    return false;
-  }
-  
+    f.onsubmit = function() {
+      postit();
+      return false;
+    }
+  }  
 }
 
