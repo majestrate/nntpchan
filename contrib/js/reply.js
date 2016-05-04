@@ -270,7 +270,7 @@ DynReply.prototype.showMessage = function(msg) {
 
 // reply box function
 function nntpchan_reply(parent, shorthash) {
-  if (parent) {
+  if (parent && document.dynreply) {
     var boardname = parent.getAttribute("boardname");
     var roothash = parent.getAttribute("root");
     var replyto = getReplyTo();

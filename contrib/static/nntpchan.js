@@ -678,7 +678,7 @@ DynReply.prototype.setBoard=function(boardname){if(boardname){this.board=boardna
 DynReply.prototype.setRoot=function(roothash){if(roothash){this.roothash=roothash;}}
 DynReply.prototype.showError=function(msg){console.log("error in dynreply: "+msg);this._error.setAttribute("class","error message");this._error.appendChild(document.createTextNode(msg));this.updateCaptcha();}
 DynReply.prototype.showMessage=function(msg){this._error.setAttribute("class","message");this._error.innerHTML="";this._error.appendChild(document.createTextNode(msg));var e=this._error;setTimeout(function(){e.innerHTML="";},2000);}
-function nntpchan_reply(parent,shorthash){if(parent){var boardname=parent.getAttribute("boardname");var roothash=parent.getAttribute("root");var replyto=getReplyTo();replyto.setBoard(boardname);replyto.setRoot(roothash);replyto.show();}
+function nntpchan_reply(parent,shorthash){if(parent&&document.dynreply){var boardname=parent.getAttribute("boardname");var roothash=parent.getAttribute("root");var replyto=getReplyTo();replyto.setBoard(boardname);replyto.setRoot(roothash);replyto.show();}
 var elem=document.getElementById("postform_message");if(elem)
 {elem.value+=">>"+shorthash.substr(0,10)+"\n";}}
 function inject_hover(prefix,el,parent){if(!prefix){throw"prefix is not defined";}
