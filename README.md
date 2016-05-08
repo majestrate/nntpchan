@@ -11,7 +11,7 @@ This repository contains resources used by the core daemon which is located on [
 
 ---
 
-*PLEASE* report any bugs you find while setting up or building on [github](https://github.com/majestrate/nntpchan/issues) or [gitgud](https://gitgud.io/uguu/nntpchan/issues) so that the problems get fixed :^)
+*PLEASE* report any bugs you find while setting up or building on [github](https://github.com/majestrate/nntpchan/issues) or [gitgud](https://gitgud.io/uguu/nntpchan/issues) so that the problems get fixed :\^)
 
 IRC:
 
