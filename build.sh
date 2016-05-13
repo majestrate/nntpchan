@@ -56,8 +56,10 @@ export GOPATH=$PWD/go
 mkdir -p $GOPATH
 
 if [ "x$ipfs" == "xyes" ] ; then
-    echo "obtaining gx"
-    go get -u -v github.com/whyrusleeping/gx-go
+    if [ ! -e $GOPATH/bin/gx ] ; then
+        echo "obtaining gx"
+        go get -u -v github.com/whyrusleeping/gx-go
+    fi
     mkdir -p vendor/gx/ipfs
     cd vendor/gx/ipfs
     $GOPATH/bin/gx get $rev
