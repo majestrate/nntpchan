@@ -65,7 +65,10 @@ if [ "x$ipfs" == "xyes" ] ; then
         go get -u -v github.com/whyrusleeping/gx-go
     fi
     echo "building stable revision, this will take a bit. to speed this part up install and run ipfs locally"
-    $GOPATH/bin/gx install
+    mkdir -p $GOPATH/src/gx/ipfs
+    cd $GOPATH/src/gx/ipfs
+    $GOPATH/bin/gx get $rev
+    cd $root
     go get -d -v 
     go build -v .
     mv nntpchan srndv2
