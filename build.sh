@@ -58,6 +58,10 @@ mkdir -p $GOPATH
 if [ "x$ipfs" == "xyes" ] ; then
     if [ ! -e $GOPATH/bin/gx ] ; then
         echo "obtaining gx"
+        go get -u -v github.com/whyrusleeping/gx
+    fi
+    if [ ! -e $GOPATH/bin/gx-go ] ; then
+        echo "obtaining gx-go"
         go get -u -v github.com/whyrusleeping/gx-go
     fi
     mkdir -p vendor/gx/ipfs
