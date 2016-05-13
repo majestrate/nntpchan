@@ -57,8 +57,8 @@ mkdir -p $GOPATH
 
 if [ "x$ipfs" == "xyes" ] ; then
     echo "obtaining gx"
-    go get -v github.com/whyrusleeping/gx
-    go get -v github.com/whyrusleeping/gx-go
+    go get -u -v github.com/whyrusleeping/gx
+    go get -u -v github.com/whyrusleeping/gx-go
     mkdir -p vendor/gx/ipfs
     cd vendor/gx/ipfs
     gx get $rev
