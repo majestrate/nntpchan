@@ -64,8 +64,8 @@ if [ "x$ipfs" == "xyes" ] ; then
         echo "obtaining gx-go"
         go get -u -v github.com/whyrusleeping/gx-go
     fi
-    mkdir -p $GOPATH/src/vendor/gx/ipfs
-    cd $GOPATH/src/vendor/gx/ipfs
+    mkdir -p $GOPATH/src/gx/ipfs
+    cd $GOPATH/src/gx/ipfs
     $GOPATH/bin/gx get $rev
     cd $root
     $GOPATH/bin/gx install
