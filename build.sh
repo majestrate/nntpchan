@@ -66,6 +66,7 @@ if [ "x$ipfs" == "xyes" ] ; then
     fi
     mkdir -p $GOPATH/src/gx/ipfs
     cd $GOPATH/src/gx/ipfs
+    echo "building stable revision, this will take a bit. to speed this part up install and run ipfs locally"
     $GOPATH/bin/gx get $rev
     cd $root
     $GOPATH/bin/gx install
