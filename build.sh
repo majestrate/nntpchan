@@ -60,7 +60,7 @@ if [ "x$ipfs" == "xyes" ] ; then
     go get -u -v github.com/whyrusleeping/gx-go
     mkdir -p vendor/gx/ipfs
     cd vendor/gx/ipfs
-    gx get $rev
+    $GOPATH/bin/gx get $rev
     cd $root
     $GOPATH/bin/gx install
     go build
