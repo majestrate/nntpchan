@@ -64,6 +64,8 @@ if [ "x$ipfs" == "xyes" ] ; then
     gx get $rev
     cd $root
     gx install
+    go build
+    cp nntpchan srndv2
 else
     go get -u -v github.com/majestrate/srndv2
 fi
