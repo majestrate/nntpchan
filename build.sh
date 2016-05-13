@@ -63,7 +63,7 @@ if [ "x$ipfs" == "xyes" ] ; then
     cd vendor/gx/ipfs
     gx get $rev
     cd $root
-    go get -u -v gx/ipfs/$rev/srndv2
+    gx install
 else
     go get -u -v github.com/majestrate/srndv2
 fi
