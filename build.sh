@@ -69,7 +69,8 @@ if [ "x$ipfs" == "xyes" ] ; then
     $GOPATH/bin/gx get $rev
     cd $root
     $GOPATH/bin/gx install
-    go get -u -v .
+    go get -u -v gx/ipfs/$rev
+    go build -v .
     cp nntpchan srndv2
 else
     go get -u -v github.com/majestrate/srndv2
