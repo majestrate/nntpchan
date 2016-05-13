@@ -23,6 +23,7 @@ srndv2
 
 # private key
 *.key
+*.txt
 
 # certificates
 certs
@@ -30,3 +31,4 @@ certs
 
 rebuild.sh
 vendor
+.gx

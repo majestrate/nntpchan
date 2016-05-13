@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gx/ipfs/QmaNuKBcG3hb5YJ4xpeipdX3t2Fw6pwZJSnpvsfn9Zj1tm/srndv2/src/srnd"
+	"gx/ipfs/QmZWEqyb7hs2z1pNUqdfNyDgG3cj31ZZgP148RFdRExCQr/srndv2/src/srnd"
 	"log"
 	"os"
 	"os/signal"

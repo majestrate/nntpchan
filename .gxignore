@@ -12,21 +12,22 @@ srnd.ini
 feeds.ini
 
 # default article store directory
-articles
+articles/
 
 # generated files
-webroot
+webroot/
 
 # built binaries
-go
+go/
 srndv2
 nntpchan
 
 # private key
 *.key
+*.txt
 
 # certificates
-certs
+certs/
 
 rebuild.sh
 

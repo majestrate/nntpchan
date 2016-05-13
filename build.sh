@@ -59,7 +59,8 @@ if [ "x$ipfs" == "xyes" ] ; then
     echo "obtaining gx"
     go get -v github.com/whyrusleeping/gx
     go get -v github.com/whyrusleeping/gx-go
-    gx install
+    gx get $rev
+    go get -u -v gx/ipfs/$rev/srndv2
 else
     go get -u -v github.com/majestrate/srndv2
 fi
