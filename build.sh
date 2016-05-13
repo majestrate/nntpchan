@@ -63,7 +63,7 @@ if [ "x$ipfs" == "xyes" ] ; then
     cd vendor/gx/ipfs
     gx get $rev
     cd $root
-    gx install
+    $GOPATH/bin/gx install
     go build
     cp nntpchan srndv2
 else
