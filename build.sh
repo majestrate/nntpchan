@@ -70,9 +70,7 @@ if [ "x$ipfs" == "xyes" ] ; then
     $GOPATH/bin/gx get $rev
     cd $root
     $GOPATH/bin/gx install
-    set +e
-    go get -u -v
-    set -e
+    go get -d -v 
     go build -v .
     cp nntpchan srndv2
 else
