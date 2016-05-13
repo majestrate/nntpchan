@@ -20,12 +20,15 @@ for arg in $@ ; do
     esac
 done
 
-rev="QmaNuKBcG3hb5YJ4xpeipdX3t2Fw6pwZJSnpvsfn9Zj1tm"
-
+rev="QmZWEqyb7hs2z1pNUqdfNyDgG3cj31ZZgP148RFdRExCQr"
+ipfs="no"
 _next=""
 # check for build flags
 for arg in $@ ; do
     case $arg in
+        "--ipfs")
+            ipfs="yes"
+            ;;
         "--disable-redis")
             tags="$tags -tags disable_redis"
             ;;
@@ -48,12 +51,17 @@ if [ "x$rev" == "x" ] ; then
 fi
 
 cd $root
-#echo "obtaining gx"
-#go get -v github.com/whyrusleeping/gx
-#go get -v github.com/whyrusleeping/gx-go
-#gx install --global && go build -v
+unset GOPATH 
 export GOPATH=$PWD/go
 mkdir -p $GOPATH
-go get -u -v github.com/majestrate/srndv2
+
+if [ "x$ipfs" == "xyes" ] ; then
+    echo "obtaining gx"
+    go get -v github.com/whyrusleeping/gx
+    go get -v github.com/whyrusleeping/gx-go
+    gx install
+else
+    go get -u -v github.com/majestrate/srndv2
+fi
 cp $GOPATH/bin/srndv2 $root
 echo "Built"
