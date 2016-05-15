@@ -20,7 +20,7 @@ for arg in $@ ; do
     esac
 done
 
-rev="QmZWEqyb7hs2z1pNUqdfNyDgG3cj31ZZgP148RFdRExCQr"
+rev="QmPAqM7anxdr1ngPmJz9J9AAxDLinDz2Eh9aAzLF9T7LNa"
 ipfs="no"
 _next=""
 # check for build flags
