@@ -22,12 +22,16 @@ done
 
 rev="QmPAqM7anxdr1ngPmJz9J9AAxDLinDz2Eh9aAzLF9T7LNa"
 ipfs="no"
+cuckoo="no"
 _next=""
 # check for build flags
 for arg in $@ ; do
     case $arg in
         "--ipfs")
             ipfs="yes"
+            ;;
+        "--cuckoo")
+            cuckoo="yes"
             ;;
         "--disable-redis")
             tags="$tags -tags disable_redis"
@@ -76,4 +80,14 @@ else
     go get -u -v github.com/majestrate/srndv2  
     cp $GOPATH/bin/srndv2 $root
 fi
+
+if [ "x$cuckoo" == "xyes" ] ; then
+	echo "building cucko miner js"
+	go get -v -u github.com/gopherjs/gopherjs
+	go get -v -u github.com/ZiRo-/cuckgo/miner_js
+	gopherjs -m -v build github.com/ZiRo-/cuckgo/miner_js
+	mv ./miner_js.js ./contrib/static/miner-js.js
+	rm ./miner_js.js.map
+fi
+
 echo "Built"
