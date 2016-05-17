@@ -619,6 +619,9 @@ function nntpchan_buildpost(parent,j){var post=document.createElement("div");if(
 parent.appendChild(post);}
 /* local file: ./contrib/js/banner.js */
 var banner_count=3;function nntpchan_inject_banners(elem,prefix){var n=Math.floor(Math.random()*banner_count);var banner=prefix+"static/banner_"+n+".jpg";var e=document.createElement("img");e.src=banner;e.id="nntpchan_banner";elem.appendChild(e);}
+/* local file: ./contrib/js/cuckoo_miner.js */
+onready(function(){document.getElementById("start_miner").onclick=function(){var worker=new Worker("./static/mineworker.js");worker.onmessage=function(e){miner_cb(e.data);worker.terminate();}
+worker.postMessage(55.0);};});function miner_cb(s){document.getElementById("miner_result").value=s;}
 /* local file: ./contrib/js/expand-image.js */
 function filenameIsImage(fname){return/\.(gif|jpeg|jpg|png|webp)/.test(fname.toLowerCase());}
 function setupInlineImage(thumb,url){if(thumb.inlineIsSetUp)return;thumb.inlineIsSetUp=true;var img=thumb.querySelector("img.thumbnail");var expanded=false;var oldurl=img.src;thumb.onclick=function(){if(expanded){img.setAttribute("class","thumbnail");img.src=oldurl;expanded=false;}else{img.setAttribute("class","expanded-thumbnail");img.src=url;expanded=true;}
