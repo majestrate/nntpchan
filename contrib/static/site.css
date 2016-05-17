@@ -121,6 +121,15 @@ table tbody tr:nth-of-type( even ) {
      padding-left: 4px;
 }
 
+.postform td{
+	padding: 0px 15px 0px 4px;
+}
+
+.button {
+	max-width: 10em;
+	height: 2em;
+}
+
 tr {
 	background-color: transparent!important;
 }
