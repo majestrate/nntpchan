@@ -620,7 +620,8 @@ parent.appendChild(post);}
 /* local file: ./contrib/js/banner.js */
 var banner_count=3;function nntpchan_inject_banners(elem,prefix){var n=Math.floor(Math.random()*banner_count);var banner=prefix+"static/banner_"+n+".jpg";var e=document.createElement("img");e.src=banner;e.id="nntpchan_banner";elem.appendChild(e);}
 /* local file: ./contrib/js/cuckoo_miner.js */
-onready(function(){document.getElementById("start_miner").onclick=function(){var worker=new Worker("./static/mineworker.js");worker.onmessage=function(e){miner_cb(e.data);worker.terminate();}
+onready(function(){document.getElementById("start_miner").onclick=function(){var btn=document.getElementById("start_miner");var label=btn.value;btn.value="..."
+btn.disabled=true;var worker=new Worker("./static/mineworker.js");worker.onmessage=function(e){miner_cb(e.data);btn.value=label;btn.disabled=false;worker.terminate();}
 worker.postMessage(55.0);};});function miner_cb(s){document.getElementById("miner_result").value=s;}
 /* local file: ./contrib/js/expand-image.js */
 function filenameIsImage(fname){return/\.(gif|jpeg|jpg|png|webp)/.test(fname.toLowerCase());}
