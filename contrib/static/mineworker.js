@@ -1,3 +1,4 @@
+importScripts('./siphash-lib.js');
 importScripts('./miner-js.js');
 
 onmessage = function(e) {
