@@ -81,13 +81,4 @@ else
     cp $GOPATH/bin/srndv2 $root
 fi
 
-if [ "x$cuckoo" == "xyes" ] ; then
-	echo "building cucko miner js"
-	go get -v -u github.com/gopherjs/gopherjs
-	go get -v -u github.com/ZiRo-/cuckgo/miner_js
-	gopherjs -m -v build github.com/ZiRo-/cuckgo/miner_js
-	mv ./miner_js.js ./contrib/static/miner-js.js
-	rm ./miner_js.js.map
-fi
-
 echo "Built"

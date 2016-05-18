@@ -15,6 +15,18 @@ if [ ! -f $GOPATH/bin/minify ]; then
   echo "set up minifiy"  
 	go get -v github.com/tdewolff/minify/cmd/minify
 fi
+if [ ! -f $GOPATH/bin/gopherjs ]; then
+        echo "set up gopherjs"
+        go get -v -u github.com/gopherjs/gopherjs
+fi
+
+# build cuckoo miner
+echo "Building cuckoo miner"
+go get -v -u github.com/ZiRo-/cuckgo/miner_js
+$GOPATH/bin/gopherjs -m -v build github.com/ZiRo-/cuckgo/miner_js
+mv ./miner_js.js ./contrib/static/miner-js.js
+rm ./miner_js.js.map
+
 outfile=$PWD/contrib/static/nntpchan.js
 
 lint() {
