@@ -620,9 +620,15 @@ parent.appendChild(post);}
 /* local file: ./contrib/js/banner.js */
 var banner_count=3;function nntpchan_inject_banners(elem,prefix){var n=Math.floor(Math.random()*banner_count);var banner=prefix+"static/banner_"+n+".jpg";var e=document.createElement("img");e.src=banner;e.id="nntpchan_banner";elem.appendChild(e);}
 /* local file: ./contrib/js/cuckoo_miner.js */
-onready(function(){document.getElementById("start_miner").onclick=function(){var btn=document.getElementById("start_miner");var label=btn.value;btn.value="..."
-btn.disabled=true;var worker=new Worker("./static/mineworker.js");worker.onmessage=function(e){miner_cb(e.data);btn.value=label;btn.disabled=false;worker.terminate();}
-worker.postMessage(55.0);};});function miner_cb(s){document.getElementById("miner_result").value=s;}
+var easiness=55.0;var miner_threads=4;var randoffs=64;onready(function(){document.getElementById("start_miner").onclick=function(){var btn=document.getElementById("start_miner");var label=btn.value;btn.value="..."
+btn.disabled=true;var b=new Uint8Array(randoffs);window.crypto.getRandomValues(b);var b_cur=0;var b_i=0;var tmp=new Uint8Array(randoffs+b_i+1);tmp.set(b)
+tmp[b.length]=0
+b=tmp;var workers=new Array(miner_threads);var worker_cb=function(e){if(e.data[0]=="ok"){miner_cb(e.data[1]);btn.value=label;btn.disabled=false;for(i=0;i<miner_threads;i++){workers[i].terminate();}}else{if(b_cur>=256){var tmp=new Uint8Array(randoffs+b_i+1);tmp.set(b)
+tmp[b.length]=0
+b=tmp;b_i++;b_cur=0;}
+b[randoffs+b_i]=b_cur;b_cur++;var params=[b,easiness,e.data[2]];workers[e.data[2]].postMessage(params);}}
+for(i=0;i<miner_threads;i++){b[randoffs+b_i]=b_cur;b_cur++;var params=[b,easiness,i];workers[i]=new Worker("./static/mineworker.js");workers[i].onmessage=worker_cb;workers[i].postMessage(params);}
+b_cur=4;};});function miner_cb(s){document.getElementById("miner_result").value=s;}
 /* local file: ./contrib/js/expand-image.js */
 function filenameIsImage(fname){return/\.(gif|jpeg|jpg|png|webp)/.test(fname.toLowerCase());}
 function setupInlineImage(thumb,url){if(thumb.inlineIsSetUp)return;thumb.inlineIsSetUp=true;var img=thumb.querySelector("img.thumbnail");var expanded=false;var oldurl=img.src;thumb.onclick=function(){if(expanded){img.setAttribute("class","thumbnail");img.src=oldurl;expanded=false;}else{img.setAttribute("class","expanded-thumbnail");img.src=url;expanded=true;}
