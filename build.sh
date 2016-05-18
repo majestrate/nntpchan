@@ -22,11 +22,14 @@ done
 
 rev="QmPAqM7anxdr1ngPmJz9J9AAxDLinDz2Eh9aAzLF9T7LNa"
 ipfs="no"
-cuckoo="no"
+rebuildjs="yes"
 _next=""
 # check for build flags
 for arg in $@ ; do
     case $arg in
+        "--no-js")
+            rebuildjs="no"
+            ;;
         "--ipfs")
             ipfs="yes"
             ;;
@@ -55,6 +58,10 @@ if [ "x$rev" == "x" ] ; then
 fi
 
 cd $root
+if [ "x$rebuildjs" == "xyes" ] ; then
+    echo "rebuilding generated js..."
+    ./build-js.sh
+fi
 unset GOPATH 
 export GOPATH=$PWD/go
 mkdir -p $GOPATH
