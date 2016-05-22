@@ -72,16 +72,17 @@ textarea {
     padding: 10px 10px;
 }
 
-.download_link {
+.download_link,.fname_link {
     display: block;
     text-align: center;
     font-size: 90%;
     height: auto
     padding: 0.5em 0;
-    margin: 0;
-    max-width: 100%;
+    margin: auto;
+    max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-height: 2.4em;
 }
 
 pre {
@@ -232,7 +233,6 @@ hr {
     max-width: 128px;
     box-shadow: 0 0 4px rgba(0,0,0,0.55);
     border: 2px solid rgba(153,153,153,0);
-    margin-bottom: 5px;
 }
 
 a:hover , a:visited:hover, .navbar-link > label:hover {
@@ -405,7 +405,7 @@ input, textarea {
 
 .thumbnail {
     display: block;                      
-    margin: 5px 20px 10px;
+    margin: 5px 20px;
     border: medium none;
     max-width: 300px;
     max-height: 200px;
@@ -527,4 +527,5 @@ textarea#reply-text {
 
 .attachments {
     float: left;
+    margin-bottom: 5px;
 }
