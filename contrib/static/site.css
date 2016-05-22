@@ -72,6 +72,18 @@ textarea {
     padding: 10px 10px;
 }
 
+.download_link {
+    display: block;
+    text-align: center;
+    font-size: 90%;
+    height: auto
+    padding: 0.5em 0;
+    margin: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 pre {
     white-space: pre-wrap;
     align: center;

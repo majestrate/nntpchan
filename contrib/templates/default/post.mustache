@@ -22,6 +22,7 @@
   {{#post.Attachments}}
     <figure>
     <figcaption>
+    <a class="download_link" href="{{Source}}" download="{{Filename}}">{{#i18n.Translations}}{{download_prompt}}{{/i18n.Translations}}</a>
     <a class="file" href="{{Source}}" title="{{Filename}}" target="_blank"><img src="{{Thumbnail}}" alt="{{Filename}}" class="thumbnail"/></a>
     </figcaption>
     </figure>
