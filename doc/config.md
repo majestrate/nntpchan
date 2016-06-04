@@ -13,6 +13,8 @@ You can configure NNTPChan via the web-interface by navigating your browser to h
 
 First your will be asked what data-storage system you would like to use. We support Redis and PostgreSQL.
 
+<hr>
+
 ####Redis configuration
 
 ![Image 2](http://i.imgur.com/HDp4Ddf.png)
