@@ -52,6 +52,8 @@ Fill in the fields required for the NNTP server.
 * **Allow attachments from anonymous posters** - Check the box if you want to allow anonymous posters to add attachments to their posts.
 * **Require TLS for incoming connections** - Check the box if NNTP connections must be encrypted and authenticated with TLS (highly recommended).
 
+<hr>
+
 ###Configuring TLS
 
 ![Image 5](http://i.imgur.com/EjkrjTT.png)
@@ -60,6 +62,8 @@ Fill in the fields required for the TLS security system.
 
 * **Hostname or IP address** - FIXME.
 * **TLS keyname** - FIXME.
+
+<hr>
 
 ###Set paths to external programs
 
@@ -70,6 +74,9 @@ NNTPChan needs to know the paths to the listed programs on your system.
 * **convert path** - Path to the `convert` program.
 * **ffmpeg path** - Path to the `ffmpeg` program.
 * **sox path** - Path to the `sox` program.
+
+<hr>
+<hr>
 
 ##Manual configuration (WIP)
 
