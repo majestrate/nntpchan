@@ -45,4 +45,5 @@ If you have chosen PostgreSQL then fill in the fields below:
 * **Name of NNTP instance** - What is the significamce of this name.
 * **Allow attachements** - Check the box if you want people to be able to add attachements to posts.
 * **Allow anonymous posters** - Check the box if you want to allow anonymous posters.
-* **Allow attachments from anonymous posters** - Check the box if you want to allow anonymous posters to add attachments to their posts,
+* **Allow attachments from anonymous posters** - Check the box if you want to allow anonymous posters to add attachments to their posts.
+* **Require TLS for incoming connections** - Check the box if NNTP connections must be encrypted and authenticated with TLS (highly recommended).
