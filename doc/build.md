@@ -47,4 +47,6 @@ If you want to build without support for Redis then build with the `--no-redis` 
 
     ./build.sh --no-redis
 
-To run eiter run `./srndv2 setup` and browse to http://127.0.0.1:18000 or configure [by hand](database.md)
+##Now let's setup NNTPChan
+
+Check out [Configuring NNTPChan](doc/config.md).
