@@ -66,7 +66,7 @@ json-api-password=seriously-fucking-change-this-value
 api-secret=RTZP5JZ2XGYCY===
 ````
 
-##[nntp]
+##`[nntp]`
 
 All NNTP server-related settings.
 
@@ -86,9 +86,37 @@ This is where you put the address and port that you would like the NNTP server t
 ####allow_anon
 
 * When this is set to `1` bluh.
-* When this is set to `0` then bluh.
+* When this is set to `0` bluh.
 
 ####allow_anon_attachments
 
 * When this is set to `1` bluh.
 * When this is set to `0` bluh.
+
+####allow_attachments
+
+* When this is set to `1` posters my attach images to their posts.
+* When this is set to `0` posters may not attach images to their posts.
+
+####require_tls
+
+* When this is set to `1` then any NNTP connection to this server will need to use TLS.
+* When this is set to `0` then any NNTP connection to this server will not need to use TLS (but it could? - FIXME)
+
+####anon_nntp
+
+* When this is set to `1` bluh.
+* When this is set to `0` bluh.
+
+##`[pprof]`
+
+All pprof-related settings.
+
+####enable
+
+* When this is set to `1` bluh.
+* When this is set to `0` bluh.
+
+####bind
+
+FIXME
