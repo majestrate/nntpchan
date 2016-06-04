@@ -21,6 +21,8 @@ Dependancies:
 
 ##Debian instructions
 
+These are instalaltion instructions for Debian.
+
 ###Install Go
 
 Install the Go programming language version _1.6_ from the [Go website](https://golang.org/dl/).
