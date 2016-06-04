@@ -1,4 +1,5 @@
 NNTPChan Documentation
 ======================
 
-Add table of contents
+1. [Building NNTPChan](building.md)
+2. [Setting up NNTPChan](setting-up.md)
