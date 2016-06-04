@@ -68,6 +68,27 @@ api-secret=RTZP5JZ2XGYCY===
 
 ##[nntp]
 
+All NNTP server-related settings.
+
 ####instance_name
 
 This is the name for your NNTP server. I don't really know what the point of it is, but hey its there (FIXME).
+
+####bind
+
+This is where you put the address and port that you would like the NNTP server to run on where `x` is the address and `y` is the port in `bind=x:y`.
+
+####sync_on_start
+
+* When this is set to `1` your NNTP server will sync articles with its peers on startup.
+* When this is set to `0` then no syncing will take place on statup.
+
+####allow_anon
+
+* When this is set to `1` bluh.
+* When this is set to `0` then bluh.
+
+####allow_anon_attachments
+
+* When this is set to `1` bluh.
+* When this is set to `0` bluh.
