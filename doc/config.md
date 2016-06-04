@@ -7,7 +7,7 @@ This document provides a step-by-step guide to configurin your NNTPChan node.
 
 You can configure NNTPChan via the web-interface by navigating your browser to http://127.0.0.1:18000.
 
-###Selecting yoru data-storage system
+###Selecting your data-storage system
 
 ![Image 1](http://i.imgur.com/l9iiXxB.png)
 
@@ -41,6 +41,10 @@ If you have chosen PostgreSQL then fill in the fields below:
 <hr>
 
 ###Configuring the NNTP server
+
+![Image 4](http://i.imgur.com/FXxShtu.png)
+
+Fill in the fields required for the NNTP server.
 
 * **Name of NNTP instance** - What is the significamce of this name.
 * **Allow attachements** - Check the box if you want people to be able to add attachements to posts.
