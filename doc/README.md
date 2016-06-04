@@ -1,4 +1,6 @@
 NNTPChan Documentation
 ======================
 
-Add table of contents
+1. [Building NNTPChan](building.md) -  Building the source code
+2. [Setting up NNTPChan](setting-up.md) - Configuring the node
+3. [Running NNTPChan](running.md) - Running the node for the first time
