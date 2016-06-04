@@ -1,10 +1,15 @@
-Overchan is a newsgroup meant to be served on web frontends in an effort to create a decentralized imageboard. Moderation takes place on each frontend itself. Message and image transport is using MIME multipart messages and Base64 as encoding for Images. All messages need to be valid NNTP messages, the transport of messages need to follow NNTP specifications. It is possible to use an existing NNTP daemon like INN or to implement the NNTP sync part as well.
+Protocol
+========
 
-# Sync Protocol (NNTP) 
+##Preface
 
-## Article Format  
+NNTPChan is a newsgroup meant to be served on web frontends in an effort to create a decentralized imageboard. Moderation takes place on each frontend itself. Message and image transport is using MIME multipart messages and Base64 as encoding for Images. All messages need to be valid NNTP messages, the transport of messages need to follow NNTP specifications. It is possible to use an existing NNTP daemon like INN or to implement the NNTP sync part as well.
 
-### Monopart
+##Sync Protocol (NNTP) 
+
+###Article Format  
+
+####Monopart
 
 Message without images can be sent without delimiting the message.
 
@@ -23,7 +28,7 @@ Message without images can be sent without delimiting the message.
     some visible message text
 
 
-### Multipart 
+####Multipart 
 
 This is necessary for posting files.
 
@@ -61,11 +66,11 @@ Where ``$identifier`` should be a rather long random string (at least 0-9, a-z, 
 
 In ~~2013~~ 2015 we can send UTF-8 messages, although this is not part of the old testament.
 
-### Date 
+####Date 
 
 It is recommend to use ``UTC (+0000)`` as timezone for new messages. If a received message is not already in UTC, the date may be converted to UTC for display purposes.
 
-### Message-ID: (see RFC 3977) 
+####Message-ID: (see RFC 3977) 
 
     "A message-id MUST begin with "<", end with ">", and MUST NOT contain the latter except at the end."
     "A message-id MUST be between 3 and 250 octets in length."
@@ -77,30 +82,30 @@ It is recommend to use ``UTC (+0000)`` as timezone for new messages. If a receiv
 
 Which would result in ``jbUdn73KxN1369733675@web.hschan.ano`` This format makes it easier to block massive spam/inapropiate content based on the frontend and a timespan.
 
-### References 
+####References 
 
 If reference is not given or empty, the message is considered an original (root) post.
 
-### X-Sage 
+####X-Sage 
 
 If ``X-Sage`` is given, the message shall not bump the corresponding thread.
 
-## Transport Format 
+###Transport Format 
 
 NNTP requires line endings with ``\r\n``
 
-### Sending
+####Sending
 
 if a line in the message body starts with `.` in needs another `.` prepended. the last line must be a single `.\r\n`
  
-### Receiving: 
+####Receiving: 
 
 If a line in the message body starts with `.` but is not `.\r\n` the `.` needs to be removed.
 
 
-# Frontend 
+##Frontend 
 
-## Postnumbers 
+###Postnumbers 
 
 The first ten characters of a sha1sum of field message-id. The probability for a unique post number (at time of generation) on a board with a maximum of 30k messages is:
 
@@ -110,7 +115,7 @@ In case of several message forgers exhaust obscure post numbers, it will become 
 
 There was a hash collision on October 13 2015, the post hash has been bumped from 10 to 18 bytes.
 
-### Quotes 
+####Quotes 
 
 Quotes reference postnumbers and work across all boards on overchan. The comment field may contain serveral lines such as:
 
@@ -120,16 +125,16 @@ to quote someone.
 
 Valid quotes match this regex: `>+ ?[0-9a-f]+`
 
-#### Optional
+#####Optional
 
 * Resolve quotes to corresponding articles and append them to references - this will aid newsreaders. 
 * Parse message IDs as quotes
 
-## Implementations 
+###Implementations 
 
-Because of the decentralized nature of Overchan, many different entry points to using the service can exist. In the following we discuss different implementations all serving from the newsgroup 'overchan'.
+Because of the decentralized nature of NNTPChan, many different entry points to using the service can exist. In the following we discuss different implementations all serving from the newsgroup 'overchan'.
 
-### negromancy.ano 
+####negromancy.ano 
 
 negromancy.ano uses `breaking-news`, a web frontend compiler for imageboards, pastebins, etc.
 
@@ -141,19 +146,19 @@ You can visit http://boards.negromancy.ano/
 
 for browsing the imageboard.
 
-#### GET request 
+#####GET request 
 
 nginx will serve a static html from dir.
 
-#### POST request 
+#####POST request 
 
 nginx will reverse to the happstack web application which generates and sends a NNTP message to a local INN daemon. INNd will place the new article in dir and feed it to its configured peers. Pictures are encoded in base64 or base91a. Root posting will not work without attaching an image.
 
-#### Generation of Html 
+#####Generation of Html 
 
 The daemon will poll for new articles in dir. If new files are found, it generates 10 main pages ranging from 0.html to 9.html and a html each for any altered threads. For each new article the corresponding thread, starting with the original post, will be bumped to the first page (0.html). For new posts, corresponding pictures are created and 'thumbnailed' through mogrify.
 
-### overchan.sfor.ano 
+####overchan.sfor.ano 
 
 overchan.sfor.ano uses SRNd, a complete NNTP server implemented in Python.
 
@@ -163,40 +168,39 @@ You can visit http://overchan.sfor.ano
 
 for browsing the imageboard and ``git clone git://git.sfor.ano/SRNd.git`` for source.
 
-#### GET request 
+#####GET request 
 
 nginx will serve a static html or image from dir.
 
-#### POST request 
+#####POST request 
 
 nginx will proxy to postman which generates and delivers a NNTP message to SRNd which then will notify overchan plugin about the new message and also deliver it to its configured NNTP peers (which can run SRNd or another NNTPd software like INN). Pictures are encoded in base64.
 
-#### Generation of Html 
+#####Generation of HTML
 
 Plugin overchan is notified by SRNd about new articles and (re)generates `thread-$id.html` and its parent board with up to 10 root posts for each site. For each new article without `X-sage` header the corresponding thread will be bumped to the first page. For new posts, corresponding pictures are created and thumbnailed.
 
-### NNTP News reader applications 
+####NNTP News reader applications 
 
-Through the use of the standard MIME format, news reader applications like Mozilla Thunderbird can also read and post directly to the chan newsserver. Each chan will appear as a root post, while additional posts will appear as replies directly to the root post.
+Through the use of the standard MIME format, news reader applications like Mozilla Thunderbird or Pan can also read and post directly to the chan newsserver. Each chan will appear as a root post, while additional posts will appear as replies directly to the root post.
 
 News readers have some features the chan software may not have: multiple attachments, non-image attachments, subject, posts referencing non-root posts, HTML text. 
 
 Open question: how should this be handled by the chan software for viewing?
 
-# Extensions
+##Extensions
 
-## Control suggestion 
+###Control suggestion 
 
 A control suggestion is a single message containing lines with commands, message-ID and extra information separated by spaces.
 
-### Commands
+####Commands
 
     sticky: sticky this thread
     delete-x-all: delete all attachments from this article
     delete: delete the whole article
 
-
-### Format 
+####Format 
 
     Content-Type: text/plain; charset=UTF-8
     Content-Transfer-Encoding: 8bit
@@ -212,11 +216,9 @@ A control suggestion is a single message containing lines with commands, message
     delete <message-ID>
     delete <message-ID>
 
-
 Messages to control are separated by at least one line break.
 
-
-### Examples
+####Examples
 
 Delete all attachments from message with ID ``message-ID``
 
@@ -226,14 +228,11 @@ Please sticky thread with OP ``message-ID`` till UNIX timestamp ``1380000000``
 
     sticky <message-ID> unix_timestamp 1380000000
 
-
-
-
-### Convention 
+####Convention 
 
 We send control suggestions to newsgroup ``ctl``. Full deletion of a root post results in removal of corresponding thread.
 
-### Signatures 
+####Signatures 
 
 As users give their secret key to the frontend they expect every form field to be verified on all ends. This includes the comment field and headers. In the following we suggest a protocol to sign optional headers.
 
@@ -251,10 +250,9 @@ Signing M vs. Signing H(M)
     H: Hash
     M: Message
 
-
 Input for block based hashing algorithms like SHA-512 can be streamed, only keeping a fixed blocked size in memory instead of all blocks. In case of SHA-512 these message blocks are 1024 bit and the hash to sign 512 bit. Optimized ``S(H(M))`` implementations require a constant amount memory as opposed to a linear requirement in ``S(M)``.
 
-### Format for signing messages (RFC 822) 
+####Format for signing messages (RFC 822) 
 
 Outer headers start with ``Content-Type: message/rfc822`` when there are signed headers or at least an attachment,
 which requires ``Content-Type: multipart/mixed`` to be signed as well as an inner header.
@@ -275,8 +273,7 @@ Please include a ``Content-Type`` header in the inner message as suggested by RF
     S(SK,M)	function that will sign an arbitrary amount of octets M using Ed25519 with secret key SK, returning only the first 64 bytes
     take32	function that takes any amount of binary data and returns the first 32 bytes
 
-
-#### Example
+#####Example
 
     Content-Type: message/rfc822; charset=UTF-8
     Content-Transfer-Encoding: 8bit
@@ -297,10 +294,8 @@ Please include a ``Content-Type`` header in the inner message as suggested by RF
     
     delete <message-ID
 
-
 In this example header Date needs verification, too.
 The following part is signed:
-
 
     Content-Type: text/plain; charset=UTF-8
     Date: Thu, 02 May 2013 12:16:44 +0000
@@ -310,18 +305,20 @@ The following part is signed:
 
     delete <message-ID
 
-
 Above example in octets:
 
     Content-Type: text/plain; charset=UTF-8\\r\\nDate: Thu, 02 May 2013 12:16:44 +0000\\r\\n\\r\\ndelete-x-all <message-ID>\\r\\ndelete <message-ID>\\r\\n\\r\\ndelete <message-ID>
     
-## RPC 
+###RPC
+
 Remote procedure calls can be sent via ``ctl`` or on a group basis by using the group ``ctl.overchan.*``, where * is the group for which you want to execute a certain operation.
 
-### Default format
+####Default format
+
 The default format uses the MIME type ``text/plain`` where the first line of the body opens an array with ``[`` the next line is the name of the procedure you want to call, and on the lines following you can add one or more parameters. Each of these lines is terminated with `,` and indention can be added as well. The arry is closed with `]`.
 
-#### Exapmple
+#####Example
+
     Content-Type: text/plain; charset=UTF-8
     Content-Transfer-Encoding: 8bit
     From: anonymous <foo@bar.ano>
@@ -336,12 +333,13 @@ The default format uses the MIME type ``text/plain`` where the first line of the
         bumplimit,
         350,
     ]
-    
-    
-### JSON RPC
+
+####JSON RPC
+
 If the MIME type is specified as ``application/json`` the body is interpreted as [JSON RPC](http://json-rpc.org/).
 
-#### Exapmple
+#####Example
+
     Content-Type: application/json; charset=UTF-8
     Content-Transfer-Encoding: 8bit
     From: anonymous <foo@bar.ano>
@@ -353,24 +351,30 @@ If the MIME type is specified as ``application/json`` the body is interpreted as
 
     {"method": "setSetting", "params": ["bumplimit", "350"], "id": null}
     
-### Additional details
+####Additional details
+
 As described above, muliple RPC's can be sent via the multipart format. It is also expected that these articles are signed.
 
-# Glossary 
+##Glossary
 
-## chan specific
+###chan specific
 
-### root post
+####root post
+
 original post
 
-### OP
+####OP
+
 original post
 
-### thread
+####thread
+
 a collection of messages starting with the original post followed by messages referencing it ordered by date
 
-### bump
+####bump
+
 newest post will be shown first with corresponding thread
     
-### sticky
+###sticky
+
 thread is temporarily 'bumped' by the frontend and sticks there regardless of newer posts
