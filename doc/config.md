@@ -60,3 +60,13 @@ Fill in the fields required for the TLS security system.
 
 * **Hostname or IP address** - FIXME.
 * **TLS keyname** - FIXME.
+
+###Set paths to external programs
+
+![Image 6](http://i.imgur.com/hBXYJDo.png)
+
+NNTPChan needs to know the paths to the listed programs on your system.
+
+* **convert path** - Path to the `convert` program.
+* **ffmpeg path** - Path to the `ffmpeg` program.
+* **sox path** - Path to the `sox` program.
