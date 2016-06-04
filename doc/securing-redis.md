@@ -12,4 +12,4 @@ This will allow you to add a password to your Redis server that must be used bef
 
 Then take your password, `x` and run this command (with `sudo` if needed).
 
-    echo "x" > /path/to/your/redis.conf
+    echo "requirepass x" >> /path/to/your/redis.conf
