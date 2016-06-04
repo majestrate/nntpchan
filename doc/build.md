@@ -1,7 +1,7 @@
 Building the NNTPChan server
 ============================
 
-This document will help you setup the NNTPChan server.
+This document will help you setup the NNTPChan server fsource code.rom the
 
 ##Requirements
 
