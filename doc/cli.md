@@ -2,6 +2,8 @@
 
 **srndv2** comes with a selection of command-line arguments for managing your node.
 
+[TOC]
+
 ##Rebuild all thumbnails
 
 To rebuild all thumbnails run:
