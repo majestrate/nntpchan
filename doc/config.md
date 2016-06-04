@@ -37,3 +37,12 @@ If you have chosen PostgreSQL then fill in the fields below:
 * **Port number** - This is the port that your PostgreSQL server is running on.
 * **Username** - The username for PostgreSQL.
 * **Password** - The password for PostgreSQL.
+
+<hr>
+
+###Configuring the NNTP server
+
+* **Name of NNTP instance** - What is the significamce of this name.
+* **Allow attachements** - Check the box if you want people to be able to add attachements to posts.
+* **Allow anonymous posters** - Check the box if you want to allow anonymous posters.
+* **Allow attachments from anonymous posters** - Check the box if you want to allow anonymous posters to add attachments to their posts,
