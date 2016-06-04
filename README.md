@@ -16,21 +16,23 @@ This is a step-by-step guide for getting up and running with NNTPChan.
 
 *PLEASE* report any bugs you find while building, setting-up or using NNTPChan on the [GitHub issue tracker](https://github.com/majestrate/nntpchan/issues) or on the [GitGud issue tracker](https://gitgud.io/uguu/nntpchan/issues) so that the probelms can be resolved or discussed.
 
-IRC:
+##Active NNTPChan nodes
 
-[freenode: #nntpchan](https://webchat.freenode.net/?channels=#nntpchan)
+Below is a list of known NNTPChan nodes:
 
-[rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan)
+1. [2hu-ch.org](https://2hu-ch.org)
+2. [nsfl.tk](https://nsfl.tk)
+3. [i2p.rocks](https://i2p.rocks/ib/)
 
+##Support
 
-Like this project? Fund it:
+Need help? Join us on IRC.
 
-bitcoin: 15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE
+1. [freenode: #nntpchan](https://webchat.freenode.net/?channels=#nntpchan)
+2. [rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan) - Most activce
 
-active nodes:
+##Donations
 
-[2hu-ch.org](https://2hu-ch.org)
+Like this project? Why not help by funding it?
 
-[nsfl.tk](https://nsfl.tk)
-
-[i2p.rocks](https://i2p.rocks/ib/)
+Bitcoin: [15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE](bitcoin://15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE)
