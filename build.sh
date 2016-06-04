@@ -88,4 +88,5 @@ else
     cp $GOPATH/bin/srndv2 $root
 fi
 
-echo "Built"
+echo -e "Built\n"
+echo "Now configure NNTPChan with ./srndv2 setup"

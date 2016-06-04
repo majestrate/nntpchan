@@ -1,38 +1,52 @@
-# building the daemon #
+Building the NNTPChan server
+============================
 
+This document will help you setup the NNTPChan server from the source code.
 
-## requirements ##
+##Requirements
 
-* linux or freebsd
-* libsodium 1.0 or higher
+NNTPChan can run on the following operating systems:
+
+* Linux
+* FreeBSD
+
+Dependancies:
+
+* libsodium _1.0_ or _higher_
 * imagemagick
 * ffmpeg
 * sox
+* go _1.6_ or _higher_ **with redis driver**
+* go _1.3_ or _higher_ **without redis driver**
 
-## supported go versions ##
+##Debian instructions
 
-* `go 1.6` or higher with redis driver
+These are installation instructions for Debian.
 
-* `go 1.3` or higher without redis driver
+###Install Go
 
-## debian ##
+Install the Go programming language version _1.6_ from the [Go website](https://golang.org/dl/).
 
-Get `go 1.6` from [here](https://golang.org/dl/) for your platform
-
-Get the dependancies
+###Install the dependancies
 
     sudo apt-get update
     sudo apt-get --no-install-recommends install imagemagick libsodium-dev ffmpeg sox build-essential git ca-certificates
 
+###Get the NNTPChan source
 
-Check out the repo and build it
-
-    git clone https://github.com/majestrate/nntpchan
+    git clone https://github.com/majestrate/nntpchan --depth=1
     cd nntpchan
+
+###Now compile!
+
+If you want to compile with Redis support (recommended - Redis is easy to use) then run:
+
     ./build.sh
 
-If you want to build without supporting redis then build with the `--no-redis` flag
+If you want to build without support for Redis then build with the `--no-redis` flag:
 
     ./build.sh --no-redis
 
-To run eiter run `./srndv2 setup` and browse to http://127.0.0.1:18000 or configure [by hand](database.md)
+##Now let's setup NNTPChan
+
+Check out [Configuring NNTPChan](config.md).
