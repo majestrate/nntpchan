@@ -1,4 +1,4 @@
 `srnd.ini`
 ==========
 
-todo: document this file
+`srnd.ini` is the configuration file for the NNTPChan system.
