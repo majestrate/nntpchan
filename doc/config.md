@@ -9,7 +9,7 @@ You can configure NNTPChan via the web-interface by navigating your browser to h
 
 ###Selecting yoru data-storage system
 
-[Image 1]()
+[Image 1](http://i.imgur.com/l9iiXxB.png)
 
 First your will be asked what data-storage system you would like to use. We support Redis and PostgreSQL.
 
