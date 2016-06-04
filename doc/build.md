@@ -49,4 +49,4 @@ If you want to build without support for Redis then build with the `--no-redis` 
 
 ##Now let's setup NNTPChan
 
-Check out [Configuring NNTPChan](doc/config.md).
+Check out [Configuring NNTPChan](config.md).
