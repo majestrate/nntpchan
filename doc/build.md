@@ -19,23 +19,29 @@ Dependancies:
 * go _1.6_ or _higher_ **with redis driver**
 * go _1.3_ or _higher_ **without redis driver**
 
-## debian ##
+##Debian instructions
 
-Get `go 1.6` from [here](https://golang.org/dl/) for your platform
+###Install Go
 
-Get the dependancies
+Install the Go programming language version _1.6_ from the [Go website](https://golang.org/dl/).
+
+###Install the dependancies
 
     sudo apt-get update
     sudo apt-get --no-install-recommends install imagemagick libsodium-dev ffmpeg sox build-essential git ca-certificates
 
+###Get the NNTPChan source
 
-Check out the repo and build it
-
-    git clone https://github.com/majestrate/nntpchan
+    git clone https://github.com/majestrate/nntpchan --depth=1
     cd nntpchan
+
+###Now compile!
+
+If you want to compile with Redis support (recommended - Redis is easy to use) then run:
+
     ./build.sh
 
-If you want to build without supporting redis then build with the `--no-redis` flag
+If you want to build without support for Redis then build with the `--no-redis` flag
 
     ./build.sh --no-redis
 
