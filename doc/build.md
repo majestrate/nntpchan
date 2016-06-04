@@ -21,7 +21,7 @@ Dependancies:
 
 ##Debian instructions
 
-These are instalaltion instructions for Debian.
+These are installation instructions for Debian.
 
 ###Install Go
 
