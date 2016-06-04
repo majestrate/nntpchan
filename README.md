@@ -8,7 +8,6 @@ This repository contains resources used by the core daemon which is located on [
 ##Getting started
 
 Before you can begin configuring your NNTPChan node you will have to compile the source code. For instructions read the [Building NNTPChan](doc/build.md) document.
-[see build documentation]()
 
 ---
 
