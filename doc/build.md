@@ -1,5 +1,7 @@
-Bulllding the NNTPChan server
-=============================
+Building the NNTPChan server
+============================
+
+This document will help you setup the NNTPChan server.
 
 ##Requirements
 
