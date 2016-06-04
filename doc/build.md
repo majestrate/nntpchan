@@ -1,19 +1,21 @@
-# building the daemon #
+Bulllding the NNTPChan server
+=============================
 
+##Requirements
 
-## requirements ##
+NNTPChan can run on the following operating systems:
 
-* linux or freebsd
-* libsodium 1.0 or higher
+* Linux
+* FreeBSD
+
+Dependancies:
+
+* libsodium _1.0_ or _higher_
 * imagemagick
 * ffmpeg
 * sox
-
-## supported go versions ##
-
-* `go 1.6` or higher with redis driver
-
-* `go 1.3` or higher without redis driver
+* go _1.6_ or _higher_ **with redis driver**
+* go _1.3_ or _higher_ **without redis driver**
 
 ## debian ##
 
