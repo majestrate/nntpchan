@@ -15,7 +15,7 @@ First your will be asked what data-storage system you would like to use. We supp
 
 ###Redis configuration
 
-![http://i.imgur.com/HDp4Ddf.png]()
+![Image 2](http://i.imgur.com/HDp4Ddf.png)
 
 If you have chosen Redis then fill in the fields below:
 
