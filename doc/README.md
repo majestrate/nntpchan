@@ -10,3 +10,4 @@ NNTPChan Documentation
 ##Developer related
 
 1. [Protocol](protocol.md)
+2. [JSON-RPC API](api.md)
