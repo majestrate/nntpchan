@@ -1,15 +1,15 @@
-## Running 
+Running (this should be titled `Manual setup`)
+=======
 
 After you have [built the daemon](build.md) and [configured the database](database.md) you can run the daemon.
 
-
-check out the nntpchan repo and build the daemon if you already haven't
+Read the [Compiling NNTPChan document] for instructions on building NNTPChan if you haven't already. (This shouldn't even be here really)
 
     git clone https://github.com/majestrate/nntpchan
     cd nntpchan
     ./build.sh
 
-set up the daemon:
+Setup the daemon by running:
 
     ./srndv2 setup
 
