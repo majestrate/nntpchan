@@ -51,3 +51,12 @@ Fill in the fields required for the NNTP server.
 * **Allow anonymous posters** - Check the box if you want to allow anonymous posters.
 * **Allow attachments from anonymous posters** - Check the box if you want to allow anonymous posters to add attachments to their posts.
 * **Require TLS for incoming connections** - Check the box if NNTP connections must be encrypted and authenticated with TLS (highly recommended).
+
+###Configuring TLS
+
+![Image 5](http://i.imgur.com/EjkrjTT.png)
+
+Fill in the fields required for the TLS security system.
+
+* **Hostname or IP address** - FIXME.
+* **TLS keyname** - FIXME.
