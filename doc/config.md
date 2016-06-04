@@ -3,7 +3,7 @@ Configuring NNTPChan server
 
 This document provides a step-by-step guide to configurin your NNTPChan node.
 
-##Configuring via web-interface
+##Configuring via web-interface (WIP)
 
 You can configure NNTPChan via the web-interface by navigating your browser to http://127.0.0.1:18000.
 
@@ -70,3 +70,7 @@ NNTPChan needs to know the paths to the listed programs on your system.
 * **convert path** - Path to the `convert` program.
 * **ffmpeg path** - Path to the `ffmpeg` program.
 * **sox path** - Path to the `sox` program.
+
+##Manual configuration (WIP)
+
+FIXME
