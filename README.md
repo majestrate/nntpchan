@@ -10,11 +10,11 @@ This repository contains resources used by the core daemon which is located on [
 This is a step-by-step guide for getting up and running with NNTPChan.
 
 1. [Compile the NNTPChan server](doc/build.md)
-2. 
+2. [Configuring your NNTPChan node](doc/config.md)
 
----
+##Bugs and issues
 
-*PLEASE* report any bugs you find while setting up or building on [github](https://github.com/majestrate/nntpchan/issues) or [gitgud](https://gitgud.io/uguu/nntpchan/issues) so that the problems get fixed :\^)
+*PLEASE* report any bugs you find while building, setting-up or using NNTPChan on the [GitHub issue tracker](https://github.com/majestrate/nntpchan/issues) or on the [GitGud issue tracker](https://gitgud.io/uguu/nntpchan/issues) so that the probelms can be resolved or discussed.
 
 IRC:
 
