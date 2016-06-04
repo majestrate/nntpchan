@@ -7,10 +7,7 @@ This repository contains resources used by the core daemon which is located on [
 
 ##Getting started
 
-This is a step-by-step guide for getting up and running with NNTPChan.
-
-1. [Compile the NNTPChan server](doc/build.md)
-2. [Configuring your NNTPChan node](doc/config.md)
+[This](doc) is a step-by-step guide for getting up and running with NNTPChan.
 
 ##Bugs and issues
 
