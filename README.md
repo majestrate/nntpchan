@@ -1,13 +1,14 @@
-# NNTPChan #
+NNTPChan
+========
 
-NNTPChan (previously known as overchan) is a decentralized imageboard that uses nntp to synchronize content between many different servers. It utilizes cryptographically signed posts to perform optional/opt-in decentralized moderation.
+**NNTPChan** (previously known as overchan) is a decentralized imageboard that uses the NNTP protocol (network-news protocol) to synchronize content between many different servers. It utilizes cryptographically signed posts to perform optional/opt-in decentralized moderation.
 
 This repository contains resources used by the core daemon which is located on [github](https://github.com/majestrate/srndv2) (for now) along with general documentation, [here](doc/)
 
-## getting started ##
+##Getting started
 
-
-[see build documentation](doc/build.md)
+Before you can begin configuring your NNTPChan node you will have to compile the source code. For instructions read the [Building NNTPChan](doc/build.md) document.
+[see build documentation]()
 
 ---
 
