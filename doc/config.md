@@ -29,7 +29,7 @@ If you have chosen Redis then fill in the fields below:
 
 ####PostgreSQL configuration
 
-![]()
+![http://i.imgur.com/WPXedZB.png]()
 
 If you have chosen PostgreSQL then fill in the fields below:
 
