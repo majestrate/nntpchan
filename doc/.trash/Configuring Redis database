@@ -1,0 +1,5 @@
+##Installing Redis
+
+Redis 3.x or higher is required, [stable release](http://download.redis.io/releases/redis-stable.tar.gz) recommended
+
+* See http://redis.io/download
