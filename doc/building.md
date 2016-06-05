@@ -46,7 +46,3 @@ If you want to compile with Redis support (recommended - Redis is easy to use) t
 If you want to build without support for Redis then build with the `--no-redis` flag:
 
     ./build.sh --no-redis
-
-##Now let's setup NNTPChan
-
-Check out [Configuring NNTPChan](config.md).
