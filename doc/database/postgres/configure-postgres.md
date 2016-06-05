@@ -5,7 +5,7 @@ These are instructions for setting up NNTPChan with Postgres as the data-storage
 
 ##Configuring Postgres
 
-Setting up postgres (as root)
+Setting up postgres (as root):
 
     # become postgres user
     su postgres
