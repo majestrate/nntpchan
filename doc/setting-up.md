@@ -19,7 +19,8 @@ First your will be asked what data-storage system you would like to use. We supp
 
 ![Image 2](http://i.imgur.com/HDp4Ddf.png)
 
-If you have chosen Redis then fill in the fields below:
+**First** [Install and Configure Redis database](redis.md).
+**Then** fill in the fields below:
 
 * **Hostname or IP Address** - This is the hostname or IP address of your Redis server (I would run it locally on 127.0.0.1 to be safe).
 * **Port number** - The port that your Redis server is running on.
@@ -32,8 +33,7 @@ If you have chosen Redis then fill in the fields below:
 ![Image 3](http://i.imgur.com/WPXedZB.png)
 
 **First** [Install and Configure Postgres database](postgres.md).
-
-If you have chosen PostgreSQL then fill in the fields below:
+**Then** fill in the fields below:
 
 * **Hostname or IP Address** - This is the hostname or IP address of your PostreSQL server (I would run it locally on 127.0.0.1 to be safe). 
 * **Port number** - This is the port that your PostgreSQL server is running on.
