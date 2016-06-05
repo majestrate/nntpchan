@@ -11,7 +11,7 @@ Redis 3.x or higher is required, [stable release](http://download.redis.io/relea
 
 ##Configuring Redis
 
-In srnd.ini the database sections should look like this:
+In `srnd.ini` the database sections should look like this:
 
     [database]
     type=redis
