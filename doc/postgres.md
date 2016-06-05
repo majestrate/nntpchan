@@ -1,6 +1,8 @@
 Configuring Postgres database
 =============================
 
+These are instructions for setting up NNTPChan with Postgres as the data-storage system.
+
 ##Installing Postgres
 
 Postgres on Debian (as root)
