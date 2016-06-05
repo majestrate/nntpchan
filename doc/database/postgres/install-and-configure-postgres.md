@@ -3,13 +3,6 @@ Configuring Postgres database
 
 These are instructions for setting up NNTPChan with Postgres as the data-storage system.
 
-##Installing Postgres
-
-Postgres on Debian (as root)
-
-    # install as root
-    apt-get install --no-install-recommends postgresql postgresql-client
-
 ##Configuring Postgres
 
 Setting up postgres (as root)
