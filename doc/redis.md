@@ -1,13 +1,11 @@
-# configuring redis database backend
-
+Configuring Redis database
+==========================
 
 0) Install redis
 
-Redis 3.x or higher is required, [stable release](http://download.redis.io/releases/redis-stable.tar.gz) recommend
+Redis 3.x or higher is required, [stable release](http://download.redis.io/releases/redis-stable.tar.gz) recommended
 
 * see http://redis.io/download
-
-    
 
 1) Configuration
 
