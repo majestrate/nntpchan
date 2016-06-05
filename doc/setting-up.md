@@ -34,7 +34,7 @@ First your will be asked what data-storage system you would like to use. We supp
 
 ![Image 3](http://i.imgur.com/WPXedZB.png)
 
-**First** [Install and Configure Postgres database](database/postgres/postgres.md).
+**First** [Install and Configure Postgres database](database/postgres/install-and-configure-postgres.md).
 **Then** fill in the fields below:
 
 * **Hostname or IP Address** - This is the hostname or IP address of your Postres server (I would run it locally on 127.0.0.1 to be safe). 
