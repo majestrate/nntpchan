@@ -75,4 +75,10 @@ NNTPChan needs to know the paths to the listed programs on your system.
 
 ##Manual configuration (WIP)
 
-FIXME
+Check out the following in order:
+
+* Setting up data-storage system (choose i or ii)
+  1. [Setting up using Postgres](database/postgres/install-and-configure-postgres.md)
+  2. [Setting up using Redis](database/postgres/install-and-configure-redis.md)
+* [Setting up NNTPChan system](srnd.md)
+* [Setting up feeds](feeds.md)
