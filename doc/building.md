@@ -44,6 +44,7 @@ Run this to install Redis - if you want to use Redis.
 
 Run this to install Postgres - if you want to use Postgres.
 
+    # install as root
     su
     apt-get install --no-install-recommends postgresql postgresql-client
 
