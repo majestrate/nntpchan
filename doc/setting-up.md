@@ -37,7 +37,7 @@ First your will be asked what data-storage system you would like to use. We supp
 **First** [Install and Configure Postgres database](database/postgres/postgres.md).
 **Then** fill in the fields below:
 
-* **Hostname or IP Address** - This is the hostname or IP address of your PostreSQL server (I would run it locally on 127.0.0.1 to be safe). 
+* **Hostname or IP Address** - This is the hostname or IP address of your Postres server (I would run it locally on 127.0.0.1 to be safe). 
 * **Port number** - This is the port that your Postgres server is running on.
 * **Username** - The username for Postgres.
 * **Password** - The password for Postgres.
