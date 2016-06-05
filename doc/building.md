@@ -65,7 +65,7 @@ Run this to install Go.
 
 ###Installing dependancies (`ffmpeg` is not available in Trisquel repos - there must be compiled)
 
-This will install `ffmpeg` to `/sur/local/bin/ffmpeg`:
+This will install `ffmpeg` to `/usr/local/bin/ffmpeg`:
 
     git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg --depth=1
     cd ffmpeg
