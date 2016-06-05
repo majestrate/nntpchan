@@ -11,5 +11,5 @@ NNTPChan Documentation
 
 ##Developer related
 
-1. [Protocol](developer/protocol.md)
-2. [JSON-RPC API](developer/api.md)
+1. [Protocol](developer/protocol.md) - NNTPChan's protocol specification
+2. [JSON-RPC API](developer/api.md) - NNTPChan's JSON-RPC API
