@@ -1,7 +1,7 @@
 Running NNTPChan
 ================
 
-Once you have [built NNTPChan](building.md) and have done [the initial setup you](setting-up.md) you can start NNTPChan.
+Once you have [built NNTPChan](building.md) and done [the initial setup you](setting-up.md) you can start NNTPChan.
 
 You can now start the NNTPChan node (srndv2) by running:
 
