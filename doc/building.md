@@ -51,14 +51,18 @@ If you want to build without support for Redis then build with the `--no-redis` 
 
 These are installation instructions for Trisquel.
 
-###Installing dependancies
+###Install Go
 
-####Standard dependancies
+Run this to install Go.
+
+    sudo apt-get install golang-1.6
+
+###Installing dependancies (standard)
 
     sudo apt-get update
     sudo apt-get --no-install-recommends install imagemagick libsodium-dev sox build-essential git ca-certificates
 
-####Compiling and installing `ffmpeg` (`ffmpeg` is not available in Trisquel repos)
+###Installing dependancies (`ffmpeg` is not available in Trisquel repos - there must be compiled)
 
 This will install `ffmpeg` to `/sur/local/bin/ffmpeg`:
 
@@ -69,21 +73,15 @@ This will install `ffmpeg` to `/sur/local/bin/ffmpeg`:
     sudo make install
     rm -rf ffmpeg
 
-###Install Go
-
-Run this to install Go.
-
-    sudo apt-get install golang-1.6
-
 ###Installing Redis
 
-Run this to install Redis.
+Run this to install Redis - if you want to use Redis.
 
     sudo apt-get install redis-server
 
 ###Installing Postgres (WIP)
 
-Run this to install Postgres.
+Run this to install Postgres - if you want to use Postgres.
 
     sudo apt-get install Postgres
 
