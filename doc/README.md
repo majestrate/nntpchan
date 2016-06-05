@@ -1,6 +1,8 @@
 NNTPChan Documentation
 ======================
 
+Hey, welcome to the documentation. This will help you use and develop with NNTPChan.
+
 ##End-user related
 
 1. [Building NNTPChan](building.md) -  Building the source code
