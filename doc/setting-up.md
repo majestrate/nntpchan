@@ -31,7 +31,7 @@ If you have chosen Redis then fill in the fields below:
 
 ![Image 3](http://i.imgur.com/WPXedZB.png)
 
-If you have chosen PostgreSQL then fill in the fields below:
+If you have chosen PostgreSQL then fill in the fields below (but first [Configure Postgres database](postgres.md):
 
 * **Hostname or IP Address** - This is the hostname or IP address of your PostreSQL server (I would run it locally on 127.0.0.1 to be safe). 
 * **Port number** - This is the port that your PostgreSQL server is running on.
