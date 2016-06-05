@@ -45,7 +45,7 @@ Run this to install Redis - if you want to use Redis.
 Run this to install Postgres - if you want to use Postgres.
 
     su
-    apt-get install Postgres
+    apt-get install --no-install-recommends postgresql postgresql-client
 
 ###Get the NNTPChan source
 
