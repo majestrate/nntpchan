@@ -19,12 +19,12 @@ First your will be asked what data-storage system you would like to use. We supp
 
 ![Image 2](http://i.imgur.com/HDp4Ddf.png)
 
-**First** [Install and Configure Redis database](install-and-configure-redis.md).
+**First** [Install and Configure Redis database](database/redis/install-and-configure-redis.md).
 **Then** fill in the fields below:
 
 * **Hostname or IP Address** - This is the hostname or IP address of your Redis server (I would run it locally on 127.0.0.1 to be safe).
 * **Port number** - The port that your Redis server is running on.
-* **Password** - Optional authentication password for Redis ([Setting up a Redis password](securing-redis.md)).
+* **Password** - Optional authentication password for Redis ([Setting up a Redis password](database/redis/securing-redis.md)).
 
 <hr>
 
@@ -32,7 +32,7 @@ First your will be asked what data-storage system you would like to use. We supp
 
 ![Image 3](http://i.imgur.com/WPXedZB.png)
 
-**First** [Install and Configure Postgres database](postgres.md).
+**First** [Install and Configure Postgres database](database/postgres/postgres.md).
 **Then** fill in the fields below:
 
 * **Hostname or IP Address** - This is the hostname or IP address of your PostreSQL server (I would run it locally on 127.0.0.1 to be safe). 
