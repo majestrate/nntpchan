@@ -53,7 +53,7 @@ These are installation instructions for Trisquel.
 
 ###Installing dependancies
 
-####Standard install
+####Standard dependancies
 
     sudo apt-get update
     sudo apt-get --no-install-recommends install imagemagick libsodium-dev sox build-essential git ca-certificates
@@ -80,3 +80,24 @@ Run this to install Go.
 Run this to install Redis.
 
     sudo apt-get install redis-server
+
+###Installing Postgres (WIP)
+
+Run this to install Postgres.
+
+    sudo apt-get install Postgres
+
+###Get the NNTPChan source
+
+    git clone https://github.com/majestrate/nntpchan --depth=1
+    cd nntpchan
+
+###Now compile!
+
+If you want to compile with Redis support (recommended - Redis is easy to use) then run:
+
+    ./build.sh
+
+If you want to build without support for Redis then build with the `--no-redis` flag:
+
+    ./build.sh --no-redis
