@@ -15,3 +15,9 @@ Hey, welcome to the documentation. This will help you use and develop with NNTPC
 
 1. [Protocol](developer/protocol.md) - NNTPChan's protocol specification
 2. [JSON-RPC API](developer/api.md) - NNTPChan's JSON-RPC API
+
+TO-ADD:
+
+1. [Configuration files](configuration-files.md)
+  1. [srnd.ini](srnd.md)
+  2. [feeds.ini](feeds.md)
