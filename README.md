@@ -26,7 +26,7 @@ Below is a list of known NNTPChan nodes:
 Need help? Join us on IRC.
 
 1. [freenode: #nntpchan](https://webchat.freenode.net/?channels=#nntpchan)
-2. [rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan) - Most activce
+2. [rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan) - Most active
 
 ##Donations
 
