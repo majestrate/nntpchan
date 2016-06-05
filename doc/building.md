@@ -1,7 +1,7 @@
 Building NNPTChan
 =================
 
-This document will help you setup the NNTPChan server from the source code.
+This document will help you build the NNTPChan software from the source code.
 
 ##Requirements
 
