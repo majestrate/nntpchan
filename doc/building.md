@@ -33,6 +33,20 @@ Install the Go programming language version _1.6_ from the [Go website](https://
     sudo apt-get update
     sudo apt-get --no-install-recommends install imagemagick libsodium-dev ffmpeg sox build-essential git ca-certificates
 
+###Installing Redis
+
+Run this to install Redis - if you want to use Redis.
+
+    su
+    apt-get install redis-server
+
+###Installing Postgres (WIP)
+
+Run this to install Postgres - if you want to use Postgres.
+
+    su
+    apt-get install Postgres
+
 ###Get the NNTPChan source
 
     git clone https://github.com/majestrate/nntpchan --depth=1
