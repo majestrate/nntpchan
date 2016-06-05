@@ -31,7 +31,3 @@ These are default values, please change them later.
 ###Important
 
 These credentials assume you are going to run using a user called `srnd`, if your username you plan to run the daemon as is different please change `srnd` to your username.
-
-##Next step
-
-See the [Running NNTPChan](running.md).
