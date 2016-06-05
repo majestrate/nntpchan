@@ -1,4 +1,5 @@
-# nntpchan jsonrpc api
+NNTPChan JSON-RPC API
+=====================
 
 To enable set the following in `srnd.ini` section `frontend`
 
