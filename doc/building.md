@@ -55,11 +55,11 @@ These are installation instructions for Trisquel.
 
 Run this to install Go.
 
+    sudo apt-get update
     sudo apt-get install golang-1.6
 
 ###Installing dependancies (standard)
 
-    sudo apt-get update
     sudo apt-get --no-install-recommends install imagemagick libsodium-dev sox build-essential git ca-certificates
 
 ###Installing dependancies (`ffmpeg` is not available in Trisquel repos - there must be compiled)
