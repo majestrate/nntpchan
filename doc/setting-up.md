@@ -79,6 +79,6 @@ Check out the following in order:
 
 1. Setting up data-storage system (choose i or ii)
   1. [Setting up using Postgres](database/postgres/install-and-configure-postgres.md)
-  2. [Setting up using Redis](database/postgres/install-and-configure-redis.md)
+  2. [Setting up using Redis](database/redis/install-and-configure-redis.md)
 2. [Setting up NNTPChan system](srnd.md)
 3. [Setting up feeds](feeds.md)
