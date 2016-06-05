@@ -3,14 +3,11 @@ NNTPChan
 
 **NNTPChan** (previously known as overchan) is a decentralized imageboard that uses the [NNTP protocol](https://en.wikipedia.org/wiki/Network_News_Transfer_Protocol) (network-news protocol) to synchronize content between many different servers. It utilizes cryptographically signed posts to perform optional/opt-in decentralized moderation.
 
-This repository contains resources used by the core daemon which is located on [github](https://github.com/majestrate/srndv2) (for now) along with general documentation, [here](doc/)
+This repository contains resources used by the core daemon which is located on [GitHub](https://github.com/majestrate/srndv2) (for now) along with general documentation, [here](doc/)
 
 ##Getting started
 
-This is a step-by-step guide for getting up and running with NNTPChan.
-
-1. [Compile the NNTPChan server](doc/build.md)
-2. [Configuring your NNTPChan node](doc/config.md)
+[This](doc) is a step-by-step guide for getting up-and-running with NNTPChan as well as documentation for developers wwho want to either work on NNTPChan directly or use NNTPChan in their aplications with the API.
 
 ##Bugs and issues
 
@@ -29,7 +26,7 @@ Below is a list of known NNTPChan nodes:
 Need help? Join us on IRC.
 
 1. [freenode: #nntpchan](https://webchat.freenode.net/?channels=#nntpchan)
-2. [rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan) - Most activce
+2. [rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan) - Most active
 
 ##Donations
 

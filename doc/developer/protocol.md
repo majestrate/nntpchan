@@ -1,6 +1,8 @@
 Protocol
 ========
 
+Documentation of the NNTPChan protocol.
+
 ##Preface
 
 NNTPChan is a newsgroup meant to be served on web frontends in an effort to create a decentralized imageboard. Moderation takes place on each frontend itself. Message and image transport is using MIME multipart messages and Base64 as encoding for Images. All messages need to be valid NNTP messages, the transport of messages need to follow NNTP specifications. It is possible to use an existing NNTP daemon like INN or to implement the NNTP sync part as well.

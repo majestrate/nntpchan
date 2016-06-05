@@ -1,10 +1,11 @@
-# feeds.ini #
+`feeds.ini`
+===========
 
-## Peering ##
+##Peering
 
 In order to actually be distributed, you need another person to sync posts with, otherwise what's the point right?
 
-### Peering over the regular internet with tls ###
+###Peering over the regular internet with TLS
 
 Requirements:
 
@@ -53,7 +54,7 @@ If Alice owns `nntp.alice.net` and Bob owns `nntp.bob.com` and are both using po
     overchan.* = 1
     ctl = 1
 
-each side's `certs` directory contains 2 files:
+Each side's `certs` directory contains 2 files:
 
 * overchan-alice-nntp.alice.net.crt (alice's certificate)
 * overchan-bob-nntp.bob.com.crt (bob's certificate)
@@ -63,7 +64,7 @@ Alice keeps `overchan-alice-nntp.alice.net.key` secret and never shares it
 Bob keeps `overchan-bob-nntp.bob.com.key` secret and never shares it
 
 
-### Peering Authentication with passwords ###
+###Peering Authentication with passwords
 
 adding / removing credentials via the command line:
 
@@ -91,7 +92,7 @@ exmaple feeds.ini:
     ctl = 1
      
 
-### Peering over tor ###
+###Peering over Tor
 
 Install tor
 
@@ -125,9 +126,9 @@ Then to peer with someone over tor add this to you feeds.ini
     ctl=1
 
 
-## Options ##
+##Options
 
-#### You need one connection and one settings block for each connection ####
+####You need one connection and one settings block for each connection
 
 Here is an example entry in feeds.ini
 
@@ -161,7 +162,7 @@ Proxy settings, straight forward. Supported proxy types are `socks4a` and `none`
 
     [them.onion]
 
-nntp synchronization settings
+NNTP synchronization settings
 
     overchan=1
 

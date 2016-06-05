@@ -17,7 +17,7 @@ func main() {
 		if action == "setup" {
 			log.Println("Setting up SRNd base...")
 			daemon.Setup()
-			log.Println("Setup Done")
+			log.Println("\nSetup Completed.")
 		} else if action == "run" {
 			log.Printf("Starting up %s...", srnd.Version())
 			daemon.Setup()
