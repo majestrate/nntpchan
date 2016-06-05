@@ -1,5 +1,5 @@
-Running
-=======
+Running NNTPChan
+================
 
 Once you have [built NNTPChan](building.md) and have done [the initial setup you](setting-up.md) you can start NNTPChan.
 
