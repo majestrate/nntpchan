@@ -21,4 +21,4 @@ In srnd.ini the database sections should look like this:
 
 ##Next step
 
-* See the [Running NNTPChan](running.md)
+See the [Running NNTPChan](running.md).
