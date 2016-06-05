@@ -1,11 +1,14 @@
 Configuring Postgres database
 =============================
 
+##Installing Postgres
+
 Postgres on Debian (as root)
 
     # install as root
     apt-get install --no-install-recommends postgresql postgresql-client
 
+##Cibfirguinrg Postgres
 
 Setting up postgres (as root)
 
