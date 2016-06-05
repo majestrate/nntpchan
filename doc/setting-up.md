@@ -19,7 +19,7 @@ First your will be asked what data-storage system you would like to use. We supp
 
 ![Image 2](http://i.imgur.com/HDp4Ddf.png)
 
-**First** [Install and Configure Redis database](redis.md).
+**First** [Install and Configure Redis database](install-and-configure-redis.md).
 **Then** fill in the fields below:
 
 * **Hostname or IP Address** - This is the hostname or IP address of your Redis server (I would run it locally on 127.0.0.1 to be safe).
