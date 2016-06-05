@@ -21,6 +21,10 @@ In `srnd.ini` the database sections should look like this:
     user=
     password=
 
+##Securing Redis (optional)
+
+Read [Securing Redis](securing-redis.md) for adding password authentication to your Redis server.
+
 ##Next step
 
 See the [Running NNTPChan](running.md).
