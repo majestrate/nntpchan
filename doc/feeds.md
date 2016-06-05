@@ -15,7 +15,7 @@ Requirements:
 * Each Side's `srnd.ini` nntp section must have entry `require_tls = 1`
 
 
-If Alice owns `nntp.alice.net` and Bob owns `nntp.bob.com` and are both using port 1199 the configs for each side are as follows:
+If Alice owns `nntp.alice.net` and Bob owns `nntp.bob.com` and are both using port `1199` the configs for each side are as follows:
 
     # alice's srnd.ini crypto section
     ...
@@ -74,7 +74,7 @@ adding / removing credentials via the command line:
     # remove an nntp login via command line
     srndv2 tool nntp del-login user-name-here
 
-exmaple feeds.ini:
+Example `feeds.ini`:
 
     # section pair in feeds.ini
     # connects to nntp.something.tld:1199 and authenticates with a username and password
@@ -94,7 +94,7 @@ exmaple feeds.ini:
 
 ###Peering over Tor
 
-Install tor
+Install Tor
 
     apt-get install tor
 
@@ -174,7 +174,7 @@ to prevent certain boards from syncing with certain peers. It can be used to kee
 
     ano.paste=0
 
-This WILL be the nntpchan pastebin, but it's not implimented yet
+This WILL be the nntpchan pastebin, but it's not implemented yet
 
     ctl=1
 
