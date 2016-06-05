@@ -63,7 +63,7 @@ If you want to build without support for Redis then build with the `--no-redis` 
 
     ./build.sh --no-redis
 
-##Trisquel instructions
+##Trisquel instructions (WIP)
 
 These are installation instructions for Trisquel.
 
@@ -99,7 +99,7 @@ Run this to install Redis - if you want to use Redis.
 
 Run this to install Postgres - if you want to use Postgres.
 
-    sudo apt-get install Postgres
+    sudo apt-get install --no-install-recommends postgresql postgresql-client
 
 ###Get the NNTPChan source
 
