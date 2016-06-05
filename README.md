@@ -33,3 +33,7 @@ Need help? Join us on IRC.
 Like this project? Why not help by funding it?
 
 Bitcoin: [15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE](bitcoin://15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE)
+
+##Acknowledgements
+
+* [Deavmi](deavmi.carteronline.net/~deavmi) - Making the documentation beautiful.
