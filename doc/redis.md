@@ -1,13 +1,13 @@
 Configuring Redis database
 ==========================
 
-0) Install redis
+##Install redis
 
 Redis 3.x or higher is required, [stable release](http://download.redis.io/releases/redis-stable.tar.gz) recommended
 
-* see http://redis.io/download
+* See http://redis.io/download
 
-1) Configuration
+##Configuration
 
 In srnd.ini the database sections should look like this:
 
@@ -19,6 +19,6 @@ In srnd.ini the database sections should look like this:
     user=
     password=
 
-2) Run the daemon
+##Next step
 
-* see the [next step](running.md)
+* See the [Running NNTPChan](running.md)
