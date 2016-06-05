@@ -1,7 +1,9 @@
 Configuring Redis database
 ==========================
 
-##Install redis
+These are instructions for setting up NNTPChan with Redis as the data-storage system.
+
+##Install Redis
 
 Redis 3.x or higher is required, [stable release](http://download.redis.io/releases/redis-stable.tar.gz) recommended
 
