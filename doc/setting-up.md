@@ -21,7 +21,7 @@ First your will be asked what data-storage system you would like to use. We supp
 
 ![Image 2](http://i.imgur.com/HDp4Ddf.png)
 
-**First** [Install and Configure Redis database](database/redis/install-and-configure-redis.md).
+**First** [Install and Configure Redis database](database/redis/configure-redis.md).
 **Then** fill in the fields below:
 
 * **Hostname or IP Address** - This is the hostname or IP address of your Redis server (I would run it locally on 127.0.0.1 to be safe).
@@ -34,7 +34,7 @@ First your will be asked what data-storage system you would like to use. We supp
 
 ![Image 3](http://i.imgur.com/WPXedZB.png)
 
-**First** [Install and Configure Postgres database](database/postgres/install-and-configure-postgres.md).
+**First** [Install and Configure Postgres database](database/postgres/configure-postgres.md).
 **Then** fill in the fields below:
 
 * **Hostname or IP Address** - This is the hostname or IP address of your Postres server (I would run it locally on 127.0.0.1 to be safe). 
@@ -80,7 +80,7 @@ NNTPChan needs to know the paths to the listed programs on your system.
 Check out the following in order:
 
 1. Setting up data-storage system (choose i or ii)
-  1. [Setting up using Postgres](database/postgres/install-and-configure-postgres.md)
-  2. [Setting up using Redis](database/redis/install-and-configure-redis.md)
+  1. [Setting up using Postgres](database/postgres/configure-postgres.md)
+  2. [Setting up using Redis](database/redis/configure-redis.md)
 2. [Setting up NNTPChan system](srnd.md)
 3. [Setting up feeds](feeds.md)
