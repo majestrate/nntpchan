@@ -6,6 +6,7 @@ NNTPChan Documentation
 1. [Building NNTPChan](building.md) -  Building the source code
 2. [Setting up NNTPChan](setting-up.md) - Configuring the node
 3. [Running NNTPChan](running.md) - Running the node for the first time
+4. [Manaing your NNTPChan node with the CLI](cli.md)
 
 ##Developer related
 
