@@ -1,5 +1,5 @@
-Building the NNTPChan server
-============================
+Building NNPTChan
+=================
 
 This document will help you setup the NNTPChan server from the source code.
 
