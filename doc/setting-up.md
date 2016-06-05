@@ -1,5 +1,5 @@
-Configuring NNTPChan server
-===========================
+Configuring NNTPChan
+====================
 
 This document provides a step-by-step guide to configurin your NNTPChan node.
 
