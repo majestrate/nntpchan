@@ -13,7 +13,7 @@ You can configure NNTPChan via the web-interface by navigating your browser to h
 
 ![Image 1](http://i.imgur.com/l9iiXxB.png)
 
-First your will be asked what data-storage system you would like to use. We support Redis and PostgreSQL.
+First your will be asked what data-storage system you would like to use. We support Redis and Postgres. Below we have configuration information for both Redis and Postgres.
 
 <hr>
 
@@ -30,7 +30,7 @@ First your will be asked what data-storage system you would like to use. We supp
 
 <hr>
 
-####PostgreSQL configuration
+####Postgres configuration
 
 ![Image 3](http://i.imgur.com/WPXedZB.png)
 
@@ -38,9 +38,9 @@ First your will be asked what data-storage system you would like to use. We supp
 **Then** fill in the fields below:
 
 * **Hostname or IP Address** - This is the hostname or IP address of your PostreSQL server (I would run it locally on 127.0.0.1 to be safe). 
-* **Port number** - This is the port that your PostgreSQL server is running on.
-* **Username** - The username for PostgreSQL.
-* **Password** - The password for PostgreSQL.
+* **Port number** - This is the port that your Postgres server is running on.
+* **Username** - The username for Postgres.
+* **Password** - The password for Postgres.
 
 <hr>
 
