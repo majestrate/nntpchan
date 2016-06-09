@@ -87,6 +87,7 @@ This will install `ffmpeg` to `/usr/local/bin/ffmpeg`:
     ./configure --disable-yasm
     make
     sudo make install
+    cd ..
     rm -rf ffmpeg
 
 ###Installing Redis
