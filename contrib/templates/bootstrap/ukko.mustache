@@ -11,8 +11,8 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="{{prefix}}static/css/bootstrap.min.css" />
     <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+        <script type="text/javascript" src="{{prefix}}static/js/nntpchan.js"></script>
     <script type="text/javascript" src="{{prefix}}static/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="{{prefix}}static/js/nntpchan.js"></script>
   </head>
   <body>
     <center>
@@ -29,10 +29,14 @@
         <div class="row" id="thread_{{OP.PostHash}}">
 	        <div class="ukko_thread_header">
           <p>{{#i18n.Translations}}{{posted_on_label}}{{/i18n.Translations}} <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></p>
-        </div>
-          {{{OP.Truncate.RenderPost}}}
+          </div>
+          <div class="row">
+            {{{OP.Truncate.RenderPost}}}
+          </div>
           {{#Truncate.Replies}}
-            {{{Truncate.RenderPost}}}
+            <div class="row">
+              {{{Truncate.RenderPost}}}
+            </div>
           {{/Truncate.Replies}}
           <hr />
         </div>
