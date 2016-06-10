@@ -36,4 +36,4 @@ Bitcoin: [15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE](bitcoin://15yuMzuueV8y5vPQQ39ZqQVz
 
 ##Acknowledgements
 
-* [Deavmi](deavmi.carteronline.net/~deavmi) - Making the documentation beautiful.
+* [Deavmi](https://deavmi.carteronline.net/) - Making the documentation beautiful.
