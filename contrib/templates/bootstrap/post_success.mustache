@@ -1,0 +1,17 @@
+{{!
+ post_success.mustache -- shown when we do a successful post
+ template parameters:
+ - redirect_url ( the url of the next page we should redirect to )
+ - message_id ( the value of the Message-ID header in the post we made, the truncated sha1 of this is the >>posthash )
+ }}
+<!doctype html>
+<html>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="{{prefix}}static/site.css" />
+  <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+  <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+  <meta http-equiv="refresh" content="4; {{redirect_url}}" />
+  <body>
+    <pre>{{#i18n.Translations}}{{posted_as_label}}{{/i18n.Translations}} {{message_id}}</pre>
+  </body>
+</html>

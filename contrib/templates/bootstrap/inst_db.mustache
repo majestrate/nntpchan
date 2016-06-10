@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1" />
+    <link rel="stylesheet" href="{{board.Prefix}}static/site.css" />
+    <link rel="stylesheet" href="{{board.Prefix}}static/user.css" />
+    <script type="text/javascript" src="{{board.Prefix}}static/nntpchan.js"></script>
+    <title>{{#i18n.Translations}}{{db_install_title}}{{/i18n.Translations}}</title>
+  </head>
+  <body>
+ <div class="installer_header">{{#i18n.Translations}}{{db_install_title}}{{/i18n.Translations}}</div>
+ {{#dialog.HasError}}
+   <p class="installer_error">{{dialog.Error}}</p>
+ {{/dialog.HasError}}
+ <form action="" method="post">
+ <div id="install-outer">
+   <div id="installer-inner">
+     <table class="installer-tab">
+       <tbody>
+         <tr>
+           <th>
+             
+           </th>
+           <td>
+             <input type="radio" name="db" value="postgres"> {{#i18n.Translations}}{{postgres_name}}{{/i18n.Translations}}
+           </td>
+         </tr>
+         <tr>
+           <th>
+             
+           </th>
+           <td>
+             <input type="radio" name="db" value="redis" checked> {{#i18n.Translations}}{{redis_name}}{{/i18n.Translations}}
+           </td>
+         </tr>
+       </tbody>
+     </table>
+   </div>
+   {{#dialog.HasNext}}
+   <input type="submit" value="{{#i18n.Translations}}{{next_prompt}}{{/i18n.Translations}}" class="button" />
+   {{/dialog.HasNext}}
+   {{^dialog.HasNext}}
+   <input type="submit" value="{{#i18n.Translations}}{{finish_prompt}}{{/i18n.Translations}}" class="button" />
+   {{/dialog.HasNext}}
+ </div>
+ </form>
+ {{#dialog.HasPrevious}}
+ <div class="back_button">
+ <form action="" method="post">
+     <input type="hidden" name="back" value="true" />
+     <input type="submit" value="{{#i18n.Translations}}{{previous_prompt}}{{/i18n.Translations}}" class="button" />
+ </form>
+ </div>
+ {{/dialog.HasPrevious}}
+</body>
+</html>

@@ -1,0 +1,35 @@
+<div id="{{post.PostHash}}" class="{{post.CSSClass}}">
+  <legend class="postheader">
+    <span class="origin">
+  {{#post.IsI2P}}
+    <img src="{{post.Prefix}}static/img/i2p.png" title="{{#i18n.Translations}}{{from_i2p}}{{/i18n.Translations}}" />
+  {{/post.IsI2P}}
+  {{#post.IsTor}}
+    <img src="{{post.Prefix}}static/img/tor.png" title="{{#i18n.Translations}}{{from_tor}}{{/i18n.Translations}}" />
+  {{/post.IsTor}}
+  {{#post.IsClearnet}}
+    <img src="{{post.Prefix}}static/img/clearnet.png" title="{{#i18n.Translations}}{{from_clearnet}}{{/i18n.Translations}}" />
+  {{/post.IsClearnet}}
+    </span>  
+    <span class="subject">{{post.Subject}}</span>
+    <span class="name">{{post.Name}}</span>
+    <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
+    <a href="#" class="postnol">No.</a><a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" title="{{post.MessageID}}" root="{{post.Reference}}" boardname="{{post.Board}}">{{post.ShortHash}}</a>
+    <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
+    <span class="tripcode">{{{post.Pubkey}}}</span>  
+  </legend>
+  <div class="attachments">
+  {{#post.Attachments}}
+    <figure>
+    <figcaption>
+    <a class="download_link" href="{{Source}}" download="{{Filename}}">{{#i18n.Translations}}{{download_prompt}}{{/i18n.Translations}}</a>
+    <a class="file" href="{{Source}}" title="{{Filename}}" target="_blank"><img src="{{Thumbnail}}" alt="{{Filename}}" class="thumbnail"/></a>
+    <a class="fname_link" title="{{Filename}}" href="{{Source}}">{{Filename}}</a>
+    </figcaption>
+    </figure>
+  {{/post.Attachments}}
+  </div>
+  <div class="post_body">
+    {{{post.RenderBody}}}
+  </div> 
+</div>
