@@ -16,8 +16,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1" />
-    <link rel="stylesheet" href="{{board.Prefix}}static/css/site.css" />
-    <link id="current_theme" rel="stylesheet" href="{{board.Prefix}}static/css/user.css" />
+    <link rel="stylesheet" href="{{board.Prefix}}static/css/bootstrap.min.css" />
+    <link id="current_theme" rel="stylesheet" href="{{board.Prefix}}static/user.css" />
+    <script type="text/javascript" src="{{board.Prefix}}static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{{board.Prefix}}static/js/nntpchan.js"></script>
     <title>{{board.Board}}</title>
   </head>
@@ -36,16 +37,19 @@
       {{{form}}}
     </div>
     <hr />
-    <div id="threads_container">
+    <div id="container">
       {{#board.Threads}}
-        <div class="thread" id="thread_{{OP.PostHash}}">
+        <div class="row" id="thread_{{OP.PostHash}}">
           <div class="thread_header">
           </div>
-          {{{OP.Truncate.RenderPost}}}
+          <div class="row">
+            {{{OP.Truncate.RenderPost}}}
+          </div>
           {{#Truncate.Replies}}
-            {{{Truncate.RenderPost}}}
+            <div class="row">
+              {{{Truncate.RenderPost}}}
+            </div>
           {{/Truncate.Replies}}
-          <hr />
         </div>
       {{/board.Threads}}
     </div>

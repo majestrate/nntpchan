@@ -1,5 +1,5 @@
 <div id="{{post.PostHash}}" class="{{post.CSSClass}}">
-  <legend class="postheader">
+  <div class="postheader">
     <span class="origin">
   {{#post.IsI2P}}
     <img src="{{post.Prefix}}static/img/i2p.png" title="{{#i18n.Translations}}{{from_i2p}}{{/i18n.Translations}}" />
@@ -17,7 +17,7 @@
     <a href="#" class="postnol">No.</a><a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" title="{{post.MessageID}}" root="{{post.Reference}}" boardname="{{post.Board}}">{{post.ShortHash}}</a>
     <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
     <span class="tripcode">{{{post.Pubkey}}}</span>  
-  </legend>
+  </div>
   <div class="attachments">
   {{#post.Attachments}}
     <figure>

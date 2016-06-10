@@ -9,8 +9,9 @@
   <head>
     <title> {{#i18n.Translations}}{{overboard_title}}{{/i18n.Translations}} </title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="{{prefix}}static/css/site.css" />
-    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/css/user.css" />
+    <link rel="stylesheet" href="{{prefix}}static/css/bootstrap.min.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <script type="text/javascript" src="{{prefix}}static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{{prefix}}static/js/nntpchan.js"></script>
   </head>
   <body>
@@ -22,10 +23,10 @@
     {{{navbar}}}
     <!-- end navbar -->
     <div class="board_header"> {{#i18n.Translations}}{{overboard_title}}{{/i18n.Translations}} </div>
-      <div id="ukko_threads">
+      <div id="ukko_threads" class="container">
         <pre><a href="#" onclick="ukko_livechan('{{prefix}}')">livechan</a></pre>
       {{#threads}}
-        <div class="thread" id="thread_{{OP.PostHash}}">
+        <div class="row" id="thread_{{OP.PostHash}}">
 	        <div class="ukko_thread_header">
           <p>{{#i18n.Translations}}{{posted_on_label}}{{/i18n.Translations}} <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></p>
         </div>
