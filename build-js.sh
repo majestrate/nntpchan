@@ -24,10 +24,10 @@ fi
 echo "Building cuckoo miner"
 go get -v -u github.com/ZiRo-/cuckgo/miner_js
 $GOPATH/bin/gopherjs -m -v build github.com/ZiRo-/cuckgo/miner_js
-mv ./miner_js.js ./contrib/static/miner-js.js
+mv ./miner_js.js ./contrib/static/js/miner-js.js
 rm ./miner_js.js.map
 
-outfile=$PWD/contrib/static/nntpchan.js
+outfile=$PWD/contrib/static/js/nntpchan.js
 
 lint() {
     if [ "x$(which jslint)" == "x" ] ; then
