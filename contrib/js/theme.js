@@ -2,7 +2,7 @@ function enable_theme(prefix, name) {
   if (prefix && name) {
     var theme = document.getElementById("current_theme");
     if (theme) {
-      theme.href = prefix + "static/"+ name + ".css";
+      theme.href = prefix + "static/css/"+ name + ".css";
       var st = get_storage();
       st.nntpchan_prefix = prefix;
       st.nntpchan_theme = name;
