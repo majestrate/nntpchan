@@ -165,7 +165,7 @@ input[type="text"],input[type="password"],textarea {
     vertical-align: top;
 }
 
-.reply, .pagelist {
+.reply, .pagelist, .op {
     background: #D6DAF0;
     border-width: 1px;
     border-style: none solid solid none;
@@ -272,7 +272,8 @@ a, a:visited, .navbar-link > label {
     border-bottom: 1px solid;
     background: #D6DAF0;
     color: #34345C;
-    min-height: 10px;
+    min-height: 20px;
+    padding-top: 2px;
 }
 
 .navbar-sep {
@@ -313,16 +314,13 @@ input, textarea {
     border-style: dashed;
 }
 
-.reply {
-    
-}
-
 .frontend {
     margin-top: 0px;
     display: inline-block;
 }
 
 .op {
+    margin-top: 5px;
     margin-bottom: 1px;
     float: left;
     clear: both;
@@ -333,8 +331,14 @@ input, textarea {
 }
 
 .post {
+    max-width: 75%;
     margin-bottom: 5px;
     min-width: 500px;
+}
+
+.post_body {
+    max-height: 500px;
+    overflow-y: overlay;
 }
 
 .postheader {
@@ -542,5 +546,12 @@ textarea#reply-text {
 }
 
 .board_title {
-    padding-right: 2px;
+    padding-right: 4px;
+}
+
+.thread {
+    padding-left: 10%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 80%;
 }
