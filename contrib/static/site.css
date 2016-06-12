@@ -47,6 +47,9 @@ section {
     color: #117743;
 }
 
+.name , .postno {
+    padding-right: 5px;
+}
 .error {
     color: red;
 }
@@ -264,10 +267,11 @@ a, a:visited, .navbar-link > label {
     right: 0px;
     margin-top: 0px;
     z-index: 20;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15);
+    box-shadow: 1px 10px 20px rgba(0, 0, 0, 0.15);
     border-bottom: 1px solid;
     background: #D6DAF0;
     color: #34345C;
+    min-height: 10px;
 }
 
 .navbar-sep {
@@ -529,3 +533,9 @@ textarea#reply-text {
     float: left;
     margin-bottom: 5px;
 }
+
+.navbar-links, .navbar-link, .navbar-name {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
