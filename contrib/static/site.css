@@ -45,9 +45,10 @@ section {
 
 .name {
     color: #117743;
+    padding-left: 5px;
 }
 
-.name , .postno {
+.postno {
     padding-right: 5px;
 }
 .error {
