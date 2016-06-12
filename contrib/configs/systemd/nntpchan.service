@@ -6,7 +6,7 @@ Requires=redis_6379.service
 Type=simple
 WorkingDirectory=/opt/nntpchan
 ExecStart=/opt/nntpchan/srndv2 run
-ExecStop=/bin/kil -15 $MAINPID
+ExecStop=/bin/kill -15 $MAINPID
 Restart=always
 
 [Install]
