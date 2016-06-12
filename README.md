@@ -19,7 +19,7 @@ Below is a list of known NNTPChan nodes:
 
 1. [2hu-ch.org](https://2hu-ch.org)
 2. [nsfl.tk](https://nsfl.tk)
-3. [i2p.rocks](https://i2p.rocks/ib/)
+3. [gchan](https://gchan.xyz/)
 
 ##Support
 
