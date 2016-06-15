@@ -1,6 +1,5 @@
-#Step by step guide for Debian 8.5 Jessie
-
 Install the initial dependencies:
+
 
 ```
 apt-get -y --no-install-recommends install imagemagick libsodium-dev sox git ca-certificates libav-tools build-essential tcl8.5
@@ -62,8 +61,6 @@ cd nntpchan
 ./build.sh
 ```
 
-Now you can proceed to setting up srndv2. You will need to replace /usr/bin/ffmpeg with /usr/bin/avconv when prompted.
+Now you can proceed with [setting up NNTPChan](setting-up.md). When you get to the "set paths to external programs" step, you should change the ffmpeg path to `/usr/bin/avconv`.
 
-```
-./srndv2 setup
-```
+Run `./srndv2 setup` and follow the instructions [here](setting-up.md).
