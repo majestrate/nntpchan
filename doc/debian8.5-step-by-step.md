@@ -98,7 +98,7 @@ If you use your package manager, you will install an old version of redis and yo
 Let's make a build directory:
 
 ```
-# mkdir /opt/redis-build && /opt/redis-build
+# mkdir /opt/redis-build && cd /opt/redis-build
 ```
 
 Download the stable ball:
