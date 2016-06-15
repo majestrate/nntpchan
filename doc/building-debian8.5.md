@@ -1,5 +1,6 @@
-Install the initial dependencies:
+#How to install nntpchan on Debian 8.5 Jessie
 
+Install the initial dependencies:
 
 ```
 apt-get -y --no-install-recommends install imagemagick libsodium-dev sox git ca-certificates libav-tools build-essential tcl8.5
@@ -19,7 +20,7 @@ cd redis-stable
 make && make test && make install
 ```
 
-The utils/ directory has a bash script that automates redis configuration. The default settings work just fine, so run the script:
+The `utils/` directory has a bash script that automates redis configuration. The default settings work just fine, so run the script:
 
 ```
 cd utils && ./install_server.sh
@@ -41,7 +42,7 @@ Edit `/etc/redis/6379.conf` and append the file with `requirepass YOUR_LONG_PASS
 
 ## Install golang
 
-Download the golang tarball, extract it to /usr/local, and add it to the global profile:
+Download the golang tarball, extract it to `/usr/local`, and add it to the global profile:
 
 ```
 cd /opt
