@@ -2,6 +2,10 @@
   bloodgod theme css override
 */
 
+/**
+  bloodgod theme css override
+*/
+
 body {
     color: #666;
     background: #111;
@@ -26,7 +30,7 @@ input[type="button"] {
 }
 
 .reply, .ukko_thread_header {
-    border-color: #CA0101;
+    border-color: #0c0c0c;
 }
 
 .ukko_thread_header {
@@ -40,6 +44,14 @@ hr, .name {
     color: #6B1919;
 }
 
+hr {
+    height: 0px;
+    border-width: 1px medium medium;
+    border-color: #0C0C0C;
+    border-style: solid none none;
+    clear: both;
+}
+
 .subject {
     color: #4E0000;
 }
@@ -48,8 +60,22 @@ hr, .name {
     background: #0C0C0C;
 }
 
+.op {
+    background-color: #1a1a1a;
+    border-style: hidden;
+}
+
+.pagelist {
+    background: #0c0c0c;
+    border-style: hidden;
+}
+
 a {
     color: #500707;
+}
+
+.post:target {
+    background-color: #1a1a1a;
 }
 
 .postno, .postnol {
@@ -60,6 +86,9 @@ a {
      background: #6B1919;
 }
 
+#postform_container {
+    background-color: #111;
+}
 table tbody tr:nth-of-type( even ) {
 	  background-color: #430000;
 }
