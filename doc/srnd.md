@@ -120,3 +120,10 @@ All pprof-related settings.
 ####bind
 
 FIXME
+
+##['frontend']
+
+####minimize_html
+
+* When this is set to `1`, frontend HTML output is minimized.
+* When this is set to `0`, frontend HTML output is not minimized.
