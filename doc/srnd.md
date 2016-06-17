@@ -120,3 +120,9 @@ All pprof-related settings.
 ####bind
 
 FIXME
+
+##`[frontend]`
+
+#####minimize_html
+* `0`: do not minimize HTML
+* `1`: minimize HTML
