@@ -95,7 +95,7 @@ This is where you put the address and port that you would like the NNTP server t
 
 ####allow_attachments
 
-* When this is set to `1` posters my attach images to their posts.
+* When this is set to `1` posters may attach images to their posts.
 * When this is set to `0` posters may not attach images to their posts.
 
 ####require_tls
@@ -105,8 +105,8 @@ This is where you put the address and port that you would like the NNTP server t
 
 ####anon_nntp
 
-* When this is set to `1` bluh.
-* When this is set to `0` bluh.
+* When this is set to `1`, the SRNdv2 server will send unauthenticated peers its articles.
+* When this is set to `0`, peers will need to be authenticated to sync articles.
 
 ##`[pprof]`
 
@@ -114,12 +114,12 @@ All pprof-related settings.
 
 ####enable
 
-* When this is set to `1` bluh.
-* When this is set to `0` bluh.
+* When this is set to `1` pprof is enabled.
+* When this is set to `0` pprof is disabled.
 
 ####bind
 
-FIXME
+* Bind to an address and port for use with `go tool pprof`
 
 ##`[frontend]`
 
