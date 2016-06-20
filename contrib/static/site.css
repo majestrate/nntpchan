@@ -441,7 +441,6 @@ input, textarea {
 
 .post {
     display: inline-block;
-    overflow: hidden;
 }
 
 .pagelist {
