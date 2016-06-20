@@ -336,11 +336,6 @@ input, textarea {
     min-width: 500px;
 }
 
-.post_body {
-    max-height: 500px;
-    overflow-y: overlay;
-}
-
 .postheader {
     padding-top: 3px;
     padding-right: 5px
