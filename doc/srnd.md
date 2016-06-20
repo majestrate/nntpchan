@@ -109,8 +109,8 @@ This is where you put the address and port that you would like the NNTP server t
 * When this is set to `1`, the SRNdv2 server will send unauthenticated peers its articles.
 * When this is set to `0`, peers will need to be authenticated to sync articles.
 
-#####feeds
-* You can store many feed configurations in a directory you define to keep your feeds more organized.
+####feeds
+* Feeds configurations can optionally be stored in a directory of your choosing (the default is `feeds.d` in the working directory). Any ini files located in this directory will be loaded.
 
 
 ##`[pprof]`
