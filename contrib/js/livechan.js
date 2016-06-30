@@ -27,7 +27,7 @@ function inject_livechan_widget(prefix, parent) {
     };
     progress("initialize");
     socket.onopen = function () {
-      progress("streaming (read only)");
+      progress("streaming");
     }
     socket.onmessage = function(ev) {
       var j = null;
