@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 set -e
-root=$(readlink -e $(dirname $0))
+root=$(readlink -e "$(dirname "$0")")
 
 prefix="/opt/nntpchan"
 
 help_text="usage: $0 [--prefix /opt/nntpchan] [-q|--quiet] [-r|--rebuild] [--disable-redis]"
 
 # check for help flags first
-for arg in $@ ; do
+for arg in "$@" ; do
     case $arg in
         -h|--help)
-            echo $help_text
+            echo "$help_text"
             exit 0
             ;;
     esac
@@ -22,7 +22,7 @@ want_quiet="0"
 build_args=""
 
 # check for main flags
-for arg in $@ ; do
+for arg in "$@" ; do
     case $arg in
         -q|--quiet)
             want_quiet="1"
@@ -34,7 +34,7 @@ for arg in $@ ; do
             _next="prefix"
             ;;
         --prefix=*)
-            prefix=$(echo $arg | cut -d'=' -f2)
+            prefix=$(echo "$arg" | cut -d'=' -f2)
             ;;
         --disable-redis)
             build_args="$build_args --disable-redis"
@@ -51,27 +51,27 @@ done
 
 _cmd() {
     if [ "X$want_quiet" == "X1" ] ; then
-        $@ &> /dev/null
+        "$@" &> /dev/null
     else
-        $@
+        "$@"
     fi
 }
 
 if [ "X$want_rebuild" == "X1" ] ; then
     _cmd echo "rebuilding daemon";
-    _cmd $root/build.sh $build_args
+    _cmd "$root/build.sh" $build_args
 fi
 
-if [ ! -e $root/srndv2 ] ; then
+if [ ! -e "$root/srndv2" ] ; then
     _cmd echo "building daemon"
     # TODO: use different GOPATH for root?
-    _cmd $root/build.sh $build_args
+    _cmd "$root/build.sh" "$build_args"
 fi
 
 
-_cmd mkdir -p $prefix
-_cmd mkdir -p $prefix/webroot/thm
-_cmd mkdir -p $prefix/webroot/img
-_cmd cp -f $root/srndv2 $prefix/srndv2
-_cmd cp -rf $root/{doc,contrib,certs} $prefix/
+_cmd mkdir -p "$prefix"
+_cmd mkdir -p "$prefix/webroot/thm"
+_cmd mkdir -p "$prefix/webroot/img"
+_cmd cp -f "$root/srndv2" "$prefix/srndv2"
+_cmd cp -rf "$root/"{doc,contrib,certs} "$prefix/"
 _cmd echo "installed to $prefix"
