@@ -1185,7 +1185,7 @@ Chat.prototype.generateChat = function(data) {
       var a = document.createElement('a');
       a.setAttribute('target', '_blank');
       // TODO: make these configurable
-      var thumb_url = self.options.prefix + 'thm/'+file.Path + ".jpeg";
+      var thumb_url = self.options.prefix + 'thm/'+file.Path + ".jpg";
       var src_url = self.options.prefix + 'img/'+file.Path;
       
       a.setAttribute('href',src_url);
