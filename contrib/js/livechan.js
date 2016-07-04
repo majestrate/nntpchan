@@ -1120,8 +1120,9 @@ Chat.prototype.scroll = function() {
 Chat.prototype.rollover = function() {
   var self = this;
   var chatSize = self.options.scrollback || 50;
-  while ( this.chatElems.output.childNodes.length > chatSize ) {
-    this.chatElems.output.childNodes.removeChild(this.chatElems.output.childNodes[0]);
+  var e = self.chatElems.output;
+  while ( e.childNodes.length > chatSize ) {
+    e.childNodes[0].remove();
   }
 }
 
