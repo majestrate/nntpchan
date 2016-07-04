@@ -16,6 +16,7 @@ allow_attachments=1
 require_tls=1
 anon_nntp=0
 feeds=/etc/nntpchan/feeds.d
+archive=0
 
 [pprof]
 enable=0
@@ -112,6 +113,9 @@ This is where you put the address and port that you would like the NNTP server t
 ####feeds
 * Feeds configurations can optionally be stored in a directory of your choosing (the default is `feeds.d` in the working directory). Any ini files located in this directory will be loaded.
 
+####archive
+* When this is set to `1`, the daemon will never expire posts. 
+* When this is set to `0`, the daemon will delete old posts. FIXME: under what conditions?
 
 ##`[pprof]`
 
