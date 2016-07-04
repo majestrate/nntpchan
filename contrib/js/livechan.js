@@ -905,12 +905,17 @@ Chat.prototype.onNotifyShow = function () {
 Chat.prototype.readImage = function (elem, callback) {
   var self = this;
 
-  var reader = new FileReader();
   if (elem.files.length > 0 ) {
+    var reader = new FileReader();
     var file = elem.files[0];
-    callback(file, file.name);
+    reader.onloadend = function(ev) {
+      if (ev.target.readyState == FileReader.DONE) {
+        callback(window.btoa(ev.target.result), file.name, file.type);
+      }
+    }
+    reader.readAsBinaryString(file);
   } else {
-    callback(null, null);
+    callback(null, null, null);
   }
 }
 
@@ -956,17 +961,21 @@ Chat.prototype.sendInput = function(event) {
     var message = inputElem.message.value;
     var name = inputElem.name.value;
     var convo = inputElem.convo.value;
-    connection.send({Type: "post", Post: {
-      Message: message,
-      Name: name,
-    }});
-    for (var idx = 0 ; idx < inputElem.file.files.length; idx ++ ) {
-      console.log("send file "+ idx);
-      connection.send(inputElem.file.files[idx]);
-    }
-    inputElem.file.value = "";
-    //TODO: don't clear this when doing captcha
-    inputElem.message.value = '';
+    self.readImage(inputElem.file, function(fdata, fname, ftype) {
+      if (fdata) {
+        connection.send({Type: "post", Post: {
+          message: message,
+          name: name,
+          files: [{name: fname, data: fdata, type: ftype}],
+        }});
+      } else {
+        connection.send({Type: "post", Post: {
+          message: message,
+          name: name, }});
+      }
+      inputElem.file.value = "";
+      inputElem.message.value = '';
+    });
     inputElem.submit.disabled = true;
     var i = parseInt(self.options.cooldown);
     // fallback
