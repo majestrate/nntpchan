@@ -450,15 +450,15 @@ function buildChat(chat, domElem, channel) {
   };
 }
 
-function Connection(ws, channel) {
+function Connection(ws, url) {
   this.ws = ws;
-  this.channel = channel;
+  this.url = url;
 }
 
 Connection.prototype.ban = function(reason) {
   if (this.ws) {
-    this.ws.close = null;
     this.ws.close();
+    this.ws.close = null;
     alert("You have been banned for the following reason: "+reason);
   }
 }
@@ -475,14 +475,17 @@ Connection.prototype.sendBinary = function(obj) {
 }
 
 Connection.prototype.onmessage = function(callback) {
-  this.ws.onmessage = function(event) {
-    var data = JSON.parse(event.data);
-    callback(data);
+  if (this.ws) {
+    this.ws.onmessage = function(event) {
+      var data = JSON.parse(event.data);
+      callback(data);
+    }
   }
 }
 
 Connection.prototype.onclose = function(callback) {
-  this.ws.onclose = callback;
+  if(this.ws)
+    this.ws.onclose = callback;
 }
 
 /* @brief Initializes the websocket connection.
@@ -490,21 +493,18 @@ Connection.prototype.onclose = function(callback) {
  * @param channel The channel to open a connection to.
  * @return A connection the the websocket.
  */
-function initWebSocket(prefix, channel, connection) {
+function initWebSocket(url, connection) {
   var ws = null;
   if (window['WebSocket']) {
     try {
-      var scheme = 'wss://';
-      if ( location.protocol == "http:" ) scheme = "ws://";
-      var ws_url = scheme+location.host+prefix+"live?"+channel;
-      console.log(ws_url);
-      ws = new WebSocket(ws_url);
-    } catch(e) {
+      var w = new WebSocket(url);
+      ws = w;
+    } catch (ex) {
       ws = null;
     }
   }
   if (ws !== null) {
-    ws.onerror = function() {
+    ws.onclose = function() {
       if (connection) {
         connection.ws = null;
       }
@@ -514,10 +514,8 @@ function initWebSocket(prefix, channel, connection) {
       connection.ws = ws;
       return connection;
     } else {
-      return new Connection(ws, channel);
+      return new Connection(ws, url);
     }
-  } else {
-    return null;
   }
 }
 
@@ -567,6 +565,7 @@ var messageRules = [
     out.addEventListener('click', function() {
       var selected = document.getElementById('livechan_chat_'+m[1]);
       selected.scrollIntoView(true);
+      // TODO: highlight
     });
     out.appendChild(document.createTextNode('>>'+m[1]));
     return out;
@@ -843,7 +842,10 @@ function Chat(domElem, channel, options) {
   
   this.chatElems = buildChat(this, this.domElem, this.name);
   var prefix = this.options.prefix || "/";
-  this.connection = initWebSocket(prefix, this.name);
+  var scheme = "wss://";
+  if (location.protocol == "http:") scheme = "ws://";
+  var url = scheme + location.host + prefix + "live?"+ this.name;
+  this.connection = initWebSocket(url);
   this.initOutput();
   this.initInput();
   // set navbar channel name
@@ -1087,20 +1089,19 @@ Chat.prototype.initOutput = function() {
       self.handleMessage(data);
     }
   });
-  connection.onclose(function() {
-  connection.ws = null;
-  var getConnection = setInterval(function() {
-    console.log("Attempting to reconnect.");
-    self.notify("disconnected");
-    var prefix = self.options.prefix || "/";
-    if (initWebSocket(prefix, connection.channel, connection) !== null
-        && connection.ws !== null) {
-      console.log("Success!");
-      self.notify("connected to livechan");
-      clearInterval(getConnection);
-    }
-  }, 1000);
-  });
+  var reconnect = function() {
+    connection.ws = null;
+    var getConnection = setInterval(function() {
+      console.log("Attempting to reconnect.");
+      if (initWebSocket(connection.url, connection) !== null
+          && connection.ws !== null) {
+        setTimeout(function() {
+          clearInterval(getConnection);
+        }, 100);
+      }
+    }, 5000);
+  };
+  connection.onclose(reconnect);
 }
 
 /* @brief update the user counter for number of users online
@@ -1198,10 +1199,12 @@ Chat.prototype.generateChat = function(data) {
       var a = document.createElement('a');
       a.setAttribute('target', '_blank');
       // TODO: make these configurable
-      var thumb_url = self.options.prefix + 'thm/'+file.Path + ".jpg";
-      var src_url = self.options.prefix + 'img/'+file.Path;
+      var filepath = file.Path;
+      var thumb_url = self.options.prefix + 'thm/'+filepath + ".jpg";
+      var src_url = self.options.prefix + 'img/'+filepath;
       
       a.setAttribute('href',src_url);
+      var fl = filepath.toLowerCase();
       var img = document.createElement('img');
       img.setAttribute('src', thumb_url);
       img.className = 'livechan_image_thumb';
@@ -1210,13 +1213,29 @@ Chat.prototype.generateChat = function(data) {
       img.onload = function() { self.scroll(); }
       
       img.addEventListener('mouseover', function () {
-        // load image
-        var i = document.createElement("img");
-        i.src = src_url;
+        
         var e = document.createElement("div");
         e.setAttribute("id", "hover_"+data.ShortHash);
         e.setAttribute("class", "hover");
-        e.appendChild(i);
+        
+        if (fl.match(/\.(webm|mp4|mkv)$/)) {
+          // video
+          var v = document.createElement("video");
+          v.src = src_url;
+          e.appendChild(v);
+        } else if (fl.match(/\.(mp3|ogg|oga|flac|opus)$/)) {
+          // audio
+          var a = document.createElement("audio");
+          a.src = src_url;
+          e.appendChild(a);
+        } else if (fl.match(/\.txt$/)) {
+          // 
+        } else {
+          // image
+          var i = document.createElement("img");
+          i.src = src_url;
+          e.appendChild(i);
+        }
         chat.appendChild(e);
       });
       img.addEventListener('mouseout', function () {
@@ -1247,7 +1266,7 @@ Chat.prototype.generateChat = function(data) {
 
   if (data.HashShort) {
     var h = data.HashShort;
-    count.setAttribute('id', 'livechan_chat_'+h);
+    chat.setAttribute('id', 'livechan_chat_'+h);
     count.appendChild(document.createTextNode(h));
     count.addEventListener('click', function() {
       self.chatElems.input.message.value += '>>'+h+'\n';
