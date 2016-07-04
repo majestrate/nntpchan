@@ -365,8 +365,8 @@ LivechanNotify.prototype.inform = function(str) {
 /* @brief roll over old messages */
 LivechanNotify.prototype.rollover = function() {
   while ( this.pane.childNodes.length > this.scrollback ) {
-    this.pane.childNodes.removeChild(this.pane.childNodes[0]);
-  }
+     this.pane.childNodes.removeChild(this.pane.childNodes[0]);
+   }
 }
 
 
@@ -688,9 +688,9 @@ ConvoBar.prototype.update = function(convo, chat) {
   while(self.convoPosts[convo].length > scrollback) {
     // remove oldest from convo tracker
     var child_data = self.convoPosts[convo].shift();
-    var child = document.getElementById("livechan_chat_"+child_data.Count);
+    //var child = document.getElementById("livechan_chat_"+child_data.Count);
     // remove element from main chat element
-    self.parent.chatElems.output.removeChild(child.parentNode.parentElement);
+    //self.parent.chatElems.output.removeChild(child.parentNode.parentElement);
   }
   
 }
@@ -1111,7 +1111,9 @@ Chat.prototype.scroll = function() {
 Chat.prototype.rollover = function() {
   var self = this;
   var chatSize = self.options.scrollback || 50;
-  self.chatElems.convobar.rolloverAll(chatSize);
+  while ( this.chatElems.output.childNodes.length > chatSize ) {
+    this.chatElems.output.childNodes.removeChild(this.chatElems.output.childNodes[0]);
+  }
 }
 
 /* @brief Inserts the chat into the DOM, overwriting if need be.
@@ -1134,6 +1136,7 @@ Chat.prototype.insertChat = function(chat, data) {
   outputElem.appendChild(chat);
   // scroll to end
   self.scroll();
+  self.rollover();
 }
 
 
@@ -1201,14 +1204,14 @@ Chat.prototype.generateChat = function(data) {
         var i = document.createElement("img");
         i.src = src_url;
         var e = document.createElement("div");
-        e.setAttribute("id", "hover_"+data.Count);
+        e.setAttribute("id", "hover_"+data.ShortHash);
         e.setAttribute("class", "hover");
         e.appendChild(i);
         chat.appendChild(e);
       });
       img.addEventListener('mouseout', function () {
         // unload image
-        var e = document.getElementById("hover_"+data.Count);
+        var e = document.getElementById("hover_"+data.ShortHash);
         e.parentElement.removeChild(e);
       });
     }
