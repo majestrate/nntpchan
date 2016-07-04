@@ -1223,7 +1223,7 @@ Chat.prototype.generateChat = function(data) {
   }
 
   if (data.Posted) {
-    date.appendChild(document.createTextNode((new Date(data.Posted)).toLocaleString()));
+    date.appendChild(document.createTextNode((new Date(data.Posted * 1000)).toLocaleString()));
   }
 
   if (data.Tripcode) {
