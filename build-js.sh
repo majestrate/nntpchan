@@ -21,11 +21,11 @@ if [ ! -f $GOPATH/bin/gopherjs ]; then
 fi
 
 # build cuckoo miner
-echo "Building cuckoo miner"
-go get -v -u github.com/ZiRo-/cuckgo/miner_js
-$GOPATH/bin/gopherjs -m -v build github.com/ZiRo-/cuckgo/miner_js
-mv ./miner_js.js ./contrib/static/miner-js.js
-rm ./miner_js.js.map
+#echo "Building cuckoo miner"
+#go get -v -u github.com/ZiRo-/cuckgo/miner_js
+#$GOPATH/bin/gopherjs -m -v build github.com/ZiRo-/cuckgo/miner_js
+#mv ./miner_js.js ./contrib/static/miner-js.js
+#rm ./miner_js.js.map
 
 outfile=$PWD/contrib/static/nntpchan.js
 
