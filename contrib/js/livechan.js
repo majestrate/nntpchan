@@ -431,8 +431,6 @@ function buildChat(chat, domElem, channel) {
   input.appendChild(submit);
   domElem.appendChild(output);
   domElem.appendChild(input);
-  // inject convobar
-  
   
   return {
     convobar : convobar,
@@ -564,6 +562,8 @@ var messageRules = [
     out.className = 'livechan_internallink';
     out.addEventListener('click', function() {
       var selected = document.getElementById('livechan_chat_'+m[1]);
+      console.log(selected.convo);
+      selected.select();
       selected.scrollIntoView(true);
       // TODO: highlight
     });
@@ -634,7 +634,8 @@ function buildConvoBar(domElem) {
   
   var convo = document.createElement('input');
   convo.className = 'livechan_chat_input_convo';
-  convo.setAttribute("value", "General");
+  convo.setAttribute("value", "");
+  convo.contentEditable = false;
   elem.appendChild(convo);
   domElem.appendChild(elem);
   return {
@@ -654,42 +655,37 @@ function ConvoBar(chat, domElem) {
   this.elem = convo.input;
   this.widget = convo.widget;
   this.active = null;
-  this.convoPosts = {};
 }
 
 
 /* @brief update the convo bar
  * @param convoId the name of this covnorsattion
  */
-ConvoBar.prototype.update = function(convo, chat) {
+ConvoBar.prototype.update = function(msgid, data) {
   var self = this;
-  if ( self.holder[convo] === undefined ) {
+  if ( self.holder[msgid] === undefined ) {
     // new convo
     // register convo
-    self.registerConvo(convo);
+    self.registerConvo(msgid, data);
   } 
   // bump existing convo
-  var convoId = self.holder[convo];
+  var convoId = self.holder[msgid].id;
   var convoElem = document.getElementById("livechan_convobar_item_"+convoId);
   var convoParent = convoElem.parentElement;
   if ( convoParent.children.length > 1 ) {
     convoParent.removeChild(convoElem);
     convoParent.insertBefore(convoElem, convoParent.childNodes[0]);
   }
-  // begin tracking a convo's posts if not already
-  if ( self.convoPosts[convo] === undefined ) {
-    self.convoPosts[convo] = [];
-  }
   // add post to convo
-  self.convoPosts[convo].push(chat);
+  self.holder[msgid].posts.push(data);
   // do roll over
   var scrollback = self.parent.options.scrollback || 30;
-  while(self.convoPosts[convo].length > scrollback) {
+  while(self.holder[msgid].posts.length > scrollback) {
     // remove oldest from convo tracker
-    var child_data = self.convoPosts[convo].shift();
-    //var child = document.getElementById("livechan_chat_"+child_data.Count);
+    var child_data = self.holder[msgid].posts.shift();
+    var child = document.getElementById("livechan_chat_"+child_data.ShortHash);
     // remove element from main chat element
-    //self.parent.chatElems.output.removeChild(child.parentNode.parentElement);
+    self.parent.chatElems.output.removeChild(child.parentNode.parentElement);
   }
   
 }
@@ -697,27 +693,37 @@ ConvoBar.prototype.update = function(convo, chat) {
 
 
 /** @brief register a new convorsation
-  * @param convo the name of the convo
  */
-ConvoBar.prototype.registerConvo = function(convo) {
+ConvoBar.prototype.registerConvo = function(msgid, data) {
   var self = this;
   var max_id = 0;
   // get the highest convo id
   for ( c in self.holder ) {
-    var id = self.holder[c];
+    var id = self.holder[c].id;
     if (id > max_id ) {
       max_id = id
     }
   }
-  // put it in the holder
-  self.holder[convo] = max_id + 1;
+
+  self.holder[msgid] = {
+    subject: data.PostSubject,
+    msgid: data.Message_id,
+    id: max_id + 1,
+    posts: [],
+    select: function() {
+      console.log("selected convo "+msgid);
+      if ( self.active !== msgid ) {
+        self.show(msgid);
+      }
+    },
+  }
   // make a new entry in the convo bar
   var elem = document.createElement("div");
   elem.className = "livechan_convobar_item";
-  elem.setAttribute("id", "livechan_convobar_item_"+ self.holder[convo]);
+  elem.setAttribute("id", "livechan_convobar_item_"+ self.holder[msgid].id);
   var link = document.createElement("span");
-  elem.addEventListener("click", function() { self.show(convo); });
-  link.appendChild(document.createTextNode(convo));
+  elem.addEventListener("click", function() { self.show(msgid); });
+  link.appendChild(document.createTextNode(data.PostSubject));
   elem.appendChild(link);
   // prepend the element
   if (self.widget.children.length > 0 ) {
@@ -727,39 +733,9 @@ ConvoBar.prototype.registerConvo = function(convo) {
   }
 }
 
-
-/* 
- * @brief load the converstation list from server
- */
-ConvoBar.prototype.load = function() {
-  var self = this;
-  var prefix = self.parent.options.prefix || "/";
-  var ajax = new XMLHttpRequest();
-  // prepare ajax
-  ajax.onreadystatechange = function() {
-    if (ajax.status == 200 && ajax.readyState == XMLHttpRequest.DONE ) {
-      // clear state
-      self.holder = {};
-      // clear widget
-      while(self.widget.firstChild) {
-        self.widget.removeChild(self.widget.firstChild);
-      }
-      // register all convos
-      var convos = json.parse(ajax.responseText);
-      for ( var idx = 0; idx < convos.length ; idx ++ ) {
-        self.registerConvo(convos[idx]);
-      }
-    }
-  }
-  // send ajax
-  ajax.open(prefix+"convos/"+self.parent.name);
-  ajax.send();
-}
-
 /* @brief Only Show chats from a convorsation
- * @param convo the name of the convorsation or null for all
  */
-ConvoBar.prototype.show = function(convo) {
+ConvoBar.prototype.show = function(msgid) {
   var self = this;
   var sheet = null;
   for(var idx = 0; idx < document.styleSheets.length; idx++ ) {
@@ -780,7 +756,7 @@ ConvoBar.prototype.show = function(convo) {
       break;
     }
   }
-  if ( convo === self.active) {
+  if (msgid === self.active) {
     // this is resetting the view
     if (sheet.insertRule) {  // firefox
       sheet.insertRule(".livechan_chat_output_chat {  display: block; }", 0);
@@ -788,19 +764,21 @@ ConvoBar.prototype.show = function(convo) {
       sheet.addRule(".livechan_chat_output_chat", "display: block");
     }
     // unset active highlight
-    var convoId = self.holder[self.active];
+    var convoId = self.holder[self.active].id;
     var itemElem = document.getElementById("livechan_convobar_item_"+convoId);
     itemElem.style.background = null;
     self.active = null;
+    self.elem.value = "";
   } else {
     // unset active highlight if it's there
     if (self.active) {
-      var convoId = self.holder[self.active];
+      var convoId = self.holder[self.active].id;
       var itemElem = document.getElementById("livechan_convobar_item_"+convoId);
       itemElem.style.background = null;
+      self.elem.value = "";
     }
     // set active highlight to new element
-    convoId = self.holder[convo];
+    convoId = self.holder[msgid].id;
     itemElem = document.getElementById("livechan_convobar_item_"+convoId);
     itemElem.style.background = "red";
     var elemClass = ".livechan_chat_convo_" + convoId;
@@ -812,10 +790,15 @@ ConvoBar.prototype.show = function(convo) {
       sheet.addRule(elemClass, "display: block");
     }
     // this convo is now active
-    self.active = convo;
+    self.active = msgid;
   }
   // set the convobar value
-  self.elem.value = self.active || "General";
+  var a = self.holder[self.active];
+  if(a) 
+    self.elem.value = a.msgid;
+  else {
+    self.elem.value = "";
+  }
 
   // scroll view
   self.parent.scroll();
@@ -962,18 +945,21 @@ Chat.prototype.sendInput = function(event) {
   if (inputElem.submit.disabled == false) {
     var message = inputElem.message.value;
     var name = inputElem.name.value;
-    var convo = inputElem.convo.value;
+    var convo = self.chatElems.convobar.active;
     self.readImage(inputElem.file, function(fdata, fname, ftype) {
       if (fdata) {
         connection.send({Type: "post", Post: {
           message: message,
           name: name,
+          reference: convo,
           files: [{name: fname, data: fdata, type: ftype}],
         }});
       } else {
         connection.send({Type: "post", Post: {
           message: message,
-          name: name, }});
+          reference: convo,
+          name: name,
+        }});
       }
       inputElem.file.value = "";
       inputElem.message.value = '';
@@ -1162,14 +1148,16 @@ Chat.prototype.generateChat = function(data) {
   var self = this;
 
   var chat = document.createElement('div');
-  conv = "General";
-  self.chatElems.convobar.update(conv, data);
-  var convo = self.chatElems.convobar.holder[conv];
-  chat.className = 'livechan_chat_output_chat livechan_chat_convo_' + convo;
-  chat.className = 'livechan_chat_output_chat';
+  self.chatElems.convobar.update(data.Parent, data);
+  var convo = self.chatElems.convobar.holder[data.Parent];
+  chat.select = function() {
+    console.log("selecting...");
+    convo.select();
+  }
+  chat.className = 'livechan_chat_output_chat livechan_chat_convo_' + convo.id;
   var convoLabel = document.createElement('span');
   convoLabel.className = 'livechan_convo_label';
-  convoLabel.appendChild(document.createTextNode(conv));
+  convoLabel.appendChild(document.createTextNode(convo.subject));
   
   var header = document.createElement('div');
   header.className = 'livechan_chat_output_header';
@@ -1273,6 +1261,7 @@ Chat.prototype.generateChat = function(data) {
     count.addEventListener('click', function() {
       self.chatElems.input.message.value += '>>'+h+'\n';
       self.chatElems.input.message.focus();
+      chat.select();
     });
   }
 
