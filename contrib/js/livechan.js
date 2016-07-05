@@ -684,8 +684,9 @@ ConvoBar.prototype.update = function(msgid, data) {
     // remove oldest from convo tracker
     var child_data = self.holder[msgid].posts.shift();
     var child = document.getElementById("livechan_chat_"+child_data.ShortHash);
-    // remove element from main chat element
-    self.parent.chatElems.output.removeChild(child.parentNode.parentElement);
+    if(child) {
+      child.remove();
+    }
   }
   
 }
@@ -710,6 +711,7 @@ ConvoBar.prototype.registerConvo = function(msgid, data) {
     msgid: data.Message_id,
     id: max_id + 1,
     posts: [],
+    ShortHash: data.ShortHash,
     select: function() {
       console.log("selected convo "+msgid);
       if ( self.active !== msgid ) {
@@ -1107,12 +1109,14 @@ Chat.prototype.scroll = function() {
 
 /** @brief roll over old posts, remove them from ui */
 Chat.prototype.rollover = function() {
+  /*
   var self = this;
   var chatSize = self.options.scrollback || 50;
   var e = self.chatElems.output;
   while ( e.childNodes.length > chatSize ) {
     e.childNodes[0].remove();
   }
+*/
 }
 
 /* @brief Inserts the chat into the DOM, overwriting if need be.
