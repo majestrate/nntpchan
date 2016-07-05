@@ -16,20 +16,17 @@
     <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
   </head>
   <body>
-    <div id="chat" style="position:absolute;left:0;right:0;top:0;bottom:0;"></div>
+    <noscript>you need js for livechan mode</noscript>
     <script type="text/javascript" >
-    e = document.getElementById("chat");
+    var e = document.createElement("div");
+    e.setAttribute("id", "chat");
+    e.setAttribute("style", "position:absolute;left:0;right:0;top:0;bottom:0;");
+    document.appendChild(e);
     var board = "live";
     if (location.hash != "" ) {
       board = location.hash.substr(1);
     }
     new Chat(e, board, { prefix : "{{prefix}}" });
     </script>
-    <!--
-    <footer>
-      <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
-      <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
-    </footer>
-    -->
   </body>
 </html>
