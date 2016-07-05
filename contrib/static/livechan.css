@@ -26,15 +26,6 @@ input, textarea, select {
     width: 30%;
 }
 
-.livechan_chat_input_file {
-  padding: 0;
-  margin: 0;
-  position: absolute;
-  left: 3px;
-  bottom: 3px;
-  border: none;
-}
-
 .livechan_chat_input_message_div {
   padding:0;
   margin:0;
