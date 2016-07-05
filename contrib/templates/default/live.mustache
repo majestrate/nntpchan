@@ -21,7 +21,7 @@
     var e = document.createElement("div");
     e.setAttribute("id", "chat");
     e.setAttribute("style", "position:absolute;left:0;right:0;top:0;bottom:0;");
-    document.appendChild(e);
+    document.body.appendChild(e);
     var board = "live";
     if (location.hash != "" ) {
       board = location.hash.substr(1);
