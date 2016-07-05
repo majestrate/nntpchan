@@ -64,7 +64,7 @@ input, textarea, select {
 }
 
 .livechan_chat_output {
-  position: absolute;
+  position: fixed;
   top: 20px;
   left: 0;
   right: 0;
