@@ -747,9 +747,14 @@ ConvoBar.prototype.show = function(msgid) {
       break;
     }
   }
-
+  var rules = null;
   // delete all filtering rules
-  while ( sheet.rules.length > 0 ) {
+  if (sheet.rules) {
+    rules = sheet.rules;
+  } else {
+    rules = sheet.cssRules;
+  }
+  while (rules.length > 0 ) {
     if (sheet.deleteRule) {
       sheet.deleteRule(0);
     } else if (sheet.removeRule) {
@@ -758,6 +763,7 @@ ConvoBar.prototype.show = function(msgid) {
       break;
     }
   }
+
   if (msgid === self.active) {
     // this is resetting the view
     if (sheet.insertRule) {  // firefox

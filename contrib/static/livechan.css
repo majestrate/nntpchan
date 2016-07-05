@@ -192,7 +192,8 @@ input, textarea, select {
 }
 
 .livechan_chat_input {
-  background: #98E;
+    background: #98E;
+    padding: 10px;
 }
 
 .livechan_greentext {
