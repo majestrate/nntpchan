@@ -423,7 +423,7 @@ function buildChat(chat, domElem, channel) {
   submit.setAttribute('value', 'send');
   var convobar = new ConvoBar(chat, domElem);
   input_left.appendChild(name); 
-  input_left.appendChild(convobar.elem);
+  input_left.appendChild(convobar.subject);
   input_left.appendChild(file);
   input.appendChild(input_left);
   messageDiv.appendChild(message);
@@ -438,7 +438,7 @@ function buildChat(chat, domElem, channel) {
     navbar: navbar,
     output: output,
     input: {
-      convo: convobar.elem,
+      subject: convobar.subject,
       form: input,
       message: message,
       name: name,
@@ -632,15 +632,14 @@ function buildConvoBar(domElem) {
   var elem = document.createElement("div");
   elem.className = "livechan_convobar_root";
   
-  var convo = document.createElement('input');
-  convo.className = 'livechan_chat_input_convo';
-  convo.setAttribute("value", "");
-  convo.contentEditable = false;
-  elem.appendChild(convo);
+  var subject = document.createElement("input");
+  subject.className = "livechan_chat_input_convo";
+  elem.appendChild(subject);
   domElem.appendChild(elem);
+  
   return {
+    subject: subject,
     widget: elem,
-    input: convo,
   }
 }
 
@@ -652,8 +651,8 @@ function ConvoBar(chat, domElem) {
   this.holder = {};
   this.domElem = domElem;
   var convo = buildConvoBar(domElem);
-  this.elem = convo.input;
   this.widget = convo.widget;
+  this.subject = convo.subject;
   this.active = null;
 }
 
@@ -776,14 +775,12 @@ ConvoBar.prototype.show = function(msgid) {
     var itemElem = document.getElementById("livechan_convobar_item_"+convoId);
     itemElem.style.background = null;
     self.active = null;
-    self.elem.value = "";
   } else {
     // unset active highlight if it's there
     if (self.active) {
       var convoId = self.holder[self.active].id;
       var itemElem = document.getElementById("livechan_convobar_item_"+convoId);
       itemElem.style.background = null;
-      self.elem.value = "";
     }
     // set active highlight to new element
     convoId = self.holder[msgid].id;
@@ -800,14 +797,6 @@ ConvoBar.prototype.show = function(msgid) {
     // this convo is now active
     self.active = msgid;
   }
-  // set the convobar value
-  var a = self.holder[self.active];
-  if(a) 
-    self.elem.value = a.msgid;
-  else {
-    self.elem.value = "";
-  }
-
   // scroll view
   self.parent.scroll();
 }
@@ -954,16 +943,19 @@ Chat.prototype.sendInput = function(event) {
     var message = inputElem.message.value;
     var name = inputElem.name.value;
     var convo = self.chatElems.convobar.active;
+    var subject = self.chatElems.convobar.subject.value;
     self.readImage(inputElem.file, function(fdata, fname, ftype) {
       if (fdata) {
         connection.send({Type: "post", Post: {
           message: message,
+          subject: subject,
           name: name,
           reference: convo,
           files: [{name: fname, data: fdata, type: ftype}],
         }});
       } else {
         connection.send({Type: "post", Post: {
+          subject: subject,
           message: message,
           reference: convo,
           name: name,
