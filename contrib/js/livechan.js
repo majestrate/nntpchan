@@ -654,15 +654,37 @@ function ConvoBar(chat, domElem) {
   this.widget = convo.widget;
   this.subject = convo.subject;
   this.active = null;
+  this._num = 0;
 }
 
+ConvoBar.prototype.count = function() {
+  return this._num;
+}
+
+/* @brief remove convorstation given root message-id */
+ConvoBar.prototype.removeConvo = function(msgid) {
+  var self = this;
+  console.log("remove "+msgid);
+  var c = self.holder[msgid];
+  if (c) {
+    var e = document.getElementById("livechan_convobar_item_"+c.id);
+    if (e) e.remove();
+    for(var idx = 0; idx < c.posts.length; idx ++ ) {
+      var child = document.getElementById("livechan_chat_"+c.posts[idx].ShortHash);
+      if(child) child.remove();
+    }
+    
+    delete self.holder[msgid];
+    self._num -- ;
+  }
+}
 
 /* @brief update the convo bar
  * @param convoId the name of this covnorsattion
  */
 ConvoBar.prototype.update = function(msgid, data) {
   var self = this;
-  if ( self.holder[msgid] === undefined ) {
+  if ( ! self.holder[msgid]) {
     // new convo
     // register convo
     self.registerConvo(msgid, data);
@@ -687,7 +709,19 @@ ConvoBar.prototype.update = function(msgid, data) {
       child.remove();
     }
   }
-  
+  // lol quartic time
+  while(self.count() > 10 ) {
+    var minid = -1;
+    var minmsgid = null;
+    for( var i in self.holder ) {
+      if (minid == -1 || self.holder[i].id < minid) {
+        minid = self.holder[i].id;
+        minmsgid = i;
+      }
+    }
+    if(minmsgid)
+      self.removeConvo(minmsgid);
+  }
 }
 
 
@@ -732,6 +766,7 @@ ConvoBar.prototype.registerConvo = function(msgid, data) {
   } else {
     self.widget.appendChild(elem);
   }
+  self._num ++;
 }
 
 /* @brief Only Show chats from a convorsation
