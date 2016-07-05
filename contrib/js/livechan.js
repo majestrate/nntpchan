@@ -943,7 +943,7 @@ Chat.prototype.sendInput = function(event) {
     var message = inputElem.message.value;
     var name = inputElem.name.value;
     var convo = self.chatElems.convobar.active;
-    var subject = self.chatElems.convobar.subject.value;
+    var subject = self.chatElems.input.subject.value;
     self.readImage(inputElem.file, function(fdata, fname, ftype) {
       if (fdata) {
         connection.send({Type: "post", Post: {
@@ -1159,7 +1159,7 @@ Chat.prototype.generateChat = function(data) {
   chat.className = 'livechan_chat_output_chat livechan_chat_convo_' + convo.id;
   var convoLabel = document.createElement('span');
   convoLabel.className = 'livechan_convo_label';
-  convoLabel.appendChild(document.createTextNode(convo.subject));
+  convoLabel.appendChild(document.createTextNode(data.PostSubject));
   
   var header = document.createElement('div');
   header.className = 'livechan_chat_output_header';

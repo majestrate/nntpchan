@@ -131,6 +131,8 @@ input, textarea, select {
 
 .livechan_convo_label {
     padding: 5px;
+    color: #a239ab;
+    font-weight: bold;
 }
 
 .livechan_convobar_root {
