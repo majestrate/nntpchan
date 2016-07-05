@@ -1030,12 +1030,14 @@ Chat.prototype.notify = function(message) {
 Chat.prototype.showNotifyPane = function () {
   var pane = this.chatElems.notify.pane;
   pane.style.zIndex = 5;
+  pane.style.visibility = 'visible';
 }
 
 /* @brief hide the notification pane */
 Chat.prototype.showNotifyPane = function () {
   var pane = this.chatElems.notify.pane;
   pane.style.zIndex = -1;
+  pane.style.visibility = 'hidden';
 }
 
 Chat.prototype.error = function(message) {
@@ -1186,7 +1188,7 @@ Chat.prototype.generateChat = function(data) {
   message.className = 'livechan_chat_output_message';
   
 
-  if (data.Name) {
+  if (data.PostName) {
     name.appendChild(document.createTextNode(data.PostName));
   } else {
     name.appendChild(document.createTextNode('Anonymous'));
