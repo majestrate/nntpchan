@@ -857,6 +857,7 @@ function Chat(domElem, channel, options) {
   var self = this;
   this.name = channel.toLowerCase();
   this.domElem = domElem;
+  this.lastOp = null;
   if (options) {
     this.options = options;
   } else {
@@ -1098,6 +1099,13 @@ Chat.prototype.handleMessage = function (data) {
       // captcha challenge
       self.login();
     }
+  } else if (mtype == "posted" ) {
+    // user posted something
+    if ( data.OP ) {
+      // they made a new thread, focus on it once it comes up
+      self.lastOp = data.Msgid
+      console.log("made new thread: "+data.Msgid)
+    }
   } else if (mtype == "post" ) {
     self.insertChat(self.generateChat(data), data);
   } else if (mtype == "count" ) {
@@ -1178,6 +1186,11 @@ Chat.prototype.insertChat = function(chat, data) {
   // scroll to end
   self.scroll();
   self.rollover();
+  // show new thread
+  if (self.lastOp) {
+    self.chatElems.convobar.show(self.lastOp);
+    self.lastOp = null;
+  }
 }
 
 
