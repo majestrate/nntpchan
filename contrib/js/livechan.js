@@ -884,8 +884,6 @@ function Chat(domElem, channel, options) {
     // send captcha solution
     self.connection.send({Captcha: { ID: id, Solution: solution}});
   });
-  // begin login sequence
-  this.login();
 }
 
 Chat.prototype.clear = function () {
