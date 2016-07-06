@@ -448,9 +448,23 @@ function buildChat(chat, domElem, channel) {
   };
 }
 
-function Connection(ws, url) {
+function Connection(chat, ws, url) {
   this.ws = ws;
+  this.chat = chat;
   this.url = url;
+  this.ws.onmessage = function(ev) {
+    chat.handleData(JSON.parse(ev.data));
+  }
+  this.ws.onclose = function() {
+    self.ws = null;
+  }
+  var self = this;
+  setInterval(function() {
+    if (self.ws == null) {
+      // try reconnecting
+      initWebSocket(self.chat, self.url, self);
+    }
+  }, 5000);
 }
 
 Connection.prototype.ban = function(reason) {
@@ -472,15 +486,6 @@ Connection.prototype.sendBinary = function(obj) {
   }
 }
 
-Connection.prototype.onmessage = function(callback) {
-  if (this.ws) {
-    this.ws.onmessage = function(event) {
-      var data = JSON.parse(event.data);
-      callback(data);
-    }
-  }
-}
-
 Connection.prototype.onclose = function(callback) {
   if(this.ws)
     this.ws.onclose = callback;
@@ -491,28 +496,31 @@ Connection.prototype.onclose = function(callback) {
  * @param channel The channel to open a connection to.
  * @return A connection the the websocket.
  */
-function initWebSocket(url, connection) {
+function initWebSocket(chat, url, connection) {
   var ws = null;
   if (window['WebSocket']) {
     try {
-      var w = new WebSocket(url);
-      ws = w;
+      ws = new WebSocket(url);
     } catch (ex) {
       ws = null;
     }
   }
-  if (ws !== null) {
+  if (ws) {
     ws.onclose = function() {
       if (connection) {
         connection.ws = null;
       }
     };
     if (connection) {
-      console.log("reconnected.");
       connection.ws = ws;
+      connection.ws.onmessage = function(ev) {
+        chat.handleData(JSON.parse(ev.data));
+      }
+      chat.clear();
+      chat.handleMessage({Type: "post", PostMessage: "reconnecting..."});
       return connection;
     } else {
-      return new Connection(ws, url);
+      return new Connection(chat, ws, url);
     }
   }
 }
@@ -670,7 +678,8 @@ ConvoBar.prototype.removeConvo = function(msgid) {
     var e = document.getElementById("livechan_convobar_item_"+c.id);
     if (e) e.remove();
     for(var idx = 0; idx < c.posts.length; idx ++ ) {
-      var child = document.getElementById("livechan_chat_"+c.posts[idx].ShortHash);
+      var id = "livechan_chat_"+c.posts[idx].HashShort;
+      var child = document.getElementById(id);
       if(child) child.remove();
     }
     
@@ -860,7 +869,7 @@ function Chat(domElem, channel, options) {
   var scheme = "wss://";
   if (location.protocol == "http:") scheme = "ws://";
   var url = scheme + location.host + prefix + "live?"+ this.name;
-  this.connection = initWebSocket(url);
+  this.connection = initWebSocket(this, url);
   this.initOutput();
   this.initInput();
   // set navbar channel name
@@ -876,6 +885,12 @@ function Chat(domElem, channel, options) {
   });
   // begin login sequence
   this.login();
+}
+
+Chat.prototype.clear = function () {
+  for ( var convo in this.chatElems.convobar.holder ) {
+    this.chatElems.convobar.removeConvo(convo);
+  }
 }
 
 /**
@@ -1097,34 +1112,24 @@ Chat.prototype.handleMessage = function (data) {
   }
 }
 
+
+Chat.prototype.handleData = function(data) {
+  var self = this;
+  if( Object.prototype.toString.call(data) === '[object Array]' ) {
+    for (var i = 0; i < data.length; i++) {
+      self.handleMessage(data[i]);
+    }
+  } else {
+    self.handleMessage(data);
+  }
+}
+
 /* @brief Binds messages to be displayed to the output.
  */
 Chat.prototype.initOutput = function() {
   var outputElem = this.chatElems.output;
   var connection = this.connection;
   var self = this;
-  connection.onmessage(function(data) {
-    if( Object.prototype.toString.call(data) === '[object Array]' ) {
-      for (var i = 0; i < data.length; i++) {
-        self.handleMessage(data[i]);
-      }
-    } else {
-      self.handleMessage(data);
-    }
-  });
-  var reconnect = function() {
-    connection.ws = null;
-    var getConnection = setInterval(function() {
-      console.log("Attempting to reconnect.");
-      if (initWebSocket(connection.url, connection) !== null
-          && connection.ws !== null) {
-        setTimeout(function() {
-          clearInterval(getConnection);
-        }, 100);
-      }
-    }, 5000);
-  };
-  connection.onclose(reconnect);
 }
 
 /* @brief update the user counter for number of users online
