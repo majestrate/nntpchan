@@ -83,17 +83,19 @@ This is where you put the address and port that you would like the NNTP server t
 ####sync_on_start
 
 * When this is set to `1` your NNTP server will sync articles with its peers on startup.
-* When this is set to `0` then no syncing will take place on statup.
+* When this is set to `0` then no syncing will take place on startup.
 
 ####allow_anon
 
-* When this is set to `1` bluh.
-* When this is set to `0` bluh.
+* When this is set to `1`, posts made from anonymizing networks will be synced from peers.
+* When this is set to `0`, posts made from anonymizing networks will not be synced from peers.
 
 ####allow_anon_attachments
 
-* When this is set to `1` bluh.
-* When this is set to `0` bluh.
+* When this is set to `1`, attachments posted from anonymizing networks will be syncdd from peers.
+* When this is set to `0`, attachments posted from anonymizing networks will not be synced from peers.
+
+Nodes with `allow_anon_attachments` disabled will not receive threads with images posted from anonymizing networks. Likewise, the thread replies will not sync. In the case where an anonymized user posts an image reply and the node has `allow_anon_attachments` disabled, text posts without attachments replying to the non-synced image post will appear to be "ghosted".
 
 ####allow_attachments
 
