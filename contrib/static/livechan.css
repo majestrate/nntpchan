@@ -5,6 +5,10 @@ input {
   color: white;
 }
 
+.livechan_captcha_inner > input {
+    color: black;
+}
+
 textarea, select {
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
