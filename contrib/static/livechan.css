@@ -161,6 +161,8 @@ textarea, select {
 .livechan_navbar_mod_indicator_inactive, .livechan_navbar_mod_indicator_active, .livechan_navbar_status, .livechan_navbar_channel_label {
     padding-left: 10px;
     padding-right: 10px;
+    background: #050505;
+    color: white;
 }
 
 
