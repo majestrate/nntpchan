@@ -5,7 +5,7 @@ input {
   color: white;
 }
 
-.livechan_captcha_inner > input {
+.livechan_captcha_input {
     color: black;
 }
 
