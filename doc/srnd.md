@@ -135,8 +135,8 @@ All pprof-related settings.
 ##`[frontend]`
 
 #####minimize_html
-* `0`: do not minimize HTML
-* `1`: minimize HTML
+* `0`: Do not minimize HTML
+* `1`: Minimize HTML
 
 ##Placing configuration elsewhere
 
