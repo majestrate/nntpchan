@@ -997,7 +997,8 @@ Chat.prototype.sendInput = function(event) {
     var board;
     if(convo)
       board = self.chatElems.convobar.holder[convo].group;
-    if (!board) board = "overchan.random"; 
+    if (!board) board = "overchan.random";
+    console.log(board);
     var subject = self.chatElems.input.subject.value;
     self.readImage(inputElem.file, function(fdata, fname, ftype) {
       if (fdata) {
@@ -1006,7 +1007,7 @@ Chat.prototype.sendInput = function(event) {
           subject: subject,
           name: name,
           reference: convo,
-          board: board,
+          newsgroup: board,
           files: [{name: fname, data: fdata, type: ftype}],
         }});
       } else {
@@ -1015,7 +1016,7 @@ Chat.prototype.sendInput = function(event) {
           message: message,
           reference: convo,
           name: name,
-          board: board,
+          newsgroup: board,
         }});
       }
       inputElem.file.value = "";
