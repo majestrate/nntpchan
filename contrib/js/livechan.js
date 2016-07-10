@@ -857,6 +857,11 @@ ConvoBar.prototype.show = function(msgid) {
 function Chat(domElem, channel, options) {
   var self = this;
   this.name = channel.toLowerCase();
+  if (this.name == "") {
+    this.name = "ukko";
+  } else {
+    this.name = "overchan." + this.name;
+  }
   this.domElem = domElem;
   this.lastOp = null;
   if (options) {
@@ -997,7 +1002,7 @@ Chat.prototype.sendInput = function(event) {
     var board;
     if(convo)
       board = self.chatElems.convobar.holder[convo].group;
-    if (!board) board = "overchan.random";
+    if (!board) board = "overchan.live";
     console.log(board);
     var subject = self.chatElems.input.subject.value;
     self.readImage(inputElem.file, function(fdata, fname, ftype) {
