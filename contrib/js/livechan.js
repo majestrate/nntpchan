@@ -857,11 +857,6 @@ ConvoBar.prototype.show = function(msgid) {
 function Chat(domElem, channel, options) {
   var self = this;
   this.name = channel.toLowerCase();
-  if (this.name == "") {
-    this.name = "ukko";
-  } else {
-    this.name = "overchan." + this.name;
-  }
   this.domElem = domElem;
   this.lastOp = null;
   if (options) {
