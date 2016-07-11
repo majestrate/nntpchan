@@ -228,11 +228,11 @@ textarea, select {
   font-weight: bold;
 }
 
-.livechan_internallink {
+.livechan_internallink , a {
   color: cyan;
 }
 
-.livechan_internallink:hover {
+.livechan_internallink:hover , a {
   color: red;
   cursor: pointer;
 }
