@@ -633,6 +633,10 @@ img#nntpchan_banner {
     box-shadow: 0px 0px 10px 0px;
 }
 
+#postform_inner {
+    background-color: rgba(0, 0, 0, 0);
+}
+
 .post:target {
     background-color: #2c2d3e;
     box-shadow: 0px 0px 10px 2px;
