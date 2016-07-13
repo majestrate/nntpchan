@@ -16,6 +16,6 @@ body {
     background: #FBFFC9;
 }
 
-.navbar, table, thead, th, table, pre {
+.navbar, table, thead, th, table, pre, .op {
     background: #FFECBE;
 }
