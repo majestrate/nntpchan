@@ -336,6 +336,12 @@ textarea
     margin-bottom: 1px;
     float: left;
     clear: both;
+    background-color: #0f0f0f;
+    border-color: #242424;
+}
+
+pre {
+    background-color:  #0f0f0f;
 }
 
 .post
