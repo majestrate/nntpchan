@@ -628,3 +628,12 @@ hr
     border: 1px solid #535353;
     height: 1px
 }
+
+img#nntpchan_banner {
+    box-shadow: 0px 0px 10px 0px;
+}
+
+.post:target {
+    background-color: 2c2d3e;
+    box-shadow: 0px 0px 10px 2px;
+}
