@@ -82,6 +82,7 @@ Captcha.prototype.load = function() {
 Captcha.prototype.setCaptchaId = function(data) {
   this.captcha_id = data.id;
   this.setImageUrl(data.url);
+  this.show();
 }
 
 Captcha.prototype.setImageUrl = function(url) {
@@ -116,7 +117,7 @@ Captcha.prototype.process = function(callback) {
  * @brief show the captcha pane
  */
 Captcha.prototype.show = function () {
-  console.log("hide captcha");
+  console.log("show captcha");
   var widget = this.widget.widget;
   if ( widget.style ) {
     widget.style.zIndex = 5;
@@ -867,23 +868,27 @@ function Chat(domElem, channel, options) {
 
   
   this.chatElems = buildChat(this, this.domElem, this.name);
-  var prefix = this.options.prefix || "/";
+  this.prefix = this.options.prefix || "/";
   var scheme = "wss://";
   if (location.protocol == "http:") scheme = "ws://";
-  var url = scheme + location.host + prefix + "live?"+ this.name;
+  var url = scheme + location.host + this.prefix + "live?"+ this.name;
   this.connection = initWebSocket(this, url);
   this.initOutput();
   this.initInput();
   // set navbar channel name
   this.chatElems.navbar.setChannel(this.name);
-  // prepare captcha callback
-  this.captcha_callback = null;
   // create captcha
   this.captcha = new Captcha(this.domElem, this.options, function(id, solution, callback) {
-    // set callback to handle captcha success
-    self.captcha_callback = callback;
     // send captcha solution
-    self.connection.send({Captcha: { ID: id, Solution: solution}});
+    var ajax = new XMLHttpRequest();
+    ajax.open("POST", self.prefix+"livechan/api/captcha");
+    ajax.onreadystatechange = function() {
+      if(ajax.readyState == 4) {
+        var result = JSON.parse(ajax.responseText);
+        callback(result && result.success);
+      }
+    }
+    ajax.send(JSON.stringify({ID: id, Solution: solution}));
   });
   this.captcha.hide();
 }
@@ -898,7 +903,6 @@ Chat.prototype.clear = function () {
  * @brief begin login sequence
  */
 Chat.prototype.login = function() {
-  this.captcha.show();
   this.captcha.load();
 }
 
@@ -1000,6 +1004,45 @@ Chat.prototype.sendInput = function(event) {
     if (!board) board = "overchan.live";
     console.log(board);
     var subject = self.chatElems.input.subject.value;
+    var ajax = new XMLHttpRequest();
+    ajax.open("POST", self.prefix+"livechan/api/post?newsgroup="+board);
+    ajax.onreadystatechange = function() {
+      if (ajax.readyState == 4) {
+        console.log("post done");
+        // responded
+        var jdata = JSON.parse(ajax.responseText);
+        if(!jdata) {
+          // error parsing
+          console.log("parse error: data="+ajax.responseText);
+        } else if(jdata.captcha) {
+          // we need to fill out captcha
+          self.login();
+        } else if (jdata.message_id) {
+          // we posted
+          console.log("post success:" +jdata.message_id);
+          if (!convo) {
+            self.lastOp = jdata.message_id;
+          }
+          // reset shit
+          inputElem.file.value = "";
+          inputElem.message.value = '';
+        }
+      } else if (ajax.readyState == 3 ) {
+        // processing
+        console.log("post processing");
+      } else if (ajax.readyState == 2 ) {
+        // sent
+        console.log("post sent");
+      }
+    }
+    var data = new FormData();
+    data.set("name", name);
+    data.set("subject", subject);
+    data.set("message", message);
+    data.set("reference", convo);
+    data.set("attachment_0", inputElem.file);
+    ajax.send(data);
+    /**
     self.readImage(inputElem.file, function(fdata, fname, ftype) {
       if (fdata) {
         connection.send({Type: "post", Post: {
@@ -1022,6 +1065,7 @@ Chat.prototype.sendInput = function(event) {
       inputElem.file.value = "";
       inputElem.message.value = '';
     });
+    */
     inputElem.submit.disabled = true;
     var i = parseInt(self.options.cooldown);
     // fallback
@@ -1105,13 +1149,6 @@ Chat.prototype.handleMessage = function (data) {
     } else {
       // captcha challenge
       self.login();
-    }
-  } else if (mtype == "posted" ) {
-    // user posted something
-    if ( data.OP ) {
-      // they made a new thread, focus on it once it comes up
-      self.lastOp = data.Msgid
-      console.log("made new thread: "+data.Msgid)
     }
   } else if (mtype == "post" ) {
     self.insertChat(self.generateChat(data), data);
