@@ -1040,7 +1040,8 @@ Chat.prototype.sendInput = function(event) {
     data.set("subject", subject);
     data.set("message", message);
     data.set("reference", convo);
-    data.set("attachment_0", inputElem.file.files[0]);
+    if (inputElem.file.files[0])
+      data.set("attachment_0", inputElem.file.files[0]);
     ajax.send(data);
     /**
     self.readImage(inputElem.file, function(fdata, fname, ftype) {
