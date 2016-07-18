@@ -42,7 +42,7 @@
     <div>
       Date: <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
     </div>
-    <div>
+    <div class="postreply">
       <a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" title="{{post.MessageID}}" root="{{post.Reference}}" boardname="{{post.Board}}">&gt;&gt;{{post.ShortHash}}</a>
       <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
     </div>
