@@ -34,21 +34,23 @@ function postIsOP(elem) {
   return ds && ds.rootmsgid == ds.msgid ;
 }
 
-function _hide_elem(elem) {
- if (elem.style) {
-    elem.style.display = "none";
+function _hide_elem(elem, fade) {
+  if(!fade) {
+    if (elem.style) {
+      elem.style.display = "none";
+    } else {
+      elem.style = {display: "none" };
+    }
+    elem.dataset.userhide = "yes";
   } else {
-    elem.style = { display: "none" };
+    $(elem).fadeOut(400, function() {
+      _hide_elem(elem);
+    });
   }
-  elem.dataset.userhide = "yes";
 }
 
 function _unhide_elem(elem) {
- if (elem.style) {
-    elem.style.display = "block";
-  } else {
-    elem.style = { display: "block" };
-  }
+  $(elem).fadeIn();
   elem.dataset.userhide = "no";
 }
 
@@ -58,7 +60,7 @@ function _elemIsHidden(elem) {
 }
 
 // hide a post
-function hidepost(elem) {
+function hidepost(elem, nofade) {
   console.log("hidepost("+elem.dataset.msgid+")");
   var posts = get_hidden_posts();
   if (posts) {
@@ -75,19 +77,19 @@ function hidepost(elem) {
         hidepost(e[idx]);
       }
     }
-  } 
+  }
   // hide attachments and post body
   var es = elem.getElementsByClassName("attachments");
   for (var idx = 0; idx < es.length ; idx ++ ) {
-    _hide_elem(es[idx]);
+    _hide_elem(es[idx], !nofade);
   }
   es = elem.getElementsByClassName("post_body");
   for (var idx = 0; idx < es.length ; idx ++ ) {
-    _hide_elem(es[idx]);
+    _hide_elem(es[idx], !nofade);
   }
   es = elem.getElementsByClassName("postheader");
   for (var idx = 0; idx < es.length ; idx ++ ) {
-    _hide_elem(es[idx]);
+    _hide_elem(es[idx], !nofade);
   }
   elem.dataset.userhide = "yes";
   elem.setHideLabel("[show]");
@@ -163,12 +165,12 @@ onready(function() {
         var e_hider = hider;
         e_hider.innerHTML = txt;
       }
-      elem.hide = function() {
+      elem.hidepost = function() {
         var e_self = elem;
         var e_hider = hider;
         hidepost(e_self);
       }
-      elem.unhide = function() {
+      elem.unhidepost = function() {
         var e_self = elem;
         var e_hider = hider;
         unhidepost(e_self);
@@ -181,9 +183,9 @@ onready(function() {
       hider.onclick = function() {
         var e_self = elem;
         if(e_self.isHiding()) {
-          e_self.unhide();
+          e_self.unhidepost();
         } else {
-          e_self.hide();
+          e_self.hidepost();
         }
       }
       elem.appendChild(hider);
@@ -198,7 +200,7 @@ onready(function() {
       var id = all[idx];
       var elem = document.getElementById(id);
       if(elem)
-        elem.hide();
+        hidepost(elem, true);
     }
   }
 });
