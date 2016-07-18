@@ -29,15 +29,23 @@
   {{#post.IsClearnet}}
     <img src="{{post.Prefix}}static/clearnet.png" title="{{#i18n.Translations}}{{from_clearnet}}{{/i18n.Translations}}" />
   {{/post.IsClearnet}}
-    <span class="frontend">{{post.Frontend}}</span>
     </span>
-    <span class="subject">{{post.Subject}}</span>
-    <span class="name">{{post.Name}}</span>
-    <span class="msgid">{{post.MessageID}}</span>
-    <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
-    <a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" title="{{post.MessageID}}" root="{{post.Reference}}" boardname="{{post.Board}}">&gt;&gt;{{post.ShortHash}}</a>
-    <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
-    <span class="tripcode">{{{post.Pubkey}}}</span>  
+    <div>
+      Subject: <span class="subject">{{post.Subject}}</span>
+    </div>
+    <div>
+      Name: <span class="name">&lt;{{post.Name}}@{{post.Frontend}}&gt;</span><span clas="tripcode">{{{post.Pubkey}}}</span>
+    </div>
+    <div>
+      MessageID: <span class="msgid">{{post.MessageID}}</span>
+    </div>
+    <div>
+      Date: <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
+    </div>
+    <div>
+      <a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" title="{{post.MessageID}}" root="{{post.Reference}}" boardname="{{post.Board}}">&gt;&gt;{{post.ShortHash}}</a>
+      <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
+    </div>
   </legend>
   <div class="attachments">
   {{#post.Attachments}}
