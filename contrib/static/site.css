@@ -559,3 +559,7 @@ textarea#reply-text {
     padding-bottom: 10px;
     width: 80%;
 }
+
+.hider {
+    float: right;
+}
