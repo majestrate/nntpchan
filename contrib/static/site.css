@@ -318,6 +318,7 @@ input, textarea {
 .frontend {
     margin-top: 0px;
     display: inline-block;
+    margin-right: 5px;
 }
 
 .op , .reply {
