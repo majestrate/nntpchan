@@ -63,3 +63,4 @@ function miner_cb(s) {
     document.getElementById("miner_result").value = s;
 }
 */
+
