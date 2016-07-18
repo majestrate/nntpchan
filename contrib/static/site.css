@@ -335,6 +335,10 @@ input, textarea {
     background-color: #A99AFF;
 }
 
+.postreply {
+    float: right;
+}
+
 .post {
     max-width: 75%;
     margin-bottom: 5px;
