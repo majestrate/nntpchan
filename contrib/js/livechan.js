@@ -121,8 +121,9 @@ Captcha.prototype.show = function () {
   var widget = this.widget.widget;
   if ( widget.style ) {
     widget.style.zIndex = 5;
+    widget.style.visibility = "visible";
   } else {
-    widget.style = {zIndex: 5};
+    widget.style = {zIndex: 5, visibility: "visible"};
   }
 }
 /**
@@ -133,8 +134,9 @@ Captcha.prototype.hide = function () {
   var widget = this.widget.widget;
   if ( widget.style ) {
     widget.style.zIndex = -1;
+    widget.style.visibility = "hidden";
   } else {
-    widget.style = {zIndex: -1};
+    widget.style = {zIndex: -1, visibility: "hidden"};
   }
 }
 
@@ -857,6 +859,7 @@ ConvoBar.prototype.show = function(msgid) {
  */
 function Chat(domElem, channel, options) {
   var self = this;
+  this.pph = 0;
   this.name = channel.toLowerCase();
   this.domElem = domElem;
   this.lastOp = null;
@@ -891,6 +894,10 @@ function Chat(domElem, channel, options) {
     ajax.send(JSON.stringify({ID: id, Solution: solution}));
   });
   this.captcha.hide();
+  setInterval(function() {
+    self.tickPPHCount();
+    self.tickUserCount();
+  }, 5000);
 }
 
 Chat.prototype.clear = function () {
@@ -1026,6 +1033,8 @@ Chat.prototype.sendInput = function(event) {
           // reset shit
           inputElem.file.value = "";
           inputElem.message.value = '';
+        } else if (jdata.error) {
+          console.log(jdata.error);
         }
       } else if (ajax.readyState == 3 ) {
         // processing
@@ -1039,7 +1048,8 @@ Chat.prototype.sendInput = function(event) {
     data.set("name", name);
     data.set("subject", subject);
     data.set("message", message);
-    data.set("reference", convo);
+    if (convo)
+      data.set("reference", convo);
     if (inputElem.file.files[0])
       data.set("attachment_0", inputElem.file.files[0]);
     ajax.send(data);
@@ -1185,12 +1195,56 @@ Chat.prototype.initOutput = function() {
   var self = this;
 }
 
+Chat.prototype.tickUserCount = function () {
+  var self=this;
+  var ajax = new XMLHttpRequest();
+  ajax.open("GET", self.prefix + "livechan/api/online");
+  ajax.onreadystatechange = function () {
+    if (ajax.readyState == 4 && ajax.status == 200 ) {
+      var data = JSON.parse(ajax.responseText);
+      if (data && data.online) {
+        self.updateUserStats(data.online);
+      }
+    }
+  }
+  ajax.send();
+}
+
+Chat.prototype.tickPPHCount = function () {
+  var self=this;
+  var convo = self.chatElems.convobar.active;
+  var board;
+  if(convo)
+    board = self.chatElems.convobar.holder[convo].group;
+  if(!board) {
+    // no board selected?
+    var h = document.location.hash;
+    if (h.length > 1 ) {
+      board = "overchan." + h.substr(1);
+    }
+  }
+  if(board) {
+    var ajax = new XMLHttpRequest();
+    ajax.open("GET", self.prefix + "livechan/api/pph?newsgroup="+board);
+    ajax.onreadystatechange = function () {
+      if (ajax.readyState == 4 && ajax.status == 200 ) {
+        var data = JSON.parse(ajax.responseText);
+        if (data && data.pph !== undefined) {
+          self.pph = data.pph;
+        }
+      }
+    }
+    ajax.send();
+  }
+}
+
 /* @brief update the user counter for number of users online
  */
-Chat.prototype.updateUserCount = function(count) {
-  var elem = this.chatElems.navbar.userCount;
-  elem.textContent = "Online: "+count;
+Chat.prototype.updateUserStats = function(count) {
+  var elem = this.chatElems.navbar.status;
+  elem.textContent = "Online: "+count + " PPH: "+ this.pph;
 }
+
 
 /* @brief Scrolls the chat to the bottom.
  */

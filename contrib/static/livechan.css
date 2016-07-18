@@ -2,7 +2,6 @@ input {
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
   border-radius: 0px;
-  color: white;
 }
 
 .livechan_captcha_input {
@@ -19,12 +18,12 @@ textarea, select {
 .livechan_chat_input {
   padding: 0;
   margin: 0;
-  position: absolute;
+  position: fixed;
   width: 100%;
   bottom: 0;
   left: 0;
   right: 0;
-  padding:none;
+  background: #d6daf0;
 }
 
 .livechan_chat_input_name, .livechan_chat_input_convo {
@@ -110,7 +109,7 @@ textarea, select {
     top: 0px;
     bottom: 0px;
     right: 0px;
-    position: absolute;
+    position: fixed;
     opacity: 0.9;
 }
 
@@ -130,17 +129,20 @@ textarea, select {
     background: black;
 }
 
+.livechan_chat_output_chat {
+    background: #d6daf0;
+}
+
 .livechan_spoiler:hover {
     color: white;
 }
 
 .livechan_convo_label {
     padding: 5px;
-    color: white;
 }
 
 .livechan_convobar_root {
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 0;
     width: 10%;
@@ -148,11 +150,13 @@ textarea, select {
 
 .livechan_convobar_item {
     padding: 5px;
+    margin: 5px;
+    background: #d6daf0;
 }
 
 .livechan_navbar {
     z-index: 3;
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100%;
     height: 20px;
@@ -161,8 +165,7 @@ textarea, select {
 .livechan_navbar_mod_indicator_inactive, .livechan_navbar_mod_indicator_active, .livechan_navbar_status, .livechan_navbar_channel_label {
     padding-left: 10px;
     padding-right: 10px;
-    background: #050505;
-    color: white;
+    background: #d6daf0;
 }
 
 
@@ -182,29 +185,14 @@ textarea, select {
     visibility: visible;
 }
 
-.livechan_chat_output, .livechan_captcha, .livechan_convobar_root, #chat {
-  background: #050505;
-}
-
-.livechan_convobar_root {
- background: #111; 
- color: white;
-}
-
-.livechan_chat_output_chat, .livechan_navbar {
- background: #111;
-}
-
-.livechan_convobar_item {
- background: #111;
-
+.livechan_captcha, .livechan_convobar_root, #chat {
+    background: #EEF2FF;
 }
 
 .livechan_chat_output_chat {
   font-family: monospace;
   margin: 4px;
   padding: 4px;
-  color: white;
 }
 
 .livechan_chat_output_name {
@@ -216,10 +204,6 @@ textarea, select {
   color: red;
 }
 
-.livechan_chat_input {
-  background: #111;
-}
-
 .livechan_greentext {
   color: #789922;
 }
@@ -229,7 +213,7 @@ textarea, select {
 }
 
 .livechan_internallink , a {
-  color: cyan;
+    color: blue;
 }
 
 .livechan_internallink:hover , a {
@@ -254,7 +238,7 @@ textarea, select {
 
 .livechan_navbar_mod_indicator_inactive {
     color: #aaaaaa;
-    background: #eef2ff;
+    background: #EEF2FF;
 }
 
 

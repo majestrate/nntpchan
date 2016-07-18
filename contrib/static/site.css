@@ -320,11 +320,14 @@ input, textarea {
     display: inline-block;
 }
 
+.op , .reply {
+    float: left;
+    clear: both;
+}
+
 .op {
     margin-top: 5px;
     margin-bottom: 1px;
-    float: left;
-    clear: both;
 }
 
 .post:target {
