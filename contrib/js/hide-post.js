@@ -1,6 +1,33 @@
 /** hidepost.js -- hides posts from page given $things */
 
 
+function get_hidden_posts() {
+  var st = get_storage();
+  var prefix = "nntpchan_hide_post_";
+  return  {
+    all : function() {
+      var msgids = [];
+      for ( var k in st) {
+        if (k.indexOf(prefix) == 0) {
+          var m = k.substring(prefix.length);
+          msgids.push(m);
+        }
+      }
+      return msgids;
+    },
+
+    add : function (msg) {
+      st[prefix+msg] = "post";
+    },
+
+    del : function (msg) {
+      st.removeItem(prefix+msg);
+    }
+  }
+}
+
+
+
 // is a post elem an OP?
 function postIsOP(elem) {
   var ds = elem.dataset;
@@ -33,7 +60,11 @@ function _elemIsHidden(elem) {
 // hide a post
 function hidepost(elem) {
   console.log("hidepost("+elem.dataset.msgid+")");
-  
+  var posts = get_hidden_posts();
+  if (posts) {
+    // add to persitant hide
+    posts.add(elem.dataset.msgidhash);
+  }  
   if(postIsOP(elem)) {
     // hide thread it's an OP
     var thread = document.getElementById("thread_"+elem.dataset.rootmsgidhash);
@@ -59,12 +90,17 @@ function hidepost(elem) {
     _hide_elem(es[idx]);
   }
   elem.dataset.userhide = "yes";
-  elem.setHideLabel("[show]");  
+  elem.setHideLabel("[show]");
 }
 
 // unhide a post
 function unhidepost(elem) {
   console.log("unhidepost("+elem.dataset.msgid+")");
+  var posts = get_hidden_posts();
+  if (posts) {
+    // remove from persiting hide
+    posts.del(elem.dataset.msgidhash);
+  } 
   if(postIsOP(elem)) {
     var thread = document.getElementById("thread_"+elem.dataset.rootmsgidhash);
     if(thread) {
@@ -153,5 +189,16 @@ onready(function() {
       elem.appendChild(hider);
     };
     inject(posts[idx]);
+  }
+  // apply persiting hidden posts
+  var posts = get_hidden_posts();
+  if(posts) {
+    var all = posts.all();
+    for ( var idx = 0 ; idx < all.length; idx ++ ) {
+      var id = all[idx];
+      var elem = document.getElementById(id);
+      if(elem)
+        elem.hide();
+    }
   }
 });
