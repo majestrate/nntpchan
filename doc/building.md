@@ -8,7 +8,7 @@ This document will help you build the NNTPChan software from the source code.
 NNTPChan can run on the following operating systems:
 
 * Linux
-    * Instructions are available for Debian and Trisquel.
+    * Instructions are available for Debian and [Trisquel](#trisquel-instructions-wip).
 * FreeBSD
 
 Dependancies:
