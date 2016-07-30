@@ -89,6 +89,12 @@ textarea {
     max-height: 2.4em;
 }
 
+.post_body > pre {
+    font-size: 9pt;
+    background: rbga(0, 0, 0, 0);
+    font-weight: unset;
+}
+
 pre {
     white-space: pre-wrap;
     align: center;

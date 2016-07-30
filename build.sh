@@ -24,9 +24,13 @@ rev="QmPAqM7anxdr1ngPmJz9J9AAxDLinDz2Eh9aAzLF9T7LNa"
 ipfs="no"
 rebuildjs="yes"
 _next=""
+unstable="no"
 # check for build flags
 for arg in $@ ; do
     case $arg in
+        "--unstable")
+            unstable="yes"
+            ;;
         "--no-js")
             rebuildjs="no"
             ;;
@@ -83,10 +87,17 @@ if [ "x$ipfs" == "xyes" ] ; then
     go get -d -v 
     go build -v .
     mv nntpchan srndv2
+    echo -e "Built\n"
+    echo "Now configure NNTPChan with ./srndv2 setup"
 else
-    go get -u -v github.com/majestrate/srndv2  
-    cp $GOPATH/bin/srndv2 $root
+    if [ "X$unstable" == "Xyes" ] ; then
+        go get -u -v github.com/majestrate/srndv2/cmd/nntpchan
+        cp $GOPATH/bin/nntpchan $root
+        echo "built unstable, if you don't know what to do, run without --unstable"
+    else
+        go get -u -v github.com/majestrate/srndv2  
+        cp $GOPATH/bin/srndv2 $root
+        echo -e "Built\n"
+        echo "Now configure NNTPChan with ./srndv2 setup"
+    fi
 fi
-
-echo -e "Built\n"
-echo "Now configure NNTPChan with ./srndv2 setup"
