@@ -91,7 +91,7 @@ textarea {
 
 .post_body > pre {
     font-size: 9pt;
-    background: rbga(0, 0, 0, 0);
+    background:  #D6DAF0;
     font-weight: unset;
 }
 
