@@ -16,66 +16,64 @@
     <script src="{{prefix}}static/nntpchan.js" type="text/javascript"></script>
     <title> {{frontend}} on nntpchan </title>
   </head>
-  <body onload="main()">
+  <body>
     {{{navbar}}}
     <center>
-    <div class="index-outer">
-      <div class="index-inner">
-        <h1> {{frontend}} on nntpchan </h1>
-        <h2>View the <a href="ukko.html">overboard</a></h2>
-        <h3>Read the <a href="{{prefix}}static/faq.html">FAQ</a></h3>
-        <h3>Join the IRC on <a href="https://qchat.rizon.net/?channels=#nntpchan">rizon</a> or <a href="irc://127.0.0.1:6668/overchan">irc2p</a></h3>
-        <h3>Lurk on <a href="irc://allyour4nert7pkh.onion/overchan">URC</a></h3>
-        <h3>Check out the <a href="{{prefix}}boards.html">board list</a></h3>
-        <h3>Fork on github: <a href="https://github.com/majestrate/nntpchan/">frontend</a> and <a href="https://github.com/majestrate/srndv2/">core</a></h3>
-        <h4>We've Had {{totalposts}} Posts Since August 01 2015 </h4>
-      </div>
-      <div id="nntpchan_banner">
-      </div>
-      <div class="index-inner">
-        <table>
-          <tbody>
-            <tr>
-              <td class="posts_td">
-                {{{postsgraph}}}
-              </td>
-              <td class="board_td">
-                {{! todo: move boardgraph into its own file like postsgraph }}
-                <table id="board_graph">
-                  <thead>
-                    <tr>
-                      <th> {{#i18n.Translations}}{{board_label}}{{/i18n.Translations}} </th>
-                      <th> {{#i18n.Translations}}{{posts_hour}}{{/i18n.Translations}} </th>
-                      <th> {{#i18n.Translations}}{{posts_today}}{{/i18n.Translations}} </th>
-                      <th> {{#i18n.Translations}}{{total}}{{/i18n.Translations}} </th>
-                    </tr>
-                   </thead>
-                   <tbody>
-                    {{# boardgraph}}
+      <div class="index-outer">
+        <div id="nntpchan_banner">
+        </div>
+        <div class="index-inner">
+          <div>{{frontend}} on nntpchan</div>
+          <div>View the <a href="{{prefix}}ukko.html">overboard</a></div>
+          <div>Join the IRC on <a href="https://qchat.rizon.net/?channels=#nntpchan">rizon</a> or <a href="irc://127.0.0.1:6668/overchan">irc2p</a></div>
+          <div>Check out the <a href="{{prefix}}boards.html">board list</a></div>
+          <div>Fork on github: <a href="https://github.com/majestrate/nntpchan/">frontend</a> and <a href="https://github.com/majestrate/srndv2/">core</a></div>
+          <div>We've Had {{totalposts}} Posts Since August 01 2015 </div>
+        </div>
+        <div class="index-inner">
+          <table>
+            <tbody>
+              <tr>
+                <td class="posts_td">
+                  {{{postsgraph}}}
+                </td>
+                <td class="board_td">
+                  {{! todo: move boardgraph into its own file like postsgraph }}
+                  <table id="board_graph">
+                    <thead>
                       <tr>
-                        <td>
-                          <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
-                        </td>
-                        <td>
-                          {{Hour}}
-                        </td>
-                        <td>
-                          {{Day}}
-                        </td>
-                        <td>
-                          {{All}}
-                        </td>
+                        <th> {{#i18n.Translations}}{{board_label}}{{/i18n.Translations}} </th>
+                        <th> {{#i18n.Translations}}{{posts_hour}}{{/i18n.Translations}} </th>
+                        <th> {{#i18n.Translations}}{{posts_today}}{{/i18n.Translations}} </th>
+                        <th> {{#i18n.Translations}}{{total}}{{/i18n.Translations}} </th>
                       </tr>
-                    {{/ boardgraph}}
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {{{overview}}}        
+                    </thead>
+                    <tbody>
+                      {{# boardgraph}}
+                        <tr>
+                          <td>
+                            <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
+                          </td>
+                          <td>
+                            {{Hour}}
+                          </td>
+                          <td>
+                            {{Day}}
+                          </td>
+                          <td>
+                            {{All}}
+                          </td>
+                        </tr>
+                      {{/ boardgraph}}
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          {{{overview}}}        
+        </div>
       </div>
-    </div>
     </center>
     <script type="text/javascript">
         var e = document.getElementById("nntpchan_banner");
@@ -83,8 +81,8 @@
     </script>
     <hr/>
     <footer>
-    <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
-    <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
+      <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
+      <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
     </footer>
   </body>
 </html>
