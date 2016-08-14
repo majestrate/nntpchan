@@ -49,7 +49,7 @@ function gennntp($headers, $files) {
 }
 
 function shoveitup($msg, $id) {
-	$s = fsockopen("tcp://i2p.rocks:1119");
+	$s = fsockopen("tcp://localhost:1119");
 	fgets($s);
 	fputs($s, "MODE STREAM\r\n");
 	fgets($s);
