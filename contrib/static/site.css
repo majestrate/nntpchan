@@ -90,22 +90,21 @@ textarea {
 }
 
 .post_body > pre {
-    font-size: 9pt;
-    background:  #D6DAF0;
+    font-size: 10pt;
     font-weight: unset;
 }
 
 pre {
     white-space: pre-wrap;
     align: center;
-    font-size: 13pt;
-    background: #98E;
+    font-size: 12pt;
     color: black;
     display: inline-block;
     overflow-wrap: break-word;
     word-wrap: break-word;
     font-weight: bold;
-    padding: 20px 20px 20px 20px;
+
+    font-family: sans;
     
     margin-left: auto;
     margin-right: auto;
@@ -346,9 +345,24 @@ input, textarea {
 }
 
 .post {
-    max-width: 75%;
-    margin-bottom: 5px;
+    background-color: #D6DAF0;
+    
+    border: 1px solid #B7C5D9;
+    border-left: none;
+    border-top: none;
+    display: table;
+    padding: 2px;
+    margin: 2px;
+
+    display: inline-block;
+    float: left;
+    clear: both;
+    
     min-width: 500px;
+}
+
+.post.op {
+    background-color: #e4eeff;
 }
 
 .postheader {
@@ -448,10 +462,6 @@ input, textarea {
     margin-bottom: 2px;
     padding-top: 0px;
     padding-bottom: 0px;
-}
-
-.post {
-    display: inline-block;
 }
 
 .pagelist {
@@ -560,7 +570,7 @@ textarea#reply-text {
 }
 
 .thread {
-    padding-left: 10%;
+    padding-left: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
     width: 80%;
@@ -569,4 +579,11 @@ textarea#reply-text {
 .hider {
     float: right;
   
+}
+@keyframes rotate {
+    0% { transform:rotate(0deg); }
+    25% { transform:rotate(-1deg); }
+    50% { transform:rotate(0deg); }
+    75% { transform:rotate(1deg); }
+
 }
