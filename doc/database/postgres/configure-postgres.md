@@ -4,23 +4,10 @@ Configuring Postgres database
 These are instructions for setting up NNTPChan with Postgres as the data-storage system.
 
 ##Configuring Postgres
+A user with sufficient privileges to run su is required (hint: you can use root). This command switches to the Postgres user, creates a Postgres role called `srnd`, and prompts for a password. For illustrative purposes, we will use `srnd` as the password.
 
-Setting up postgres (as root):
-
-    # become postgres user
-    su postgres
-    # spawn postgres admin shell
-    psql 
-
-You'll get a prompt, enter the following:
-
-    CREATE ROLE srnd WITH LOGIN PASSWORD 'srnd';
-    CREATE DATABASE srnd WITH ENCODING 'UTF8' OWNER srnd;
-    \q
-
-For demo purposes we'll use these credentials.
-These are default values, please change them later.
+    # su - postgres -c "createuser --pwprompt --createdb --encrypted srnd"
 
 ###Important
 
-These credentials assume you are going to run using a user called `srnd`, if your username you plan to run the daemon as is different please change `srnd` to your username.
+It's easiest to connect to Postgres using role-based authentication. In this case, our Linux user `srnd` matches up with our Postgres role `srnd`, so role-based authentication can take place. If you're running SRNDv2 as a different user (e.g. `nntpchan`), you will need to create a role that matches that user using the command above.
