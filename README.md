@@ -27,6 +27,15 @@ Tor node list:
 2. [chan](http://ev7fnjzjdbtu3miq.onion/)
 3. [oniichan](http://sfw.oniichanylo2tsi4.onion/)
 
+##Clients
+
+NNTP (confirmed working):
+
+* Thunderbird
+
+Web:
+
+* [Yukko](https://github.com/faissaloo/Yukko): ncurses based nntpchan web ui reader
 
 
 ##Support
