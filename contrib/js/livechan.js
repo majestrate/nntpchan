@@ -1012,7 +1012,7 @@ Chat.prototype.sendInput = function(event) {
     console.log(board);
     var subject = self.chatElems.input.subject.value;
     var ajax = new XMLHttpRequest();
-    ajax.open("POST", self.prefix+"livechan/api/post?newsgroup="+board);
+    ajax.open("POST", self.prefix+"livechan/api/post?newsgroup="+board, true);
     ajax.onreadystatechange = function() {
       if (ajax.readyState == 4) {
         console.log("post done");
