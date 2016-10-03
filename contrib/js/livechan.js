@@ -1045,13 +1045,13 @@ Chat.prototype.sendInput = function(event) {
       }
     }
     var data = new FormData();
-    data.set("name", name);
-    data.set("subject", subject);
-    data.set("message", message);
+    data.append("name", name);
+    data.append("subject", subject);
+    data.append("message", message);
     if (convo)
-      data.set("reference", convo);
+      data.append("reference", convo);
     if (inputElem.file.files[0])
-      data.set("attachment_0", inputElem.file.files[0]);
+      data.append("attachment_0", inputElem.file.files[0]);
     ajax.send(data);
     /**
     self.readImage(inputElem.file, function(fdata, fname, ftype) {
