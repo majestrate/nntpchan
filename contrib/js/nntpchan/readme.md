@@ -1,0 +1,1 @@
+main nntpchan javascript files

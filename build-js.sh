@@ -15,17 +15,6 @@ if [ ! -f $GOPATH/bin/minify ]; then
   echo "set up minifiy"  
 	go get -v github.com/tdewolff/minify/cmd/minify
 fi
-if [ ! -f $GOPATH/bin/gopherjs ]; then
-        echo "set up gopherjs"
-        go get -v -u github.com/gopherjs/gopherjs
-fi
-
-# build cuckoo miner
-#echo "Building cuckoo miner"
-#go get -v -u github.com/ZiRo-/cuckgo/miner_js
-#$GOPATH/bin/gopherjs -m -v build github.com/ZiRo-/cuckgo/miner_js
-#mv ./miner_js.js ./contrib/static/miner-js.js
-#rm ./miner_js.js.map
 
 outfile=$PWD/contrib/static/nntpchan.js
 
@@ -62,10 +51,16 @@ if [ -e ./contrib/js/contrib/*.js ] ; then
     done
 fi
     
-mini ./contrib/js/main.js_ $outfile
+mini ./contrib/js/entry.js $outfile
 
 # local js
-for f in ./contrib/js/*.js ; do
+for f in ./contrib/js/nntpchan/*.js ; do
   mini $f $outfile
 done
+
+# vendor js
+for f in ./contrib/js/vendor/*.js ; do
+  mini $f $outfile
+done
+
 echo "ok"
