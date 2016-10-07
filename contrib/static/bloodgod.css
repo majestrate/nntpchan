@@ -2,10 +2,6 @@
   bloodgod theme css override
 */
 
-/**
-  bloodgod theme css override
-*/
-
 body {
     color: #666;
     background: #111;
@@ -25,7 +21,7 @@ input[type="button"] {
     color: black;
 }
 
-#captcha_img, pre {
+#captcha_img {
     background: #D80000;
 }
 

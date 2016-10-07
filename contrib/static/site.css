@@ -361,10 +361,6 @@ input, textarea {
     min-width: 500px;
 }
 
-.post.op {
-    background-color: #e4eeff;
-}
-
 .postheader {
     width: 100%;
     padding-top: 3px;
