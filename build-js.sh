@@ -31,8 +31,9 @@ lint() {
 mini() {
     echo "minify $1"
     echo "" >> $2
-    echo "/* local file: $1 */" >> $2
+    echo "/* begin $1 */" >> $2
     $GOPATH/bin/minify --mime=text/javascript >> $2 < $1
+    echo "/* end $1 */" >> $2
 }
 
 # do linting too
@@ -43,7 +44,19 @@ if [ "x$1" == "xlint" ] ; then
     done
 fi
 
-echo -e "//For source code and license information please check https://github.com/majestrate/nntpchan \n" > $outfile
+rm -f $outfile
+
+echo '/*' >> $outfile
+echo ' * For source code and license information please check https://github.com/majestrate/nntpchan' >> $outfile
+brandingfile=./contrib/branding.txt
+if [ -e $brandingfile ] ; then
+    echo ' *' >> $outfile
+    while read line; do
+        echo -n ' * ' >> $outfile;
+        echo $line >> $outfile;
+    done < $brandingfile;
+fi
+echo ' */' >> $outfile 
 
 if [ -e ./contrib/js/contrib/*.js ] ; then
     for f in ./contrib/js/contrib/*.js ; do
