@@ -7,7 +7,7 @@ body {
     background: #111;
 }
 
-.post_body {
+.post_body > pre {
     color: #666;
 }
 
