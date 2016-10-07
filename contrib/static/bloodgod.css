@@ -7,6 +7,9 @@ body {
     background: #111;
 }
 
+.post_body {
+    color: #666;
+}
 
 input, textarea, button, input[type="text"], input[type="password"],
 input[type="checkbox"], input[type="file"], input[type="submit"],
