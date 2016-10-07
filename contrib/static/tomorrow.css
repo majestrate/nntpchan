@@ -9,6 +9,11 @@ body
     padding-right: 4px;
 }
 
+.post_body > pre {
+    color: #DADADA;
+}
+
+
 main,
 aside,
 section
