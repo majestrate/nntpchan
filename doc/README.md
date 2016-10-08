@@ -1,5 +1,6 @@
 NNTPChan Documentation
 ======================
+**WARNING: Caching with redis was deprecated in [commit 96de42](https://github.com/majestrate/srndv2/commit/96de42bf5d689a54d27871c9f8bc4ef3d0cdbefc). Any reference to redis as a cache should be ignored. You should instead use null cache.**
 
 Hey, welcome to the documentation. This will help you use and develop with NNTPChan.
 
