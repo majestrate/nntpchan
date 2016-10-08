@@ -16,6 +16,23 @@ body {
     background: #FBFFC9;
 }
 
-.navbar, table, thead, th, table, pre {
+#postform_container {
+    background-color: rgba(0,0,0,0);
+}
+
+.post:target {
+    background-color: #ffda9b;
+    box-shadow: 0px 0px 5px 1px;
+}
+
+img#nntpchan_banner {
+    box-shadow: 0px 0px 10px 0px #FFECBE;
+}
+
+#postform_inner {
+    box-shadow: 0px 1px 5px 1px;
+}
+
+.navbar, table, thead, th, table, pre, .op {
     background: #FFECBE;
 }

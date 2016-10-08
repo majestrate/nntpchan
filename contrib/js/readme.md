@@ -1,0 +1,2 @@
+javascript files for nntpchan
+

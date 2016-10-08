@@ -89,17 +89,22 @@ textarea {
     max-height: 2.4em;
 }
 
+.post_body > pre {
+    font-size: 10pt;
+    font-weight: unset;
+}
+
 pre {
     white-space: pre-wrap;
     align: center;
-    font-size: 13pt;
-    background: #98E;
+    font-size: 12pt;
     color: black;
     display: inline-block;
     overflow-wrap: break-word;
     word-wrap: break-word;
     font-weight: bold;
-    padding: 20px 20px 20px 20px;
+
+    font-family: sans;
     
     margin-left: auto;
     margin-right: auto;
@@ -318,26 +323,46 @@ input, textarea {
 .frontend {
     margin-top: 0px;
     display: inline-block;
+    margin-right: 5px;
+}
+
+.op , .reply {
+    float: left;
+    clear: both;
 }
 
 .op {
     margin-top: 5px;
     margin-bottom: 1px;
-    float: left;
-    clear: both;
 }
 
 .post:target {
     background-color: #A99AFF;
 }
 
+.postreply {
+    float: right;
+}
+
 .post {
-    max-width: 75%;
-    margin-bottom: 5px;
+    background-color: #D6DAF0;
+    
+    border: 1px solid #B7C5D9;
+    border-left: none;
+    border-top: none;
+    display: table;
+    padding: 2px;
+    margin: 2px;
+
+    display: inline-block;
+    float: left;
+    clear: both;
+    
     min-width: 500px;
 }
 
 .postheader {
+    width: 100%;
     padding-top: 3px;
     padding-right: 5px
 }
@@ -433,10 +458,6 @@ input, textarea {
     margin-bottom: 2px;
     padding-top: 0px;
     padding-bottom: 0px;
-}
-
-.post {
-    display: inline-block;
 }
 
 .pagelist {
@@ -545,8 +566,20 @@ textarea#reply-text {
 }
 
 .thread {
-    padding-left: 10%;
+    padding-left: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
     width: 80%;
+}
+
+.hider {
+    float: right;
+  
+}
+@keyframes rotate {
+    0% { transform:rotate(0deg); }
+    25% { transform:rotate(-1deg); }
+    50% { transform:rotate(0deg); }
+    75% { transform:rotate(1deg); }
+
 }

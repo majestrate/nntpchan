@@ -2,6 +2,7 @@ var easiness = 55.0;
 var miner_threads = 4;
 var randoffs = 64;
 
+/*
 onready(function(){
 	document.getElementById("start_miner").onclick = function() {
 		var btn = document.getElementById("start_miner");
@@ -61,3 +62,5 @@ onready(function(){
 function miner_cb(s) {
     document.getElementById("miner_result").value = s;
 }
+*/
+

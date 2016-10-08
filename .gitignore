@@ -35,6 +35,7 @@ vendor
 
 # generated js
 contrib/static/nntpchan.js
+contrib/static/js/nntpchan.js
 contrib/static/miner-js.js
 
 #docs trash

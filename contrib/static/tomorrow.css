@@ -9,6 +9,12 @@ body
     padding-right: 4px;
 }
 
+.post_body > pre {
+    color: #DADADA;
+    text-align: left;
+}
+
+
 main,
 aside,
 section
@@ -336,6 +342,12 @@ textarea
     margin-bottom: 1px;
     float: left;
     clear: both;
+    background-color: #0f0f0f;
+    border-color: #242424;
+}
+
+pre {
+    background-color:  #0f0f0f;
 }
 
 .post
@@ -621,4 +633,17 @@ hr
 {
     border: 1px solid #535353;
     height: 1px
+}
+
+img#nntpchan_banner {
+    box-shadow: 0px 0px 10px 0px;
+}
+
+#postform_container {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.post:target {
+    background-color: #2c2d3e;
+    box-shadow: 0px 0px 10px 2px;
 }
