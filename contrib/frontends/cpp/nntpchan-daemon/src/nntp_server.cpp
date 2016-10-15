@@ -39,7 +39,7 @@ namespace nntpchan
       return;
     }
     NNTPServerConn * conn = new NNTPServerConn(m_loop, s, m_storagePath);
-    conn->SendCode(200, "Posting Allowed");
+    conn->Greet();
   }
 
 
@@ -56,6 +56,7 @@ namespace nntpchan
     uv_accept(s, (uv_stream_t*) &m_conn);
     uv_read_start((uv_stream_t*) &m_conn, [] (uv_handle_t * h, size_t s, uv_buf_t * b) {
         NNTPServerConn * self = (NNTPServerConn*) h->data;
+        if(self == nullptr) return;
         b->base = self->m_readbuff;
         if (s > sizeof(self->m_readbuff))
           b->len = sizeof(self->m_readbuff);
@@ -63,70 +64,56 @@ namespace nntpchan
           b->len = s;
       }, [] (uv_stream_t * s, ssize_t nread, const uv_buf_t * b) {
         NNTPServerConn * self = (NNTPServerConn*) s->data;
+        if(self == nullptr) return;
         if(nread > 0) {
-          self->ProcessData(b->base, nread);
+          self->m_handler.OnData(b->base, nread);
           self->SendNextReply();
+          if(self->m_handler.Done())
+            self->Close();
         } else {
           if (nread != UV_EOF) {
             std::cerr << "error in nntp server conn alloc: ";
             std::cerr << uv_strerror(nread);
             std::cerr << std::endl;
           }
-           
-          delete self;
-          s->data = nullptr;
-          
+          // got eof or error
+          self->Close();
         }
       });
-  }
-
-  NNTPServerConn::~NNTPServerConn()
-  {
-    uv_close((uv_handle_t*)&m_conn, [] (uv_handle_t *) {});
-  }
-
-  void NNTPServerConn::ProcessData(const char *d, ssize_t l)
-  {
-    m_handler.OnData(d, l);
   }
 
   void NNTPServerConn::SendNextReply()
   {
     if(m_handler.HasNextLine()) {
       auto line = m_handler.GetNextLine();
-      SendLine(line);
+      SendString(line+"\n");
     }
   }
-  
-  void NNTPServerConn::SendCode(const int code, const std::string & msg)
-  {
-    std::stringstream ss;
-    ss << code << " " << msg << std::endl;
-    SendString(ss.str());
-  }
 
-  void NNTPServerConn::SendString(const std::string & line)
-  {
-    WriteBuffer * b = new WriteBuffer(line);
-    uv_write(&b->w, *this, &b->b, 1, [](uv_write_t * w, int status) {
-        WriteBuffer * wb = (WriteBuffer *) w->data;
-        delete wb;
-    });
-  }
 
-  NNTPServerHandler::NNTPServerHandler(const std::string & storagepath) :
-    m_state(eNNTPStateGreet)
-  {
-    m_storage.SetPath(storagepath);
-  }
-
-  NNTPServerHandler::~NNTPServerHandler()
-  {
-  }
-
-  void NNTPServerHandler::OnData(const char * d, ssize_t l)
+  void NNTPServerConn::Greet()
   {
     
   }
+  
+  void NNTPServerConn::SendString(const std::string & str)
+  {
+    WriteBuffer * b = new WriteBuffer(str);
+    uv_write(&b->w, *this, &b->b, 1, [](uv_write_t * w, int status) {
+        (void) status;
+        WriteBuffer * wb = (WriteBuffer *) w->data;
+        if(wb)
+          delete wb;
+    });
+  }
 
+  void NNTPServerConn::Close()
+  {
+    uv_close((uv_handle_t*)&m_conn, [] (uv_handle_t * s) {
+        NNTPServerConn * self = (NNTPServerConn*) s->data;
+        if(self)
+          delete self;
+        s->data = nullptr;
+    });
+  }  
 }

@@ -10,6 +10,7 @@ namespace nntpchan
   {
   public:
     ArticleStorage();
+    ArticleStorage(const std::string & fpath);
     ~ArticleStorage();
 
     void SetPath(const std::string & fpath);

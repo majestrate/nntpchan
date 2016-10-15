@@ -2,12 +2,14 @@
 #define NNTPCHAN_NNTP_SERVER_HPP
 #include <uv.h>
 #include <string>
-#include <vector>
+#include <deque>
 #include "storage.hpp"
+#include "nntp_auth.hpp"
+#include "nntp_handler.hpp"
 
 namespace nntpchan
 {
-
+  
   class NNTPServerConn;
   
   class NNTPServer
@@ -31,58 +33,24 @@ namespace nntpchan
     uv_tcp_t m_server;
     uv_loop_t * m_loop;
     
-    std::vector<NNTPServerConn *> m_conns;
+    std::deque<NNTPServerConn *> m_conns;
 
     std::string m_storagePath;
     
   };
-
-
-    class NNTPServerHandler
-  {
-  public:
-
-    enum State {
-      eNNTPStateGreet,
-      eNNTPStateHandshake,
-      eNNTPStateReader,
-      eNNTPStateStream,
-      eNNTPStateTAKETHIS,
-      eNNTPStateIHAVE,
-      eNNTPStateARTICLE,
-      eNNTPStatePOST
-    };
-    
-    NNTPServerHandler(const std::string & storagepath);
-    ~NNTPServerHandler();
-    
-    void OnData(const char * data, ssize_t s);
-
-    bool HasNextLine();
-    std::string GetNextLine();
-    
-  private:
-    State m_state;
-    ArticleStorage m_storage;
-  };
-
   
   class NNTPServerConn
   {
   public:
     NNTPServerConn(uv_loop_t * l, uv_stream_t * s, const std::string & storage);
-    virtual ~NNTPServerConn();
 
+    /** @brief close connection, this connection cannot be used after calling this */
     void Close();
-
-    void Quit();
-
-    void SendLine(const std::string & line);
-    void SendCode(const int code, const std::string & message);
-
-    void ProcessData(const char * d, ssize_t l);
     
+    /** @brief send next queued reply */
     void SendNextReply();
+
+    void Greet();
     
   private:
 
@@ -94,8 +62,10 @@ namespace nntpchan
     uv_tcp_t m_conn;
 
     NNTPServerHandler m_handler;
+
+    NNTPCredentialDB * m_logindb;
     
-    char m_readbuff[1024];
+    char m_readbuff[1028];
     
   };
 }

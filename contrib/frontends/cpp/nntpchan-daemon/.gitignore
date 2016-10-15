@@ -1,2 +1,4 @@
 *.o
-nntpchan
+nntpd
+nntpchan-tool
+.gdb_history
