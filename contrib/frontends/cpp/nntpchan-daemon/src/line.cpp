@@ -10,10 +10,10 @@ namespace nntpchan {
     while(l-- > 0) {
       char c = d[idx++];
       if(c == '\n') {
-        OnLine(d, idx-2);
+        OnLine(d, idx-1);
         d += idx;
       } else if (c == '\r' && d[idx] == '\n') {
-        OnLine(d, idx-2);
+        OnLine(d, idx-1);
         d += idx + 1;
       }
     }
