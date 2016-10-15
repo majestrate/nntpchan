@@ -8,10 +8,16 @@
 namespace nntpchan
 {
   NNTPServerHandler::NNTPServerHandler(const std::string & storage) :
+    m_auth(nullptr),
     m_store(storage),
     m_authed(false),
     m_state(eStateReadCommand)
   {
+  }
+
+  NNTPServerHandler::~NNTPServerHandler()
+  {
+    if(m_auth) delete m_auth;
   }
   
   void NNTPServerHandler::HandleLine(const std::string &line)
@@ -58,6 +64,7 @@ namespace nntpchan
 
   void NNTPServerHandler::SwitchMode(const std::string & mode)
   {
+    
   }
 
   void NNTPServerHandler::Quit()
@@ -70,5 +77,24 @@ namespace nntpchan
   bool NNTPServerHandler::Done()
   {
     return m_state == eStateQuit;
+  }
+
+  bool NNTPServerHandler::PostingAllowed()
+  {
+    return m_authed || m_auth == nullptr;
+  }
+  
+  void NNTPServerHandler::Greet()
+  {
+    if(PostingAllowed()) 
+      QueueLine("200 Posting allowed");
+    else
+      QueueLine("201 Posting not allowed");
+  }
+
+  void NNTPServerHandler::SetAuth(NNTPCredentialDB *creds)
+  {
+    if(m_auth) delete m_auth;
+    m_auth = creds;
   }
 }

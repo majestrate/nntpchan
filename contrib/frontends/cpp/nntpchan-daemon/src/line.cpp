@@ -12,6 +12,9 @@ namespace nntpchan {
       if(c == '\n') {
         OnLine(d, idx-2);
         d += idx;
+      } else if (c == '\r' && d[idx] == '\n') {
+        OnLine(d, idx-2);
+        d += idx + 1;
       }
     }
   }

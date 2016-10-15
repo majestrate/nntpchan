@@ -53,6 +53,10 @@ int main(int argc, char * argv[]) {
       return 1;
     }
 
+    if (nntpconf.find("authdb") != nntpconf.end()) {
+      nntp.SetLoginDB(nntpconf["authdb"]);
+    }
+
     auto & a = nntpconf["bind"];
     
     try {

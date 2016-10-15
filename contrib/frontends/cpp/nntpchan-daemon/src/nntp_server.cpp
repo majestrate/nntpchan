@@ -1,5 +1,6 @@
 #include "buffer.hpp"
 #include "nntp_server.hpp"
+#include "nntp_auth.hpp"
 #include "net.hpp"
 #include <cassert>
 #include <iostream>
@@ -38,19 +39,32 @@ namespace nntpchan
       std::cerr << "nntp server OnAccept fail: " << uv_strerror(status) << std::endl;
       return;
     }
-    NNTPServerConn * conn = new NNTPServerConn(m_loop, s, m_storagePath);
+    NNTPCredentialDB * creds = nullptr;
+
+    std::ifstream i;
+    i.open(m_logindbpath);
+    if(i.is_open()) creds = new HashedFileDB(m_logindbpath);
+    
+    NNTPServerConn * conn = new NNTPServerConn(m_loop, s, m_storagePath, creds);
     conn->Greet();
   }
 
+
+  void NNTPServer::SetLoginDB(const std::string path)
+  {
+    m_logindbpath = path;
+  }
+  
 
   void NNTPServer::SetStoragePath(const std::string & path)
   {
     m_storagePath = path;
   }
   
-  NNTPServerConn::NNTPServerConn(uv_loop_t * l, uv_stream_t * s, const std::string & storage) :
+  NNTPServerConn::NNTPServerConn(uv_loop_t * l, uv_stream_t * s, const std::string & storage, NNTPCredentialDB * creds) :
     m_handler(storage)
   {
+    m_handler.SetAuth(creds);
     uv_tcp_init(l, &m_conn);
     m_conn.data = this;
     uv_accept(s, (uv_stream_t*) &m_conn);
@@ -81,7 +95,7 @@ namespace nntpchan
         }
       });
   }
-
+  
   void NNTPServerConn::SendNextReply()
   {
     if(m_handler.HasNextLine()) {
@@ -93,7 +107,8 @@ namespace nntpchan
 
   void NNTPServerConn::Greet()
   {
-    
+    m_handler.Greet();
+    SendNextReply();
   }
   
   void NNTPServerConn::SendString(const std::string & str)

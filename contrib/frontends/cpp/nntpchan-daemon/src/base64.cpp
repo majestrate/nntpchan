@@ -219,8 +219,8 @@ namespace nntpchan
   std::string B64Encode(const uint8_t * data, const std::size_t l)
   {
     std::string out;
-    out.reserve(i2p::data::Base64EncodingBufferSize(l));
-    i2p::data::ByteStreamToBase64(data, l, &out[0], out.capacity());
+    out.resize(i2p::data::Base64EncodingBufferSize(l));
+    i2p::data::ByteStreamToBase64(data, l, &out[0], out.size());
     return out;
   }
 

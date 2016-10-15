@@ -23,6 +23,8 @@ namespace nntpchan
     void OnAccept(uv_stream_t * s, int status);
 
     void SetStoragePath(const std::string & path);
+
+    void SetLoginDB(const std::string path);
     
   private:
     
@@ -35,6 +37,7 @@ namespace nntpchan
     
     std::deque<NNTPServerConn *> m_conns;
 
+    std::string m_logindbpath;
     std::string m_storagePath;
     
   };
@@ -42,8 +45,7 @@ namespace nntpchan
   class NNTPServerConn
   {
   public:
-    NNTPServerConn(uv_loop_t * l, uv_stream_t * s, const std::string & storage);
-
+    NNTPServerConn(uv_loop_t * l, uv_stream_t * s, const std::string & storage, NNTPCredentialDB * creds);
     /** @brief close connection, this connection cannot be used after calling this */
     void Close();
     
@@ -63,8 +65,6 @@ namespace nntpchan
 
     NNTPServerHandler m_handler;
 
-    NNTPCredentialDB * m_logindb;
-    
     char m_readbuff[1028];
     
   };

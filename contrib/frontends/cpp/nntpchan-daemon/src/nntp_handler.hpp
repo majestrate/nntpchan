@@ -3,6 +3,7 @@
 #include <deque>
 #include <string>
 #include "line.hpp"
+#include "nntp_auth.hpp"
 #include "storage.hpp"
 
 namespace nntpchan
@@ -11,8 +12,13 @@ namespace nntpchan
   {
   public:
     NNTPServerHandler(const std::string & storage);
-
+    ~NNTPServerHandler();
+    
     bool Done();
+
+    void SetAuth(NNTPCredentialDB * creds);
+
+    void Greet();
     
   protected:
     void HandleLine(const std::string & line);
@@ -31,9 +37,11 @@ namespace nntpchan
 
     // switch nntp modes, this queues a reply
     void SwitchMode(const std::string & mode);
+
+    bool PostingAllowed();
     
   private:
-    
+    NNTPCredentialDB * m_auth;
     ArticleStorage m_store;
     std::string m_mode;
     bool m_authed;
