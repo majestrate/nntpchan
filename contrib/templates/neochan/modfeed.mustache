@@ -1,0 +1,49 @@
+{{!
+ modfeed.mustache -- admin nntp feed page
+ template parameters:
+ - prefix ( the site's prefix )
+
+ }}
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <!-- yes it uses js -->
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+    <script type="text/javascript" src="{{prefix}}static/mod.js"></script>
+    <script type="text/javascript" src="{{prefix}}static/feed.js"></script>
+    <title> {{#i18n.Translations}}{{modpage_title}}{{/i18n.Translations}} </title>
+  </head>
+  <body onload="main()">
+    <div id="nntpchan_mod_result"></div>
+    <div class="nntpchan_feed_pane">
+      <pre> Add Feed </pre>
+      <label for="add_feed_host">Host</label>
+      <input id="add_feed_host" />
+      <label for="add_feed_host">Port</label>
+      <input id="add_feed_port" />
+      <label for="add_feed_name">Name</label>
+      <input id="add_feed_name" />
+      <button onclick="nntp_feed_add()">Add</button>
+    </div>
+    <div class="nntpchan_feed_pane">
+      <pre> Remove Feed </pre>
+      <label for="del_feed_name">Name</label>
+      <input id="del_feed_name" />
+      <button onclick="nntp_feed_del()">Remove</button>
+    </div>
+    <div class="nntpchan_feed_pane">
+      <pre> Sync Feeds </pre>
+      <button onclick="nntpchan_admin('feed.sync')">Sync All</button>
+    </div>
+    <div id="nntpchan_feed_result"></div>
+    <div id="nntpchan_feeds"></div>
+    <script>
+      nntp_feed_update();
+    </script>
+    <noscript>
+      <b>{{#i18n.Translations}}{{nojs_info}}{{/i18n.Translations}}</b>
+    </noscript>
+  </body>
+</html>

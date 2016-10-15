@@ -1,0 +1,51 @@
+{{!
+  boardlist.mustache -- full list of every board
+  template parameters:
+  - graph ( a list of 4 string tuples: (board, posts_per_hour, posts_per_day, total_posts) )
+  - frontend ( the name of the frontend )
+  - prefix ( the site's prefix )
+}}
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{prefix}}static/site.css"></link>
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css"></link>
+    <title> {{frontend}} {{#i18n.Translations}}{{board_list_title}}{{/i18n.Translations}} </title>
+  </head>
+  <body>
+    <center>
+    <div class="index-outer">
+      <div class="index-inner">
+        <table id="board_graph">
+          <thead>
+            <tr>
+              <th> {{#i18n.Translations}}{{board_label}}{{/i18n.Translations}} </th>
+              <th> {{#i18n.Translations}}{{pph_label}}{{/i18n.Translations}} </th>
+              <th> {{#i18n.Translations}}{{ppd_label}}{{/i18n.Translations}} </th>
+              <th> {{#i18n.Translations}}{{total}}{{/i18n.Translations}} </th>
+            </tr>
+           </thead>
+           <tbody>
+            {{# graph}}
+            <tr>
+              <td>
+                <a href="{{prefix}}{{Board}}-0.html">{{Board}}</a>
+              </td>
+              <td>
+                {{Hour}}
+              </td>
+              <td>
+                {{Day}}
+              </td>
+              <td>
+                {{All}}
+              </td>
+            </tr>
+            {{/ graph}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </center>
+  </body>
+</html>

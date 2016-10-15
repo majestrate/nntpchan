@@ -1,0 +1,35 @@
+{{!
+  404.mustache -- 404 page
+  template parameters:
+  - prefix (the site prefix)
+}}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> 404 </title>
+    <meta charset="utf-8"></meta>
+    <link rel="stylesheet" href="{{prefix}}static/neochan-site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+  </head>
+  <body>
+    <center>
+      <div class="not_found fade-in">
+        <img src="{{prefix}}static/404.png"></img>
+        <div class="not_found_message">
+          {{#i18n.Translations}}{{resource_not_found}}{{/i18n.Translations}}
+        </div>
+      </div>
+    </center>
+    <script type="text/javascript">
+      neochan_init(function() {
+        ready();
+      });
+    </script>
+    <hr />
+    <footer>
+      <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
+      <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
+    </footer>
+  </body>
+</html>

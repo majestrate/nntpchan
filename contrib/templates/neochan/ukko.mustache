@@ -1,0 +1,53 @@
+{{!
+  ukko.mustache -- overboard, contains the last threads posted regardless of newsgroup
+  template parameters:
+  - prefix ( site prefix )
+  - threads ( a list of Thread Models that represent the latest threads )
+  }}
+<!doctype html>
+<html>
+  <head>
+    <title> {{#i18n.Translations}}{{overboard_title}}{{/i18n.Translations}} </title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+  </head>
+  <body>
+    <center>
+      <div id="nntpchan_banner">
+      </div>
+    </center>
+    <!-- begin navbar -->
+    {{{navbar}}}
+    <!-- end navbar -->
+    <div class="board_header"> {{#i18n.Translations}}{{overboard_title}}{{/i18n.Translations}} </div>
+      <div id="ukko_threads">
+        <pre><a href="{{prefix}}livechan/">livechan</a></pre>
+      {{#threads}}
+        <div class="thread" id="thread_{{OP.PostHash}}">
+	        <div class="ukko_thread_header">
+          <p>{{#i18n.Translations}}{{posted_on_label}}{{/i18n.Translations}} <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></p>
+        </div>
+          {{{OP.Truncate.RenderPost}}}
+          {{#Truncate.Replies}}
+            {{{Truncate.RenderPost}}}
+          {{/Truncate.Replies}}
+        </div>  
+        <hr />  
+      {{/threads}}
+      </div>
+      <script type="text/javascript" >
+          var prefix = "{{prefix}}";
+          var e = document.getElementById("nntpchan_banner");
+          nntpchan_inject_banners(e, prefix);
+          init(prefix);
+          ready();
+      </script>
+    <hr/>
+    <footer>
+    <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
+    <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
+    </footer>
+  </body>
+</html>

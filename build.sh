@@ -6,9 +6,9 @@ if [ "" == "$root" ] ; then
 fi
 cd "$root"
 
-tags=""
+tags="-tags disable_redis"
 
-help_text="usage: $0 [--disable-redis]"
+help_text="usage: $0 [--disable-neochan]"
 
 # check for help flags first
 for arg in "$@" ; do
@@ -25,9 +25,13 @@ ipfs="no"
 rebuildjs="yes"
 _next=""
 unstable="no"
+neochan="yes"
 # check for build flags
 for arg in "$@" ; do
     case $arg in
+        "--disable-neochan")
+            neochan="no"
+            ;;
         "--unstable")
             unstable="yes"
             ;;
@@ -36,12 +40,6 @@ for arg in "$@" ; do
             ;;
         "--ipfs")
             ipfs="yes"
-            ;;
-        "--cuckoo")
-            cuckoo="yes"
-            ;;
-        "--disable-redis")
-            tags="$tags -tags disable_redis"
             ;;
         "--revision")
             _next="rev"
@@ -64,8 +62,13 @@ fi
 cd "$root"
 if [ "$rebuildjs" == "yes" ] ; then
     echo "rebuilding generated js..."
-    ./build-js.sh
+    if [ "$neochan" == "no" ] ; then
+        ./build-js.sh --disable-neochan
+    else
+        ./build-js.sh
+    fi
 fi
+
 unset GOPATH
 export GOPATH=$PWD/go
 mkdir -p "$GOPATH"

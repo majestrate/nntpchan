@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <title>{{#i18n.Translations}}{{login}}{{/i18n.Translations}}</title>
+  </head>
+  <body>
+    <form action="login" method="POST" name="modlogin">
+      <label for="mod_key">{{#i18n.Translations}}{{secret_key}}{{/i18n.Translations}}</label>
+      <input type="password" id="mod_key" name="privkey" />
+      <input type="submit" value="{{#i18n.Translations}}{{login}}{{/i18n.Translations}}" />
+      {{{csrfField}}}
+    </form>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<div id="{{post.PostHash}}" class="{{post.CSSClass}}"
+     data-frontend="{{post.Frontend}}"
+     data-newsgroup="{{post.Board}}"
+     data-msgid="{{post.MessageID}}"
+     data-msgidhash="{{post.PostHash}}"
+     data-rootmsgid="{{post.Reference}}"
+     data-rootmsgidhash="{{post.ReferenceHash}}"
+     {{#post.Sage}}
+     data-sage="1"
+     {{/post.Sage}}
+     {{#post.IsI2P}}
+     data-origin="i2p"
+     {{/post.IsI2P}}
+     {{#post.IsTor}}
+     data-origin="tor"
+     {{/post.IsTor}}
+     {{#post.IsClearnet}}
+     data-origin="clearnet"
+     {{/post.IsClearnet}}
+     data-posturl="{{post.PostURL}}">
+  <legend class="postheader">
+    <span class="origin">
+  {{#post.IsI2P}}
+    <img src="{{post.Prefix}}static/i2p.png" title="{{#i18n.Translations}}{{from_i2p}}{{/i18n.Translations}}" />
+  {{/post.IsI2P}}
+  {{#post.IsTor}}
+    <img src="{{post.Prefix}}static/tor.png" title="{{#i18n.Translations}}{{from_tor}}{{/i18n.Translations}}" />
+  {{/post.IsTor}}
+  {{#post.IsClearnet}}
+    <img src="{{post.Prefix}}static/clearnet.png" title="{{#i18n.Translations}}{{from_clearnet}}{{/i18n.Translations}}" />
+  {{/post.IsClearnet}}
+    </span>
+    <div class="postreply">
+      <a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" root="{{post.Reference}}" boardname="{{post.Board}}">&gt;&gt;{{post.ShortHash}}</a>
+      <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
+    </div>
+    <div>
+      Subject: <span class="subject">{{post.Subject}}</span>
+    </div>
+    <div>
+      Name: <span class="name">{{post.Name}}</span><span clas="tripcode">{{{post.Pubkey}}}</span>
+    </div>
+    <div>
+      MessageID: <span class="msgid">{{post.MessageID}}</span>
+    </div>
+    <div>
+      Date: <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
+    </div>
+  </legend>
+  <hr>
+  <div class="attachments">
+  {{#post.Attachments}}
+    <figure data-sha512="{{Hash}}">
+    <figcaption>
+    <a class="download_link" href="{{Source}}" download="{{Filename}}">{{#i18n.Translations}}{{download_prompt}}{{/i18n.Translations}}</a>
+    <a class="file" href="{{Source}}" title="{{Filename}}" target="_blank"><img src="{{Thumbnail}}" alt="{{Filename}}" class="thumbnail"/></a>
+    <a class="fname_link" title="{{Filename}}" href="{{Source}}">{{Filename}}</a>
+    </figcaption>
+    </figure>
+  {{/post.Attachments}}
+  </div>
+  <div class="post_body">
+    <pre>{{{post.RenderBody}}}</pre>
+  </div>
+  <hr>
+</div>

@@ -1,0 +1,25 @@
+{{!
+posts graph.mustache -- post frequence graph
+parameters:
+
+ * graph - a postsGraph instance (see srnd/model.go)
+}}
+
+<table id="posts_graph">
+  <thead>
+    <tr>
+      <th>{{#i18n.Translations}}{{day}}{{/i18n.Translations}}</th>
+      <th>{{#i18n.Translations}}{{posts}}{{/i18n.Translations}}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#graph.Scale}}
+      <tr>
+        <td>{{Day}}</td>
+        <td>{{Num}}</td>
+        <td>{{OvercockGraph}}</td>
+      </tr>
+    {{/graph.Scale}}
+  </tbody>
+</table>

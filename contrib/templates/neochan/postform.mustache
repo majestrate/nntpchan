@@ -1,0 +1,93 @@
+{{!
+ postform.mustache -- the form for posting
+
+ template parameters:
+ - post_url ( the url of the post form )
+ - reference ( the post we are replying to, or empty string if it's an op )
+ - button ( the text for the reply button )
+ - files ( bool, do we allow attachments ? )
+ - csrf ( csrf token )
+ }}
+ <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post">
+ {{{csrf}}}
+ <input type="hidden" name="reference" value="{{reference}}" id="postform_reference"/>
+ <div id="postform-outer">
+   <div id="postform-inner">
+     <table class="postform">
+       <tbody>
+         <tr>
+           <th>
+             {{#i18n.Translations}}{{name}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <span>
+               <input type="text" name="name" value="" id="postform_name" />
+               <span id="postform_msg"></span>
+             </span>
+           </td>
+         </tr>
+         <tr>
+           <th>
+             {{#i18n.Translations}}{{subject}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <input type="text" name="subject" value="" id="postform_subject" />
+             <input type="submit" value="{{button}}" class="button" id="postform_submit" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             {{#i18n.Translations}}{{comment}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <textarea id="postform_message" name="message" cols=40 rows=5></textarea>
+           </td>
+         </tr>
+         {{#files}}
+           <tr>
+           <th>
+             {{#i18n.Translations}}{{file}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <input class="postform_attachment" id="postform_attachments" type="file" name="attachment_uploaded" multiple />
+           </td>
+         </tr>
+         {{/files}}
+         <tr>
+          <th>
+             {{#i18n.Translations}}{{dubs}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <input type="checkbox" name="dubs" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             {{#i18n.Translations}}{{captcha}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <img id="captcha_img" src="{{prefix}}captcha/img" alt="captcha" />
+           </td>
+         </tr>
+         <tr>
+           <th>
+             {{#i18n.Translations}}{{solution}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <input type="text" name="captcha" autocomplete="off" id="captcha_solution" />
+           </td>
+         </tr>
+         <!-- <tr>
+           <th>
+             {{#i18n.Translations}}{{cuckoo_pow}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <input type="text" name="pow" autocomplete="off" id="miner_result" /><input id="start_miner" class="button" type="button" value="{{#i18n.Translations}}{{start_mining}}{{/i18n.Translations}}"/>
+           </td>
+         </tr> -->
+       </tbody>
+     </table>
+   </div>
+ </div>
+ </form>
+ 
