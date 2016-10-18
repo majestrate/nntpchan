@@ -27,8 +27,14 @@ $(EXE): $(OBJECTS)
 $(TOOL): $(OBJECTS)
 	$(CXX) -o $(TOOL) $(LD_FLAGS) $(OBJECTS) $(CXXFLAGS) tool.cpp
 
+build-test: $(OBJECTS)
+	$(CXX) -o test $(LD_FLAGS) $(OBJECTS) $(CXXFLAGS) test.cpp
+
+test: build-test
+	./test
+
 %.o: src/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ 
 
 clean:
-	rm -f $(OBJECTS) $(EXE) $(TOOL)
+	rm -f $(OBJECTS) $(EXE) $(TOOL) test

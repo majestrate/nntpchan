@@ -1,4 +1,5 @@
 *.o
 nntpd
 nntpchan-tool
+test
 .gdb_history

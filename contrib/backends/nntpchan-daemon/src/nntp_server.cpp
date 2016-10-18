@@ -12,11 +12,21 @@ namespace nntpchan
   {
     uv_tcp_init(loop, &m_server);
     m_loop = loop;
+    m_server.data = this;
   }
 
   NNTPServer::~NNTPServer()
   {
-    uv_close((uv_handle_t*)&m_server, [](uv_handle_t *) {});
+    if (m_frontend) delete m_frontend;
+  }
+
+  void NNTPServer::Close()
+  {
+    uv_close((uv_handle_t*)&m_server, [](uv_handle_t * s) {
+        NNTPServer * self = (NNTPServer*)s->data;
+        if (self) delete self;
+        s->data = nullptr;
+    });
   }
 
   void NNTPServer::Bind(const std::string & addr)
@@ -24,7 +34,6 @@ namespace nntpchan
     auto saddr = ParseAddr(addr);
     assert(uv_tcp_bind(*this, saddr, 0) == 0);
     std::cerr << "nntp server bound to " << saddr.to_string() << std::endl;
-    m_server.data = this;
     auto cb = [] (uv_stream_t * s, int status) {
       NNTPServer * self = (NNTPServer *) s->data;
       self->OnAccept(s, status);
@@ -59,6 +68,12 @@ namespace nntpchan
   void NNTPServer::SetStoragePath(const std::string & path)
   {
     m_storagePath = path;
+  }
+
+  void NNTPServer::SetFrontend(Frontend * f)
+  {
+    if(m_frontend) delete m_frontend;
+    m_frontend = f;
   }
   
   NNTPServerConn::NNTPServerConn(uv_loop_t * l, uv_stream_t * s, const std::string & storage, NNTPCredentialDB * creds) :

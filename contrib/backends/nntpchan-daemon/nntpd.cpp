@@ -60,18 +60,18 @@ int main(int argc, char * argv[]) {
 
     if ( level.sections.find("frontend") != level.sections.end()) {
       // frontend enabled
-      auto & frontconf = level.sections["frontend"];
+      auto & frontconf = level.sections["frontend"].values;
       if (frontconf.find("type") == frontconf.end()) {
         std::cerr << "frontend section provided but 'type' value not provided" << std::endl;
         return 1;
       }
-      auto & ftype = frontconf.find("type");
+      auto ftype = frontconf["type"];
       if (ftype == "exec") {
         if (frontconf.find("exec") == frontconf.end()) {
           std::cerr << "exec frontend specified but no 'exec' value provided" << std::endl;
           return 1;
         }
-        nntp.SetFrontend(new nntpchan::ExecFrontend(loop, frontconf["exec"]));
+        nntp.SetFrontend(new nntpchan::ExecFrontend(frontconf["exec"]));
       } else {
         std::cerr << "unknown frontend type '" << ftype << "'" << std::endl;
       }

@@ -4,6 +4,7 @@
 #include <string>
 #include <deque>
 #include "storage.hpp"
+#include "frontend.hpp"
 #include "nntp_auth.hpp"
 #include "nntp_handler.hpp"
 
@@ -25,6 +26,10 @@ namespace nntpchan
     void SetStoragePath(const std::string & path);
 
     void SetLoginDB(const std::string path);
+
+    void SetFrontend(Frontend * f);
+
+    void Close();
     
   private:
     
@@ -39,6 +44,8 @@ namespace nntpchan
 
     std::string m_logindbpath;
     std::string m_storagePath;
+
+    Frontend * m_frontend;
     
   };
   

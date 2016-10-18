@@ -1,5 +1,6 @@
 #ifndef NNTPCHAN_FRONTEND_HPP
 #define NNTPCHAN_FRONTEND_HPP
+#include <string>
 
 namespace nntpchan
 {
@@ -10,14 +11,13 @@ namespace nntpchan
     virtual ~Frontend() {}
 
     /** @brief process an inbound message stored at fpath that we have accepted. */
-    void ProcessNewMessage(const std::string & fpath) = 0;
+    virtual void ProcessNewMessage(const std::string & fpath) = 0;
 
     /** @brief return true if we take posts in a newsgroup */
-    bool AcceptsNewsgroup(const std::string & newsgroup) = 0;
+    virtual bool AcceptsNewsgroup(const std::string & newsgroup) = 0;
     
     /** @brief return true if we will accept a message given its message-id */
-    bool AcceptsMessage(const std::string & msgid) = 0;
-
+    virtual bool AcceptsMessage(const std::string & msgid) = 0;
     
   };
 }
