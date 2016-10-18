@@ -22,7 +22,7 @@ CXXFLAGS := -std=c++14 -Wall -Wextra $(INC_FLAGS) -g
 all: $(EXE) $(TOOL)
 
 $(EXE): $(OBJECTS)	
-	$(CXX) -o $(EXE) $(LD_FLAGS) $(OBJECTS) $(CXXFLAGS) nntpchan.cpp
+	$(CXX) -o $(EXE) $(LD_FLAGS) $(OBJECTS) $(CXXFLAGS) nntpd.cpp
 
 $(TOOL): $(OBJECTS)
 	$(CXX) -o $(TOOL) $(LD_FLAGS) $(OBJECTS) $(CXXFLAGS) tool.cpp

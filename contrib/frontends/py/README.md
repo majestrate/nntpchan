@@ -2,6 +2,8 @@
 
 ## usage ##
 
+### srndv2 unstable ###
+
 add to nntpchan.json hooks section:
 
     {
@@ -9,3 +11,12 @@ add to nntpchan.json hooks section:
       "exec": "/path/to/frontend.py"
     }
 
+### nntpd ###
+
+add this to nntpchan.ini
+
+
+    ...
+    [frontend]
+    type=exec
+    exec=/path/to/frontend.py
