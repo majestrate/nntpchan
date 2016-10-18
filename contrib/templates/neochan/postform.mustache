@@ -8,9 +8,9 @@
  - files ( bool, do we allow attachments ? )
  - csrf ( csrf token )
  }}
- <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post" id="neochan_postform" >
+ <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post">
  {{{csrf}}}
- <input type="hidden" name="reference" value="{{reference}}" id="postform_reference" />
+ <input type="hidden" name="reference" value="{{reference}}" id="postform_reference"/>
  <div id="postform-outer">
    <div id="postform-inner">
      <table class="postform">
@@ -32,7 +32,7 @@
            </th>
            <td>
              <input type="text" name="subject" value="" id="postform_subject" />
-             <button value="{{button}}" class="button" id="postform_submit" onclick="neochan_submit_post()" />
+             <input type="submit" value="{{button}}" class="button" id="postform_submit" />
            </td>
          </tr>
          <tr>
@@ -77,6 +77,14 @@
              <input type="text" name="captcha" autocomplete="off" id="captcha_solution" />
            </td>
          </tr>
+         <!-- <tr>
+           <th>
+             {{#i18n.Translations}}{{cuckoo_pow}}{{/i18n.Translations}}
+           </th>
+           <td>
+             <input type="text" name="pow" autocomplete="off" id="miner_result" /><input id="start_miner" class="button" type="button" value="{{#i18n.Translations}}{{start_mining}}{{/i18n.Translations}}"/>
+           </td>
+         </tr> -->
        </tbody>
      </table>
    </div>

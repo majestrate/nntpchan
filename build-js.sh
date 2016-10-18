@@ -85,7 +85,7 @@ done
 
 if [ "$neochan" == "yes" ] ; then
     set +e
-    for exe in lessc tsc ; do
+    for exe in lessc coffee ; do
         which $exe &> /dev/null
         if [ "$?" != "0" ] ; then
             echo "$exe not installed";
@@ -98,10 +98,10 @@ if [ "$neochan" == "yes" ] ; then
     echo
     
     initfile "$neochan_js_outfile"
-
-    echo "compile typescript"
-    tsc ./contrib/js/neochan/*.ts
-    
+    for f in ./contrib/js/neochan/*.coffee ; do
+        echo "compile $f"
+        coffee -cs < "$f" > "$f.js"
+    done
     for f in ./contrib/js/neochan/*.js ; do
         mini "$f" "$neochan_js_outfile"
     done
