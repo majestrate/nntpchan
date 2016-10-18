@@ -1,0 +1,71 @@
+{{!
+ board.mustache, displays the contents of page N of the board
+
+ template parameters:
+ - board ( the model of the current page )
+ - page ( the page number of the current page )
+ 
+ board has the properties:
+  - Prefix ( absolute path like //site.tld/ or /path/ )
+  - Board ( the name of the board )
+  - Navbar ( a function that renders the navbar, should not be escaped )
+  - Threads ( a list of Thread Models with the last few replies )
+}}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1" />
+    <link rel="stylesheet" href="{{board.Prefix}}static/site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{board.Prefix}}static/user.css" />
+    <script type="text/javascript" src="{{board.Prefix}}static/nntpchan.js"></script>
+    <title>{{board.Board}}</title>
+  </head>
+  <body>
+    <!-- begin navbar -->
+    {{{board.Navbar}}}
+    <!-- end navbar -->
+    <center>
+      <div id="nntpchan_banner">
+      </div>
+    </center>
+    <div class="board_header">{{board.Board}}</div>
+    <div class="board_header_catalog"><a href="{{board.Prefix}}catalog-{{board.Name}}.html"> {{#i18n.Translations}}{{catalog_label}}{{/i18n.Translations}} </a></div>
+    <!-- postform -->
+    <div id="postform_container">
+      {{{form}}}
+    </div>
+    <hr />
+    <div id="threads_container">
+      {{#board.Threads}}
+        <div class="thread" id="thread_{{OP.PostHash}}">
+          <div class="thread_header">
+          </div>
+          {{{OP.Truncate.RenderPost}}}
+          {{#Truncate.Replies}}
+            {{{Truncate.RenderPost}}}
+          {{/Truncate.Replies}}
+          <hr />
+        </div>
+      {{/board.Threads}}
+    </div>
+    <div class="pagelist">{{# board.PageList }}[<a href="{{LinkURL}}"> {{Text}} </a>]  {{/ board.PageList }}
+    <span class="navbar-sep">
+     |
+    </span>
+    <a href="{{board.Prefix}}catalog-{{board.Name}}.html"> {{#i18n.Translations}}{{catalog_label}}{{/i18n.Translations}} </a>
+    </div>
+    <script type="text/javascript">
+      var prefix = "{{board.Prefix}}";
+      var e = document.getElementById("nntpchan_banner");
+      nntpchan_inject_banners(e, prefix);
+      init(prefix);
+      ready();
+    </script>
+    <hr/>
+    <footer>
+    <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
+    <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+{{!
+ navbar.mustache -- element on the top of each nod-mod page
+
+ TODO: make this not suck, have a board list, have board page list
+ 
+ template parameters:
+ - name ( the name of whatever resource we are on, board/thread )
+ - frontend ( the name of the frontend we are on )
+ - links ( a list of Link Models to display )
+ - prefix ( site prefix )
+ }}
+ <div class="navbar">
+   <span class="navbar-name">
+     <span class="board_title">{{name}}</span>
+     {{#i18n.Translations}}{{navbar_on}}{{/i18n.Translations}}
+     <span class="frontend_title">{{frontend}}</span>
+   </span>
+   <span class="navbar-sep">
+     |
+   </span>
+   <span class="navbar-links">
+     <span class="navbar-links-title">
+       Pages:
+     </span>
+     {{# links }}
+       <span class="navbar-link"><a href="{{LinkURL}}">{{Text}}</a></span>
+     {{/ links }}
+   </span>
+   <span class="navbar-sep">
+     |
+   </span>
+   <span class="navbar-links"> 
+     <span class="navbar-link"><a href="{{prefix}}">{{#i18n.Translations}}{{front_page_title}}{{/i18n.Translations}}</a></span>
+   </span>
+   <span class="navbar-sep">
+     |
+   </span>
+   <span class="navbar-links"> 
+     <span class="navbar-link"><a href="{{prefix}}ukko.html">{{#i18n.Translations}}{{overboard_title}}{{/i18n.Translations}}</a></span>
+   </span>
+   <span class="navbar-sep">
+     |
+   </span>
+   <span class="navbar-right navbar-links">
+     <span class="navbar-link" onclick="neochan_navbar_options_clicked(this)">[options]</span>
+   </span>
+ </div>
+ <hr />

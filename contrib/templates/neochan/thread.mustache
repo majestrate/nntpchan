@@ -1,0 +1,60 @@
+{{!
+ thread.mustache -- renders to a thread-*.html page, shows the entire thread
+ template parameters:
+ - board ( the Board Model of the board this thread was posted in )
+ - thread ( the Thread Model of the current thread being rendered )
+ 
+ Thread Model attributes:
+ - OP , the Post Model of the original poster
+ - Replies , a list of all the replies or empty if none
+ - Board , the name of the Board this thread is on
+ - BoardURL , the url that points to the board index page
+}}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1" />
+    <link rel="stylesheet" href="{{thread.Prefix}}static/site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{thread.Prefix}}static/user.css" />
+    <script src="{{thread.Prefix}}static/nntpchan.js" type="text/javascript"></script>
+    <title> {{thread.OP.Subject}} </title>
+  </head>
+  <body>
+    <!-- begin navbar -->
+    {{{thread.Navbar}}}
+    <!-- end navbar -->
+    <center>
+      <div id="nntpchan_banner">
+      </div>
+    </center>
+    <div class="board_header">{{thread.Board}}</div>
+    <!-- postform -->
+    <div id="postform_container">
+      {{{form}}}
+    </div>
+    <hr />
+    <div class="thread" id="thread_{{thread.OP.PostHash}}">
+      <div class="thread_header">
+      </div>
+      {{{thread.OP.RenderPost}}}
+      {{# thread.Replies}}
+        {{{RenderPost}}}
+      {{/ thread.Replies}}
+    </div>
+    <hr/>
+    <div class="navLinks">[<a href="{{thread.BoardURL}}" accesskey="a">{{#i18n.Translations}}{{return}}{{/i18n.Translations}}</a>] [<a href="{{thread.Prefix}}catalog-{{thread.Board}}.html" accesskey="r">{{#i18n.Translations}}{{catalog_label}}{{/i18n.Translations}}</a>] [<a href="#thread_{{thread.OP.PostHash}}">{{#i18n.Translations}}{{to_top_label}}{{/i18n.Translations}}</a>] [<a href="#navlinks" accesskey="r" onclick="location.reload();">{{#i18n.Translations}}{{update}}{{/i18n.Translations}}</a>]</div>
+      <script type="text/javascript">
+          var prefix = "{{thread.Prefix}}";
+          var e = document.getElementById("nntpchan_banner");
+          nntpchan_inject_banners(e, prefix);
+          init(prefix);
+          ready();
+      </script>
+    <hr/>
+    <footer>
+    <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
+    <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
+    </footer>
+    </body>
+</html>

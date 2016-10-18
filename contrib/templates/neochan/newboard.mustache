@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>{{#i18n.Translations}}{{new_board_title}}{{/i18n.Translations}}</title>
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <link rel="stylesheet" href="{{prefix}}static/user.css" />
+    <script type="text/javascript" src="{{prefix}}static/newboard.js">
+    </script>
+  </head>
+  <body>
+    <p>{{#i18n.Translations}}{{first_post_label}}{{/i18n.Translations}}</p>
+    <hr />
+    <form action="{{prefix}}post/" enctype="multipart/form-data" name="post" method="post" id="postform" >
+    <div id="postform-outer">
+      <div id="postform-inner">
+        <table class="postform">
+          <tbody>
+            <tr>
+              <th>
+                {{#i18n.Translations}}{{board_name_title}}{{/i18n.Translations}}
+              </th>
+              <td>
+                <input type="text" name="name" value="" id="boardname" />
+                <button onclick="createBoard()">Create Board</button>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                {{#i18n.Translations}}{{comment}}{{/i18n.Translations}}
+              </th>
+              <td>
+             <textarea id="postform_message" name="message" cols=40 rows=5></textarea>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                {{#i18n.Translations}}{{captcha}}{{/i18n.Translations}}
+              </th>
+              <td>
+                <img id="captcha_img" src="{{prefix}}captcha/img" alt="captcha" />
+              </td>
+            </tr>
+            <tr>
+              <th>
+                {{#i18n.Translations}}{{solution}}{{/i18n.Translations}}
+              </th>
+              <td>
+                <input type="text" name="captcha" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </form>
+  </body>
+</html>

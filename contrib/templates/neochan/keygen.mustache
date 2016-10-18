@@ -1,0 +1,32 @@
+{{!
+ keygen.mustache -- page containing a newly generated tripcode
+ template parameters:
+ - prefix ( the site prefix )
+ - public ( the public key in hex )
+ - secret ( the secret key in hex )
+ - tripcode ( html version of the public key )
+ }}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"></meta>
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+  <title>{{#i18n.Translations}}{{new_tripcode_title}}{{/i18n.Translations}}</title>
+  </head>
+  <body>
+    <div id="wrapper" class="fade-in">
+      <pre>{{#i18n.Translations}}{{new_tripcode_label}}{{/i18n.Translations}}:
+        <div id="secret_key">{{#i18n.Translations}}{{secret_key}}{{/i18n.Translations}}: {{secret}}</div>
+        <div id="public_key">{{#i18n.Translations}}{{public_key}}{{/i18n.Translations}}: {{public}}</div>
+        <div>{{#i18n.Translations}}{{tripcode}}{{/i18n.Translations}}: <span class="tripcode" id="capcode_key">{{{tripcode}}}</span></div>
+      </pre>
+    </div>
+    <script type="text/javascript">
+      neochan_init(function() {
+        ready();
+      });
+    </script>
+  </body>
+</html>

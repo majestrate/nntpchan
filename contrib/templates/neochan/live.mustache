@@ -1,0 +1,32 @@
+{{!
+  live.mustache -- live ui 
+  template parameters:
+  - prefix ( site prefix )
+}}
+<!doctype html>
+<html>
+  <head>
+    <title> {{#i18n.Translations}}{{overboard_title}}{{/i18n.Translations}} </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
+    <link rel="stylesheet" href="{{prefix}}static/livechan.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <style type="text/css" id="convo_filter">
+    </style>
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+  </head>
+  <body>
+    <noscript>you need js for livechan mode</noscript>
+    <script type="text/javascript" >
+    var e = document.createElement("div");
+    e.setAttribute("id", "chat");
+    e.setAttribute("style", "position:fixed;left:0;right:0;top:0;bottom:0;width:100%;height:100%;");
+    document.body.appendChild(e);
+    var board = "";
+    if (location.hash != "" ) {
+      board = location.hash.substr(1);
+    }
+    new Chat(e, board, { prefix : "{{prefix}}" });
+    </script>
+  </body>
+</html>

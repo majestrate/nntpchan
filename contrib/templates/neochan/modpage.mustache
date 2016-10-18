@@ -1,0 +1,109 @@
+{{!
+ modpage.mustache -- the moderator panel when logged in
+ template parameters:
+ - prefix ( the site's prefix )
+
+ }}
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <!-- yes it uses js -->
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+    <script type="text/javascript" src="{{prefix}}static/mod.js"></script>
+    <title> {{#i18n.Translations}}{{modpage_title}}{{/i18n.Translations}} </title>
+  </head>
+  <body onload="main()">
+    <div>
+      <div> {{#i18n.Translations}}{{post_actions_label}}{{/i18n.Translations}} </div>
+      <hr />
+      <div>
+        <label for="nntpchan_mod_target">{{#i18n.Translations}}{{target_label}}{{/i18n.Translations}}</label>
+        <input id="nntpchan_mod_target" type="text" />
+      </div>
+      <div>
+        <button onclick="nntpchan_ban()">{{#i18n.Translations}}{{ban_url_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_delete()">{{#i18n.Translations}}{{delete_url_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_unban()">{{#i18n.Translations}}{{unban_ip_prompt}}{{/i18n.Translations}}</button>
+      </div>
+    </div>
+    <hr />
+    <div>
+      <div> {{#i18n.Translations}}{{key_actions_label}}{{/i18n.Translations}} </div>
+      <div>
+        <label for="nntpchan_board_target">{{#i18n.Translations}}{{pubkey_label}}{{/i18n.Translations}}:</label>
+        <input type="text" id="nntpchan_key_target" />
+      </div>
+      <div>
+        <button onclick="nntpchan_key_add()">{{#i18n.Translations}}{{add_key_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_key_del()">{{#i18n.Translations}}{{remove_key_prompt}}{{/i18n.Translations}}</button>
+      </div>
+    </div>
+    <hr />
+    <div>
+      <div> {{#i18n.Translations}}{{nntp_login_label}}{{/i18n.Translations}} </div>
+      <div>
+        <label for="nntpchan_nntp_username">{{#i18n.Translations}}{{username}}{{/i18n.Translations}}:</label>
+        <input id="nntpchan_nntp_username" />
+      </div>
+      <div>
+        <label for="nntpchan_nntp_passwd">{{#i18n.Translations}}{{password}}{{/i18n.Translations}}:</label>
+        <input type="password" id="nntpchan_nntp_passwd" />
+      </div>
+      <div>
+        <button onclick="nntpchan_admin_nntp('nntp.login.add')">{{#i18n.Translations}}{{add_user_prompt}}{{/i18n.Translations}}</button>
+      </div>
+      <div>  
+        <button onclick="nntpchan_admin_nntp('nntp.login.del')">{{#i18n.Translations}}{{remove_user_prompt}}{{/i18n.Translations}}</button>        
+      </div>
+    </div>
+    <hr />
+    <div>
+      <div> {{#i18n.Translations}}{{board_actions_label}}{{/i18n.Translations}} </div>
+      <div>
+        <label for="nntpchan_board_target">{{#i18n.Translations}}{{board_name_title}}{{/i18n.Translations}}:</label>
+        <input id="nntpchan_board_target" />
+      </div>
+      <div>
+        <button onclick="nntpchan_admin_board('frontend.add')">{{#i18n.Translations}}{{add_board_prompt}}{{/i18n.Translations}}</button>
+      </div>
+      <div>
+        <button onclick="nntpchan_admin_board('frontend.regen')">{{#i18n.Translations}}{{regenerate_prompt}}{{/i18n.Translations}}</button>
+      </div>
+      <div>    
+        <button onclick="nntpchan_admin_board('frontend.ban')">{{#i18n.Translations}}{{ban_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_admin_board('frontend.unban')">{{#i18n.Translations}}{{unban_prompt}}{{/i18n.Translations}}</button>
+      </div>
+      <div>
+        <button onclick="nntpchan_admin_board('frontend.nuke')">{{#i18n.Translations}}{{nuke_prompt}}{{/i18n.Translations}}</button>
+      </div>
+    </div>
+    <hr />
+    <div>
+      <div>
+        {{#i18n.Translations}}{{light_actions_label}}{{/i18n.Translations}}
+      </div>
+      <div>
+        <button onclick="nntpchan_admin('template.reload')">{{#i18n.Translations}}{{reload_templates_prompt}}{{/i18n.Translations}}</button>
+      </div>
+    </div>
+    <hr />
+    <div>
+      <label>{{#i18n.Translations}}{{heavy_actions_label}}{{/i18n.Translations}}</label>
+      <div>
+        <button onclick="nntpchan_admin('frontend.regen')">{{#i18n.Translations}}{{regenerate_markup_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_admin('thumbnail.regen')">{{#i18n.Translations}}{{regenerate_thumbs_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_admin('feed.sync')">{{#i18n.Translations}}{{feed_sync_prompt}}{{/i18n.Translations}}</button>
+        <button onclick="nntpchan_admin('store.expire')">{{#i18n.Translations}}{{expire_old_prompt}}{{/i18n.Translations}}</button>    
+      </div>
+    </div>
+    <div>
+      <a href="{{prefix}}mod/feeds">nntp feed management</a>
+    </div>
+    <div id="nntpchan_mod_result"></div>
+    <noscript>
+      <b>{{#i18n.Translations}}{{nojs_info}}{{/i18n.Translations}}</b>
+    </noscript>
+  </body>
+</html>
