@@ -30,7 +30,6 @@ certs
 
 
 rebuild.sh
-vendor
 .gx
 
 # generated js
