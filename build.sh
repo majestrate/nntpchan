@@ -6,9 +6,9 @@ if [ "" == "$root" ] ; then
 fi
 cd "$root"
 
-tags="-tags disable_redis"
+tags=""
 
-help_text="usage: $0 [--disable-neochan]"
+help_text="usage: $0 [--disable-neochan] [--enable-redis]"
 
 # check for help flags first
 for arg in "$@" ; do
@@ -26,9 +26,13 @@ rebuildjs="yes"
 _next=""
 unstable="no"
 neochan="no"
+buildredis="no"
 # check for build flags
 for arg in "$@" ; do
     case $arg in
+        "--enable-redis")
+            buildredis="yes"
+            ;;
         "--enable-neochan")
             neochan="yes"
             ;;
@@ -53,6 +57,10 @@ for arg in "$@" ; do
             fi
     esac
 done
+
+if [ "$buildredis" == "yes" ] ; then
+    tags="$tags -tags disable_redis"
+fi
 
 if [ "$rev" == "" ] ; then
     echo "revision not specified"
@@ -98,7 +106,7 @@ else
         cp "$GOPATH/bin/nntpchan" "$root"
         echo "built unstable, if you don't know what to do, run without --unstable"
     else
-        go get -u -v github.com/majestrate/srndv2
+        go get -u -v $tags github.com/majestrate/srndv2
         cp "$GOPATH/bin/srndv2" "$root"
         echo -e "Built\n"
         echo "Now configure NNTPChan with ./srndv2 setup"
