@@ -25,12 +25,12 @@ ipfs="no"
 rebuildjs="yes"
 _next=""
 unstable="no"
-neochan="yes"
+neochan="no"
 # check for build flags
 for arg in "$@" ; do
     case $arg in
-        "--disable-neochan")
-            neochan="no"
+        "--enable-neochan")
+            neochan="yes"
             ;;
         "--unstable")
             unstable="yes"

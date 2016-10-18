@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-neochan="yes"
-if [ "$1" == "--disable-neochan" ] ; then
-    neochan="no"
+neochan="no"
+if [ "$1" == "--enable-neochan" ] ; then
+    neochan="yes"
 fi
 
 root=$(readlink -e "$(dirname "$0")")
