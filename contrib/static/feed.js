@@ -18,7 +18,10 @@ function createConnectionElement(j) {
   mode.setAttribute("class", "mode");
   mode.appendChild(document.createTextNode("mode: "+j.mode));
   e.appendChild(mode);
-
+  var backlog = document.createElement("div");
+  backlog.setAttribute("class", "backlog");
+  backlog.appendChild(document.createTextNode("backlog: "+j.backlog));
+  e.appendChild(backlog);
   var pending = document.createElement("div");
   pending.setAttribute("class", "pending");
   // pending articles
