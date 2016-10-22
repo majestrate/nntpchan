@@ -3,51 +3,25 @@
 Install the initial dependencies:
 
 ```
-apt-get -y --no-install-recommends install imagemagick libsodium-dev sox git ca-certificates libav-tools build-essential tcl8.5
+apt-get -y --no-install-recommends install imagemagick libsodium-dev sox git ca-certificates \
+libav-tools build-essential tcl8.5 postgresql postgresql-contrib
 ```
 
-##Install redis
-
-It is not recommended that you install redis from the default package repos because it is probably not up to date.
-
-Download the redis stable tarball and make:
+##Configure postgresql
 
 ```
-cd /opt
-wget http://download.redis.io/redis-stable.tar.gz
-tar -xzvf redis-stable.tar.gz
-cd redis-stable
-make && make test && make install
+su - postgres -c "createuser --pwprompt --encrypted srnd"
+su - postgres -c "createdb srnd"
 ```
-
-The `utils/` directory has a bash script that automates redis configuration. The default settings work just fine, so run the script:
-
-```
-cd utils && ./install_server.sh
-```
-
-Make redis start during system boot up:
-
-```
-update-rc.d redis_6379 defaults
-```
-
-It is *strongly recommended* that you use a password for redis. I am generating an sha512sum for a random string:
-
-```
-"good old fashioned memes will end global warming and restore our freedom of speech" | sha512sum
-```
-
-Edit `/etc/redis/6379.conf` and append the file with `requirepass YOUR_LONG_PASSWORD_HERE`.
-
+Don't forget the password you make for the srnd user, you will need it for configuration.
 ## Install golang
 
 Download the golang tarball, extract it to `/usr/local`, and add it to the global profile:
 
 ```
 cd /opt
-wget https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz
-tar -C /usr/local/ -xvzf go1.6.2.linux-amd64.tar.gz
+wget https://storage.googleapis.com/golang/go1.7.3.linux-amd64.tar.gz
+tar -C /usr/local/ -xvzf go1.7.3.linux-amd64.tar.gz
 echo 'export PATH="$PATH:/usr/local/go/bin"' >> /etc/profile
 ```
 
