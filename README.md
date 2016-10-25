@@ -1,6 +1,8 @@
 NNTPChan
 ========
 
+[info page](https://nntpchan.info)
+
 **NNTPChan** (previously known as overchan) is a decentralized imageboard that uses the [NNTP protocol](https://en.wikipedia.org/wiki/Network_News_Transfer_Protocol) (network-news transfer protocol) to synchronize content between many different servers. It utilizes cryptographically signed posts to perform optional/opt-in decentralized moderation.
 
 This repository contains resources used by the core daemon which is located on [GitHub](https://github.com/majestrate/srndv2) (for now) along with general documentation, [here](doc/).
@@ -12,20 +14,6 @@ This repository contains resources used by the core daemon which is located on [
 ##Bugs and issues
 
 *PLEASE* report any bugs you find while building, setting-up or using NNTPChan on the [GitHub issue tracker](https://github.com/majestrate/nntpchan/issues) or on the [GitGud issue tracker](https://gitgud.io/uguu/nntpchan/issues) so that the probelms can be resolved or discussed.
-
-##Active NNTPChan nodes
-
-Below is a list of known NNTPChan nodes:
-
-1. [2hu-ch.org](https://2hu-ch.org)
-2. [nsfl.tk](https://nsfl.tk)
-3. [gchan](https://gchan.xyz/)
-
-Tor node list:
-
-1. [textpunk](http://ucavviu7wl6azuw7.onion/)
-2. [chan](http://ev7fnjzjdbtu3miq.onion/)
-3. [oniichan](http://sfw.oniichanylo2tsi4.onion/)
 
 ##Clients
 
