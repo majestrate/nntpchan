@@ -22,6 +22,18 @@
     {{{navbar}}}
     <!-- end navbar -->
     <div class="board_header"> {{#i18n.Translations}}{{overboard_title}}{{/i18n.Translations}} </div>
+      <div id="ukko_paginator">
+        {{#prev}}
+          <span id="ukko_prev">
+            <a href="{{prefix}}ukko-{{prev}}.html">previous</a>
+          </span>
+        {{/prev}}
+        {{#next}}
+          <span id="ukko_next">
+            <a href="{{prefix}}ukko-{{next}}.html">next</a>
+          </span>
+        {{/next}}
+      </div>
       <div id="ukko_threads">
         <pre><a href="{{prefix}}livechan/">livechan</a></pre>
       {{#threads}}
