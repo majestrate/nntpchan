@@ -349,7 +349,7 @@ input, textarea {
 
 div {
     flex: 1;
-    flex-direction: rows;
+    flex-direction: row;
 }
 
 .post {
@@ -358,6 +358,9 @@ div {
     border: 1px solid #B7C5D9;
     border-left: none;
     border-top: none;
+    padding: 2px;
+    margin: 2px;
+
 /*
     display: table;
     padding: 2px;
