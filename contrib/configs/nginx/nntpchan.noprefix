@@ -1,0 +1,38 @@
+
+#
+# config for no prefix
+#
+server {
+    listen 80;
+    location / {
+        client_max_body_size 50M;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://[::1]:18000/;
+    }
+
+    set $webroot /path/to/nntpchan/repo/webroot;
+
+    location /thm/ {
+        autoindex off;
+        root $webroot;
+    }
+
+    location /img/ {
+        autoindex off;
+        root $webroot;
+    }
+
+    # location for known filetypes
+    location ~ /img/(.+)\.(jpeg|jpg|png|webp|gif|mp3|ogg|opus|mp4|flac|txt|zip|rar|mp2|flv)$ {
+        alias $webroot/img/$1.$2;
+    }
+
+    # location for unknown file types
+    location ~ /img/(.+)\.(+)$ {
+        types {}
+        default_type text/plain;
+        alias $webroot/img/$1.$2;
+    }
+
+}
