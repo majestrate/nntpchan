@@ -593,7 +593,7 @@ textarea#reply-text {
     75% { transform:rotate(1deg); }
 }
 
-.truncated_post {
+.truncated_post , .ukko_thread_header {
     max-width: 75%;
     padding-left: 25%;
 }
