@@ -328,12 +328,12 @@ input, textarea {
     display: inline-block;
     margin-right: 5px;
 }
-
+/*
 .op , .reply {
     float: left;
     clear: both;
 }
-
+*/
 .op {
     margin-top: 5px;
     margin-bottom: 1px;
