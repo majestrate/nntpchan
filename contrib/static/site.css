@@ -299,7 +299,6 @@ a, a:visited, .navbar-link > label {
 }
 
 .ukko_thread_header {
-    float: left;
     clear: both;
     display: inline-block;
     padding-left: 4px;
@@ -309,6 +308,10 @@ a, a:visited, .navbar-link > label {
 
 input, textarea {
 
+}
+
+.thread_header {
+    
 }
 
 .ukko_thread_header {
@@ -344,12 +347,18 @@ input, textarea {
     float: right;
 }
 
+div {
+    flex: 1;
+    flex-direction: rows;
+}
+
 .post {
     background-color: #D6DAF0;
     
     border: 1px solid #B7C5D9;
     border-left: none;
     border-top: none;
+/*
     display: table;
     padding: 2px;
     margin: 2px;
@@ -357,7 +366,7 @@ input, textarea {
     display: inline-block;
     float: left;
     clear: both;
-    
+*/  
     min-width: 500px;
 }
 
@@ -443,8 +452,10 @@ input, textarea {
 
 .reply  {
     padding: 3px 5px 3px 5px;
+/*
     float: left;
     clear: both;
+*/
 }
 
 .post_body {
