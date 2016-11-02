@@ -591,5 +591,13 @@ textarea#reply-text {
     25% { transform:rotate(-1deg); }
     50% { transform:rotate(0deg); }
     75% { transform:rotate(1deg); }
+}
 
+.truncated_post {
+    max-width: 75%;
+    padding-left: 25%;
+}
+
+.thread_exclude_info {
+    padding-left: 25%;
 }
