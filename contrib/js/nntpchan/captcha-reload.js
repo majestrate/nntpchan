@@ -14,7 +14,10 @@ function reload(el) {
 }
 
 onready(function(){
-	document.getElementById("captcha_img").onclick = function() {
-		reload(document.getElementById("captcha_img"));
-	};
+  var e = document.getElementById("captcha_img");
+  if (e) {
+    e.onclick = function() {
+		  reload(document.getElementById("captcha_img"));
+	  };
+  }
 });
