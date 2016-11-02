@@ -298,12 +298,6 @@ a, a:visited, .navbar-link > label {
      padding-bottom: 50px;
 }
 
-.ukko_thread_header {
-
-    padding-left: 4px;
-    padding-right: 4px;
-}
-
 
 input, textarea {
 
@@ -313,6 +307,7 @@ input, textarea {
     
 }
 
+/*
 .ukko_thread_header {
     border-color: #C0C3D4;
     border-top-left-radius: 0px;
@@ -321,7 +316,7 @@ input, textarea {
     border-bottom-left-radius: 0px;
     border-style: dashed;
 }
-
+*/
 .frontend {
     margin-top: 0px;
     display: inline-block;

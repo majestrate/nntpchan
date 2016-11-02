@@ -35,7 +35,7 @@ function inject_search(elem) {
             status.innerHTML = "no results";
           } else {
             status.innerHTML = "found "+result.length+" results";
-            for (var idx = 0 ; idx < result.length; idx ++ ) {
+            for (var idx = 0 ; idx < result.length; idx++ ) {
               inject_search_result(result[idx]);
             }
           }
