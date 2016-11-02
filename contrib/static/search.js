@@ -17,7 +17,7 @@ function inject_search(elem) {
     output.appendChild(document.createElement("hr"));
   }
 
-  botton.onclick = function(ev) {
+  button.onclick = function(ev) {
     var text = input.value;
     input.value = "";
     while(output.children.length > 0) 
