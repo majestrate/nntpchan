@@ -42,6 +42,8 @@ function inject_search(elem) {
         }
       }
     }
+    ajax.open("GET", "/api/find?text="+text);
+    ajax.send();
   }
 
   inner.appendChild(input);
