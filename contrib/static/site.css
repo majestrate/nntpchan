@@ -299,8 +299,7 @@ a, a:visited, .navbar-link > label {
 }
 
 .ukko_thread_header {
-    clear: both;
-    display: inline-block;
+
     padding-left: 4px;
     padding-right: 4px;
 }
@@ -593,7 +592,8 @@ textarea#reply-text {
     75% { transform:rotate(1deg); }
 }
 
-.truncated_post , .ukko_thread_header {
+.truncated_post {
     max-width: 75%;
     padding-left: 25%;
 }
+
