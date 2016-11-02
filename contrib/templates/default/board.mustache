@@ -49,17 +49,17 @@
                 {{ImageCount}} images
               </span>
             </div>
-          </div>
           {{#Truncate}}
+          </div>
+          <div class="thread_exclude_info">
+            <span class="thread_exclude_posts">{{MissingPostCount}} posts excluded</span>
+            <span class="thread_exclude_images">{{MissingImageCount}} images excluded</span>
+          </div>
             {{#Replies}}
               <div class="truncated_post">
                 {{{RenderTruncatedPost}}}
               </div>
             {{/Replies}}
-            <div class="thread_exclude_info">
-              <span class="thread_exclude_posts">{{MissingPostCount}} posts excluded</span>
-              <span class="thread_exclude_images">{{MissingImageCount}} images excluded</span>
-            </div>
           {{/Truncate}}
           <hr />
         </div>
