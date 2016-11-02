@@ -40,7 +40,6 @@
       {{#board.Threads}}
         <div class="thread" id="thread_{{OP.PostHash}}">
           <div class="truncated_post">
-            {{{OP.RenderTruncatedPost}}}
             <div class="thread_header">
               <span class="thread_posts">
                 {{PostCount}} posts
@@ -49,20 +48,20 @@
                 {{ImageCount}} images
               </span>
             </div>
-          {{#Truncate}}
-        
+            {{{OP.RenderTruncatedPost}}}
+            {{#Truncate}}
             <div class="thread_exclude_info">
               <span class="thread_exclude_posts">{{MissingPostCount}} posts excluded</span>
               <span class="thread_exclude_images">{{MissingImageCount}} images excluded</span>
             </div>
           </div>
 
-            {{#Replies}}
-              <div class="truncated_post">
-                {{{RenderTruncatedPost}}}
-              </div>
-            {{/Replies}}
-          {{/Truncate}}
+          {{#Replies}}
+            <div class="truncated_post">
+              {{{RenderTruncatedPost}}}
+            </div>
+          {{/Replies}}
+           {{/Truncate}}
           <hr />
         </div>
       {{/board.Threads}}
