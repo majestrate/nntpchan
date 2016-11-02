@@ -39,6 +39,7 @@
       {{#threads}}
         <div class="thread" id="thread_{{OP.PostHash}}">
 	        <div class="truncated_post">
+            <div>{{#i18n.Translations}}{{posted_on_label}}{{/i18n.Translations}} <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></div>  
             <div class="thread_header">
               <span class="thread_posts">
                 {{PostCount}} posts
@@ -52,8 +53,6 @@
               <span class="thread_exclude_posts">{{MissingPostCount}} posts excluded</span>
               <span class="thread_exclude_images">{{MissingImageCount}} images excluded</span>
             </div>
-            <div>{{#i18n.Translations}}{{posted_on_label}}{{/i18n.Translations}} <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></div>
-              
             {{{OP.RenderTruncatedPost}}}
           </div>
           {{#Replies}}
