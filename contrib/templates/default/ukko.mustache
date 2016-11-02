@@ -65,6 +65,18 @@
         <hr />  
       {{/threads}}
       </div>
+      <div id="ukko_paginator">
+        {{#prev}}
+          <span id="ukko_prev">
+            <a href="{{prefix}}ukko-{{no}}.html">previous</a>
+          </span>
+        {{/prev}}
+        {{#next}}
+          <span id="ukko_next">
+            <a href="{{prefix}}ukko-{{no}}.html">next</a>
+          </span>
+        {{/next}}
+      </div>
       <script type="text/javascript" >
           var prefix = "{{prefix}}";
           var e = document.getElementById("nntpchan_banner");
