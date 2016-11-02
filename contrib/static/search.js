@@ -15,8 +15,8 @@ function inject_search(elem) {
   function inject_search_result(r) {
     var e = document.createElement("div");
     e.innerHTML = r.PostMarkup;
-    output.appendChild(e);
     output.appendChild(document.createElement("hr"));
+    output.appendChild(e);
   }
 
   button.onclick = function(ev) {
@@ -34,7 +34,7 @@ function inject_search(elem) {
           if (result.length == 0) {
             status.innerHTML = "no results";
           } else {
-            status.innerHTML = "found "+result.length+"results";
+            status.innerHTML = "found "+result.length+" results";
             for (var idx = 0 ; idx < result.length; idx ++ ) {
               inject_search_result(result[idx]);
             }
