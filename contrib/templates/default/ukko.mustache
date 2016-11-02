@@ -41,8 +41,7 @@
 	        <div class="ukko_thread_header">
           <p>{{#i18n.Translations}}{{posted_on_label}}{{/i18n.Translations}} <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></p>
           </div>
-          <div class="truncated_post">
-            {{{OP.RenderTruncatedPost}}}
+          <div class="truncated_post op">
             <div class="thread_header">
               <span class="thread_posts">
                 {{PostCount}} posts
@@ -51,10 +50,11 @@
                 {{ImageCount}} images
               </span>
             </div>
+            {{{OP.RenderTruncatedPost}}}
           </div>
           {{#Truncate}}
             {{#Replies}}
-              <div class="truncated_post">
+              <div class="truncated_post reply">
                 {{{RenderTruncatedPost}}}
               </div>
             {{/Replies}}
