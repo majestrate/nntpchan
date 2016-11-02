@@ -10,6 +10,8 @@ function inject_search(elem) {
   var status = document.createElement("span");
   var output = document.createElement("div");
 
+  button.innerHTML = "search";
+  
   function inject_search_result(r) {
     var e = document.createElement("div");
     e.innerHTML = r.PostMarkup;
