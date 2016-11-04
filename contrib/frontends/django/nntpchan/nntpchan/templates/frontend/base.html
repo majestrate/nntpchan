@@ -1,0 +1,29 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>{% block title %} nntpchan {% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <script type="text/javascript" href="{% static 'nntpchan.js' %}">
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="navbar">
+        <span id="navbar_title">{% block navbar_title %}nntpchan{% endblock %}</span> |
+        <span id="navbar_links">{% block navbar_links %}{% endblock %}</span> |
+        <span id="navbar_left">{% block navbar_left %}<a href="#" onclick="nntpchan_toggle_settings()">settings</a>{% endblock %}</span>
+      </div>
+      <div id="content">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+    <footer>
+      <p> legal notice goes here </p>
+    </footer>
+    <script>
+      ready();
+    </script>
+  </body>
+</html>
