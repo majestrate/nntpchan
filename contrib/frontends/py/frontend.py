@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+#
+# entry point for c++ frontend
+#
+
 from nntpchan import message
 from nntpchan import db
 import logging

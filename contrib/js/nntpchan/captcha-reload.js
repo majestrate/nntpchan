@@ -17,7 +17,7 @@ onready(function(){
   var e = document.getElementById("captcha_img");
   if (e) {
     e.onclick = function() {
-		  reload(document.getElementById("captcha_img"));
+		  reload(e);
 	  };
   }
 });
