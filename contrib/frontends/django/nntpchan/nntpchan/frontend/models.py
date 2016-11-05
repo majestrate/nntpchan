@@ -18,7 +18,7 @@ class Attachment(models.Model):
 
     def path(self):
         ext = self.filename.split('.')[-1]
-        return '{}{}'.format(self.filehash, ext)
+        return '{}.{}'.format(self.filehash, ext)
     
     def thumb(self):
         return '/media/thumb-{}.jpg'.format(self.path())
@@ -66,7 +66,7 @@ class Post(models.Model):
         rpls = self.get_all_replies()
         l = len(rpls)
         if l > truncate:
-            rpls = rpls[(l+1)-truncate:l-1]
+            rpls = rpls[l-truncate:]
         return rpls
         
     def is_op(self):

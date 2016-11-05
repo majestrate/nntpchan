@@ -13,7 +13,7 @@
     
     <div class="attachments">
       {% for a in op.attachments.all %}
-      <img class="thumb" src="{{a.thumb}}"></img>
+      <a href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
       {% endfor %}
     </div>
     <pre class="postbody">{{op.message|memepost}}</pre>
@@ -28,7 +28,7 @@
     </div>
     <div class="attachments">
       {% for a in reply.attachments.all %}
-      <img class="thumb" src="{{a.thumb}}"></img>
+      <a href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
       {% endfor %}
     </div>
     {% autoescape off %}
