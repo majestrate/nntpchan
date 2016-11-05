@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .frontend.models import Post, Attachment, Newsgroup
 from .frontend import util
 
+from . import thumbnail
+
 import email
 import traceback
 from datetime import datetime
@@ -74,10 +76,15 @@ def webhook(request):
                 mtype = part.get_content_type()
                 ext = mimetypes.guess_extension(mtype) or ''
                 fh = util.hashfile(bytes(payload))
-                fname = os.path.join(settings.MEDIA_ROOT, fh+ext)
+                fn = fh + ext
+                fname = os.path.join(settings.MEDIA_ROOT, fn)
                 if not os.path.exists(fname):
                     with open(fname, 'wb') as f:
                         f.write(payload)
+                tname = os.path.join(settings.MEDIA_ROOT, 'thumb-{}.jpg'.format(fn))
+                placeholder = os.path.join(settings.MEDIA_ROOT, 'placeholder.jpg')
+                if not os.path.exists(tname):
+                    thumbnail.generate(fname, tname, placeholder)
                         
                 att = Attachment(filehash=fh)
                 att.mimetype = mtype

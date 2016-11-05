@@ -1,0 +1,102 @@
+
+body, html {
+    background-color: #eef2ff;
+}
+
+div {
+    font-size: 12px;
+    font-family: sans;
+}
+
+#navbar {
+    z-index: 20;
+    position: fixed;
+    top: 0px;
+    margin-top: 0px;
+    left: 0px;
+    right: 0px;
+    box-shadow: 1px 10px 20px rgba(0, 0, 0, 0.15);
+    min-height: 20px;
+    background-color: #d6daf0;
+    border-bottom: 1px solid;
+    color: #34345c
+}
+
+#navbar_left {
+    float: right;
+}
+
+
+img.thumb {
+    max-width: 300px;
+    max-height: 200px;
+}
+
+.thread {
+    padding: 5%;
+}
+
+.post {
+    margin: 2%;
+    background-color: #d6daf0;
+    min-width: 500px;
+    width: 75%;
+    border: 2px solid #B7C5D9;
+    border-radius: 2px 4px 4px 4px;
+    border-left: none;
+    border-top: none;
+    padding: 1%;
+}
+
+.post > .header {
+    padding-bottom: 1%;
+}
+
+.postbody {
+    font-family: serif;
+    font-size: 10pt;
+    white-space: pre-wrap;
+}
+
+.name {
+    font-weight: bold;
+    color: #028241;
+}
+
+.subject {
+    font-weight: bold;
+    color: #480188;
+}
+
+.cite {
+    float: right;
+}
+
+.redtext {
+    color: red;
+    font-weight: bold;
+}
+
+.greentext {
+    color: green;
+    font-style: italic;
+}
+
+@keyframes psych {
+    0%   {background-color: red; color: blue; }
+    10%  {background-color: yellow; color: red; }
+    20%  {background-color: blue; color: green; }
+    30% {background-color: green; color: yellow; }
+    40%   {background-color: red; color: blue; }
+    50%  {background-color: yellow; color: green; }
+    60%  {background-color: blue; color: yellow; }
+    70% {background-color: green; color: blue; }
+    80%   {background-color: red; color: green; }
+    90%  {background-color: yellow; color: red; }
+    95%  {background-color: blue; color: yellow; }
+    100% {background-color: green; color: white; }
+}
+
+.psy {
+    animation: psych 2s linear infinite;
+}

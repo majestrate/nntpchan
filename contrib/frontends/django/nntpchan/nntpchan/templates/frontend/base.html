@@ -12,7 +12,7 @@
       <div id="navbar">
         <span id="navbar_title">{% block navbar_title %}nntpchan{% endblock %}</span> |
         <span id="navbar_links">{% block navbar_links %}{% endblock %}</span> |
-        <span id="navbar_left">{% block navbar_left %}<a href="#" onclick="nntpchan_toggle_settings()">settings</a>{% endblock %}</span>
+        <span id="navbar_left">{% block navbar_left %}| <a href="#" onclick="nntpchan_toggle_settings()">settings</a>{% endblock %}</span>
       </div>
       <div id="content">
         {% block content %}

@@ -1,0 +1,41 @@
+{% extends "frontend/base.html" %}
+{% load chanup %}
+{% block title %} {{op.subject}} {% endblock %}
+{% block content %}
+<div id="{{op.posthash}}" class="thread">
+  <div class="post op">
+    <div class="header">
+      <span class="name">{{op.name}}</span> <span class="subject">{{op.subject}}</span>
+      <span class="msgid">{{op.msgid}}</span>
+      <span class="posted">{{op.posted}}</span>
+      <span class="cite"><a href="{{op.get_absolute_url}}">&gt;&gt;{{op.shorthash}}</a></span>
+    </div>
+    
+    <div class="attachments">
+      {% for a in op.attachments.all %}
+      <img class="thumb" src="{{a.thumb}}"></img>
+      {% endfor %}
+    </div>
+    <pre class="postbody">{{op.message|memepost}}</pre>
+  </div>
+  {% for reply in op.get_all_replies %}
+  <div class="post reply">
+    <div class="header">
+      <span class="name">{{reply.name}}</span> <span class="subject">{{reply.subject}}</span>
+      <span class="msgid">{{reply.msgid}}</span>
+      <span class="posted">{{reply.posted}}</span>
+      <span class="cite"><a href="{{reply.get_absolute_url}}">&gt;&gt;{{reply.shorthash}}</a></span>
+    </div>
+    <div class="attachments">
+      {% for a in reply.attachments.all %}
+      <img class="thumb" src="{{a.thumb}}"></img>
+      {% endfor %}
+    </div>
+    {% autoescape off %}
+    <pre class="postbody">{{reply.message|memepost}}</pre>
+    {% endautoescape %}
+  </div>
+  {% endfor %}
+</div>
+<hr />
+{% endblock %}

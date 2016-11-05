@@ -2,6 +2,8 @@ from django.db import models
 
 from . import util
 
+import mimetypes
+
 class Attachment(models.Model):
     """
     a file attachment assiciated with a post
@@ -13,6 +15,16 @@ class Attachment(models.Model):
     width = models.IntegerField(default=0)
     height = models.IntegerField(default=0)
     banned = models.BooleanField(default=False)
+
+    def path(self):
+        ext = self.filename.split('.')[-1]
+        return '{}{}'.format(self.filehash, ext)
+    
+    def thumb(self):
+        return '/media/thumb-{}.jpg'.format(self.path())
+
+    def source(self):
+        return '/media/{}'.format(self.path())
     
     
 class Newsgroup(models.Model):
@@ -46,16 +58,28 @@ class Post(models.Model):
     posted = models.DateTimeField()
     placeholder = models.BooleanField(default=False)
     
+    def get_all_replies(self):
+        if self.is_op():
+            return Post.objects.filter(reference=self.msgid).order_by('posted')
+    
+    def get_board_replies(self, truncate=5):
+        rpls = self.get_all_replies()
+        l = len(rpls)
+        if l > truncate:
+            rpls = rpls[(l+1)-truncate:l-1]
+        return rpls
+        
     def is_op(self):
-        return self.reference is None
+        return self.reference == ''
+
+    def shorthash(self):
+        return self.posthash[:10]
     
     def get_absolute_url(self):
-        from django.urls import reverse
-        
         if self.is_op():
             op = util.hashid(self.msgid)
-            return reverse('nntpchan.frontend.views.threadpage', args[op])
+            return '/t/{}/'.format(op)
         else:
-            op = util.hashid(self.reference.msgid)
+            op = util.hashid(self.reference)
             frag = util.hashid(self.msgid)
-            return reverse('nntpchan.frontend.views.threadpage', args=[op]) + '#{}'.format(frag)
+            return '/t/{}/#{}'.format(op, frag)
