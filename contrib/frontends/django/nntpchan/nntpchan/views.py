@@ -82,7 +82,7 @@ def webhook(request):
                     with open(fname, 'wb') as f:
                         f.write(payload)
                 tname = os.path.join(settings.MEDIA_ROOT, 'thumb-{}.jpg'.format(fn))
-                placeholder = os.path.join(settings.MEDIA_ROOT, 'placeholder.jpg')
+                placeholder = os.path.join(settings.ASSETS_ROOT, 'placeholder.jpg')
                 if not os.path.exists(tname):
                     thumbnail.generate(fname, tname, placeholder)
                         
