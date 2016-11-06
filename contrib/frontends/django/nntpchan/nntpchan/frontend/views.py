@@ -18,21 +18,8 @@ class BoardView(generic.View):
             raise Http404("no such board")
         else:
             begin = page * group.posts_per_page
-            end = begin + group.posts_per_page
-            print(begin, end)
-            posts = self.model.objects.filter(newsgroup=group).order_by('-posted')[begin:end]
-            roots = []
-            for post in posts:
-                if post.is_op():
-                    if post not in roots:
-                        roots.append(post)
-                else:
-                    op = self.model.objects.filter(msgid=post.reference)
-                    if len(op) > 0:
-                        op = op[0]
-                        if op not in roots:
-                            roots.append(op)
-                        
+            end = begin + group.posts_per_page - 1
+            roots = self.model.objects.filter(newsgroup=group, reference='').order_by('-last_bumped')[begin:end]      
             ctx = {'threads': roots,'page': page, 'name': newsgroup}
             if page < group.max_pages:
                 ctx['nextpage'] = '/{}/{}/'.format(group.name, page + 1)
