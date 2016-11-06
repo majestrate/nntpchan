@@ -69,14 +69,14 @@ def webhook(request):
             if ctype.startswith("text/plain"):
                 m += '{} '.format(part.get_payload(decode=True).decode('utf-8'))
             else:
-                print(part.get_content_type())
                 payload = part.get_payload(decode=True)
                 if payload is None:
                     continue
+                filename = part.get_filename()
                 mtype = part.get_content_type()
-                ext = mimetypes.guess_extension(mtype) or ''
+                ext = filename.split('.')[-1]
                 fh = util.hashfile(bytes(payload))
-                fn = fh + ext
+                fn = fh + '.' + ext
                 fname = os.path.join(settings.MEDIA_ROOT, fn)
                 if not os.path.exists(fname):
                     with open(fname, 'wb') as f:
@@ -88,7 +88,7 @@ def webhook(request):
                         
                 att = Attachment(filehash=fh)
                 att.mimetype = mtype
-                att.filename = part.get_filename()
+                att.filename = filename
                 att.save()
                 atts.append(att)
         post.message = m
