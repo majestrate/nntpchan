@@ -14,7 +14,7 @@
   </div>
   <div class="attachments">
     {% for a in post.attachments.all %}
-    <a href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
+    <a target="_blank" href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
     {% endfor %}
   </div>
   <pre class="postbody">{{post.message | truncate | memepost }}</pre>

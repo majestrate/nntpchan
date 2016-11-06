@@ -24,7 +24,7 @@
     
     <div class="attachments">
       {% for a in op.attachments.all %}
-      <a href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
+      <a target="_blank" href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
       {% endfor %}
     </div>
     <pre class="postbody">{{op.message|truncate|memepost}}</pre>
@@ -38,7 +38,7 @@
     </div>
     <div class="attachments">
       {% for a in reply.attachments.all %}
-      <a href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
+      <a target="_blank" href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
       {% endfor %}
     </div>
     <pre class="postbody">{{reply.message|truncate|memepost}}</pre>
