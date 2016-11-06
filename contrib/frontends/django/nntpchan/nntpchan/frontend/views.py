@@ -57,7 +57,7 @@ class BoardView(generic.View, Postable):
         name = 'overchan.{}'.format(name)
         if not util.newsgroup_valid(name):
             return None, "invalid newsgroup: {}".format(name)
-        return util.createPost(name, '', request.POST, request.FILES)
+        return util.createPost(name, None, request.POST, request.FILES)
 
     
     def get(self, request, name):

@@ -49,9 +49,10 @@ def createPost(newsgroup, ref, form, files):
     msg["Subject"] = form["subject"] or "None"
     msg['Date'] = email.utils.format_datetime(datetime.now())
     msg['Message-ID'] = email.utils.make_msgid(randstr(13), settings.FRONTEND_NAME)
-    if not msgid_valid(ref):
+    if ref and not msgid_valid(ref):
         return None, "invalid reference: {}".format(ref)
-    msg["References"] = ref
+    if ref:
+        msg["References"] = ref
     msg["Newsgroups"] = newsgroup
     msg["From"] = '{} <anon@django.nntpchan.tld>'.format(form['name'] or 'Anonymous')
     if 'attachment' in files:
