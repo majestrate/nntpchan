@@ -1,7 +1,7 @@
 from django.conf import settings
 import subprocess
 import os
-img_ext = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'ico', 'pdf', 'ps']
+img_ext = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'ico']
 vid_ext = ['mp4', 'webm', 'm4v', 'ogv', 'avi', 'txt']
 
 def generate(fname, tname, placeholder):
