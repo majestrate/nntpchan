@@ -1,5 +1,6 @@
-from django.db import models
 
+from django.conf import settings
+from django.db import models
 from django.core.urlresolvers import reverse
 
 from . import util
@@ -24,10 +25,10 @@ class Attachment(models.Model):
         return '{}.{}'.format(self.filehash, ext)
     
     def thumb(self):
-        return '/media/thumb-{}.jpg'.format(self.path())
+        return '{}thumb-{}.jpg'.format(settings.MEDIA_URL, self.path())
 
     def source(self):
-        return '/media/{}'.format(self.path())
+        return '{}{}'.format(settings.MEDIA_URL, self.path())
     
     
 class Newsgroup(models.Model):
