@@ -1,8 +1,15 @@
+from django.conf import settings
+
 import base64
 import hashlib
 import re
 
+from datetime import datetime
 import time
+import string
+import random
+import nntplib
+import email.message
 
 def hashid(msgid):
     h = hashlib.sha1()
@@ -24,3 +31,50 @@ def msgid_valid(msgid):
 def time_int(dtime):
     return time.mktime(dtime.timetuple())
     
+def randstr(l, base=string.digits):
+    r = ''
+    while l > 0:
+        r += random.choice(base)
+        l -= 1
+    return r
+
+
+def createPost(newsgroup, ref, form, files):
+    """
+    create a post and post it to a news server
+    """
+
+    msg = email.message.Message()
+    msg['Content-Type'] = 'multipart/mixed'
+    msg["Subject"] = form["subject"] or "None"
+    msg['Date'] = email.utils.format_datetime(datetime.now())
+    msg['Message-ID'] = email.utils.make_msgid(randstr(13), settings.FRONTEND_NAME)
+    if not msgid_valid(ref):
+        return None, "invalid reference: {}".format(ref)
+    msg["References"] = ref
+    msg["Newsgroups"] = newsgroup
+    msg["From"] = '{} <anon@django.nntpchan.tld>'.format(form['name'] or 'Anonymous')
+    if 'attachment' in files:
+        f = files['attachment']
+        part =  email.message.Message()
+        part['Content-Type'] = f.content_type
+        part['Content-Disposition'] = 'form-data; filename="{}"; name="attachment"'.format(f.name)
+        part['Content-Transfer-Encoding'] = 'base64'
+        part.set_payload(base64.b64encode(f.read()))
+        msg.attach(part)
+    text = email.message.Message()
+    m = '{}'.format(form['message'] or ' ')
+    text.set_payload(m)
+    text['Content-Type'] = 'text/plain'
+    msg.attach(text)
+
+    server = settings.NNTP_SERVER
+    server['readermode'] = True
+    msgid = None
+    try:
+        with nntplib.NNTP(**server) as nntp:
+            nntp.login(**settings.NNTP_LOGIN)
+            msgid = nntp.post(msg.as_bytes())
+    except Exception as e:
+        return None, e
+    return msgid, None

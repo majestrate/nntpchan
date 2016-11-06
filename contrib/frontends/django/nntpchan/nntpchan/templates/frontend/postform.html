@@ -1,6 +1,6 @@
 {% load captcha %}
 <div class="postform">
-  <form id="postform" method="post" action="">
+  <form id="postform" method="post" action="" enctype="multipart/form-data">
     {% csrf_token %}
     <table class="postform">
        <tbody>
@@ -33,15 +33,7 @@
              <th>
            </th>
            <td>
-             <input class="postform_attachment" id="postform_attachments" type="file" name="attachment_uploaded" multiple />
-           </td>
-         </tr>
-         <tr>
-          <th>
-
-           </th>
-           <td>
-             <input type="checkbox" name="dubs" />
+             <input class="postform_attachment" id="postform_attachments" type="file" name="attachment" multiple />
            </td>
          </tr>
          <tr>

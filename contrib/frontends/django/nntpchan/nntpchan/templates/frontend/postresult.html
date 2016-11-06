@@ -1,9 +1,12 @@
 {% extends "frontend/base.html" %}
+{% block head %}
+<meta http-equiv="refresh" content="2; {{refresh_url}}"></meta>
+{% endblock %}
 
 {% block content %}
 
 {% if error %}
-<pre class="error"> failed to post {{error}} </pre>
+<pre class="error"> failed to post: {{error}} </pre>
 {% else %}
 {% if msgid %}
 <pre class="posted"> posted as {{msgid}} </pre>

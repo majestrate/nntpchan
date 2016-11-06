@@ -5,6 +5,7 @@
 <span class="navbar_link"><a href="{{op.newsgroup.get_absolute_url}}">back to {{op.newsgroup.name}}</a></span>
 {% endblock %}
 {% block content %}
+{% include "frontend/postform.html" %}
 <div id="{{op.posthash}}" class="thread">
   <div class="post op">
     <div class="header">

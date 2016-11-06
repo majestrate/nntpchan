@@ -121,7 +121,8 @@ form {
 }
 
 
-.frontpage.posts {
+.posts {
+    flex-direction: column;
     width: 50%;
     padding-top: 10%;
     padding-left: 25%;

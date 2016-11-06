@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
-
+import glob
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -133,3 +133,23 @@ MEDIA_URL = '/media/'
 # for thumbnailing 
 CONVERT_PATH = '/usr/bin/convert'
 FFMPEG_PATH = '/usr/bin/ffmpeg'
+
+
+# for captcha
+CAPTCHA_FONT_DIR = os.path.join(ASSETS_ROOT, 'fonts')
+CAPTCHA_FONTS = glob.glob(os.path.join(CAPTCHA_FONT_DIR, '*.ttf'))
+
+# for nntp server
+# see nntplib module for more info
+NNTP_SERVER = {
+    'host': '127.0.0.1',
+    'port': 1129
+}
+
+# nntp server login credentials
+NNTP_LOGIN = {
+    'user': None,
+    'password': None
+}
+
+FRONTEND_NAME = 'ebin.tld'

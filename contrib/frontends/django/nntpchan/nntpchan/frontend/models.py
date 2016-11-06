@@ -61,6 +61,12 @@ class Post(models.Model):
     posted = models.IntegerField(default=0)
     placeholder = models.BooleanField(default=False)
     last_bumped = models.IntegerField(default=0)
+
+    def has_attachment(self, filehash):
+        for att in self.attachments.all():
+            if att.filehash == filehash:
+                return True
+        return False
     
     def get_all_replies(self):
         if self.is_op():

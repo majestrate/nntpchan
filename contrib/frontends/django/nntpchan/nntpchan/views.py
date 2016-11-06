@@ -105,6 +105,8 @@ def webhook(request):
         post.save()
 
         for att in atts:
+            if post.has_attachment(att.filehash):
+                continue
             post.attachments.add(att)
 
             
