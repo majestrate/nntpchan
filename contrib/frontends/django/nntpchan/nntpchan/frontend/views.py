@@ -1,6 +1,8 @@
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+
 
 from .models import Post, Newsgroup
 
@@ -9,9 +11,17 @@ class BoardView(generic.View):
     context_object_name = 'threads'
     model = Post
 
-    def get(self, request, name, page):
+    def get(self, request, name):
+        page = 0
+        if 'p' in request.GET:
+            page = request.GET['p']
         newsgroup = 'overchan.{}'.format(name)
-        page = int(page or "0")
+        try:
+            page = int(page or "0")
+        except:
+            page = 0
+        if page < 0:
+            page = 0
         try:
             group = Newsgroup.objects.get(name=newsgroup)
         except Newsgroup.DoesNotExist:
@@ -20,11 +30,11 @@ class BoardView(generic.View):
             begin = page * group.posts_per_page
             end = begin + group.posts_per_page - 1
             roots = self.model.objects.filter(newsgroup=group, reference='').order_by('-last_bumped')[begin:end]      
-            ctx = {'threads': roots,'page': page, 'name': newsgroup}
+            ctx = {'threads': roots, 'page': page, 'name': newsgroup}
             if page < group.max_pages:
-                ctx['nextpage'] = '/{}/{}/'.format(group.name, page + 1)
+                ctx['nextpage'] = reverse('board', args=[name]) + '?p={}'.format(page + 1)
             if page > 0:
-                ctx['prevpage'] = '/{}/{}/'.format(group.name, page - 1)
+                ctx['prevpage'] = reverse('board', args=[name]) + '?p={}'.format(page - 1)
             return render(request, self.template_name, ctx)
         
         
