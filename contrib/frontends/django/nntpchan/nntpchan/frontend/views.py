@@ -19,8 +19,26 @@ class BoardView(generic.View):
         else:
             begin = page * group.posts_per_page
             end = begin + group.posts_per_page
-            posts = self.model.objects.filter(newsgroup=group, reference='').order_by('-posted')[begin:end]
-            return render(request, self.template_name, {'threads': posts, 'page': page, 'name': newsgroup})
+            print(begin, end)
+            posts = self.model.objects.filter(newsgroup=group).order_by('-posted')[begin:end]
+            roots = []
+            for post in posts:
+                if post.is_op():
+                    if post not in roots:
+                        roots.append(post)
+                else:
+                    op = self.model.objects.filter(msgid=post.reference)
+                    if len(op) > 0:
+                        op = op[0]
+                        if op not in roots:
+                            roots.append(op)
+                        
+            ctx = {'threads': roots,'page': page, 'name': newsgroup}
+            if page < group.max_pages:
+                ctx['nextpage'] = '/{}/{}/'.format(group.name, page + 1)
+            if page > 0:
+                ctx['prevpage'] = '/{}/{}/'.format(group.name, page - 1)
+            return render(request, self.template_name, ctx)
         
         
 class ThreadView(generic.ListView):
@@ -33,12 +51,16 @@ class ThreadView(generic.ListView):
     
 
 
-class FrontPageView(generic.ListView):
+class FrontPageView(generic.View):
     template_name = 'frontend/frontpage.html'
     model = Post
 
-    def get_queryset(self):
-        return self.model.objects.order_by('posted')[:10]
+    def get(self, request, truncate=5):
+        if truncate <= 0:
+            truncate = 5
+        posts = self.model.objects.order_by('-posted')[:truncate]
+        ctx = {'posts' : posts}
+        return render(request, self.template_name, ctx)
     
     
 def modlog(request, page):

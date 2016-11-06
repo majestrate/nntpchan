@@ -2,6 +2,15 @@
 {% extends "frontend/base.html" %}
 {% load chanup %}
 {% block title %} {{name}} page {{page}} {% endblock %}
+{% block navbar_links %}
+  {% if prevpage %}
+<span class="navbar_link"><a href="{{prevpage}}">previous page</a></span> 
+  {% endif %}
+{% if nextpage %}
+  {% if prevpage %}|{% endif %}
+<span class="navbar_link"><a href="{{nextpage}}">next page</a></span>
+  {% endif %}
+{% endblock %}
 {% block content %}
 <hr />
 {% for op in threads %}
@@ -9,8 +18,7 @@
   <div class="post op">
     <div class="header">
       <span class="name">{{op.name}}</span> <span class="subject">{{op.subject}}</span>
-      <span class="msgid">{{op.msgid}}</span>
-      <span class="posted">{{op.posted}}</span>
+      <span class="posted">{{op.postdate|date}}</span>
       <span class="cite"><a href="{{op.get_absolute_url}}">&gt;&gt;{{op.shorthash}}</a></span>
     </div>
     
@@ -19,14 +27,13 @@
       <a href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
       {% endfor %}
     </div>
-    <pre class="postbody">{{op.message|memepost}}</pre>
+    <pre class="postbody">{{op.message|truncate|memepost}}</pre>
   </div>
   {% for reply in op.get_board_replies %}
-  <div class="post reply">
+  <div class="post reply" id="{{reply.posthash}}">
     <div class="header">
       <span class="name">{{reply.name}}</span> <span class="subject">{{reply.subject}}</span>
-      <span class="msgid">{{reply.msgid}}</span>
-      <span class="posted">{{reply.posted}}</span>
+      <span class="posted">{{reply.postdate|date}}</span>
       <span class="cite"><a href="{{reply.get_absolute_url}}">&gt;&gt;{{reply.shorthash}}</a></span>
     </div>
     <div class="attachments">
@@ -34,10 +41,18 @@
       <a href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
       {% endfor %}
     </div>
-    <pre class="postbody">{{reply.message|memepost}}</pre>
+    <pre class="postbody">{{reply.message|truncate|memepost}}</pre>
   </div>
   {% endfor %}
 </div>
-<hr />
 {% endfor %}
+
+<div class="paginator">
+  {% if prevpage %}
+  <span class="paginator_item"><a href="{{prevpage}}">prev</a></span>
+  {% endif %}
+  {% if nextpage %}
+  <span class="paginator_item"><a href="{{nextpage}}">next</a></span>
+  {% endif %}
+</div>
 {% endblock %}

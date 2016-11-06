@@ -1,1 +1,24 @@
 {% extends "frontend/base.html" %}
+{% load chanup %}
+{% block content %}
+<div class="frontpage posts">
+{% for post in posts %}
+<div class="post">
+  <div class="header">
+    <span class="boardname"><a href="{{post.newsgroup.get_absolute_url}}">{{post.newsgroup.name}}</a></span>
+  </div>
+  <div class="header">
+    <span class="name">{{post.name}}</span> <span class="subject">{{post.subject}}</span>
+    <span class="posted">{{post.postdate|date}}</span>
+    <span class="cite"><a href="{{post.get_absolute_url}}">&gt;&gt;{{post.shorthash}}</a></span>
+  </div>
+  <div class="attachments">
+    {% for a in post.attachments.all %}
+    <a href="{{a.source}}"><img class="thumb" src="{{a.thumb}}"></img></a>
+    {% endfor %}
+  </div>
+  <pre class="postbody">{{post.message | truncate | memepost }}</pre>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

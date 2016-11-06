@@ -111,6 +111,8 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
+DATE_FORMAT = "r"
+
 USE_I18N = True
 
 USE_L10N = True

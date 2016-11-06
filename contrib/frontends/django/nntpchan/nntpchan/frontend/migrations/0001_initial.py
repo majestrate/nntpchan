@@ -13,10 +13,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Attachment',
             fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('filehash', models.CharField(editable=False, max_length=256)),
                 ('filename', models.CharField(max_length=256)),
-                ('mimetype', models.CharField(max_length=256, default='text/plain')),
+                ('mimetype', models.CharField(default='text/plain', max_length=256)),
                 ('width', models.IntegerField(default=0)),
                 ('height', models.IntegerField(default=0)),
                 ('banned', models.BooleanField(default=False)),
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Newsgroup',
             fields=[
-                ('name', models.CharField(editable=False, max_length=256, serialize=False, primary_key=True)),
+                ('name', models.CharField(primary_key=True, serialize=False, editable=False, max_length=256)),
                 ('posts_per_page', models.IntegerField(default=10)),
                 ('max_pages', models.IntegerField(default=10)),
                 ('banned', models.BooleanField(default=False)),
@@ -34,16 +34,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Post',
             fields=[
-                ('msgid', models.CharField(editable=False, max_length=256, serialize=False, primary_key=True)),
+                ('msgid', models.CharField(primary_key=True, serialize=False, editable=False, max_length=256)),
                 ('posthash', models.CharField(editable=False, max_length=256)),
-                ('reference', models.CharField(max_length=256, default='')),
+                ('reference', models.CharField(default='', max_length=256)),
                 ('message', models.TextField(default='')),
-                ('subject', models.CharField(max_length=256, default='None')),
-                ('name', models.CharField(max_length=256, default='Anonymous')),
-                ('pubkey', models.CharField(max_length=64, default='')),
-                ('signature', models.CharField(max_length=64, default='')),
-                ('posted', models.DateTimeField()),
+                ('subject', models.CharField(default='None', max_length=256)),
+                ('name', models.CharField(default='Anonymous', max_length=256)),
+                ('pubkey', models.CharField(default='', max_length=64)),
+                ('signature', models.CharField(default='', max_length=64)),
+                ('posted', models.IntegerField(default=0)),
                 ('placeholder', models.BooleanField(default=False)),
+                ('last_bumped', models.IntegerField(default=0)),
                 ('attachments', models.ManyToManyField(to='frontend.Attachment')),
                 ('newsgroup', models.ForeignKey(to='frontend.Newsgroup')),
             ],

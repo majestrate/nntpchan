@@ -31,9 +31,10 @@ def webhook(request):
         if not util.newsgroup_valid(newsgroup):
             raise Exception("invalid newsgroup name")
         
-    
+        bump = True
         group, created = Newsgroup.objects.get_or_create(name=newsgroup)
-
+        if created:
+            group.save()
         if group.banned:
             raise Exception("newsgroup is banned")
 
@@ -42,23 +43,32 @@ def webhook(request):
             if h in msg:
                 msgid = msg[h]
                 break
-
+        # check for sage
+        if 'X-Sage' in msg and msg['X-Sage'] == '1':
+            bump = False
+            
         if msgid is None:
             raise Exception("no message id specified")
         elif not util.msgid_valid(msgid):
             raise Exception("invalid message id format: {}".format(msgid))
+
+        opmsgid = msgid
         
         h = util.hashid(msgid)
         atts = list()
         ref = msg['References'] or ''
-        posted = email.utils.parsedate_to_datetime(msg['Date'])
+        posted = util.time_int(email.utils.parsedate_to_datetime(msg['Date']))
 
+        if len(ref) > 0:
+            opmsgid = ref
+        
         f = msg['From'] or 'anon <anon@anon>'
         name = email.utils.parseaddr(f)[0]
         post, created = Post.objects.get_or_create(defaults={
             'posthash': h,
             'reference': ref,
             'posted': posted,
+            'last_bumped': 0,
             'name': name,
             'subject': msg["Subject"] or '',
             'newsgroup': group}, msgid=msgid)
@@ -96,6 +106,20 @@ def webhook(request):
 
         for att in atts:
             post.attachments.add(att)
+
+            
+        op, _ = Post.objects.get_or_create(defaults={
+            'posthash': util.hashid(opmsgid),
+            'reference': '',
+            'posted': 0,
+            'last_bumped': 0,
+            'name': 'OP',
+            'subject': 'OP Not Found',
+            'newsgroup': group}, msgid=opmsgid)
+        if bump:
+            op.bump()
+        op.save()
+            
     except Exception as ex:
         traceback.print_exc()
         return JsonResponse({ 'error': '{}'.format(ex) })

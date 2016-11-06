@@ -10,7 +10,8 @@
   <body>
     <div id="wrapper">
       <div id="navbar">
-        <span id="navbar_title">{% block navbar_title %}nntpchan{% endblock %}</span> |
+        <span id="navbar_frontpage"><a href="/">nntpchan</a></span> |
+        <span id="navbar_title">{% block navbar_title %}{% endblock %}</span> |
         <span id="navbar_links">{% block navbar_links %}{% endblock %}</span> |
         <span id="navbar_left">{% block navbar_left %}| <a href="#" onclick="nntpchan_toggle_settings()">settings</a>{% endblock %}</span>
       </div>
@@ -19,9 +20,13 @@
         {% endblock %}
       </div>
     </div>
-    <footer>
-      <p> legal notice goes here </p>
-    </footer>
+    <hr/>
+    <center>
+      <footer>
+        <p>All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
+        <p>To make a DMCA request or report illegal content, please contact the administration</p>
+      </footer>
+    </center>
     <script>
       ready();
     </script>

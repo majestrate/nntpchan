@@ -2,6 +2,8 @@ import base64
 import hashlib
 import re
 
+import time
+
 def hashid(msgid):
     h = hashlib.sha1()
     m = '{}'.format(msgid).encode('ascii')
@@ -19,8 +21,6 @@ def hashfile(data):
 def msgid_valid(msgid):
     return re.match("<[a-zA-Z0-9\$\._\-\|]+@[a-zA-Z0-9\$\._\-\|]+>$", msgid) is not None
 
-def save_part(part):
-    """
-    save a mime part to disk
-    """
+def time_int(dtime):
+    return time.mktime(dtime.timetuple())
     

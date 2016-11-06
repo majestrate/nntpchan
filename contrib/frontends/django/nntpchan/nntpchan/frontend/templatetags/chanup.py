@@ -142,4 +142,11 @@ def memepost(text, autoescape=True):
                 return doFilter(funcs[1:], t, filter)
         
     return mark_safe(doFilter(line_funcs, return_text, conditional_escape))
-        
+
+
+@register.filter(name='truncate')
+@stringfilter
+def truncate(text, truncate=500):
+    if len(text) > truncate:
+        return text[:truncate] + '...'
+    return text

@@ -1,6 +1,6 @@
 
 body, html {
-    background-color: #eef2ff;
+    background: #EEF2FF url('/static/bg.png') repeat-x 50% 0%;
 }
 
 div {
@@ -66,6 +66,27 @@ img.thumb {
 .subject {
     font-weight: bold;
     color: #480188;
+}
+
+.frontpage.posts {
+    width: 50%;
+    padding-top: 10%;
+    padding-left: 25%;
+}
+
+footer {
+    font-size: 8pt;
+    margin-top: 5%;
+    maring-bottom: 5%;
+    padding-left: 1%;
+    margin: 0px;
+    min-width: 0px;
+    bottom: 0px;
+}
+
+.paginator {
+    padding-top: 5%;
+    padding-bottom: 5%;
 }
 
 .cite {

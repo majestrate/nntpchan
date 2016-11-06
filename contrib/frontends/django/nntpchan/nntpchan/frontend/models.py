@@ -1,8 +1,11 @@
 from django.db import models
 
+from django.core.urlresolvers import reverse
+
 from . import util
 
 import mimetypes
+from datetime import datetime
 
 class Attachment(models.Model):
     """
@@ -35,14 +38,13 @@ class Newsgroup(models.Model):
     posts_per_page = models.IntegerField(default=10)
     max_pages = models.IntegerField(default=10)
     banned = models.BooleanField(default=False)
-    
+
     def get_absolute_url(self):
-        from django.urls import reverse
-        return reverse('nntpchan.frontend.views.boardpage', args=[self.name, '0'])
+        return reverse('board', args=[self.name[9:]])
     
 class Post(models.Model):
     """
-    a post made
+    a post made anywhere on the boards
     """
     
     msgid = models.CharField(max_length=256, primary_key=True, editable=False)
@@ -55,13 +57,14 @@ class Post(models.Model):
     signature = models.CharField(max_length=64, default='')
     newsgroup = models.ForeignKey(Newsgroup, on_delete=models.CASCADE)
     attachments = models.ManyToManyField(Attachment)
-    posted = models.DateTimeField()
+    posted = models.IntegerField(default=0)
     placeholder = models.BooleanField(default=False)
+    last_bumped = models.IntegerField(default=0)
     
     def get_all_replies(self):
         if self.is_op():
             return Post.objects.filter(reference=self.msgid).order_by('posted')
-    
+        
     def get_board_replies(self, truncate=5):
         rpls = self.get_all_replies()
         l = len(rpls)
@@ -70,16 +73,23 @@ class Post(models.Model):
         return rpls
         
     def is_op(self):
-        return self.reference == ''
+        return self.reference == '' or self.reference == self.msgid
 
     def shorthash(self):
         return self.posthash[:10]
+
+    def postdate(self):
+        return datetime.fromtimestamp(self.posted)
     
     def get_absolute_url(self):
         if self.is_op():
             op = util.hashid(self.msgid)
-            return '/t/{}/'.format(op)
+            return reverse('thread', args=[op])
         else:
             op = util.hashid(self.reference)
             frag = util.hashid(self.msgid)
-            return '/t/{}/#{}'.format(op, frag)
+            return reverse('thread', args=[op]) + '#{}'.format(frag)
+
+    def bump(self):
+        if self.is_op():
+            self.last_bumped = util.time_int(datetime.now())
