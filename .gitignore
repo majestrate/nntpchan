@@ -23,7 +23,6 @@ srndv2
 
 # private key
 *.key
-*.txt
 
 # certificates
 certs

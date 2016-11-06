@@ -4,16 +4,22 @@
   <head>
     <title>{% block title %} nntpchan {% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
-    <script type="text/javascript" href="{% static 'nntpchan.js' %}">
-    </script>
+    <script type="text/javascript" src="{% static 'hooks.js' %}"></script>
+    <script type="text/javascript" src="{% static 'postform.js' %}"></script>
+    <script type="text/javascript" src="{% static 'banners.js' %}"></script>
+    <script type="text/javascript" src="{% static 'settings.js' %}"></script>
   </head>
   <body>
     <div id="wrapper">
       <div id="navbar">
-        <span id="navbar_frontpage"><a href="/">nntpchan</a></span> |
-        <span id="navbar_title">{% block navbar_title %}{% endblock %}</span> |
-        <span id="navbar_links">{% block navbar_links %}{% endblock %}</span> |
-        <span id="navbar_left">{% block navbar_left %}| <a href="#" onclick="nntpchan_toggle_settings()">settings</a>{% endblock %}</span>
+        <div class="navbar left">
+          <div id="navbar_frontpage"><a href="/">nntpchan</a></div> |
+          <div id="navbar_title">{% block navbar_title %}{% endblock %}</div>
+          <div id="navbar_links">{% block navbar_links %}{% endblock %}</div>
+        </div>
+        <div class="navbar right">
+          <div>{% block navbar_left %}| <a href="#" onclick="nntpchan_toggle_settings_pane()">settings</a>{% endblock %}</div>
+        </div>
       </div>
       <div id="content">
         {% block content %}

@@ -4,6 +4,7 @@ body, html {
 }
 
 div {
+    display: flex;
     font-size: 12px;
     font-family: sans;
 }
@@ -22,30 +23,81 @@ div {
     color: #34345c
 }
 
-#navbar_left {
-    float: right;
+.navbar.left {
+    flex-basis: 100%;
 }
 
+#navbar_frontpage {
+    flex-basis: 5%;
+}
+
+.navbar.right {
+}
 
 img.thumb {
+    margin: 10px;
     max-width: 300px;
     max-height: 200px;
 }
 
 .thread {
-    padding: 5%;
+    flex-direction: column;
+    background-color: rgba(214, 218, 240, 0.25);
+    border-radius: 10px;
+    margin: 1%;
+    width: 90%;
+    align-items: flex-begin;
+}
+
+#wrapper , #content {
+    flex-direction: column;
 }
 
 .post {
-    margin: 2%;
+    margin: 1%;
     background-color: #d6daf0;
-    min-width: 500px;
-    width: 75%;
+    width: 90%;
     border: 2px solid #B7C5D9;
     border-radius: 2px 4px 4px 4px;
     border-left: none;
     border-top: none;
     padding: 1%;
+    flex-direction: column;
+}
+
+form {
+    padding: 5%;
+    width: 90%;
+}
+
+.postform {
+    flex-direction: column;
+    align-items: flex-start;
+    max-height: 25%;
+    width: 90%;
+}
+
+.pf-left {
+    flex-direction: column;
+    flex-basis: 50%;
+    width: 50%;
+}
+
+.postform > input {
+    align-items: flex-start;
+}
+
+.pf-item {
+    flex-basis: 100%;
+    flex-direction: row;
+}
+
+.pf-inner {
+    align-content: flex-start;
+    align-self: flex-end;
+    flex-direction: column;
+    width: 100%;
+    flex-basis: 100%;
 }
 
 .post > .header {
@@ -67,6 +119,7 @@ img.thumb {
     font-weight: bold;
     color: #480188;
 }
+
 
 .frontpage.posts {
     width: 50%;

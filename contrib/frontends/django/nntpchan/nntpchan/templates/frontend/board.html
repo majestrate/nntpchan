@@ -12,7 +12,7 @@
   {% endif %}
 {% endblock %}
 {% block content %}
-<hr />
+{% include "frontend/postform.html" %}
 {% for op in threads %}
 <div id="{{op.posthash}}" class="thread">
   <div class="post op">

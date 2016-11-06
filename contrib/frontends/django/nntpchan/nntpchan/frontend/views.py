@@ -6,7 +6,23 @@ from django.views import generic
 
 from .models import Post, Newsgroup
 
-class BoardView(generic.View):
+class Postable:
+    """
+    postable view
+    checks captcha etc
+    """
+
+    def post(self, request, **kwargs):
+        ctx = {
+            'error' : None
+        }
+
+        
+        
+        return render(request, 'frontend/postresult.html', ctx)
+
+        
+class BoardView(generic.View, Postable):
     template_name = 'frontend/board.html'
     context_object_name = 'threads'
     model = Post
@@ -37,8 +53,7 @@ class BoardView(generic.View):
                 ctx['prevpage'] = reverse('board', args=[name]) + '?p={}'.format(page - 1)
             return render(request, self.template_name, ctx)
         
-        
-class ThreadView(generic.ListView):
+class ThreadView(generic.ListView, Postable):
     template_name = 'frontend/thread.html'
     model = Post
     context_object_name = 'op'
@@ -46,8 +61,6 @@ class ThreadView(generic.ListView):
     def get_queryset(self):
         return get_object_or_404(self.model, posthash=self.kwargs['op'])
     
-
-
 class FrontPageView(generic.View):
     template_name = 'frontend/frontpage.html'
     model = Post

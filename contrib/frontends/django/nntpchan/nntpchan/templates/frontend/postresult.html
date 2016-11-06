@@ -1,0 +1,15 @@
+{% extends "frontend/base.html" %}
+
+{% block content %}
+
+{% if error %}
+<pre class="error"> failed to post {{error}} </pre>
+{% else %}
+{% if msgid %}
+<pre class="posted"> posted as {{msgid}} </pre>
+{% else %}
+<pre class="posted"> message was not posted </pre>
+{% endif %}
+{% endif %}
+
+{% endblock %}

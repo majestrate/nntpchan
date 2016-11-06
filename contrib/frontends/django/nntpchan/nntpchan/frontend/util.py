@@ -11,7 +11,7 @@ def hashid(msgid):
     return h.hexdigest()
 
 def newsgroup_valid(name):
-    return re.match('overchan\.[a-zA-Z0-9\.]+[a-zA-Z0-9]$', name) is not None
+    return re.match('overchan\.[a-zA-Z0-9\.]+[a-zA-Z0-9]$', name) is not None or name == 'ctl'
 
 def hashfile(data):
     h = hashlib.sha512()
