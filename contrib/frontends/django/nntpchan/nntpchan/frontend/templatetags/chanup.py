@@ -9,11 +9,12 @@ from nntpchan.frontend.models import Newsgroup, Post
 
 import re
 from urllib.parse import urlparse
+from html import unescape
 
 register = template.Library()
 
 re_postcite = re.compile('>> ?([0-9a-fA-F]+)')
-re_boardlink = re.compile('>>> ?([a-zA-Z0-9\.]+[a-zA-Z0-9])')
+re_boardlink = re.compile('>>> ?/([a-zA-Z0-9\.]+[a-zA-Z0-9])/')
 re_redtext = re.compile('== ?(.+) ?==')
 re_psytext = re.compile('@@ ?(.+) ?@@')
 
@@ -28,7 +29,7 @@ def greentext(text, esc):
             return_text += '<span class="greentext">%s </span>' % esc ( line ) + '\n'
             f = True
         else:
-            return_text += line + '\n'
+            return_text += esc(line) + '\n'
     return return_text, f
 
 def blocktext(text, esc, delim='', css='', tag='span'):
@@ -56,7 +57,7 @@ def postcite(text, esc):
     filtered = False
     for line in text.split('\n'):
         for word in line.split(' '):
-            match = re_postcite.match(word)
+            match = re_postcite.match(unescape(word))
             if match:
                 posthash = match.groups()[0]
                 posts = Post.objects.filter(posthash__startswith=posthash)
@@ -78,7 +79,7 @@ def boardlink(text, esc):
     filtered = False
     for line in text.split('\n'):
         for word in line.split(' '):
-            match = re_boardlink.match(word)
+            match = re_boardlink.match(unescape(word))
             if match:
                 name = match.groups()[0]
                 group = Newsgroup.objects.filter(name=name)
@@ -87,8 +88,6 @@ def boardlink(text, esc):
                     return_text += '<a href="%s" class="boardlink">%s</a> ' % ( group[0].get_absolute_url(), esc(match.string ) )
                 else:
                     return_text += '<span class="greentext">%s</span> ' % esc (match.string)
-            elif filtered:
-                return_text += word + ' '
             else:
                 return_text += esc(word) + ' '
         return_text += '\n'
@@ -112,36 +111,19 @@ def urlify(text, esc):
 line_funcs = [
     greentext,
     redtext,
-    postcite,
-    boardlink,
     urlify,
     psytext,
     codeblock,
+    postcite,
+    boardlink,
 ]
 
 @register.filter(needs_autoescape=True, name='memepost')
 def memepost(text, autoescape=True):
-    if autoescape:
-        esc = conditional_escape
-    else:
-        esc = lambda x : x
-    return_text = text
-
-    def doFilter(funcs, text, filter):
-        """
-        RECURSIVE FUNCTIONS ARE FUN :^DDDDDD
-        """
-        if len(funcs) == 1:
-            t, filtered = funcs[0](text, lambda x : x)
-            return t
-        else:
-            t, filtered = funcs[0](text, filter)
-            if filtered:
-                return doFilter(funcs[1:], t, lambda x : x)
-            else:
-                return doFilter(funcs[1:], t, filter)
-        
-    return mark_safe(doFilter(line_funcs, return_text, conditional_escape))
+    text, _ = line_funcs[0](text, conditional_escape)
+    for f in line_funcs[1:]:
+        text, _ = f(text, lambda x : x)
+    return mark_safe(text)
 
 
 @register.filter(name='truncate')
