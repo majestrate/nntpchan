@@ -12,5 +12,5 @@ urlpatterns = [
     url(r'^b/(?P<name>[a-zA-Z0-9\.]+[a-zA-Z0-9])/(?P<page>[0-9]+)/$', views.BoardView.as_view(), name='board'),
     url(r'^t/(?P<op>[a-fA-F0-9\.]{40})/$', views.ThreadView.as_view(), name='thread'),
     url(r'captcha.png', views.create_captcha, name='captcha'),
-    url(r'^$', views.FrontPageView.as_view(), name='index'),
+    url(r'^$', views.FrontPageView.as_view(), name='frontpage'),
 ]

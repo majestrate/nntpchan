@@ -14,7 +14,7 @@
     <div id="wrapper">
       <div id="navbar">
         <div class="navbar left">
-          <div id="navbar_frontpage"><a href="/">nntpchan</a></div> |
+          <div id="navbar_frontpage"><a href="{% url 'frontpage' %}">nntpchan</a></div> |
           <div id="navbar_title">{% block navbar_title %}{% endblock %}</div>
           <div id="navbar_links">{% block navbar_links %}{% endblock %}</div>
         </div>
