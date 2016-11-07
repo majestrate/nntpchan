@@ -8,7 +8,7 @@ def generate(fname, tname, placeholder):
     """
     generate thumbnail
     """
-    ext = fname.split('.')[-1]
+    ext = fname.split('.')[-1].lower()
     cmd = None
     if ext in img_ext:
         cmd = [settings.CONVERT_PATH, '-thumbnail', '200', fname, tname]
