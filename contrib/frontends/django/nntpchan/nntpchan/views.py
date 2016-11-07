@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt   
 
 from .frontend.models import Post, Attachment, Newsgroup
@@ -12,6 +13,13 @@ import traceback
 from datetime import datetime
 import mimetypes
 import os
+
+
+def frontpage(request):
+    """
+    frontpage for entire webapp
+    """
+    return render(request, 'frontpage.html')
 
 @csrf_exempt
 def webhook(request):

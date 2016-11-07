@@ -20,7 +20,7 @@ class Postable:
     """
 
     def context_for_get(self, request, defaults):
-        defaults['captcha'] = reverse('captcha')
+        defaults['captcha'] = reverse('frontend:captcha')
         defaults['refresh_url'] = request.path
         return defaults
 
@@ -80,11 +80,11 @@ class BoardView(generic.View, Postable):
             roots = self.model.objects.filter(newsgroup=group, reference='').order_by('-last_bumped')[begin:end]
             ctx = self.context_for_get(request, {'threads': roots, 'page': page, 'name': newsgroup, 'button': 'new thread'})
             if page < group.max_pages:
-                ctx['nextpage'] = reverse('board', args=[name, page + 1])
+                ctx['nextpage'] = reverse('frontend:board', args=[name, page + 1])
             if page == 1:
-                ctx['prevpage'] = reverse('board-front', args=[name])
+                ctx['prevpage'] = reverse('frontend:board-front', args=[name])
             if page > 1:
-                ctx['prevpage'] = reverse('board', args=[name, page - 1])
+                ctx['prevpage'] = reverse('frontend:board', args=[name, page - 1])
             return render(request, self.template_name, ctx)
         
 class ThreadView(generic.View, Postable):

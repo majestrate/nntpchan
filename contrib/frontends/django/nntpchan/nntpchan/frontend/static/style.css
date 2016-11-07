@@ -2,6 +2,13 @@
 body, html {
     background: #EEF2FF url('/static/bg.png') repeat-x 50% 0%;
 }
+#logo {
+    height: 500px;
+}
+
+.frontpage {
+    align-self: center;
+}
 
 div {
     display: flex;

@@ -41,7 +41,7 @@ class Newsgroup(models.Model):
     banned = models.BooleanField(default=False)
 
     def get_absolute_url(self):
-        return reverse('board-front', args=[self.name[9:]])
+        return reverse('frontend:board-front', args=[self.name[9:]])
     
 class Post(models.Model):
     """
@@ -91,11 +91,11 @@ class Post(models.Model):
     def get_absolute_url(self):
         if self.is_op():
             op = util.hashid(self.msgid)
-            return reverse('thread', args=[op])
+            return reverse('frontend:thread', args=[op])
         else:
             op = util.hashid(self.reference)
             frag = util.hashid(self.msgid)
-            return reverse('thread', args=[op]) + '#{}'.format(frag)
+            return reverse('frontend:thread', args=[op]) + '#{}'.format(frag)
 
     def bump(self):
         if self.is_op():
