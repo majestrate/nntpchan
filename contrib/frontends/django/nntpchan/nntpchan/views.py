@@ -80,6 +80,10 @@ def webhook(request):
             'name': name,
             'subject': msg["Subject"] or '',
             'newsgroup': group}, msgid=msgid)
+        if not created:
+            post.subject = msg["Subject"] or ''
+            post.name = name
+            post.posted = posted
         m = ''
 
         for part in msg.walk():
