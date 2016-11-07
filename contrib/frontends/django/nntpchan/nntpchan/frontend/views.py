@@ -41,8 +41,10 @@ class Postable:
                     ctx['msgid'], ctx['error'] = self.handle_post(request, **kwargs)
         request.session['captcha'] = ''
         request.session.save()
-        
-        return render(request, 'frontend/postresult.html', ctx)
+        code = 201
+        if ctx['error']:
+            code = 200
+        return HttpResponse(content=render(request, 'frontend/postresult.html', ctx), status=code)
 
         
 class BoardView(generic.View, Postable):
@@ -79,7 +81,7 @@ class BoardView(generic.View, Postable):
             begin = page * group.posts_per_page
             end = begin + group.posts_per_page - 1
             roots = self.model.objects.filter(newsgroup=group, reference='').order_by('-last_bumped')[begin:end]
-            ctx = self.context_for_get(request, {'threads': roots, 'page': page, 'name': newsgroup})
+            ctx = self.context_for_get(request, {'threads': roots, 'page': page, 'name': newsgroup, 'button': 'new thread'})
             if page < group.max_pages:
                 ctx['nextpage'] = reverse('board', args=[name]) + '?p={}'.format(page + 1)
             if page > 0:
@@ -103,7 +105,7 @@ class ThreadView(generic.View, Postable):
     
     def get(self, request, op):
         posts = get_object_or_404(self.model, posthash=op)
-        ctx = self.context_for_get(request, {'op': posts})
+        ctx = self.context_for_get(request, {'op': posts, 'button': 'reply'})
         return render(request, self.template_name, ctx)
     
 class FrontPageView(generic.View):

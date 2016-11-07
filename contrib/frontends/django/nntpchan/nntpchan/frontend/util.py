@@ -71,11 +71,11 @@ def createPost(newsgroup, ref, form, files):
 
     server = settings.NNTP_SERVER
     server['readermode'] = True
-    msgid = None
+    response = None
     try:
         with nntplib.NNTP(**server) as nntp:
             nntp.login(**settings.NNTP_LOGIN)
-            msgid = nntp.post(msg.as_bytes())
+            response = nntp.post(msg.as_bytes())
     except Exception as e:
-        return None, e
-    return msgid, None
+        return None, 'connection to backend failed, {}'.format(e)
+    return response, None

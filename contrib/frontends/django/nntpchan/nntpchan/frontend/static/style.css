@@ -9,6 +9,14 @@ div {
     font-family: sans;
 }
 
+hr {
+    height: 0px;
+    border-width: 1px medium medium;
+    border-color: #b7c5d9;
+    border-style: solid none none;
+    width: 100%;
+}
+
 #navbar {
     z-index: 20;
     position: fixed;
@@ -100,26 +108,38 @@ form {
     flex-basis: 100%;
 }
 
-.post > .header {
+.post-header {
     padding-bottom: 1%;
+    flex-basis: 100%;
+    flex-direction: row-reverse;
 }
 
 .postbody {
     font-family: serif;
     font-size: 10pt;
     white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
-.name {
+.post-name {
     font-weight: bold;
     color: #028241;
+    margin-left: 1%;
+    margin-right: 1%;
 }
 
-.subject {
+.post-subject {
     font-weight: bold;
     color: #480188;
+    margin-left: 1%;
+    margin-right: 1%;
 }
 
+.post-date {
+    font-style: italic;
+    margin-left: 1%;
+    margin-right: 1%;
+}
 
 .posts {
     flex-direction: column;
@@ -143,8 +163,12 @@ footer {
     padding-bottom: 5%;
 }
 
-.cite {
-    float: right;
+.post-info {
+    flex-basis: 100%;
+}
+
+.post-cite {
+    align-self: flex-end;
 }
 
 .redtext {
