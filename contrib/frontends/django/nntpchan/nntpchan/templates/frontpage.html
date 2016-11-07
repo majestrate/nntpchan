@@ -1,0 +1,11 @@
+{% extends "frontend/base.html" %}
+{% load static %}
+
+{% block navbar_frontpage %}{% endblock %}
+{% block content %}
+
+<div class="frontpage">
+  <a href="{% url 'frontend:frontpage' %}"><img id="logo" src="{% static 'nntpchan.png' %}" /></a>
+</div>
+
+{% endblock %}
