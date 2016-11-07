@@ -41,7 +41,7 @@ class Newsgroup(models.Model):
     banned = models.BooleanField(default=False)
 
     def get_absolute_url(self):
-        return reverse('board', args=[self.name[9:]])
+        return reverse('board-front', args=[self.name[9:]])
     
 class Post(models.Model):
     """
