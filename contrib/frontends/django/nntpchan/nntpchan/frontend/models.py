@@ -97,6 +97,6 @@ class Post(models.Model):
             frag = util.hashid(self.msgid)
             return reverse('frontend:thread', args=[op]) + '#{}'.format(frag)
 
-    def bump(self):
+    def bump(self, last):
         if self.is_op():
-            self.last_bumped = util.time_int(datetime.now())
+            self.last_bumped = last

@@ -127,7 +127,7 @@ def webhook(request):
             'subject': 'OP Not Found',
             'newsgroup': group}, msgid=opmsgid)
         if bump:
-            op.bump()
+            op.bump(post.posted)
         op.save()
             
     except Exception as ex:
