@@ -1,0 +1,86 @@
+#
+# server config with nginx in front of varnish for srndv2 as backend daemon
+#
+
+
+
+server {
+        listen 80;
+        listen [::]:80;
+
+        # srndv2 backend address
+        set $srnd "127.0.0.1:18000";
+        # varnish backend address
+        set $varnish "127.0.0.1:8000";
+
+        # nntpchan repo path
+        set $nntpchan "/opt/nntpchan"
+
+
+        set $allowed "yes";
+
+        # example blacklist rules, uncomment as needed
+
+        # allow only torbrowser
+        #if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0" ) {
+        #   set $allowed "no";
+        #}
+
+
+
+        if ($allowed != "yes") {
+                 return 403;
+        }
+
+
+        location /live {
+                # livechan websocket is passed into backend directly bypassing varnish
+                client_max_body_size 10M;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_pass http://$srnd/live;
+        }
+
+        
+        location / {
+                # have varnish by default
+                proxy_pass http://$varnish/;
+        }
+
+        location ~ /post/(.+) {
+                # pass post right into backend bypassing varnish
+                client_max_body_size 80M;
+                proxy_pass http://$srnd/post/$1;
+        }
+
+        location /static/ {
+                 # serve static files
+                 alias $nntpchan/contrib/static/;
+        }
+        
+        location ~ /img/(.+)\.(jpeg|jpg|png|webp|gif|mp3|ogg|opus|mp4|flac|txt|zip|rar|mp2|flv)$ {
+                # serve files
+                alias $nntpchan/webroot/img/$1.$2;
+        }
+
+        location ~ /img/(.+)\.(.+)$ {
+                # changes mime type for unknown files
+                types        { }
+                default_type text/plain;
+                alias $nntpchan/webroot/img/$1.$2;
+        }
+
+        location  ~ /thm/(.+)\.jpg$ {
+                # http subdomain rewrite for sfw 
+                if ( $http_host ~ fbi ) {
+                        rewrite ^/(.+).jpg /static/placeholder.jpg break;
+                }
+                if ( $http_host ~ sfw ) {
+                        rewrite ^/(.+).jpg /static/placeholder.jpg break;
+                }
+                alias $nntpchan/webroot/thm/;
+        }
+}
+
+        
