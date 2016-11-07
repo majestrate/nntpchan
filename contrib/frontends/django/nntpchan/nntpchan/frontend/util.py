@@ -78,4 +78,4 @@ def createPost(newsgroup, ref, form, files):
             response = nntp.post(msg.as_bytes())
     except Exception as e:
         return None, 'connection to backend failed, {}'.format(e)
-    return response, None
+    return msg["Message-ID"], None

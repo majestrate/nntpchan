@@ -44,6 +44,8 @@ class Postable:
         code = 201
         if ctx['error']:
             code = 200
+        else:
+            ctx['refresh_url'] = reverse('frontend:thread', args=[util.hashid(ctx['msgid'])])
         return HttpResponse(content=render(request, 'frontend/postresult.html', ctx), status=code)
 
         

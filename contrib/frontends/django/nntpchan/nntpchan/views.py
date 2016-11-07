@@ -96,7 +96,7 @@ def webhook(request):
                     continue
                 filename = part.get_filename()
                 mtype = part.get_content_type()
-                ext = filename.split('.')[-1]
+                ext = filename.split('.')[-1].lower()
                 fh = util.hashfile(bytes(payload))
                 fn = fh + '.' + ext
                 fname = os.path.join(settings.MEDIA_ROOT, fn)
