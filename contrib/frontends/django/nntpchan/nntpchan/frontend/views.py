@@ -62,10 +62,7 @@ class BoardView(generic.View, Postable):
         return util.createPost(name, None, request.POST, request.FILES)
 
     
-    def get(self, request, name):
-        page = 0
-        if 'p' in request.GET:
-            page = request.GET['p']
+    def get(self, request, name, page="0"):
         newsgroup = 'overchan.{}'.format(name)
         try:
             page = int(page or "0")
@@ -83,9 +80,11 @@ class BoardView(generic.View, Postable):
             roots = self.model.objects.filter(newsgroup=group, reference='').order_by('-last_bumped')[begin:end]
             ctx = self.context_for_get(request, {'threads': roots, 'page': page, 'name': newsgroup, 'button': 'new thread'})
             if page < group.max_pages:
-                ctx['nextpage'] = reverse('board', args=[name]) + '?p={}'.format(page + 1)
-            if page > 0:
-                ctx['prevpage'] = reverse('board', args=[name]) + '?p={}'.format(page - 1)
+                ctx['nextpage'] = reverse('board', args=[name, page + 1])
+            if page == 1:
+                ctx['prevpage'] = reverse('board-front', args=[name])
+            if page > 1:
+                ctx['prevpage'] = reverse('board', args=[name, page - 1])
             return render(request, self.template_name, ctx)
         
 class ThreadView(generic.View, Postable):
