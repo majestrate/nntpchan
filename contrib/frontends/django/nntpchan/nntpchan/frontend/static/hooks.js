@@ -11,3 +11,9 @@ function ready() {
 	}
 }
 
+function forEachInClass(clazz, cb) {
+  var elems = document.getElementsByClassName(clazz);
+  for (var idx = 0; idx < elems.length; idx ++) {
+    cb(elems[idx]);
+  }
+}

@@ -8,11 +8,7 @@
 {% if error %}
 <pre class="error"> failed to post: {{error}} </pre>
 {% else %}
-{% if msgid %}
 <pre class="posted"> posted </pre>
-{% else %}
-<pre class="posted"> message was not posted </pre>
-{% endif %}
 {% endif %}
 
 {% endblock %}

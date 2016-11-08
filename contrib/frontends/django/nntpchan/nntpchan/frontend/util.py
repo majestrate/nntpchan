@@ -48,7 +48,6 @@ def createPost(newsgroup, ref, form, files):
     msg['Content-Type'] = 'multipart/mixed'
     msg["Subject"] = form["subject"] or "None"
     msg['Date'] = email.utils.format_datetime(datetime.now())
-    msg['Message-ID'] = email.utils.make_msgid(randstr(13), settings.FRONTEND_NAME)
     if ref and not msgid_valid(ref):
         return None, "invalid reference: {}".format(ref)
     if ref:
@@ -80,4 +79,4 @@ def createPost(newsgroup, ref, form, files):
         return None, 'connection to backend failed, {}'.format(e)
     if ref:
         return ref, None
-    return msg["Message-ID"], None
+    return None, None
