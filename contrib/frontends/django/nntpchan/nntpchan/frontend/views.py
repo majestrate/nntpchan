@@ -29,16 +29,40 @@ class Postable:
         handle post request, implement in subclass
         """
         return None, 'handle_post() not implemented'
+
+    def handle_mod(self, request):
+        """
+        handle moderation parameters
+        """
+        if 'modactions' in request.POST:
+            actions = request.POST['modactions'] + '\n'
+            body = ''
+            for line in actions.split('\n'):
+                line = line.strip()
+                if len(line) > 0:
+                    body += '{}\n'.format(line)
+            key = None
+            if 'secret' in request.POST:
+                key = request.POST['secret']
+            _, err = util.createPost('ctl', '', {'message': body}, {}, key)
+            return True, err
+        return False, None
     
     def post(self, request, **kwargs):
         ctx = {
-            'error' : 'invalid captcha'
+            'error' : 'invalid captcha',
+            'only_mod': False
         }
         solution = request.session['captcha']
         if solution is not None:
             if 'captcha' in request.POST:
                 if request.POST['captcha'].lower() == solution.lower():
-                    ctx['msgid'], ctx['error'] = self.handle_post(request, **kwargs)
+                    processed, err = self.handle_mod(request)
+                    if processed:
+                        ctx['error'] = err or 'report made'
+                        ctx['msgid'] = ''
+                    else:
+                        ctx['msgid'], ctx['error'] = self.handle_post(request, **kwargs)
         request.session['captcha'] = ''
         request.session.save()
         code = 201
@@ -61,6 +85,7 @@ class BoardView(generic.View, Postable):
         name = 'overchan.{}'.format(name)
         if not util.newsgroup_valid(name):
             return None, "invalid newsgroup: {}".format(name)
+        self.handle_mod(request)
         return util.createPost(name, None, request.POST, request.FILES)
 
     
