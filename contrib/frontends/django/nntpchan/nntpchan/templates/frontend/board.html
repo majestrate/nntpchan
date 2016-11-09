@@ -12,14 +12,25 @@
   {% endif %}
 {% endblock %}
 {% block content %}
+{% if captcha %}
 {% include "frontend/postform.html" %}
+{% endif %}
 {% for op in threads %}
 <div id="{{op.posthash}}" class="thread">
-  <div class="post op">
+  <div class="post op" data-msgid="{{op.msgid}}">
     <div class="post-header">
       <div class="post-reply"><a href="{{op.get_absolute_url}}">[reply]</a></div>
       <div class="post-cite"><a onclick="board_citepost('{{op.posthash}}')" href="#{{op.posthash}}">&gt;&gt;{{op.shorthash}}</a></div>
       <div class="post-info">
+        <div class="post-report">
+        <label for="report_{{op.posthash}}">[x]</label>
+          <input type="checkbox" id="report_{{op.posthash}}">
+          <div style="display: none;" onclick="nntpchan_report_thread('{{op.posthash}}')">
+            <div class="mod-delete">
+              [delete thread]
+            </div>
+          </div>
+        </div>
         <div class="post-name">{{op.name}}</div>
         <div class="post-subject">{{op.subject}}</div>
         <div class="post-date">{{op.postdate|date}}</div>
@@ -33,12 +44,20 @@
     <pre class="postbody">{{op.message|truncate|memepost}}</pre>
   </div>
   {% for reply in op.get_board_replies %}
-  <div class="post reply" id="{{reply.posthash}}">
+  <div class="post reply" data-msgid="{{reply.msgid}}" id="{{reply.posthash}}">
     <div class="post-header">
       <div class="post-reply"><a href="{{reply.get_absolute_url}}">[reply]</a></div>
       <div class="post-cite"><a onclick="board_citepost('{{reply.posthash}}')" href="#{{reply.posthash}}">&gt;&gt;{{reply.shorthash}}</a></div>
       <div class="post-info">
-        <div class="post-name">{{reply.name}}</div>
+        <div class="post-report">
+        <label for="report_{{reply.posthash}}">[x]</label>
+          <input type="checkbox" id="report_{{reply.posthash}}">
+          <div style="display: none;" onclick="nntpchan_report('{{reply.msgid}}')">
+            <div class="mod-delete">
+              [delete post]
+            </div>
+          </div>
+        </div>        <div class="post-name">{{reply.name}}</div>
         <div class="post-subject">{{reply.subject}}</div>
         <div class="post-date">{{reply.postdate|date}}</div>
       </div>
@@ -54,7 +73,6 @@
 </div>
 <hr />
 {% endfor %}
-
 <div class="paginator">
   {% if prevpage %}
   <span class="paginator_item"><a href="{{prevpage}}">prev</a></span>

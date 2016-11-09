@@ -6,6 +6,7 @@
        <tbody>
          <tr>
            <th>
+             Name
            </th>
            <td>
              <span>
@@ -16,6 +17,7 @@
          </tr>
          <tr>
            <th>
+             Subject
            </th>
            <td>
              <input type="text" name="subject" value="" id="postform_subject" />
@@ -24,9 +26,10 @@
          </tr>
          <tr>
            <th>
+             Message
            </th>
            <td>
-             <textarea id="postform_message" name="message" cols=40 rows=5></textarea>
+             <textarea cols=100 rows=10 id="postform_message" name="message"></textarea>
            </td>
          </tr>
            <tr>
@@ -35,10 +38,10 @@
            <td>
              <input class="postform_attachment" id="postform_attachments" type="file" name="attachment" multiple />
            </td>
-         </tr>
+           </tr>
          <tr>
            <th>
-
+             Captcha
            </th>
            <td>
              <img id="captcha_img" src="{{ captcha }}" alt="captcha" />
@@ -46,9 +49,39 @@
          </tr>
          <tr>
            <th>
+             Solution
            </th>
            <td>
              <input type="text" name="captcha" autocomplete="off" id="captcha_solution" height="175" width="350"/>
+           </td>
+         </tr>
+         <tr>
+           <th>
+             <label id="censor-toggle" for="censor-tools">[censor tools]</label>
+           </th>
+           <td>
+             <input type="checkbox" id="censor-tools"><div style="display: none;">
+               <table>
+                 <tbody>
+                   <tr>
+                     <th>
+                       Actions:
+                     </th>
+                     <td>
+                       <textarea cols=85 name="modactions" id="modactions"></textarea>
+                     </td>
+                   </tr>
+                   <tr>
+                     <th>
+                       Secret:
+                     </th>
+                     <td>
+                       <input type="password" name="modkey"></input>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
            </td>
          </tr>
        </tbody>

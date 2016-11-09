@@ -85,34 +85,18 @@ form {
     width: 90%;
 }
 
+.postreport {
+    width: 100px;
+}
+
 .postform {
-    flex-direction: column;
-    align-items: flex-start;
-    max-height: 25%;
-    width: 90%;
+    width: 75%;
 }
 
 .pf-left {
     flex-direction: column;
     flex-basis: 50%;
     width: 50%;
-}
-
-.postform > input {
-    align-items: flex-start;
-}
-
-.pf-item {
-    flex-basis: 100%;
-    flex-direction: row;
-}
-
-.pf-inner {
-    align-content: flex-start;
-    align-self: flex-end;
-    flex-direction: column;
-    width: 100%;
-    flex-basis: 100%;
 }
 
 .post-header {
@@ -205,4 +189,77 @@ footer {
 
 .psy {
     animation: psych 2s linear infinite;
+}
+
+.postform > tr, th {
+     background: #98E;
+     font-size: 10pt;
+     text-align: left;
+     padding-right: 10px;
+     padding-left: 4px;
+}
+
+.postform td{
+	padding: 0px 15px 0px 4px;
+}
+
+table {
+	margin: auto;
+}
+table.board-list-table {
+	width: 100%;
+}
+
+table tbody td {
+	margin: 0;
+	padding: 4px 15px 4px 4px;
+	vertical-align: top;
+	text-align: left;
+}
+table thead th {
+	border: 1px solid #000333;
+	padding: 4px 15px 5px 5px;
+	
+	background: #98E;
+	color: #000333;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.postform td{
+	padding: 0px 15px 0px 4px;
+}
+
+input[type="text"],input[type="password"],textarea {
+  border: 1px solid #a9a9a9;
+  text-indent: 0;
+  text-shadow: none;
+  text-transform: none;
+  word-spacing: normal;
+  font-size: inherit;
+  font-family: sans-serif;
+}
+
+
+/** mod stuff */
+[type=checkbox] {
+    display: none;
+}
+:checked + div {
+    display: block !important;
+}
+
+#censor-toggle {
+    font-style: italic;
+    text-decoration: underline;
+    font-weight: normal;
+}
+
+
+#censor-toggle, a {
+    color: #34345C;
+}
+
+a:hover {
+    color: #ff0000;
 }

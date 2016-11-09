@@ -121,10 +121,21 @@ class FrontPageView(generic.View):
         return render(request, self.template_name, ctx)
     
     
-def modlog(request, page):
-    if page is None:
-        page = 0
-    return HttpResponse('mod log page {}'.format(page))
+def modlog(request, page=None):
+    page = int(page or '0')
+    ctx = {
+        'page': page,
+    }
+    if page > 0:
+        ctx['prevpage'] = reverse('frontend:modlog-page', args=[page - 1])
+
+    group, _ = Newsgroup.objects.get_or_create(name='ctl')
+    if page < group.max_pages:
+        ctx['nextpage'] = reverse('frontend:modlog-page', args=[page + 1])
+    begin = group.posts_per_page * page
+    end = begin + group.posts_per_page - 1
+    ctx['threads'] = Post.objects.filter(newsgroup='ctl').order_by('-last_bumped')[begin:end]
+    return render(request, 'frontend/board.html', ctx)
 
 def create_captcha(request):
     solution = util.randstr(7).lower()
