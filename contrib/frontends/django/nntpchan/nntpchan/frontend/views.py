@@ -35,17 +35,18 @@ class Postable:
         handle moderation parameters
         """
         if 'modactions' in request.POST:
-            actions = request.POST['modactions'] + '\n'
-            body = ''
-            for line in actions.split('\n'):
-                line = line.strip()
-                if len(line) > 0:
-                    body += '{}\n'.format(line)
-            key = None
-            if 'secret' in request.POST:
-                key = request.POST['secret']
-            _, err = util.createPost('ctl', '', {'message': body}, {}, key)
-            return True, err
+            actions = request.POST['modactions']
+            if len(actions) > 0:
+                body = ''
+                for line in actions.split('\n'):
+                    line = line.strip()
+                    if len(line) > 0:
+                        body += '{}\n'.format(line)
+                key = None
+                if 'secret' in request.POST:
+                    key = request.POST['secret']
+                _, err = util.createPost('ctl', '', {'message': body}, {}, key)
+                return True, err
         return False, None
     
     def post(self, request, **kwargs):
