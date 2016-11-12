@@ -62,10 +62,12 @@ img.thumb {
     margin: 1%;
     width: 90%;
     align-items: flex-begin;
+    padding: 10%;
 }
 
 #wrapper , #content {
     flex-direction: column;
+    padding: 5%;
 }
 
 .post {
