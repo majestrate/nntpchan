@@ -23,7 +23,7 @@ def greentext(text, esc):
     f = False
     for line in text.split('\n'):
         line = line.strip()
-        if len(line) < 1:
+        if len(line) < 2:
             continue
         if line[0] == '>' and line[1] != '>':
             return_text += '<span class="greentext">%s </span>' % esc ( line ) + '\n'
