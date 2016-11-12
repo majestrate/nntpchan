@@ -9,7 +9,7 @@ Navigate to http://[yourNodeURL]/mod/keygen (e.g. http://oniichanylo2tsi4.onion/
 
 E.g.
 
-![Image 0](tripcode-0.png)
+![Image 0](tripcode-1.png)
 
 ###Use TripCode
 
@@ -19,7 +19,7 @@ E.g.
 
     user#0902e04b64bcb8172fb1ced455f348c3462fe64ced193247e5df05dc79fe93ee
 
-![Image 1](tripcode-1.png)
+![Image 1](tripcode-0.png)
 
 
 ###Add Moderators
