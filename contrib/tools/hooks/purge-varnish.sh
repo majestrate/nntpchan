@@ -12,6 +12,8 @@ fi
 # ip to bind to when doing http request
 ip="127.0.1.1"
 
+varnish="127.0.0.1:8000"
+
 # purge thread page
 curl --interface "$ip" -v -X PURGE http://$varnish/thread-$(sha1sum <<< "$op" | cut -d' ' -f1).html
 # purge board page
