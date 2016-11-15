@@ -15,6 +15,6 @@ ip="127.0.1.1"
 varnish="127.0.0.1:8000"
 
 # purge thread page
-curl --interface "$ip" -v -X PURGE http://$varnish/thread-$(sha1sum <<< "$op" | cut -d' ' -f1).html
+curl --interface "$ip" -X PURGE http://$varnish/thread-$(sha1sum <<< "$op" | cut -d' ' -f1).html &> /dev/null
 # purge board page
-curl --interface "$ip" -v -X PURGE http://$varnish/$1-0.html
+curl --interface "$ip" -X PURGE http://$varnish/$1-0.html &> /dev/null
