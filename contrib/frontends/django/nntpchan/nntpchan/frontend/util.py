@@ -5,7 +5,7 @@ import hashlib
 import re
 
 import nacl.signing
-from binascii import hexlify
+from binascii import hexlify, unhexlify
 
 from datetime import datetime
 import time
@@ -67,12 +67,20 @@ def createPost(newsgroup, ref, form, files, secretKey=None):
     msg['Date'] = email.utils.format_datetime(datetime.now())
     if ref and not msgid_valid(ref):
         return None, "invalid reference: {}".format(ref)
-    if ref:
-        msg["References"] = ref
     msg["Newsgroups"] = newsgroup
     name = "Anonymous"
     if 'name' in form:
         name = form['name'] or name
+    if '#' in name:
+        parts = name.split('#')
+        secret = name[1+len(name):]
+        name = parts[0]
+        try:
+            assert len(unhexlify(secret.encode('ascii'))) == 32
+        except:
+            secret = hashlib.sha256(secret.encode('utf-8')).hexdigest()
+        secretKey = secret
+            
     msg["From"] = '{} <anon@django.nntpchan.tld>'.format(name)
     if 'attachment' in files:
         msg['Content-Type'] = 'multipart/mixed'
@@ -93,6 +101,10 @@ def createPost(newsgroup, ref, form, files, secretKey=None):
         m = '{}'.format(form['message'] or ' ')
         msg.set_payload(m)
     msg['Message-Id'] = '<{}${}@{}>'.format(randstr(5), int(time_int(datetime.now())), settings.FRONTEND_NAME)
+    if ref:
+        msg["References"] = ref
+    else:
+        msg["References"] = msg["Message-Id"]
     if secretKey:
         msg['Path'] = settings.FRONTEND_NAME
         # sign
@@ -103,7 +115,11 @@ def createPost(newsgroup, ref, form, files, secretKey=None):
         body = msg.as_bytes()
         h.update(body)
         sig = hexlify(keypair.sign(h.digest()).signature).decode('ascii')
-        data = '''Content-Type: message/rfc822; charset=UTF-8
+        if ref:
+            data = 'References: ' + ref + '\n'
+        else:
+            data = ''
+        data += '''Content-Type: message/rfc822; charset=UTF-8
 Message-ID: {}
 Content-Transfer-Encoding: 8bit
 Newsgroups: {}
@@ -113,7 +129,7 @@ From: {}
 Date: {}
 Subject: {}
 
-{}'''.format(msg["Message-ID"], newsgroup, pubkey, sig, msg["From"], msg["Date"], msg['Subject'], msg.as_string())
+{}\n'''.format(msg["Message-ID"], msg["Refereces"], newsgroup, pubkey, sig, msg["From"], msg["Date"], msg['Subject'], msg.as_string())
         data = data.encode('utf-8')
     else:
         data = msg.as_bytes()
@@ -131,3 +147,17 @@ Subject: {}
     if ref:
         return ref, None
     return None, None
+
+
+def verify_message(pubkey, sig, payload):
+    h = hashlib.sha512()
+    h.update(payload[:-1])
+    d = h.digest()
+    sig = unhexlify(sig)
+    k = nacl.signing.VerifyKey(pubkey, nacl.signing.encoding.HexEncoder)
+    try:
+        k.verify(d, sig)
+    except:
+        return False
+    else:
+        return True

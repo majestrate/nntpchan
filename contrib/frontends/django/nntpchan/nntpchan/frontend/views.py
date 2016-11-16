@@ -200,10 +200,23 @@ class ModView(generic.View, Postable):
             return render(request, 'frontend/redirect.html', {'url' : reverse('frontend:mod'), 'msg' : msg } )
         else:
             # do mod action
-            return self.handle_mod_action(request)
+            return self.handle_mod_action(request, mod, action)
 
-    def handle_mod_action(self, request):
-        return render(request, 'frontend/redirect.html', {'url' : reverse('frontend:mod')} )
+    def handle_mod_action(self, request, mod, action):
+        msg = 'no action made'
+        if action is not None:
+            if action == 'delete':
+                # handle bulk delete
+                if 'posts' in request.POST:
+                    body = '\ndelete '.join(request.POST['posts'].split())
+                    sk = mod['sk']
+                    _, err = util.createPost('ctl', '', {'message' : body }, {}, sk)
+                    if err:
+                        msg = 'error: {}'.format(err)
+                    else:
+                        msg = 'okay'
+        
+        return render(request, 'frontend/redirect.html', {'url' : reverse('frontend:mod'), 'msg' : msg} )
     
     def get(self, request):
         mod = None

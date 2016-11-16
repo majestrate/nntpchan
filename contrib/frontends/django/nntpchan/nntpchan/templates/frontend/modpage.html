@@ -5,6 +5,13 @@
 	<input type="hidden" name="action" value="logout"></input>
 	<input type="submit" value="logout"></input>
 </form>
-mod page
+<form method="POST">
+	{% csrf_token %}
+	<input type="hidden" name="action" value="delete"></input>
+	<label for="bulk-delete"> bulk delete</label>
+	<textarea name="posts"></textarea>
+	<input type="submit" value="delete"></input>
+</form>
+
 
 {% endblock %}
