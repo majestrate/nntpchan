@@ -1,0 +1,10 @@
+{% extends "frontend/base.html" %}
+{% block content %}
+<form method="POST">
+	{% csrf_token %}
+	<input type="hidden" name="action" value="logout"></input>
+	<input type="submit" value="logout"></input>
+</form>
+mod page
+
+{% endblock %}

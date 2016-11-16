@@ -77,7 +77,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'HOST': '/var/run/postgresql',
-        'NAME': 'postgres',
+        'NAME': 'jeff',
     }
 }
 

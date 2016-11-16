@@ -1,0 +1,11 @@
+{% extends "frontend/base.html" %}
+{% block content %}
+<form method="POST">
+	{% csrf_token %}
+	<label for="secret"> secret key </label>
+	<input type="password" id="secret" name="secret"></input>
+	<input type="hidden" name="action" value="login"></input>
+	<input type="submit" value="login"></input>
+</form>
+
+{% endblock %}

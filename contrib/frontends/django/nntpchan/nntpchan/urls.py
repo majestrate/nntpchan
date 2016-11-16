@@ -21,6 +21,6 @@ from . import views
 
 urlpatterns = [
     url(r'^webhook$', views.webhook),
-    url(r'^nntpchan/', include('nntpchan.frontend.urls', namespace='frontend'), name='nntpchan'),
+    url(r'^nntpchan/', include('nntpchan.frontend.urls', namespace='frontend'), name='nntpchan')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns.append(url(r'', views.frontpage, name='frontpage'))

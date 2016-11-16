@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
 
-from .models import Post, Newsgroup
+from .models import Post, Newsgroup, ModPriv
 
 from captcha.image import ImageCaptcha
 from . import util
@@ -54,17 +54,26 @@ class Postable:
             'error' : 'invalid captcha',
             'only_mod': False
         }
-        solution = request.session['captcha']
-        if solution is not None:
-            if 'captcha' in request.POST:
-                if request.POST['captcha'].lower() == solution.lower():
-                    processed, err = self.handle_mod(request)
-                    if processed:
-                        ctx['error'] = err or 'report made'
-                        ctx['msgid'] = ''
-                    else:
-                        ctx['msgid'], ctx['error'] = self.handle_post(request, **kwargs)
-        request.session['captcha'] = ''
+        # bypass captcha for mod users
+        mod = None
+        if 'mod' in request.session:
+            mod = request.session['mod']
+        if mod is None:
+            solution = request.session['captcha']
+            if solution is not None:
+                if 'captcha' in request.POST:
+                    if request.POST['captcha'].lower() == solution.lower():
+                        processed, err = self.handle_mod(request)
+                        if processed:
+                            ctx['error'] = err or 'report made'
+                            ctx['msgid'] = ''
+                        else:
+                            ctx['msgid'], ctx['error'] = self.handle_post(request, **kwargs)
+            request.session['captcha'] = ''
+        else:
+            # we have a mod session
+            ctx['msgid'], ctx['error'] = self.handle_post(request, **kwargs)
+            
         request.session.save()
         code = 201
         if ctx['error']:
@@ -146,7 +155,66 @@ class FrontPageView(generic.View):
         ctx = {'posts' : posts}
         return render(request, self.template_name, ctx)
     
+
+class ModView(generic.View, Postable):
+
+    def show_login(self, request):
+        """
+        handle login page
+        """
+        request.session['mod'] = None
+        request.session.save()
+        return render(request, 'frontend/modlogin.html')
+
+    def logout(self, request):
+        request.session['mod'] = None
+        request.session.save()
+        return render(request, 'frontend/redirect.html', { 'url' : reverse('frontend:mod')})
+
+    def post(self, request):
+        action = None
+        if 'action' in request.POST:
+            action = request.POST['action']
+        mod = None
+        msg = 'bad login'
+        if 'mod' in request.session:
+            mod = request.session['mod']
+        if action == 'logout':
+            return self.logout(request)
+        if action == 'login' and 'secret' in request.POST and mod is None:
+            # try login
+            sk = request.POST['secret']
+            pk = None
+            try:
+                pk = util.to_public(sk)
+                print (pk)
+            except:
+                msg = 'bad key format'
+            if pk is not None and ModPriv.has_access(ModPriv.LOWEST, pk):
+                mod = request.session['mod'] = {'sk' : sk, 'pk' : pk}
+                request.session.save()
+                # login okay
+                return render(request, 'frontend/redirect.html', {'url' : reverse('frontend:mod'), 'msg' : 'logged in'})
+        if mod is None:
+            # no mod session
+            return render(request, 'frontend/redirect.html', {'url' : reverse('frontend:mod'), 'msg' : msg } )
+        else:
+            # do mod action
+            return self.handle_mod_action(request)
+
+    def handle_mod_action(self, request):
+        return render(request, 'frontend/redirect.html', {'url' : reverse('frontend:mod')} )
     
+    def get(self, request):
+        mod = None
+        if 'mod' in request.session:
+            mod = request.session['mod']
+        if mod:
+            return render(request, 'frontend/modpage.html', {'mod' : mod })
+        else:
+            return self.show_login(request)
+        
+        
 def modlog(request, page=None):
     page = int(page or '0')
     ctx = {
@@ -171,3 +239,11 @@ def create_captcha(request):
     r =HttpResponse(c)
     r['Content-Type'] = 'image/png'
     return r
+
+def keygen(request):
+    """
+    generate new keypair
+    """
+    ctx = {}
+    ctx['sk'], ctx['pk'] = util.keygen()
+    return render(request, 'frontend/keygen.html', ctx)

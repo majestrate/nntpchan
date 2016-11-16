@@ -1,0 +1,15 @@
+{% extends "frontend/base.html" %}
+{% block title %} new tripcode keypair {% endblock %}
+{% block content %}
+<div class="tripcode-outer">
+	<div class="tripcode">
+		public key:
+		<span class="tripcode-public">{{pk}}</span>
+	</div>
+	<div class="tripcode">
+		secret key:
+		<span class="tripcode-secret">{{sk}}</span>
+	</div>
+</div>
+{% endblock %}
+

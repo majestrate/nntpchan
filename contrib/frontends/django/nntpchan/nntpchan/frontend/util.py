@@ -14,6 +14,18 @@ import random
 import nntplib
 import email.message
 
+
+def keygen():
+    """
+    generate a new keypair
+    """
+    k = nacl.signing.SigningKey.generate()
+    return hexlify(k.encode()).decode('ascii'), hexlify(k.verify_key.encode()).decode('ascii')
+
+def to_public(sk):
+    k = nacl.signing.SigningKey(sk, nacl.signing.encoding.HexEncoder)
+    return hexlify(k.verify_key.encode()).decode('ascii')
+    
 def hashid(msgid):
     h = hashlib.sha1()
     m = '{}'.format(msgid).encode('ascii')
@@ -80,7 +92,7 @@ def createPost(newsgroup, ref, form, files, secretKey=None):
         msg['Content-Type'] = 'text/plain; charset=UTF-8'
         m = '{}'.format(form['message'] or ' ')
         msg.set_payload(m)
-    msg['Message-Id'] = '<{}${}@signed.{}>'.format(randstr(5), int(time_int(datetime.now())), settings.FRONTEND_NAME)
+    msg['Message-Id'] = '<{}${}@{}>'.format(randstr(5), int(time_int(datetime.now())), settings.FRONTEND_NAME)
     if secretKey:
         msg['Path'] = settings.FRONTEND_NAME
         # sign
