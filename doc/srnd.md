@@ -38,12 +38,15 @@ sox_bin=/usr/bin/sox
 compression=0
 
 [database]
-type=postgres
-schema=srnd
-host=/var/run/postgresql
+type=redis
+schema=single
+host=localhost
+port=6379
+user
+password
 
 [cache]
-type=null
+type=file
 
 [frontend]
 enable=1
