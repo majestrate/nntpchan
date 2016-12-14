@@ -22,7 +22,7 @@
              
            </th>
            <td>
-             <input type="radio" name="cache" value="file" checked> {{#i18n.Translations}}{{file_cache_name}}{{/i18n.Translations}}
+             <input type="radio" name="cache" value="file"> {{#i18n.Translations}}{{file_cache_name}}{{/i18n.Translations}}
            </td>
          </tr>
          <tr>
@@ -30,9 +30,10 @@
              
            </th>
            <td>
-             <input type="radio" name="cache" value="null"> {{#i18n.Translations}}{{null_cache_name}}{{/i18n.Translations}}
+             <input type="radio" name="cache" value="null" checked> {{#i18n.Translations}}{{null_cache_name}}{{/i18n.Translations}}
            </td>
          </tr>
+				 <!--
          <tr>
            <th>
              
@@ -41,6 +42,7 @@
              <input type="radio" name="cache" value="redis"> {{#i18n.Translations}}{{redis_cache_name}}{{/i18n.Translations}}
            </td>
          </tr>
+				 -->
        </tbody>
      </table>
    </div>
