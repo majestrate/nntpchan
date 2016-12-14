@@ -102,8 +102,8 @@ if [ "$ipfs" == "yes" ] ; then
     echo "Now configure NNTPChan with ./srndv2 setup"
 else
     if [ "$unstable" == "yes" ] ; then
-        make -C contrib/backends/srndv2
-        cp contrib/backends/srndv2/bin/nntpchand "$root"
+        go get -u -v github.com/majestrate/srndv2/cmd/nntpchan
+        cp "$GOPATH/bin/nntpchan" "$root"
         echo "built unstable, if you don't know what to do, run without --unstable"
     else
         go get -u -v $tags github.com/majestrate/srndv2
