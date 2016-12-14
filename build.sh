@@ -103,7 +103,7 @@ if [ "$ipfs" == "yes" ] ; then
 else
     if [ "$unstable" == "yes" ] ; then
         make -C contrib/backends/srndv2
-        cp contrib/backends/srndv2/bin/nntpchand "$root"
+        cp contrib/backends/srndv2/nntpchand "$root/nntpchan"
         echo "built unstable, if you don't know what to do, run without --unstable"
     else
         go get -u -v $tags github.com/majestrate/srndv2
