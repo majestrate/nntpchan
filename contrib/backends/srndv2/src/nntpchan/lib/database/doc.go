@@ -1,4 +1,0 @@
-//
-// database driver
-//
-package database

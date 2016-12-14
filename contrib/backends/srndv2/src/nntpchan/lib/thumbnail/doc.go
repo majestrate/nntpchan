@@ -1,4 +1,0 @@
-//
-// attachment thumbnailing
-//
-package thumbnail

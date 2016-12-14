@@ -19,7 +19,7 @@ webroot
 
 # built binaries
 go
-./srndv2
+srndv2
 
 # private key
 *.key

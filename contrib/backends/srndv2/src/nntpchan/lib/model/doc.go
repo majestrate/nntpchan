@@ -1,2 +1,0 @@
-// MVC models
-package model
