@@ -3,7 +3,11 @@
 <html lang="en">
   <head>
     <title>{% block title %} nntpchan {% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" type="text/css" media="(max-width: 699px) and (min-width: 520px)" href="{% static 'narrow.css' %}" />
+<!-- <link rel="stylesheet" type="text/css" media="screen and not (max-width: 420px)" href="{% static 'desktop.css'%}"  /> -->
     <script type="text/javascript" src="{% static 'hooks.js' %}"></script>
     <script type="text/javascript" src="{% static 'postform.js' %}"></script>
     <script type="text/javascript" src="{% static 'banners.js' %}"></script>

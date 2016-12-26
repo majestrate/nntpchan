@@ -1,0 +1,5 @@
+/** desktop stylesheet */
+
+body, html {
+    background: #EEF2FF url('/static/bg.png') repeat-x 50% 0%;
+}

@@ -42,6 +42,8 @@ function inject_search(elem) {
         } else {
           status.innerHTML = "HTTP "+ajax.status;
         }
+      } else {
+        status.innerHTML = "searching... ";
       }
     }
     ajax.open("GET", "/api/find?text="+text);

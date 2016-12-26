@@ -1,5 +1,5 @@
 {% load captcha %}
-<div class="postform">
+<div class="postform_outer">
   <form id="postform" method="post" action="" enctype="multipart/form-data">
     {% csrf_token %}
     <table class="postform">
@@ -29,7 +29,7 @@
              Message
            </th>
            <td>
-             <textarea cols=100 rows=10 id="postform_message" name="message"></textarea>
+             <textarea id="postform_message" name="message"></textarea>
            </td>
          </tr>
            <tr>

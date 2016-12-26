@@ -1,0 +1,13 @@
+/** narrow.css -- for narrow screens */
+
+html, body {
+    background: red;
+}
+
+#navbar {
+    min-height: 100px;
+}
+
+.postbody {
+    
+}
