@@ -17,6 +17,7 @@ function inject_search(elem) {
     var e = document.createElement("div");
     var a = document.createElement("a");
     a.href = r.URL;
+    a.target = "_blank";
     e.appendChild(a);
     var txt = document.createTextNode(r.Message_id);
     a.appendChild(txt);
