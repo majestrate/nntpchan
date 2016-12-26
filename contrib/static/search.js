@@ -35,10 +35,11 @@ function inject_search(elem) {
         if(ajax.status == 200) {
           // good
           var result = JSON.parse(ajax.responseText);
-          if (result.length == 1) {
+          var num = result.length - 1;
+          if (num <= 0) {
             status.innerHTML = "no results";
           } else {
-            status.innerHTML = "found "+(result.length - 1)+" results";
+            status.innerHTML = "found "+num+" results";
             for (var idx = 0 ; idx < result.length; idx++ ) {
               inject_search_result(result[idx]);
             }
