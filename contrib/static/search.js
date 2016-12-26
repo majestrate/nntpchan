@@ -6,6 +6,7 @@
 function inject_search(elem) {
     var inner = document.createElement("div");
     inner.setAttribute("class", "search-navbar");
+    var hash = document.createElement("input");
     var button = document.createElement("button");
     var input = document.createElement("input");
     var newsgroup = document.createElement("input");
@@ -57,7 +58,12 @@ function inject_search(elem) {
                 status.innerHTML = "searching... ";
             }
         };
-        ajax.open("GET", "/api/find?text="+text+"&group="+group);
+        var h = hash.value;
+        if (!h) {
+            ajax.open("GET", "/api/find?text="+text+"&group="+group);
+        } else {
+            ajax.open("GET", "/api/find?hash="+h);
+        }
         ajax.send();
     };
 
@@ -79,6 +85,8 @@ function inject_search(elem) {
     inner.appendChild(input);
     inner.appendChild(document.createTextNode("board: "));
     inner.appendChild(newsgroup);
+    inner.appendChild(document.createTextNode("posthash: "))
+    inner.appendChild(hash);
     inner.appendChild(button);
     inner.appendChild(status);
     
