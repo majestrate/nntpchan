@@ -283,7 +283,7 @@ a, a:visited, .navbar-link > label {
 }
 
 .search-navbar {
-    margin-left: 10px;
+    padding-left: 10px;
 }
 
 .searchresult {
