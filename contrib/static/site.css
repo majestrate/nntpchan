@@ -282,6 +282,12 @@ a, a:visited, .navbar-link > label {
     padding-top: 2px;
 }
 
+.searchresult {
+    position: fixed;
+    top: 20px;
+    left: 10px;
+}
+
 .navbar-sep {
     color: darkgray;
 }

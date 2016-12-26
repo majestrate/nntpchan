@@ -11,6 +11,7 @@ function inject_search(elem) {
     var newsgroup = document.createElement("input");
     var status = document.createElement("span");
     var output = document.createElement("div");
+    output.setAttribute("class", "searchresult");
 
     button.innerHTML = "search";
     
