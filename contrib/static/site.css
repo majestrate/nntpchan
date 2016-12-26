@@ -283,9 +283,7 @@ a, a:visited, .navbar-link > label {
 }
 
 .searchresult {
-    position: fixed;
-    top: 20px;
-    left: 10px;
+    margin-top: 20px;
 }
 
 .navbar-sep {
