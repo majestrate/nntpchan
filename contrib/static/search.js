@@ -63,7 +63,7 @@ function inject_search(elem) {
         search();
     };
 
-    input.onsubmit = function(ev) {
+    input.onkeydown = function(ev) {
         if (ev.keyCode == 13)
             search();
     };
