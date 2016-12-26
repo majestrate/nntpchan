@@ -267,7 +267,7 @@ a, a:visited, .navbar-link > label {
     text-decoration: underline;
 }
 
-.navbar {
+.navbar, .search-navbar {
     position: fixed;
     top: 0px;
     left: 0px;
@@ -280,6 +280,10 @@ a, a:visited, .navbar-link > label {
     color: #34345C;
     min-height: 20px;
     padding-top: 2px;
+}
+
+.search-navbar {
+    margin-left: 10px;
 }
 
 .searchresult {
