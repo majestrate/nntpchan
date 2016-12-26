@@ -14,7 +14,11 @@ function inject_search(elem) {
   
   function inject_search_result(r) {
     var e = document.createElement("div");
-    e.innerHTML = r.PostMarkup;
+    var a = document.createElement("a");
+    a.href = r.URL;
+    e.appendChild(a);
+    var txt = document.createTextNode(r.Message_id);
+    a.appendChild(txt);
     output.appendChild(document.createElement("hr"));
     output.appendChild(e);
   }
