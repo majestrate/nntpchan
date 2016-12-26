@@ -7,6 +7,7 @@ function inject_search(elem) {
   var inner = document.createElement("div");
   var button = document.createElement("button");
   var input = document.createElement("input");
+  var newsgroup = document.createElement("input");
   var status = document.createElement("span");
   var output = document.createElement("div");
 
@@ -26,6 +27,7 @@ function inject_search(elem) {
   button.onclick = function(ev) {
     var text = input.value;
     input.value = "";
+    var group = newsgroup.value;
     while(output.children.length > 0) 
       output.children[0].remove();
     var ajax = new XMLHttpRequest();
@@ -51,11 +53,14 @@ function inject_search(elem) {
         status.innerHTML = "searching... ";
       }
     }
-    ajax.open("GET", "/api/find?text="+text);
+    ajax.open("GET", "/api/find?text="+text+"&g="+group);
     ajax.send();
   }
 
+  inner.appendChild(document.createTextNode("text: "));
   inner.appendChild(input);
+  inner.appendChild(document.createTextNode("board: "));
+  inner.appendChild(newsgroup);
   inner.appendChild(button);
   inner.appendChild(status);
   
