@@ -5,6 +5,7 @@
 /** inject search widget */
 function inject_search(elem) {
     var inner = document.createElement("div");
+    inner.id = "navbar";
     var button = document.createElement("button");
     var input = document.createElement("input");
     var newsgroup = document.createElement("input");
