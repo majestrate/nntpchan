@@ -53,7 +53,7 @@ function inject_search(elem) {
         status.innerHTML = "searching... ";
       }
     }
-    ajax.open("GET", "/api/find?text="+text+"&g="+group);
+    ajax.open("GET", "/api/find?text="+text+"&group="+group);
     ajax.send();
   }
 
