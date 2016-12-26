@@ -30,6 +30,8 @@ function inject_search(elem) {
     }
 
     var search = function() {
+
+        var h = hash.value;
         var text = input.value;
         input.value = "";
         var group = newsgroup.value;
@@ -52,13 +54,16 @@ function inject_search(elem) {
                         }
                     }
                 } else {
-                    status.innerHTML = "HTTP "+ajax.status;
+                    if (ajax.status == 404) {
+                        status.innerHTML = "no results";
+                    } else {
+                        status.innerHTML = "HTTP "+ajax.status;
+                    }
                 }
             } else {
                 status.innerHTML = "searching... ";
             }
         };
-        var h = hash.value;
         if (!h) {
             ajax.open("GET", "/api/find?text="+text+"&group="+group);
         } else {
