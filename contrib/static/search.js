@@ -14,6 +14,7 @@ function inject_search(elem) {
     button.innerHTML = "search";
     
     function inject_search_result(r) {
+        if(!r)return;
         var e = document.createElement("div");
         var a = document.createElement("a");
         a.href = r.URL;
@@ -63,11 +64,13 @@ function inject_search(elem) {
     };
 
     input.onsubmit = function(ev) {
-        search();
+        if (ev.keyCode == 13)
+            search();
     };
 
-    newsgroup.onsubmit = function(ev) {
-        search();
+    newsgroup.onkeydown = function(ev) {
+        if (ev.keyCode == 13)
+            search();
     };
 
     inner.appendChild(document.createTextNode("text: "));
