@@ -90,7 +90,7 @@ function inject_search(elem) {
     inner.appendChild(input);
     inner.appendChild(document.createTextNode("board: "));
     inner.appendChild(newsgroup);
-    inner.appendChild(document.createTextNode("posthash: "))
+    inner.appendChild(document.createTextNode("posthash: "));
     inner.appendChild(hash);
     inner.appendChild(button);
     inner.appendChild(status);
