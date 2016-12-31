@@ -18,7 +18,7 @@
      data-origin="clearnet"
      {{/post.IsClearnet}}
      data-posturl="{{post.PostURL}}">
-  <legend class="postheader">
+  <div class="postheader">
     <span class="origin">
   {{#post.IsI2P}}
     <img src="{{post.Prefix}}static/i2p.png" title="{{#i18n.Translations}}{{from_i2p}}{{/i18n.Translations}}" />
@@ -46,17 +46,19 @@
     <div>
       Date: <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
     </div>
-  </legend>
+  </div>
   <hr>
   <div class="attachments">
   {{#post.Attachments}}
-    <figure data-sha512="{{Hash}}">
-    <figcaption>
-    <a class="download_link" href="{{Source}}" download="{{Filename}}">{{#i18n.Translations}}{{download_prompt}}{{/i18n.Translations}}</a>
-    <a class="file" href="{{Source}}" title="{{Filename}}" target="_blank"><img src="{{Thumbnail}}" alt="{{Filename}}" class="thumbnail"/></a>
-    <a class="fname_link" title="{{Filename}}" href="{{Source}}">{{Filename}}</a>
-    </figcaption>
-    </figure>
+    <div data-sha512="{{Hash}}">
+      <div>
+        <a class="download_link" href="{{Source}}" <download></download>Translations}}</a>
+        <a class="file" href="{{Source}}" title="{{Filename}}" target="_blank">
+            <img src="{{Thumbnail}}" alt={{Filename}}" class="thumbnail"></img>
+        </a>
+        <a class="fname_link" title="{{Filename}}" href="{{Source}}">{{Filename}}</a>
+      </div>
+    </div>
   {{/post.Attachments}}
   </div>
   <div class="post_body">

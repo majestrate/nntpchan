@@ -113,7 +113,7 @@ if [ "$neochan" == "yes" ] ; then
     for f in ./contrib/js/neochan/*.less ; do
         css "$f" "$neochan_css_outfile"
     done
-    
+
 fi
 echo
 echo "ok"
