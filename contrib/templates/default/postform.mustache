@@ -8,7 +8,7 @@
  - files ( bool, do we allow attachments ? )
  - csrf ( csrf token )
  }}
- <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post">
+ <form action="{{post_url}}" enctype="multipart/form-data" name="post" method="post" id="postform">
  {{{csrf}}}
  <input type="hidden" name="reference" value="{{reference}}" id="postform_reference"/>
  <div id="postform-outer">
@@ -77,17 +77,46 @@
              <input type="text" name="captcha" autocomplete="off" id="captcha_solution" height="175" width="350"/>
            </td>
          </tr>
-         <!-- <tr>
+         <tr>
            <th>
-             {{#i18n.Translations}}{{cuckoo_pow}}{{/i18n.Translations}}
+             <label id="censor-toggle" for="censor-tools">[censor tools]</label>
            </th>
            <td>
-             <input type="text" name="pow" autocomplete="off" id="miner_result" /><input id="start_miner" class="button" type="button" value="{{#i18n.Translations}}{{start_mining}}{{/i18n.Translations}}"/>
+             <input type="checkbox" id="censor-tools"><div style="display: none;">
+               <table>
+                 <tbody>
+                   <tr>
+                     <th>
+                       Actions:
+                     </th>
+                     <td>
+                       <textarea cols=85 id="nntpchan_censor_actions"></textarea>
+                     </td>
+                   </tr>
+                   <tr>
+                     <th>
+                       Secret:
+                     </th>
+                     <td>
+                       <input type="password" id="nntp_censor_secret"></input>
+                     </td>
+                   </tr>
+                   <tr>
+                     <th>
+                       <button onclick="nntpchan_submit_censor(document.getElementById('postform'), '{{post_url}}')">report</button>
+                     </th>
+                     <td>
+                       <div id="nntpchan_censor_result"></div>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
            </td>
-         </tr> -->
+         </tr>
        </tbody>
      </table>
    </div>
  </div>
  </form>
- 
+

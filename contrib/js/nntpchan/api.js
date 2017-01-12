@@ -1,13 +1,13 @@
 // call an api method
 // handler(json_object) on success
 // handler(null) on fail
-function nntpchan_apicall(url, handler, err_handler) {
+function nntpchan_apicall(url, handler, err_handler, method, data) {
   var ajax = new XMLHttpRequest();
   ajax.onreadystatechange = function() {
     if (ajax.readyState == XMLHttpRequest.DONE ) {
       var status = ajax.status;
       var j = null;
-      if (status == 200) {
+      if (status == 200 || status == 201) {
         // found
         try {
           j = JSON.parse(ajax.responseText);
@@ -19,8 +19,12 @@ function nntpchan_apicall(url, handler, err_handler) {
       handler(j);
     }
   };
-  ajax.open("GET", url);
-  ajax.send();
+  var meth = method || "GET";
+  ajax.open(meth, url);
+  if(data)
+    ajax.send(data);
+  else
+    ajax.send();
 }
 
 // build post from json
