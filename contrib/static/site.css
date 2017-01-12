@@ -614,7 +614,7 @@ textarea#reply-text {
     font-weight: normal;
 }
 
-#nntpchan_submit_censor {
+th > label {
     text-decoration: underline;
 }
 
