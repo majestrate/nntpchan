@@ -600,3 +600,21 @@ textarea#reply-text {
     padding-left: 25%;
 }
 
+/** mod stuff */
+[type=checkbox] {
+    display: none;
+}
+:checked + div {
+    display: block !important;
+}
+
+#censor-toggle {
+    font-style: italic;
+    text-decoration: underline;
+    font-weight: normal;
+}
+
+
+#censor-toggle, a {
+    color: #34345C;
+}
