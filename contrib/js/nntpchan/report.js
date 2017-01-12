@@ -20,7 +20,7 @@ function nntpchan_report(msgid, msgid_hash, refid, refid_hash) {
     var e = document.getElementById("nntpchan_censor_actions");
     if (!e) return;
     if(refid == msgid) {
-        nntp_report_thread(refid_hash);
+        nntpchan_report_thread(refid_hash);
     } else {
         e.value += "delete "+msgid+"\n";
     }
