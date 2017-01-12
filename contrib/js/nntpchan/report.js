@@ -32,7 +32,7 @@ function nntpchan_submit_censor(form, regular_url) {
     var result = document.getElementById("nntpchan_censor_result");
 
     var show_result = function(msg) {
-        result.innerHTML = document.createTextNode(msg);
+        result.innerHTML = msg;
     }
 
     var handle_result = function(j) {
@@ -52,6 +52,7 @@ function nntpchan_submit_censor(form, regular_url) {
     parts[parts.length-1] = 'ctl';
     var url = parts.join('/');
     url += '?json';
+    console.log(url);
     var captcha = form.captcha.value;
     if(!captcha) {
         show_result("no captcha solution provided");
