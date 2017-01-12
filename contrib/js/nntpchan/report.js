@@ -7,7 +7,7 @@ function show_censortools() {
 }
 
 function nntpchan_report_thread(posthash) {
-    var thread = document.getElementById(posthash);
+    var thread = document.getElementById("thread_"+posthash);
     if (!thread) return;
     var posts = thread.getElementsByClassName("post");
     for (var idx = 0; idx < posts.length; idx ++ ) {
