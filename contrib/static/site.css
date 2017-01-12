@@ -614,6 +614,9 @@ textarea#reply-text {
     font-weight: normal;
 }
 
+#nntpchan_submit_censor {
+    text-decoration: underline;
+}
 
 #censor-toggle, a {
     color: #34345C;
