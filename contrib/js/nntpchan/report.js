@@ -58,7 +58,7 @@ function nntpchan_submit_censor(form, regular_url) {
         show_result("no captcha solution provided");
         return;
     }
-    var secret = document.getElementById("nntpchan_censor_secret").value;
+    var secret = document.getElementById("nntp_censor_secret").value;
     if(!secret) {
         show_result("no mod key provided");
         return;
