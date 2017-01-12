@@ -51,7 +51,7 @@ function nntpchan_submit_censor(form, regular_url) {
     var parts = regular_url.split('/');
     parts[parts.length-1] = 'ctl';
     var url = parts.join('/');
-    url += '?json';
+    url += '?t=json';
     console.log(url);
     var captcha = form.captcha.value;
     if(!captcha) {
