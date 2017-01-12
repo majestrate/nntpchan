@@ -1,4 +1,4 @@
-var banner_count = 6;
+var banner_count = 7;
 
 // inject a banner into an element
 function nntpchan_inject_banners(elem, prefix) {
