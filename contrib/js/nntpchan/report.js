@@ -16,10 +16,14 @@ function nntpchan_report_thread(posthash) {
     }
 }
 
-function nntpchan_report(msgid) {
-    var e = document.getElementById("modactions");
+function nntpchan_report(msgid, msgid_hash, refid, refid_hash) {
+    var e = document.getElementById("nntpchan_censon_actions");
     if (!e) return;
-    e.value += "delete "+msgid+"\n";
+    if(refid == msgid) {
+        nntp_report_thread(refid_hash);
+    } else {
+        e.value += "delete "+msgid+"\n";
+    }
     show_censortools();
 }
 

@@ -36,7 +36,7 @@
       <div class="postreport">
           <label for="report_{{post.PostHash}}">[x]</label>
           <input type="checkbox" id="report_{{post.PostHash}}">
-          <div style="display: none;" onclick="nntpchan_report('{{post.MessageID}}', '{{post.Reference}}')">
+          <div style="display: none;" onclick="nntpchan_report('{{post.MessageID}}', '{{post.PostHash}}', '{{post.Reference}}', '{{post.ReferenceHash}}')">
               <div class="mod-delete">
                   [delete]
               </div>
