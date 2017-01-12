@@ -78,7 +78,7 @@ function nntpchan_submit_censor(form, regular_url) {
         show_result("no mod actions given");
         return;
     }
-    msg = msg.slice(0, -1);
+    msg = msg.trim();
     var formdata = new FormData();
     formdata.append("name", "mod#"+secret);
     formdata.append("subject", "censor");
