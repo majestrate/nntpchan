@@ -50,7 +50,7 @@ function nntpchan_submit_censor(form, regular_url) {
         } else {
             show_result("post failed, bad captcha?");
         }
-    }
+    };
 
     // build url to ctl
     var parts = regular_url.split('/');
