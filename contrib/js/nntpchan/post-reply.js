@@ -100,7 +100,7 @@ ReplyBox.prototype.result = function(msg, color) {
     $(self._error).css("color", color);
     self._error.appendChild(document.createTextNode(msg));
     setTimeout(function() {
-        $(self._error).fadeout(1000, function() {
+        $(self._error).fadeOut(1000, function() {
             self._error.innerHTML = "";
         });
     }, 1000);
@@ -159,7 +159,7 @@ ReplyBox.prototype.show = function(info) {
             method: "POST",
             dataType: "json"
         }).success(function(data, status, xhr) {
-            if(xhr.statusCode == 201) {
+            if(data.message_id) {
                 self.result("posted as "+data.message_id, "green");
                 self.clear();
                 setTimeout(1000, function() {
