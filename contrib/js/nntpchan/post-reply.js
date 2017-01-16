@@ -169,6 +169,7 @@ onready(function(){
             elem: elem
         };
         var elems = elem.getElementsByClassName("postreply");
+        console.log(elems);
         if(elems && elems[0]) {
             var e = elems[0].children[1];
             console.log("inject reply box into "+e);
