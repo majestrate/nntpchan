@@ -153,6 +153,8 @@ ReplyBox.prototype.show = function(info) {
         var post = self.makePost(info);
         var a = $.ajax({
             data: post,
+            processData: false,
+            contentType: false,
             url: info.url,
             method: "POST",
             dataType: "json"
