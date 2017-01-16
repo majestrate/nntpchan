@@ -59,51 +59,43 @@ function DynReply(rootElem) {
     
     // subject
     elem = document.createElement("input");
-    elem.setAttribute("name", "subject");
     elem.setAttribute("value", "");
-    elem.setAttribute("id", "postform_subject");
+    this.subject = elem;
     // submit
     var submit = document.createElement("input");
     submit.setAttribute("value", "reply");
     submit.setAttribute("class", "button");
-    submit.setAttribute("type", "submit");
-    submit.setAttribute("id", "postform_submit");
     table_insert_row(tbody, document.createTextNode("Subject"), [elem, submit]);
-
+    this.submit = submit;
     
     // Comment
     elem = document.createElement("textarea");
     elem.setAttribute("id", "postform_message");
-    elem.setAttribute("name", "message");
     elem.setAttribute("cols", "40");
     elem.setAttribute("rows", "5");
     table_insert_row(tbody, document.createTextNode("Comment"), [elem]);
+    this.message = elem;
     
     // file
     elem = document.createElement("input");
     elem.setAttribute("class", "postform_attachment");
     elem.setAttribute("type", "file");
-    elem.setAttribute("name", "attachment_uploaded");
     elem.setAttribute("multiple", "multiple");
+    this.files = elem;
     table_insert_row(tbody, document.createTextNode("Files"), [elem]);
-
-    // dubs
-    elem = document.createElement("input");
-    elem.setAttribute("type", "checkbox");
-    elem.setAttribute("name", "dubs");
-    table_insert_row(tbody, document.createTextNode("Get Dubs"), [elem]);
 
     // captcha
     elem = document.createElement("img");
     elem.alt = "captcha";
     table_insert_row(tbody, document.createTextNode("Captcha"), [elem]);
+    this.captcha_img = elem;
 
     // captcha solution
     elem = document.createElement("input");
     elem.name = "captcha";
     elem.autocomplete = "off";
     table_insert_row(tbody, document.createTextNode("Solution"), [elem]);
-    
+    this.captcha_solution = elem;
     table.appendChild(tbody);
     this.elem.appendChild(table);
     this.board = null;
@@ -135,24 +127,20 @@ DynReply.prototype.clear = function() {
 
 // clear captcha solution
 DynReply.prototype.clearSolution = function() {
-    var e = document.getElementById("captcha_solution");
     // reset value
-    e.value = "";
+    this.captcha_solution.value = "";
 }
 
 // clear postform elements
 DynReply.prototype.clearPostbox = function() {
-    var e = document.getElementById("postform_subject");
-    e.value = "";
-    e = document.getElementById("postform_message");
-    e.value = "";
-    e = document.getElementById("postform_attachments");
-    e.value = null;
+    this.subject.value = "";
+    this.message.value = "";
+    this.files.value = null;
 }
 
 DynReply.prototype.post = function(cb, err_cb) {
-    if (this.url && this.form) {
-        var data = new FormData(this.form);
+    if (this.url) {
+        var data = new FormData();
         var ajax = new XMLHttpRequest();
         ajax.onreadystatechange = function(ev) {
             if (ajax.readyState == XMLHttpRequest.DONE) {
@@ -174,8 +162,10 @@ DynReply.prototype.post = function(cb, err_cb) {
 
 DynReply.prototype.updateCaptcha = function() {
     if (this.prefix) {
-        var captcha_img = document.getElementById("captcha_img");
-        captcha_img.src = this.prefix + "captcha/img";
+        if (!this.captcha_img) {
+            this.captcha_img = document.createElement("img");
+            this.captcha_img.src = this.prefix + "captcha/img";
+        }
     }
     this.clearSolution();
 }
@@ -240,7 +230,8 @@ function nntpchan_reply(parent, shorthash) {
 }
 
 
-function init(prefix) {
+function init(prefix, enabled) {
+    if(!enabled) return;
     var rpl  = getReplyTo();
     rpl.setPrefix(prefix);
     rpl.updateCaptcha();
