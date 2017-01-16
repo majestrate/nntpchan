@@ -7,7 +7,7 @@ function getReplyTo() {
     e.style.position = "fixed";
     e.style.left = document.dynreply.x+ "px";
     e.style.top = document.dynreply.y + "px";
-    e.setAttribute("class", "shadow");
+    e.setAttribute("class", "shadow shadow-box");
     return document.dynreply;
 }
 
