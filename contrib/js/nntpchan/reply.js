@@ -264,7 +264,9 @@ function init(prefix) {
 
 
     $(rpl.elem).on("mousedown", e, function (ev) {
-        $dragging = $(rpl.elem);
+        if (ev.button == 0 ) {
+            $dragging = $(rpl.elem);
+        }
     });
 
     $(rpl.elem).on("mouseup", function (e) {
