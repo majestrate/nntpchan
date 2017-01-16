@@ -182,6 +182,7 @@ onready(function(){
                     replyBox.hide();
                 }
                 replyInfo.show = ! replyInfo.show;
+                ev.preventDefault();
             }
         }
     });
