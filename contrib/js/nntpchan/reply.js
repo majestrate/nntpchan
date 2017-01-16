@@ -253,11 +253,11 @@ function init(prefix) {
 
     $(rpl.elem).on("mousemove", function(ev) {
         if ($dragging) {
-            var x = ev.pageX - $(this).width() / 2,
-                y = ev.pageY - $(this).height() / 2;
+            var x = ev.pageX, // - $(this).width() / 2,
+                y = ev.pageY; //- $(this).height() / 2;
             $dragging.offset({
-                top: y - 50,
-                left: x - 50
+                top: y,
+                left: x
             });
         }
     });
