@@ -88,6 +88,7 @@ function ReplyBox() {
     table.appendChild(tbody);
     this.elem.appendChild(table);
     document.body.appendChild(this.elem);
+    this._open = false;
 }
 
 ReplyBox.prototype.result = function(msg, color) {
@@ -100,6 +101,10 @@ ReplyBox.prototype.result = function(msg, color) {
             self._error.innerHTML = "";
         });
     }, 1000);
+}
+
+ReplyBox.prototype.visible = function() {
+    return this._open != false;
 }
 
 
@@ -130,8 +135,10 @@ ReplyBox.prototype.reload = function() {
 }
 
 ReplyBox.prototype.show = function(info) {
-    console.log("reply box show for "+info.reference);
     var self = this;
+    self.reload();
+    self._open = true;
+    console.log("reply box show for "+info.reference);
     $(self.elem).css("display", "inline-block");
     $(self.elem).css("position", "fixed");
     var off = $(info.elem).offset();
@@ -149,7 +156,9 @@ ReplyBox.prototype.show = function(info) {
             if(xhr.statusCode == 201) {
                 self.result("posted as "+data.message_id, "green");
                 self.clear();
-                self.submit.onclick = function(ev) {};
+                setTimeout(1000, function() {
+                    self.hide();
+                });
             } else {
                 self.result("error: " + data.error, "red");
             }
@@ -163,13 +172,17 @@ ReplyBox.prototype.show = function(info) {
 
 ReplyBox.prototype.hide = function() {
     var self = this;
-    $(self.elem).css("display", "none");
-    self.submit.onclick = function(ev) {};
+    if(!self.visible()) return;
+    self._open = false;
+    $(self.elem).fadeout(400, function() {
+        self.submit.onclick = function(ev) {};
+    });
 }
 
 onready(function(){
     var replyBox = new ReplyBox();
     replyBox.hide();
+    document.reply = replyBox;
     $(".post").each(function(_, elem) {
         var replyInfo = {
             show: false,

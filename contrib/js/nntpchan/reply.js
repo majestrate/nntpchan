@@ -11,7 +11,13 @@ function nntpchan_reply(parent, shorthash) {
         // show it
         replyto.show();
     }
-    var elem = document.getElementById("postform_message");
+    
+    var elem;
+    if(document.reply && document.reply.visible()) {
+        elem = document.reply.message;
+    } else {
+        elem = document.getElementById("postform_message");
+    }
     if ( elem )
     {
         elem.value += ">>" + shorthash.substr(0,10) + "\n";
