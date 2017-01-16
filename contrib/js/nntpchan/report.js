@@ -36,7 +36,7 @@ function nntpchan_submit_censor(form, regular_url) {
             result.children[0].remove();
         }
         result.appendChild(document.createTextNode(msg));
-    }
+    };
 
     var handle_result = function(j) {
         var err = j.error;
