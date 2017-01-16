@@ -137,7 +137,7 @@ function DynReply(existingElem) {
   this.elem.appendChild(this.form);
   document.body.appendChild(this.elem);
   this.board = null;
-  this.roothash = null;
+  this.rootmsg = null;
   this.prefix = null;
   this.url = null;
   this.x = 1;
@@ -152,13 +152,12 @@ DynReply.prototype.update = function() {
     if (this.board) {
       // update post form
       var ref = document.getElementById("postform_reference");
-         
-      if (this.roothash) {
-        ref.setAttribute("value", this.roothash);
+      if (this.rootmsg) {
+        ref.setAttribute("value", this.rootmsg);
       } else {
         ref.setAttribute("value", "");
       }
-      this.url = this.prefix + "post/" + this.board + "?t=json";
+      this.url = this.prefix + "post/" + this.board + "/json";
     }
   }
 }
@@ -243,9 +242,9 @@ DynReply.prototype.setBoard = function(boardname) {
   }
 }
 
-DynReply.prototype.setRoot = function(roothash) {
-  if (roothash) {
-    this.roothash = roothash;
+DynReply.prototype.setRoot = function(rootmsg) {
+  if (rootmsg) {
+      this.rootmsg = rootmsg;
   }
 }
 
@@ -271,12 +270,12 @@ DynReply.prototype.showMessage = function(msg) {
 // reply box function
 function nntpchan_reply(parent, shorthash) {
   if (parent && document.dynreply) {
-    var boardname = parent.getAttribute("boardname");
-    var roothash = parent.getAttribute("root");
+    var boardname = parent.dataset.newsgroup;
+    var rootmsg = parent.dataset.rootmsgid;
     var replyto = getReplyTo();
     // set target
     replyto.setBoard(boardname);
-    replyto.setRoot(roothash);
+    replyto.setRoot(rootmsg);
     // show it
     replyto.show();
   }
@@ -290,7 +289,7 @@ function nntpchan_reply(parent, shorthash) {
 // inject post hover behavior
 function inject_hover(prefix, el, parent) {
   if (!prefix) { throw "prefix is not defined"; }
-  var linkhash = el.getAttribute("backlinkhash");
+  var linkhash = el.dataset.msgidhash;
   if (!linkhash) { throw "linkhash undefined"; }
   console.log("rewrite linkhash "+linkhash);
 
