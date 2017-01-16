@@ -164,6 +164,7 @@ onready(function(){
     replyBox.hide();
     $(".post").each(function(_, elem) {
         var replyInfo = {
+            show: false,
             url: (prefix || "/") + "post/" + elem.dataset.newsgroup + "/json",
             reference: elem.dataset.rootmsgid,
             board: elem.dataset.newsgroup,
