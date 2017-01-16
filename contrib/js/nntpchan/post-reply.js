@@ -136,7 +136,7 @@ ReplyBox.prototype.show = function(info) {
     var off = $(info.elem).offset();
     $(self.elem).offset({
         top: off.top,
-        right: off.left
+        left: $(info.elem).width() + off.left
     });
     self.submit.onclick = function(ev) {
         $.ajax({
