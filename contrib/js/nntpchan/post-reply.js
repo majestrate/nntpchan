@@ -162,9 +162,9 @@ ReplyBox.prototype.show = function(info) {
             if(data.message_id) {
                 self.result("posted as "+data.message_id, "green");
                 self.clear();
-                setTimeout(1000, function() {
+                setTimeout(function() {
                     self.hide();
-                });
+                }, 1000);
             } else {
                 self.result("error: " + data.error, "red");
             }
