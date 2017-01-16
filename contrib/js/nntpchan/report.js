@@ -41,9 +41,11 @@ function nntpchan_submit_censor(form, regular_url) {
             show_result("error: "+err);
             return;
         }
-        var msgid = j.message_id;
+        var msgid = j.Message_id;
         if(msgid) {
             show_result("submitted report as "+msgid);
+        } else {
+            show_result("post failed, bad captcha?");
         }
     }
 
