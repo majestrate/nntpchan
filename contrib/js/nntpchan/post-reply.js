@@ -40,6 +40,7 @@ function ReplyBox() {
     elem = document.createElement("input");
     elem.setAttribute("name", "name");
     elem.setAttribute("value", "Anonymous");
+    this.name = elem;
     span.appendChild(elem);
     // error message
     var err_elem = document.createElement("span");
