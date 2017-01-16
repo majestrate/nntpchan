@@ -255,6 +255,8 @@ function init(prefix) {
         if ($dragging) {
             var x = ev.pageX - $(this).width() / 2,
                 y = ev.pageY - $(this).height() / 2;
+            y -= $(e).height();
+            x -= $(e).width();
             $(e).offset({
                 top: y,
                 left: x
