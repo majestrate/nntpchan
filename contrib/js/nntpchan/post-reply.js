@@ -83,7 +83,8 @@ function ReplyBox() {
     elem = document.createElement("input");
     elem.name = "captcha";
     elem.autocomplete = "off";
-    table_insert_row(tbody, document.createTextNode("Solution"), [elem, submit]);
+    table_insert_row(tbody, document.createTextNode("Solution"), [elem]);
+    table_insert_row(tbody, document.createTextNode("Post"), [submit]);
     this.captcha_solution = elem;
     table.appendChild(tbody);
     this.elem.appendChild(table);
