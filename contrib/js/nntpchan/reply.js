@@ -339,7 +339,7 @@ function inject_hover(prefix, el, parent) {
 
 // inject post hover for all backlinks in an element
 function inject_hover_for_element(elem) {  
-  var elems = elem.getElementsByClassName("backlink");
+  var elems = elem.getElementsByClassName("postno");
   var ls = [];
   var l = elems.length;
   for ( var idx = 0 ; idx < l ; idx ++ ) {
@@ -352,19 +352,11 @@ function inject_hover_for_element(elem) {
 }
 
 function init(prefix) {
-  // because no one cares about this feature :|
-  return;
-  // inject posthover ...
-  inject_hover_for_element(document);
-  if ( /\.html$/.test(document.location.pathname) && ! (/ukko/.test(document.location.pathname)) ) {
-    // board / thread page
-    console.log("not loading reply widget");
-  } else {
-    // ukko / livechan page
+    // inject posthover ...
+    inject_hover_for_element(document);
     var rpl  = getReplyTo();
     rpl.setPrefix(prefix);
-    // set livechan
-    rpl.setBoard("overchan.random");
+    rpl.setBoard("");
     rpl.update();
     rpl.updateCaptcha();
     
