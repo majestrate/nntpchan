@@ -41,7 +41,7 @@ function nntpchan_submit_censor(form, regular_url) {
             show_result("error: "+err);
             return;
         }
-        var msgid = j.Message_id;
+        var msgid = j.message_id;
         if(msgid) {
             show_result("submitted report as "+msgid);
         } else {
