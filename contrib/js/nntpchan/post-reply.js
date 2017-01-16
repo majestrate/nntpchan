@@ -52,9 +52,8 @@ function ReplyBox() {
     elem.setAttribute("value", "");
     this.subject = elem;
     // submit
-    var submit = document.createElement("input");
+    var submit = document.createElement("button");
     submit.setAttribute("value", "reply");
-    submit.setAttribute("class", "button");
     table_insert_row(tbody, document.createTextNode("Subject"), [elem]);
     this.submit = submit;
     
