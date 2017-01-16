@@ -88,6 +88,8 @@ function ReplyBox() {
     table.appendChild(tbody);
     this.elem.appendChild(table);
     document.body.appendChild(this.elem);
+    $(this.elem).css("position", "fixed");
+    $(this.elem).css("display", "none");
     this._open = false;
 }
 
@@ -139,8 +141,7 @@ ReplyBox.prototype.show = function(info) {
     self.reload();
     self._open = true;
     console.log("reply box show for "+info.reference);
-    $(self.elem).css("display", "inline-block");
-    $(self.elem).css("position", "fixed");
+
     var off = $(info.elem).offset();
     $(self.elem).offset({
         top: off.top,
