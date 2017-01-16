@@ -171,6 +171,7 @@ onready(function(){
         var elems = elem.getElementsByClassName("postreply");
         if(elems && elems[0]) {
             var e = elems[0].children[1];
+            console.log("inject reply box into "+e);
             e.onclick = function(ev) {
                 if(!replyInfo.show) {
                     // is hidden, show reply
