@@ -60,7 +60,7 @@ function DynReply() {
   err_elem.setAttribute("id", "postform_msg");
   span.appendChild(err_elem);
   this._error = err_elem;
-  table_insert_row(tbody, document.createTextNode("Name"), [span])
+    table_insert_row(tbody, document.createTextNode("Name"), [span]);
   
   // subject
   elem = document.createElement("input");
@@ -110,7 +110,7 @@ function DynReply() {
   elem.name = "captcha";
   elem.autocomplete = "off";
   elem.setAttribute("id", "captcha_solution");
-  table_insert_row(tbody, document.createTextNode("Solution"), [elem])
+    table_insert_row(tbody, document.createTextNode("Solution"), [elem]);
     
   table.appendChild(tbody);
   this.form.appendChild(table);
@@ -265,56 +265,6 @@ function nntpchan_reply(parent, shorthash) {
   }
 }
 
-// inject post hover behavior
-function inject_hover(prefix, el, parent) {
-  if (!prefix) { throw "prefix is not defined"; }
-  var linkhash = el.dataset.msgidhash;
-  if (!linkhash) { throw "linkhash undefined"; }
-  console.log("rewrite linkhash "+linkhash);
-
-  var elem = document.createElement("span");
-  elem.setAttribute("class", "backlink_rewritten");
-  elem.appendChild(document.createTextNode(">>"+linkhash.substr(0,10)));
-  if (!parent) {
-    parent = el.parentNode;
-  }
-  parent.removeChild(el);
-  parent.appendChild(elem);
-  
-  elem.onclick = function(ev) {
-    if(parent.backlink) {
-      nntpchan_apicall(prefix+"api/find?hash="+linkhash, function(j) {
-        var wrapper = document.createElement("div");
-        wrapper.setAttribute("class", "hover "+linkhash);
-        if (j == null) {
-          // not found?
-          wrapper.setAttribute("class", "hover notfound-hover "+linkhash);
-          wrapper.appendChild(document.createTextNode("not found"));
-        } else {
-          // wrap backlink
-          nntpchan_buildpost(wrapper, j);
-        }
-        parent.appendChild(wrapper);
-        parent.backlink = false;
-      }, function(msg) {
-        var wrapper = document.createElement("div");
-        wrapper.setAttribute("class", "hover "+linkhash);
-        wrapper.appendChild(document.createTextNode(msg));
-        parent.appendChild(wrapper);
-        parent.backlink = false;
-      });
-    } else {
-      var elems = document.getElementsByClassName(linkhash);
-      if (!elems) throw "bad state, no backlinks open?";
-      for (var idx = 0 ; idx < elems.length; idx ++ ) {
-        elems[idx].parentNode.removeChild(elems[idx]);
-      }
-      parent.backlink = true;
-    }
-  };
-  parent.backlink = true;
-}
-
 
 function init(prefix) {
     var rpl  = getReplyTo();
@@ -350,9 +300,7 @@ function init(prefix) {
     });
     
     // add replyto post handlers
-    e = document.getElementById("postform_submit");
     var postit = function() {
-      var f = document.querySelector("form");
       // do ajax request to post data
       var r = getReplyTo();
       r.showMessage("posting... ");
@@ -371,10 +319,5 @@ function init(prefix) {
         r.clearSolution();
       });
     }
-    var f = document.querySelector("form");
-    f.onsubmit = function() {
-      postit();
-      return false;
-    };
 }
 
