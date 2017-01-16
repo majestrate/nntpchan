@@ -53,7 +53,7 @@ function ReplyBox() {
     this.subject = elem;
     // submit
     var submit = document.createElement("button");
-    submit.setAttribute("value", "reply");
+    submit.innerHTML = "reply";
     table_insert_row(tbody, document.createTextNode("Subject"), [elem]);
     this.submit = submit;
     
