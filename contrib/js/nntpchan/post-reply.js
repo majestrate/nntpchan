@@ -150,8 +150,9 @@ ReplyBox.prototype.show = function(info) {
         left: $(info.elem).width() + off.left
     });
     self.submit.onclick = function(ev) {
-        $.ajax({
-            data: self.makePost(info),
+        var post = self.makePost(info);
+        var a = $.ajax({
+            data: post,
             url: info.url,
             method: "POST",
             dataType: "json"
