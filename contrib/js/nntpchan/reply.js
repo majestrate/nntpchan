@@ -412,7 +412,6 @@ function init(prefix) {
     f.onsubmit = function() {
       postit();
       return false;
-    }
-  }  
+    };
 }
 
