@@ -17,3 +17,7 @@ function nntpchan_reply(parent, shorthash) {
         elem.value += ">>" + shorthash.substr(0,10) + "\n";
     }
 }
+
+function init(prefix) {
+    
+}
