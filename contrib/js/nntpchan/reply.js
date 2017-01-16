@@ -1,7 +1,7 @@
 
 function getReplyTo() {
     if(!document.dynreply) { 
-        document.dynreply = new DynReply();
+        document.dynreply = new DynReply(document.body);
     }
     var e = document.dynreply.elem;
     e.style.position = "fixed";
