@@ -174,7 +174,7 @@ ReplyBox.prototype.hide = function() {
     var self = this;
     if(!self.visible()) return;
     self._open = false;
-    $(self.elem).fadeout(400, function() {
+    $(self.elem).fadeOut(400, function() {
         self.submit.onclick = function(ev) {};
     });
 }
