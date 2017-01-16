@@ -257,8 +257,8 @@ function init(prefix) {
                 y = ev.pageY - $(this).height() / 2;
 
             $(e).offset({
-                top: y,
-                left: x
+                top: y / 2,
+                left: x / 2
             });
         }
     });
