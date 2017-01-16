@@ -24,6 +24,7 @@ function table_insert_row(table, header, items) {
 function ReplyBox() {
     var elem = document.createElement("div");
     this.elem = elem;
+    elem.setAttribute("class", "shadow shadow-box");
     // reference
     elem = document.createElement("input");
     elem.name = "reference";
