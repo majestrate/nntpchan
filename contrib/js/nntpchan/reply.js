@@ -336,23 +336,8 @@ function inject_hover(prefix, el, parent) {
   parent.backlink = true;
 }
 
-// inject post hover for all backlinks in an element
-function inject_hover_for_element(elem) {  
-  var elems = elem.getElementsByClassName("postno");
-  var ls = [];
-  var l = elems.length;
-  for ( var idx = 0 ; idx < l ; idx ++ ) {
-    var e = elems[idx];
-    ls.push(e);
-  }
-  for( var elem in ls ) {
-      inject_hover(prefix, ls[elem]);
-  }
-}
 
 function init(prefix) {
-    // inject posthover ...
-    inject_hover_for_element(document);
     var rpl  = getReplyTo();
     rpl.setPrefix(prefix);
     rpl.setBoard("");
