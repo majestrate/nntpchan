@@ -132,6 +132,12 @@ ReplyBox.prototype.show = function(info) {
     console.log("reply box show for "+info.reference);
     var self = this;
     $(self.elem).css("display", "inline-block");
+    $(self.elem).css("position", "fixed");
+    var off = $(info.elem).offset();
+    $(self.elem).offset({
+        top: off.top,
+        left: off.left
+    });
     self.submit.onclick = function(ev) {
         $.ajax({
             data: self.makePost(info),
