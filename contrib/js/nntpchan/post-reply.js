@@ -86,6 +86,7 @@ function ReplyBox() {
     this.captcha_solution = elem;
     table.appendChild(tbody);
     this.elem.appendChild(table);
+    document.body.appendChild(this.elem);
 }
 
 ReplyBox.prototype.result = function(msg, color) {
