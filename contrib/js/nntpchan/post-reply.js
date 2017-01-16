@@ -164,6 +164,8 @@ ReplyBox.prototype.show = function(info) {
                 self.clear();
                 setTimeout(function() {
                     self.hide();
+                    if(data.redirect_url)
+                        window.location = data.redirect_url;
                 }, 1000);
             } else {
                 self.result("error: " + data.error, "red");
