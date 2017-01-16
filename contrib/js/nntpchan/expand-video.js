@@ -206,14 +206,16 @@ function setupVideo(thumb, url) {
     }*/
 }
 
+
 function setupVideosIn(element) {
+    var vidRegex = /(\.webm)|(\.mp4)|(\.mkv)|(\.avi)|(\.m4v)|(\.ogv)|(\.flv)/;
     var thumbs = element.querySelectorAll("a.file");
     for (var i = 0; i < thumbs.length; i++) {
-        if (/(\.webm)|(\.mp4)$/.test(thumbs[i].pathname)) {
+        if (vidRegex.test(thumbs[i].pathname)) {
             setupVideo(thumbs[i], thumbs[i].href);
         } else {
           var url = thumbs[i].href;
-          if (/(\.webm)|(\.mp4)$/.test(url)) setupVideo(thumbs[i], url);
+          if (vidRegex.test(url)) setupVideo(thumbs[i], url);
         }
     }
 }
