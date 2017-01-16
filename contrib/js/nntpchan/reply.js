@@ -5,6 +5,8 @@ function getReplyTo() {
     }
     var e = document.dynreply.elem;
     e.style.position = "fixed";
+    e.style.left = document.dynreply.x+ "px";
+    e.style.top = document.dynreply.y + "px";
     e.setAttribute("class", "shadow");
     return document.dynreply;
 }
