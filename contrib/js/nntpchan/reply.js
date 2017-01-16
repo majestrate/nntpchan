@@ -1,19 +1,12 @@
 
 function getReplyTo() {
-  if(!document.dynreply) {
-    var e = document.getElementById("postform_container");
-    if (e) {
-      // use existing postform
-      document.dynreply = new DynReply(e);
-    } else {
-      // build a new postform
-      document.dynreply = new DynReply();
+    if(!document.dynreply) { 
+        document.dynreply = new DynReply();
     }
-    e = document.dynreply.elem;
+    var e = document.dynreply.elem;
     e.style.position = "fixed";
     e.setAttribute("class", "shadow");
-  }
-  return document.dynreply;
+    return document.dynreply;
 }
 
 function table_insert_row(table, header, items) {
@@ -34,20 +27,7 @@ function table_insert_row(table, header, items) {
 /**
    build dynamic reply box
 */
-function DynReply(existingElem) {
-  if (existingElem) {
-    // wrap existing post form
-    // XXX: wrap it here
-    this.elem = existingElem;
-    this.form = this.elem.querySelector("form");
-    this._error = document.getElementById("postform_msg");
-    this.url = this.form.action + "?t=json";
-    this.x = 1;
-    this.y = 1;
-    return;
-  }
-
-  // build new post form
+function DynReply() {
   
   var elem = document.createElement("div");
   elem.setAttribute("id", "postform_container");
@@ -142,7 +122,6 @@ function DynReply(existingElem) {
   this.url = null;
   this.x = 1;
   this.y = 1;
-  
 }
 
 DynReply.prototype.update = function() {
