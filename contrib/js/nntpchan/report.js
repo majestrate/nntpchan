@@ -32,7 +32,10 @@ function nntpchan_submit_censor(form, regular_url) {
     var result = document.getElementById("nntpchan_censor_result");
 
     var show_result = function(msg) {
-        result.innerHTML = msg;
+        while(result.children.length > 0) {
+            result.children[0].remove();
+        }
+        result.appendChild(document.createTextNode(msg));
     }
 
     var handle_result = function(j) {
