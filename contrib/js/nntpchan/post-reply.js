@@ -141,7 +141,7 @@ ReplyBox.prototype.show = function(info) {
     self.reload();
     self._open = true;
     console.log("reply box show for "+info.reference);
-
+    $(self.elem).css("display", "inline-block");
     var off = $(info.elem).offset();
     $(self.elem).offset({
         top: off.top,
