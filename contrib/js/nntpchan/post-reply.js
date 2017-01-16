@@ -133,6 +133,7 @@ ReplyBox.prototype.clear = function() {
 }
 
 ReplyBox.prototype.reload = function() {
+    var self = this;
     self.captcha_img.src = "/captcha/img?" + new Date().getTime();
 }
 
