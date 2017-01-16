@@ -115,7 +115,7 @@ function DynReply(rootElem) {
 
 DynReply.prototype.show = function() {
     console.log("show dynreply");
-    this.update();
+    this.updateCaptcha();
     this.elem.style.display = 'inline';
 }
 
