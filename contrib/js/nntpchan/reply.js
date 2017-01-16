@@ -241,8 +241,6 @@ function nntpchan_reply(parent, shorthash) {
 function init(prefix) {
     var rpl  = getReplyTo();
     rpl.setPrefix(prefix);
-    rpl.setBoard("");
-    rpl.update();
     rpl.updateCaptcha();
     
     // position replyto widget
