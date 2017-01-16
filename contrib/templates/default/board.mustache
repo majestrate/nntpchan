@@ -76,8 +76,8 @@
       var prefix = "{{board.Prefix}}";
       var e = document.getElementById("nntpchan_banner");
       nntpchan_inject_banners(e, prefix);
-      init(prefix);
-      ready();
+      if(init) init(prefix);
+      ready(prefix);
     </script>
     <hr/>
     <footer>

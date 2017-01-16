@@ -93,6 +93,3 @@ function nntpchan_submit_censor(form, regular_url) {
     nntpchan_apicall(url, handle_result, null, "POST", formdata);
 }
 
-onready(function() {
-    
-});
