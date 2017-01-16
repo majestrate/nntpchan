@@ -355,8 +355,8 @@ function init(prefix) {
         var x = ev.pageX - $(this).width() / 2,
             y = ev.pageY - $(this).height() / 2;
         $dragging.offset({
-          top: y,
-          left: x
+          top: y - 50,
+          left: x - 50
         });
       }
     });
