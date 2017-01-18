@@ -95,8 +95,6 @@ if [ "$ipfs" == "yes" ] ; then
     cd "$GOPATH/src/gx/ipfs"
     "$GOPATH/bin/gx" get "$rev"
     cd "$rev/srndv2"
-    echo "get deps"
-    go get -d -v 
     echo "build..."
     go build -v .
     cp srndv2 "$root"
