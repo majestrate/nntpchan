@@ -94,10 +94,12 @@ if [ "$ipfs" == "yes" ] ; then
     mkdir -p "$GOPATH/src/gx/ipfs"
     cd "$GOPATH/src/gx/ipfs"
     "$GOPATH/bin/gx" get "$rev"
-    cd "$root"
-    go get -d -v
+    cd "$rev/srndv2"
+    echo "get deps"
+    go get -d -v 
+    echo "build..."
     go build -v .
-    mv nntpchan srndv2
+    cp srndv2 "$root"
     echo -e "Built\n"
     echo "Now configure NNTPChan with ./srndv2 setup"
 else
