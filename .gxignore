@@ -20,7 +20,6 @@ webroot/
 # built binaries
 go/
 srndv2
-nntpchan
 
 # private key
 *.key
