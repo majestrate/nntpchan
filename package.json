@@ -1,13 +1,13 @@
 {
   "name": "nntpchan",
   "author": "jeff",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "gxDependencies": [
     {
       "author": "jeff",
       "name": "srndv2",
-      "hash": "QmPAqM7anxdr1ngPmJz9J9AAxDLinDz2Eh9aAzLF9T7LNa",
-      "version": "0.0.2"
+      "hash": "QmZq5c9CksFnozQZqgwnzjdSBjD95ShwfuV8A3eDzs5ULd",
+      "version": "0.1.0"
     }
   ],
   "language": "go",
