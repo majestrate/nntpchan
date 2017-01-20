@@ -96,6 +96,7 @@ textarea {
 .post_body > pre {
     font-size: 10pt;
     font-weight: unset;
+    word-break: break-word;
 }
 
 pre {
