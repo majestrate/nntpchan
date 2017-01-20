@@ -65,11 +65,10 @@ echo "building nntpchan.js ..."
 echo
 initfile "$outfile"
 
-if [ -e ./contrib/js/contrib/*.js ] ; then
-    for f in ./contrib/js/contrib/*.js ; do
-        mini "$f" "$outfile"
-    done
-fi
+
+for f in ./contrib/js/contrib/*.js ; do
+    mini "$f" "$outfile"
+done
 
 mini ./contrib/js/entry.js "$outfile"
 
