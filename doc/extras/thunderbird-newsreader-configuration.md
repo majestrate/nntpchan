@@ -13,44 +13,44 @@ In my example, my computer is on a VPN that is run by the server. The vpn's fire
 
 The first thing to do is to add a new account. For the most part here you can just follow the pictures
 
-![](http://i.imgur.com/gifKx4J.png)
+![](thunderbird-1.png)
 
-![](http://i.imgur.com/sA6jYAu.png)
+![](thunderbird-2.png)
 
-![](http://i.imgur.com/kvUs4We.png)
+![](thunderbird-3.png)
 
 Whatever you put in the "Your Name" field here is what will be displayed in green on the website. It's best to set it to Anonymous so you don't look like a tripfag
 
-![](http://i.imgur.com/FIeTx5G.png)
+![](thunderbird-4.png)
 
 I'm assuming you know your server's IP address
 
-![](http://i.imgur.com/4vQYPjO.png)
+![](thunderbird-5.png)
 
 There are still a few things you need to change before it will work. 
 
-![](http://i.imgur.com/FQOdlyn.png)
+![](thunderbird-6.png)
 
 Also, mine didn't work until I set Connection security to None instead of TLS, even though I know for a fact that TLS is enabled in the server. I don't know why.
 
-![](http://i.imgur.com/1VGXtGx.png)
+![](thunderbird-7.png)
 
 Before you can subscribe to any groups you need to log in
 
-![](http://i.imgur.com/984ZQXN.png)
+![](thunderbird-8.png)
 
-![](http://i.imgur.com/ou0SSbc.png)
+![](thunderbird-__11.png)
 
 Add your account on the server
 
-![](http://i.imgur.com/jo8BaOI.png)
+![](thunderbird-__12.png)
 
-![](http://i.imgur.com/V6fWJd7.png)
+![](thunderbird-__13.png)
 
 Now you can subscribe to groups
 
-![](http://i.imgur.com/984ZQXN.png)
+![](thunderbird-8.png)
 
-![](http://i.imgur.com/3sEW3o1.png)
+![](thunderbird-9.png)
 
-![](http://i.imgur.com/ipggXtj.png)
+![](thunderbird-10.png)
