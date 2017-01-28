@@ -10,7 +10,7 @@ function wobble_text(str)
 end
 
 -- generate extra markup
-function memeposting(prefix, body)
+function memeposting(body, prefix)
   body = string.gsub(body, "<(%w+)>", wobble_text)
   return body
 end
