@@ -11,6 +11,9 @@ end
 
 -- generate extra markup
 function memeposting(body, prefix)
-  body = string.gsub(body, "|(.*)|", wobble_text)
+  local nums = 1
+  for nums > 0 do
+    body, nums = string.gsub(body, "|(.*)|", wobble_text, 1)
+  end
   return body
 end
