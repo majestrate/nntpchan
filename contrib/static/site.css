@@ -636,4 +636,5 @@ th > label {
 .wobble {
     animation: ebin 0.25s infinite;
     animation-timing-function: linear;
+    text-align: center;
 }
