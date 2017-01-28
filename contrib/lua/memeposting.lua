@@ -11,6 +11,6 @@ end
 
 -- generate extra markup
 function memeposting(body, prefix)
-  body = string.gsub(body, "<(%w+)>", wobble_text)
+  body = string.gsub(body, "\[\[(%w+)\]\]", wobble_text)
   return body
 end
