@@ -27,9 +27,13 @@ _next=""
 unstable="no"
 neochan="no"
 buildredis="no"
+lua="no"
 # check for build flags
 for arg in "$@" ; do
     case $arg in
+        "--enable-lua")
+            lua="yes"
+            ;;
         "--enable-redis")
             buildredis="yes"
             ;;
@@ -60,6 +64,10 @@ done
 
 if [ "$buildredis" == "yes" ] ; then
     tags="$tags -tags disable_redis"
+fi
+
+if [ "$lua" == "yes" ] ; then
+    tags="$tags -tags lua"
 fi
 
 if [ "$rev" == "" ] ; then
