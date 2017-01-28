@@ -9,8 +9,13 @@ function wobble_text(str)
   return span_text("wobble", str)
 end
 
+function explode_text(str)
+  return span_text("explode", str)
+end
+
 -- generate extra markup
 function memeposting(body, prefix)
   body = string.gsub(body, "|(.-)|", wobble_text)
+  body = string.gsub(body, "//(.-)\\\\", explode_text)
   return body
 end
