@@ -626,3 +626,14 @@ th > label {
 #censor-toggle, a {
     color: #34345C;
 }
+
+@keyframes ebin {
+    0% {transform: rotate(-10deg);}
+    50% {transform: rotate(10deg);}
+    100% {transform: rotate(-10deg);}
+}
+
+.wobble {
+    animation: ebin 0.25s infinite;
+    animation-timing-function: linear;
+}
