@@ -62,8 +62,8 @@ Fill in the fields required for the NNTP server.
 
 Fill in the fields required for the TLS security system.
 
-* **Hostname or IP address** - FIXME.
-* **TLS keyname** - FIXME.
+* **Hostname or IP address** - Represents the `Common Name (CN)` in the TLS certificate
+* **TLS keyname** - Represents the `Organization (O)` in the TLS certificate. Most nodes use `overchan`.
 
 ###Set paths to external programs
 
