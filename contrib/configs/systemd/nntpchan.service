@@ -1,6 +1,6 @@
 [Unit]
 Description=NNTPChan Server
-Requires=redis_6379.service
+Requires=postgresql.service
 
 [Service]
 Type=simple
