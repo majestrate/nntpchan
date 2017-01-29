@@ -18,7 +18,7 @@ function psy_text(str)
 end
 
 function red_text(str)
-  return span_text("redtext", str)
+  return string.format("<span class='redtext'>%s</span>", str)
 end
 
 function pre_text(str)
