@@ -25,6 +25,8 @@ function pre_text(str)
   str = str:gsub("\\", "&#92;")
   str = str:gsub("/", "&#47;")
   str = str:gsub("%]", "&#93;")
+  str = str:gsub("=", "&#61;")
+  str = str:gsub("@", "&#64;")
   return span_text("code", str:gsub("%|", "&#124;"))
 end
 
@@ -33,6 +35,8 @@ function memeposting(body, prefix)
   body = string.gsub(body, "`(.-)`", pre_text)
   body = string.gsub(body, "%(%(%((.-)%)%)%)", function(str) return string.format("<div class='nazi' style='background-image: url(%sstatic/nazi.png);'>%s</div>", prefix, str) end)
   body = string.gsub(body, "|(.-)|", wobble_text)
+  body = string.gsub(body, "==(.-)==", red_text)
+  body = string.gsub(body, "@@(.-)@@", psy_text)
   body = string.gsub(body, "//(.-)\\\\", explode_text)
   body = string.gsub(body, "/@(.-)@\\", psy_text)
   return body
