@@ -17,6 +17,10 @@ function psy_text(str)
   return span_text("psy", str)
 end
 
+function red_text(str)
+  return span_text("redtext", str)
+end
+
 function pre_text(str)
 
   str = str:gsub("%(", "&#40;")
