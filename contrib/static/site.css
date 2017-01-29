@@ -675,5 +675,4 @@ th > label {
 .flashy {
     animation: flash 1s infinite;
     animation-timing-function: linear;
-    text-align: center;
 }
