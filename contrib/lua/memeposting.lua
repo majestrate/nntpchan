@@ -23,6 +23,7 @@ function pre_text(str)
   str = str:gsub("%)", "&#41;")
   str = str:gsub("%[", "&#91;")
   str = str:gsub("\\", "&#92;")
+  str = str:gsub("/", "&#47;")
   str = str:gsub("%]", "&#93;")
   return span_text("code", str:gsub("%|", "&#124;"))
 end
