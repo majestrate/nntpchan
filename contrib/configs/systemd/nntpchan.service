@@ -1,9 +1,12 @@
 [Unit]
 Description=NNTPChan Server
-Requires=postgresql.service
+#After=network.target
+#Requires=postgresql.service
 
 [Service]
 Type=simple
+#Uncomment next line if you want to specify an ini path not in the working directory
+#Environment=SRND_INI_PATH=/opt/nntpchan/srnd.ini
 WorkingDirectory=/opt/nntpchan
 ExecStart=/opt/nntpchan/srndv2 run
 ExecStop=/bin/kill -15 $MAINPID
