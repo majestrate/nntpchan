@@ -17,9 +17,13 @@ function psy_text(str)
   return span_text("psy", str)
 end
 
+function quotey_text(str)
+  return span_text("nazi", str)
+end
+
 -- generate extra markup
 function memeposting(body, prefix)
-  body = string.gsub(body, "%(%(%((.-)%)%)%)", function (str) return string.format("<div style='background-image: url(%sstatic/nazi.png)'>%s</div>", prefix, str) end)
+  body = string.gsub(body, "%(%(%((.-)%)%)%)", quotey_text)
   body = string.gsub(body, "%[%[%[(.-)%]%]%]", wobble_text)
   body = string.gsub(body, "//(.-)\\\\", explode_text)
   body = string.gsub(body, "/@(.-)@\\", psy_text)
