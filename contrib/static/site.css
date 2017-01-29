@@ -673,7 +673,7 @@ th > label {
 }
 
 .flashy {
-    animation: flash 0.5s infinite;
+    animation: flash 0.125s infinite;
     animation-timing-function: linear;
     text-align: center;
 }
