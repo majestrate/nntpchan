@@ -663,3 +663,17 @@ th > label {
 .nazi {
     padding: 10px;
 }
+
+
+@keyframes flash {
+    0% { opacity: 1;}
+    49% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+.flashy {
+    animation: flash 0.5s infinite;
+    animation-timing-function: linear;
+    text-align: center;
+}
