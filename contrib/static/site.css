@@ -649,3 +649,16 @@ th > label {
         animation: expl 0.5s infinite;
 }
 
+.code {
+        font-family: monospace;
+        font-size: smaller;
+        background-color: #313131;
+        color: #fb9f26;
+        border-radius: 5px;
+        padding: 10px;
+}
+
+
+.nazi {
+    padding: 10px;
+}
