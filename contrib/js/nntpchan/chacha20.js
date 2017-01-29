@@ -6,6 +6,7 @@
 // See for details: http://cr.yp.to/chacha/chacha-20080128.pdf
 
 function U8TO32_LE(x, i) {
+    if(x === undefined) return;
   return x[i] | (x[i+1]<<8) | (x[i+2]<<16) | (x[i+3]<<24);
 }
 
@@ -20,7 +21,7 @@ function ROTATE(v, c) {
   return (v << c) | (v >>> (32 - c));
 }
 
-var Chacha20 = function(key, nonce, counter) {
+function Chacha20(key, nonce, counter) {
   this.input = new Uint32Array(16);
 
   // https://tools.ietf.org/html/draft-irtf-cfrg-chacha20-poly1305-01#section-2.3
@@ -103,14 +104,17 @@ Chacha20.prototype.keystream = function(dst, len) {
   this.encrypt(dst, dst, len);
 };
 
-// additions to make it easier and export it as a module
+var Cipher = Chacha20;
 
-exports.Cipher = Chacha20;
+var chacha_encrypt;
+var chacha_decrypt;
 
-exports.encrypt = exports.decrypt = function(key, nonce, data)
+chacha_decrypt = function(key, nonce, data)
 {
-  var cipher = new Chacha20(key, nonce);
-  var ret = new Buffer(data.length);
+  var cipher = new Chacha20(key, nonce, 0);
+  var ret = new Uint8Array(data.length);
   cipher.encrypt(ret, data, data.length);
   return ret;
-}
+};
+
+chacha_encrypt = chacha_decrypt;
