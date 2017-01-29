@@ -17,12 +17,16 @@ function psy_text(str)
   return span_text("psy", str)
 end
 
+function pre_text(str)
+  return span_text("code", str:gsub("%|", "&#124;"))
+end
+
 -- generate extra markup
 function memeposting(body, prefix)
+  body = string.gsub(body, "`(.-)`", pre_text)
   body = string.gsub(body, "%(%(%((.-)%)%)%)", function(str) return string.format("<div class='nazi' style='background-image: url(%sstatic/nazi.png);'>%s</div>", prefix, str) end)
-  body = string.gsub(body, "%[%[%[(.-)%]%]%]", wobble_text)
+  body = string.gsub(body, "|(.-)|", wobble_text)
   body = string.gsub(body, "//(.-)\\\\", explode_text)
   body = string.gsub(body, "/@(.-)@\\", psy_text)
-  body = string.gsub(body, "`(.-)`", pre_text)
   return body
 end
