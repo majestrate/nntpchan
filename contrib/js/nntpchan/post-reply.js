@@ -188,6 +188,7 @@ ReplyBox.prototype.hide = function() {
 }
 
 onready(function(){
+    return; /* disabled */
     var replyBox = new ReplyBox();
     replyBox.hide();
     document.reply = replyBox;
