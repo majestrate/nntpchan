@@ -18,6 +18,12 @@ function psy_text(str)
 end
 
 function pre_text(str)
+
+  str = str:gsub("%(", "&#40;")
+  str = str:gsub("%)", "&#41;")
+  str = str:gsub("%[", "&#91;")
+  str = str:gsub("\\", "&#92;")
+  str = str:gsub("%]", "&#93;")
   return span_text("code", str:gsub("%|", "&#124;"))
 end
 
