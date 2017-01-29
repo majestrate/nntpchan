@@ -646,7 +646,8 @@ th > label {
 }
 
 .explode {
-        animation: expl 0.5s infinite;
+    animation: expl 0.5s infinite;
+    text-align: center;
 }
 
 .code {
