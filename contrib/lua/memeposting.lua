@@ -14,7 +14,7 @@ function explode_text(str)
 end
 
 function psy_text(str)
-  return span_text("psy", str)
+  return string.format("<span class='psy'>%s</span>", str)
 end
 
 function red_text(str)
