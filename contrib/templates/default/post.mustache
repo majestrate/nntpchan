@@ -18,7 +18,8 @@
      data-origin="clearnet"
      {{/post.IsClearnet}}
      data-posturl="{{post.PostURL}}">
-  <legend class="postheader">
+    <div class="postheader-outer">
+    <div class="postheader">
     <span class="origin">
   {{#post.IsI2P}}
     <img src="{{post.Prefix}}static/i2p.png" title="{{#i18n.Translations}}{{from_i2p}}{{/i18n.Translations}}" />
@@ -33,6 +34,7 @@
     <span class="subject">{{post.Subject}}</span>
     <span class="name">{{post.Name}}</span><span class="tripcode">{{{post.Pubkey}}}</span>
     <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
+    </div>
     <div class="postreply">
       <a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" root="{{post.Reference}}" boardname="{{post.Board}}">&gt;&gt;{{post.ShortHash}}</a>
       <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
@@ -46,10 +48,7 @@
           </span>
       </span>
     </div>
-    <div>
-      <span class="msgid">{{post.MessageID}}</span>
     </div>
-  </legend>
   <hr>
   <div class="attachments">
   {{#post.Attachments}}
