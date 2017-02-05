@@ -44,16 +44,14 @@
       </div>
     </div>
     <div>
-      Subject: <span class="subject">{{post.Subject}}</span>
+      <span class="subject">{{post.Subject}}</span>
+      <span class="name">{{post.Name}}</span><span class="tripcode">{{{post.Pubkey}}}</span>
     </div>
     <div>
-      Name: <span class="name">{{post.Name}}</span><span class="tripcode">{{{post.Pubkey}}}</span>
+      <span class="msgid">{{post.MessageID}}</span>
     </div>
     <div>
-      MessageID: <span class="msgid">{{post.MessageID}}</span>
-    </div>
-    <div>
-      Date: <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
+      <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
     </div>
   </legend>
   <hr>
