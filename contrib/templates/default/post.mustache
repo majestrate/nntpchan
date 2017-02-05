@@ -36,7 +36,7 @@
     <div class="postreply">
       <a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" root="{{post.Reference}}" boardname="{{post.Board}}">&gt;&gt;{{post.ShortHash}}</a>
       <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
-      <div class="postreport">
+      <span class="postreport">
           <label for="report_{{post.PostHash}}">[x]</label>
           <input type="checkbox" id="report_{{post.PostHash}}">
           <div style="display: none;" onclick="nntpchan_report('{{post.MessageID}}', '{{post.PostHash}}', '{{post.Reference}}', '{{post.ReferenceHash}}')">
@@ -44,7 +44,7 @@
                   [delete]
               </div>
           </div>
-      </div>
+      </span>
     </div>
     <div>
       <span class="msgid">{{post.MessageID}}</span>
