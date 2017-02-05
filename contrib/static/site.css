@@ -354,10 +354,6 @@ input, textarea {
     float: right;
 }
 
-div {
-    flex: 1;
-    flex-direction: row;
-}
 
 .post {
     background-color: #D6DAF0;
@@ -675,4 +671,9 @@ th > label {
 .flashy {
     animation: flash 1s infinite;
     animation-timing-function: linear;
+}
+
+.thread {
+    display: flex;
+    flex-direction: column;
 }
