@@ -30,6 +30,9 @@
     <img src="{{post.Prefix}}static/clearnet.png" title="{{#i18n.Translations}}{{from_clearnet}}{{/i18n.Translations}}" />
   {{/post.IsClearnet}}
     </span>
+    <span class="subject">{{post.Subject}}</span>
+    <span class="name">{{post.Name}}</span><span class="tripcode">{{{post.Pubkey}}}</span>
+    <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
     <div class="postreply">
       <a class="postno" onclick="nntpchan_reply(this, '{{post.ShortHash}}');" root="{{post.Reference}}" boardname="{{post.Board}}">&gt;&gt;{{post.ShortHash}}</a>
       <a href="{{post.PostURL}}">[{{#i18n.Translations}}{{reply_label}}{{/i18n.Translations}}]</a>
@@ -42,11 +45,6 @@
               </div>
           </div>
       </div>
-    </div>
-    <div>
-      <span class="subject">{{post.Subject}}</span>
-      <span class="name">{{post.Name}}</span><span class="tripcode">{{{post.Pubkey}}}</span>
-      <time datetime="{{post.DateRFC}}">{{post.Date}}</time>
     </div>
     <div>
       <span class="msgid">{{post.MessageID}}</span>
