@@ -677,3 +677,5 @@ th > label {
     display: flex;
     flex-direction: column;
 }
+
+[data-subject~="None"] { display: none; }
