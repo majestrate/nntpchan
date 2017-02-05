@@ -462,6 +462,7 @@ input, textarea {
     float: left;
     clear: both;
 */
+    margin-left: 5%;
 }
 
 .post_body {
