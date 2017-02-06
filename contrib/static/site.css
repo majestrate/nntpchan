@@ -368,9 +368,8 @@ input, textarea {
     display: table;
     padding: 2px;
     margin: 2px;
-
-    display: inline-block;
 /*
+    display: inline-block;
     float: left; */
     clear: both;
     min-width: 500px;
