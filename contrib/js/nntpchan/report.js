@@ -4,6 +4,7 @@
 function show_censortools() {
     var e = document.getElementById("censor-tools");
     if(e) e.checked = true;
+    else throw "censor tools element not found wtfug?";
 }
 
 function nntpchan_report_thread(posthash) {
@@ -58,10 +59,13 @@ function nntpchan_submit_censor(form, regular_url) {
     var url = parts.join('/');
     url += '/json';
     console.log(url);
-    var captcha = form.captcha.value;
-    if(!captcha) {
-        show_result("no captcha solution provided");
-        return;
+    var captcha = null;
+    if(form.captcha) {
+        captcha = form.captcha.value;
+        if(!captcha) {
+            show_result("no captcha solution provided");
+            return;
+        }
     }
     var secret = document.getElementById("nntp_censor_secret").value;
     if(!secret) {
@@ -88,8 +92,9 @@ function nntpchan_submit_censor(form, regular_url) {
     formdata.append("name", "mod#"+secret);
     formdata.append("subject", "censor");
     formdata.append("message", msg);
-    formdata.append("captcha", captcha);
+    if(captcha) {
+        formdata.append("captcha", captcha);
+    }
     formdata.append("reference", "");
     nntpchan_apicall(url, handle_result, null, "POST", formdata);
 }
-
