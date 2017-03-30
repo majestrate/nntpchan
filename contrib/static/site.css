@@ -605,7 +605,7 @@ textarea#reply-text {
 [type=checkbox] {
     display: none;
 }
-:checked + span {
+:checked + div {
     display: block !important;
 }
 
