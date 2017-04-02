@@ -728,7 +728,7 @@ th > label {
 	.thread {
 		width: auto;
 		padding:0;
-		border-bottom: 1px solid #B7C5D9;
+		/* border-bottom: 1px solid #B7C5D9; */
 		padding:15px 0;
 		display:block;
 	}
