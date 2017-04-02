@@ -47,7 +47,9 @@ Bitcoin: [15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE](bitcoin://15yuMzuueV8y5vPQQ39ZqQVz
 
 * started in mid 2013 on anonet
 
-The network over the span of 4 years had this shape: (thnx anon who made this)
+This is a graph of the post flow of the `overchan.test` newsgroup over 4 years, quite a big network.
 
-![network topology of 4 years](topology.png "post flow")
+(thnx anon who made this btw)
+
+![network topology of 4 years](topology.png "changolia")
 
