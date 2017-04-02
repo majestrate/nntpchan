@@ -49,5 +49,5 @@ Bitcoin: [15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE](bitcoin://15yuMzuueV8y5vPQQ39ZqQVz
 
 The network over the span of 4 years had this shape: (thnx anon who made this)
 
-![network topology of 4 years](topology.png post flow)
+![network topology of 4 years](topology.png "post flow")
 
