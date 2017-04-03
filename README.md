@@ -7,15 +7,15 @@
 
 This repository contains resources used by the core daemon which is located on [GitHub](https://github.com/majestrate/srndv2) (for now) along with general documentation, [here](doc/).
 
-##Getting started
+## Getting started
 
 [This](doc) is a step-by-step guide for getting up-and-running with NNTPChan as well as documentation for developers who want to either work on NNTPChan directly or use NNTPChan in their aplications with the API.
 
-##Bugs and issues
+## Bugs and issues
 
 *PLEASE* report any bugs you find while building, setting-up or using NNTPChan on the [GitHub issue tracker](https://github.com/majestrate/nntpchan/issues) or on the [GitGud issue tracker](https://gitgud.io/uguu/nntpchan/issues) so that the probelms can be resolved or discussed.
 
-##Clients
+## Clients
 
 NNTP (confirmed working):
 
@@ -26,20 +26,20 @@ Web:
 * [Yukko](https://github.com/faissaloo/Yukko): ncurses based nntpchan web ui reader
 
 
-##Support
+## Support
 
 Need help? Join us on IRC.
 
 1. [freenode: #nntpchan](https://webchat.freenode.net/?channels=#nntpchan)
 2. [rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan) - Most active
 
-##Donations
+## Donations
 
 Like this project? Why not help by funding it?
 
 Bitcoin: [15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE](bitcoin://15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE)
 
-##Acknowledgements
+## Acknowledgements
 
 * [Deavmi](https://deavmi.carteronline.net/) - Making the documentation beautiful.
 
@@ -52,4 +52,3 @@ This is a graph of the post flow of the `overchan.test` newsgroup over 4 years, 
 (thnx anon who made this btw)
 
 ![network topology of 4 years](topology.png "changolia")
-
