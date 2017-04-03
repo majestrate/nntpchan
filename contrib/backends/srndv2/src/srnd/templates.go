@@ -443,40 +443,41 @@ func (self *templateEngine) genGraphs(prefix string, wr io.Writer, db Database) 
 
 // generate front page and board list
 func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name string, indexwr, boardswr io.Writer, db Database) {
-	// the graph for the front page
-	var frontpage_graph boardPageRows
+	/*
+		// the graph for the front page
+		var frontpage_graph boardPageRows
 
-	// for each group
-	groups := db.GetAllNewsgroups()
-	for _, group := range groups {
-		// posts this hour
-		hour := db.CountPostsInGroup(group, 3600)
-		// posts today
-		day := db.CountPostsInGroup(group, 86400)
-		// posts total
-		all := db.CountPostsInGroup(group, 0)
-		frontpage_graph = append(frontpage_graph, boardPageRow{
-			All:   all,
-			Day:   day,
-			Hour:  hour,
-			Board: group,
-		})
-	}
-
-	var posts_graph postsGraph
-
-	posts := db.GetLastDaysPosts(10)
-	if posts == nil {
-		// wtf?
-	} else {
-		for _, entry := range posts {
-			posts_graph = append(posts_graph, postsGraphRow{
-				day: entry.Time(),
-				Num: entry.Count(),
+		// for each group
+		groups := db.GetAllNewsgroups()
+		for _, group := range groups {
+			// posts this hour
+			hour := db.CountPostsInGroup(group, 3600)
+			// posts today
+			day := db.CountPostsInGroup(group, 86400)
+			// posts total
+			all := db.CountPostsInGroup(group, 0)
+			frontpage_graph = append(frontpage_graph, boardPageRow{
+				All:   all,
+				Day:   day,
+				Hour:  hour,
+				Board: group,
 			})
 		}
-	}
 
+		var posts_graph postsGraph
+
+		posts := db.GetLastDaysPosts(10)
+		if posts == nil {
+			// wtf?
+		} else {
+			for _, entry := range posts {
+				posts_graph = append(posts_graph, postsGraphRow{
+					day: entry.Time(),
+					Num: entry.Count(),
+				})
+			}
+		}
+	*/
 	models := db.GetLastPostedPostModels(prefix, 20)
 
 	wr := indexwr
@@ -484,15 +485,16 @@ func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name st
 	param := make(map[string]interface{})
 
 	param["overview"] = self.renderTemplate("overview.mustache", map[string]interface{}{"overview": overviewModel(models)})
-
-	sort.Sort(posts_graph)
-	param["postsgraph"] = self.renderTemplate("posts_graph.mustache", map[string]interface{}{"graph": posts_graph})
-	sort.Sort(frontpage_graph)
-	if len(frontpage_graph) > top_count {
-		param["boardgraph"] = frontpage_graph[:top_count]
-	} else {
-		param["boardgraph"] = frontpage_graph
-	}
+	/*
+		sort.Sort(posts_graph)
+		param["postsgraph"] = self.renderTemplate("posts_graph.mustache", map[string]interface{}{"graph": posts_graph})
+		sort.Sort(frontpage_graph)
+		if len(frontpage_graph) > top_count {
+			param["boardgraph"] = frontpage_graph[:top_count]
+		} else {
+			param["boardgraph"] = frontpage_graph
+		}
+	*/
 	param["frontend"] = frontend_name
 	param["totalposts"] = db.ArticleCount()
 
@@ -503,13 +505,14 @@ func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name st
 	if err != nil {
 		log.Println("error writing front page", err)
 	}
-
-	wr = boardswr
-	param["graph"] = frontpage_graph
-	_, err = io.WriteString(wr, self.renderTemplate("boardlist.mustache", param))
-	if err != nil {
-		log.Println("error writing board list page", err)
-	}
+	/*
+		wr = boardswr
+		param["graph"] = frontpage_graph
+		_, err = io.WriteString(wr, self.renderTemplate("boardlist.mustache", param))
+		if err != nil {
+			log.Println("error writing board list page", err)
+		}
+	*/
 }
 
 func ReloadTemplates() {
