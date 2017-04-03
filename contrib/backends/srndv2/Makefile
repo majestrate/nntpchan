@@ -1,6 +1,8 @@
 REPO=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-all: srndv2
+all: clean build
+
+build: srndv2
 
 srndv2:
 	GOPATH=$(REPO) go build -v

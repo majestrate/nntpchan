@@ -109,14 +109,10 @@ if [ "$ipfs" == "yes" ] ; then
     echo -e "Built\n"
     echo "Now configure NNTPChan with ./srndv2 setup"
 else
-    if [ "$unstable" == "yes" ] ; then
-        make -C contrib/backends/srndv2
-        cp contrib/backends/srndv2/nntpchand "$root/nntpchan"
-        echo "built unstable, if you don't know what to do, run without --unstable"
-    else
-        go get -u -v $tags github.com/majestrate/srndv2
-        cp "$GOPATH/bin/srndv2" "$root"
-        echo -e "Built\n"
-        echo "Now configure NNTPChan with ./srndv2 setup"
-    fi
+    echo "building the daemon..."
+    echo
+    make -C contrib/backends/srndv2
+    cp contrib/backends/srndv2/srndv2 .
+    echo "built"
+    echo "now configure NNTPChan with ./srndv2 setup"
 fi
