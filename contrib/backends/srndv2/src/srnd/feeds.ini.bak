@@ -1,0 +1,13 @@
+[feed-dummy]
+proxy-type=socks4a
+proxy-host=127.0.0.1
+proxy-port=9050
+host=dummy
+port=119
+connections=1
+
+[dummy]
+overchan.*=1
+ano.paste=0
+ctl=1
+

@@ -1,10 +1,9 @@
-GOPATH=$(PWD)
+REPO=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-all: nntpchand
+all: srndv2
 
-nntpchand:
-	go build -o nntpchand -v nntpchan/cmd/nntpchan 
+srndv2:
+	GOPATH=$(REPO) go build -v
 
 clean:
-	go clean -v
-	rm -f nntpchand
+	GOPATH=$(REPO) go clean -v
