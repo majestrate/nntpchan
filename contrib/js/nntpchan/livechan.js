@@ -2,29 +2,29 @@
 
 function buildCaptcha(domElem, prefix) {
   var captcha_widget = document.createElement("div");
-  
+
   captcha_widget.className = "livechan_captcha_inner";
 
   var outer = document.createElement("div");
 
   outer.className = "livechan_captcha";
-  
+
   var text = document.createElement("div");
   text.textContent = "solve the captcha";
   captcha_widget.appendChild(text);
-  
+
   var captcha_image = document.createElement("img");
   captcha_image.className = "livechan_captcha_image";
   var div = document.createElement("div");
   div.appendChild(captcha_image);
   captcha_widget.appendChild(div);
-  
+
   var captcha_entry = document.createElement("input");
   captcha_entry.className = "livechan_captcha_input";
   var div = document.createElement("div");
   div.appendChild(captcha_entry);
   captcha_widget.appendChild(div);
-  
+
   var captcha_submit = document.createElement("input");
   captcha_submit.setAttribute("type", "button");
   captcha_submit.value = "solve";
@@ -34,7 +34,7 @@ function buildCaptcha(domElem, prefix) {
 
   outer.appendChild(captcha_widget);
   domElem.appendChild(outer);
-  
+
   return {
     widget: outer,
     button: captcha_submit,
@@ -50,8 +50,8 @@ function Captcha(domElem, options, callback) {
   } else {
     this.options = {};
   }
-  
-  this.prefix = options.prefix || "/";  
+
+  this.prefix = options.prefix || "/";
   this.widget = buildCaptcha(domElem, this.prefix);
   var self = this;
   this.widget.button.addEventListener("click", function() { self.process(callback); });
@@ -72,7 +72,7 @@ Captcha.prototype.load = function() {
       }
     }
   }
-    
+
   xhr.send();
 }
 
@@ -100,7 +100,7 @@ Captcha.prototype.process = function(callback) {
     var self = this;
     callback(this.captcha_id, solution , function(solved) {
       if (solved) {
-        // woot we solved it 
+        // woot we solved it
         self.hide();
       } else {
         // TODO: inform user of bad solution
@@ -142,28 +142,28 @@ Captcha.prototype.hide = function () {
 
 /**
  * build login widget
- * for captcha / mod login 
+ * for captcha / mod login
  */
 function buildLogin(domElem) {
   var widget = document.createElement("div");
   widget.className = "livechan_login_widget";
   widget.style.zIndex = -1;
-  
+
 
   var mod_div = document.createElement("div");
   mod_div.className = "livechan_login";
 
   var mod_form = document.createElement("form");
-  
+
   var mod_username = document.createElement("input");
   mod_form.appendChild(mod_username);
   mod_username.className = "livechan_login_username";
-  
+
   var mod_password = document.createElement("input");
   mod_password.className = "livechan_login_password";
   mod_password.setAttribute("type", "password");
   mod_form.appendChild(mod_password);
-  
+
   var mod_submit = document.createElement("input");
   mod_password.className = "livechan_login_submit";
   mod_submit.setAttribute("type", "submit");
@@ -196,7 +196,7 @@ Login.prototype.show = function() {
 
 
 
-/* 
+/*
  *  @brief build livechan navbar
  *  @param domElem the root element to put the navbar in
  */
@@ -211,7 +211,7 @@ function LivechanNavbar(domElem) {
   channelLabel.className = 'livechan_navbar_channel_label';
 
   this.channel = channelLabel;
-  
+
   // mod indicator
   this.mod = document.createElement("span");
   this.mod.className = 'livechan_navbar_mod_indicator_inactive';
@@ -228,7 +228,7 @@ function LivechanNavbar(domElem) {
   container.appendChild(this.status);
 
   this.navbar.appendChild(container);
-  
+
   domElem.appendChild(this.navbar);
 
 }
@@ -399,24 +399,24 @@ function buildChat(chat, domElem, channel) {
 
   var input_left = document.createElement('div');
   input_left.className = 'livechan_chat_input_left';
-  
+
   var input = document.createElement('form');
   input.className = 'livechan_chat_input';
-  
+
   var name = document.createElement('input');
   name.className = 'livechan_chat_input_name';
   name.setAttribute('placeholder', 'Anonymous');
-  
+
   var file = document.createElement('input');
   file.className = 'livechan_chat_input_file';
   file.setAttribute('type', 'file');
   file.setAttribute('value', 'upload');
   file.setAttribute('id', channel+'_input_file');
- 
-    
+
+
   var messageDiv = document.createElement('div');
   messageDiv.className = 'livechan_chat_input_message_div';
-  
+
   var message = document.createElement('textarea');
   message.className = 'livechan_chat_input_message';
 
@@ -425,7 +425,7 @@ function buildChat(chat, domElem, channel) {
   submit.setAttribute('type', 'submit');
   submit.setAttribute('value', 'send');
   var convobar = new ConvoBar(chat, domElem);
-  input_left.appendChild(name); 
+  input_left.appendChild(name);
   input_left.appendChild(convobar.subject);
   input_left.appendChild(file);
   input.appendChild(input_left);
@@ -434,7 +434,7 @@ function buildChat(chat, domElem, channel) {
   input.appendChild(submit);
   domElem.appendChild(output);
   domElem.appendChild(input);
-  
+
   return {
     convobar : convobar,
     notify: notify,
@@ -534,7 +534,7 @@ function initWebSocket(chat, url, connection) {
  * @return A dom element containing the message.
  */
 function parse(text, rules, end_tag) {
-  var output = document.createElement('div'); 
+  var output = document.createElement('div');
   var position = 0;
   var end_matched = false;
   if (end_tag) {
@@ -642,12 +642,12 @@ var messageRules = [
 function buildConvoBar(domElem) {
   var elem = document.createElement("div");
   elem.className = "livechan_convobar_root";
-  
+
   var subject = document.createElement("input");
   subject.className = "livechan_chat_input_convo";
   elem.appendChild(subject);
   domElem.appendChild(elem);
-  
+
   return {
     subject: subject,
     widget: elem,
@@ -685,7 +685,7 @@ ConvoBar.prototype.removeConvo = function(msgid) {
       var child = document.getElementById(id);
       if(child) child.remove();
     }
-    
+
     delete self.holder[msgid];
     self._num -- ;
   }
@@ -700,7 +700,7 @@ ConvoBar.prototype.update = function(msgid, data) {
     // new convo
     // register convo
     self.registerConvo(msgid, data);
-  } 
+  }
   // bump existing convo
   var convoId = self.holder[msgid].id;
   var convoElem = document.getElementById("livechan_convobar_item_"+convoId);
@@ -869,7 +869,7 @@ function Chat(domElem, channel, options) {
     this.options = {};
   }
 
-  
+
   this.chatElems = buildChat(this, this.domElem, this.name);
   this.prefix = this.options.prefix || "/";
   var scheme = "wss://";
@@ -971,13 +971,13 @@ Chat.prototype.sendInput = function(event) {
   var inputElem = this.chatElems.input;
   var connection = this.connection;
   var self = this;
-    
+
   if (inputElem.message.value[0] == '/') {
     var inp = inputElem.message.value;
     var helpRegex = /(help)? (.*)/;
     var helpMatch = helpRegex.exec(inp.slice(1));
     if (helpMatch) {
-      
+
     }
     if ( self.options.customCommands ) {
       for (var i in self.options.customCommands) {
@@ -1080,7 +1080,7 @@ Chat.prototype.sendInput = function(event) {
     inputElem.submit.disabled = true;
     var i = parseInt(self.options.cooldown);
     // fallback
-    if ( i == NaN ) { i = 4; } 
+    if ( i == NaN ) { i = 4; }
     inputElem.submit.setAttribute('value', i);
     var countDown = setInterval(function(){
       inputElem.submit.setAttribute('value', --i);
@@ -1104,7 +1104,7 @@ Chat.prototype.initInput = function() {
   inputElem.form.addEventListener('submit', function(event) {
     self.sendInput(event);
   });
-  
+
   inputElem.message.addEventListener('keydown', function(event) {
     /* If enter key. */
     if (event.keyCode === 13 && !event.shiftKey) {
@@ -1168,7 +1168,7 @@ Chat.prototype.handleMessage = function (data) {
   } else if (mtype == "ban" ) {
     self.connection.ban(data.Reason);
   } else if (mtype == "error") {
-    self.insertChat(self.generateChat({PostMessage: data.Error, PostSubject: "Server Error", PostName: "Server"}))
+      self.insertChat(self.generateChat({PostMessage: data.Error, PostSubject: "Server Error", PostName: "Server"}));
     console.log("server error: "+data.Error);
   } else {
     console.log("unknown message type "+mtype);
@@ -1312,7 +1312,7 @@ Chat.prototype.generateChat = function(data) {
   var convoLabel = document.createElement('span');
   convoLabel.className = 'livechan_convo_label';
   convoLabel.appendChild(document.createTextNode(data.PostSubject));
-  
+
   var header = document.createElement('div');
   header.className = 'livechan_chat_output_header';
   var name = document.createElement('span');
@@ -1328,7 +1328,7 @@ Chat.prototype.generateChat = function(data) {
   body.className = 'livechan_chat_output_body';
   var message = document.createElement('div');
   message.className = 'livechan_chat_output_message';
-  
+
 
   if (data.PostName) {
     name.appendChild(document.createTextNode(data.PostName));
@@ -1346,7 +1346,7 @@ Chat.prototype.generateChat = function(data) {
       var filepath = file.Path;
       var thumb_url = self.options.prefix + 'thm/'+filepath + ".jpg";
       var src_url = self.options.prefix + 'img/'+filepath;
-      
+
       a.setAttribute('href',src_url);
       var fl = filepath.toLowerCase();
       var img = document.createElement('img');
@@ -1355,13 +1355,13 @@ Chat.prototype.generateChat = function(data) {
       a.appendChild(img);
       message.appendChild(a);
       img.onload = function() { self.scroll(); }
-      
+
       img.addEventListener('mouseover', function () {
-        
+
         var e = document.createElement("div");
         e.setAttribute("id", "hover_"+data.ShortHash);
         e.setAttribute("class", "hover");
-        
+
         if (fl.match(/\.(webm|mp4|mkv)$/)) {
           // video
           var v = document.createElement("video");
@@ -1373,7 +1373,7 @@ Chat.prototype.generateChat = function(data) {
           a.src = src_url;
           e.appendChild(a);
         } else if (fl.match(/\.txt$/)) {
-          // 
+          //
         } else {
           // image
           var i = document.createElement("img");
@@ -1389,7 +1389,7 @@ Chat.prototype.generateChat = function(data) {
       });
     }
   }
-    
+
   /* Note that parse does everything here.  If you want to change
    * how things are rendered modify messageRules. */
   if (data.PostMessage) {
