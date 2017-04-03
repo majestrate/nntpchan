@@ -33,16 +33,6 @@ Need help? Join us on IRC.
 1. [freenode: #nntpchan](https://webchat.freenode.net/?channels=#nntpchan)
 2. [rizon: #nntpchan](https://qchat.rizon.net/?channels=#nntpchan) - Most active
 
-## Donations
-
-Like this project? Why not help by funding it?
-
-Bitcoin: [15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE](bitcoin://15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE)
-
-## Acknowledgements
-
-* [Deavmi](https://deavmi.carteronline.net/) - Making the documentation beautiful.
-
 ## History
 
 * started in mid 2013 on anonet
@@ -52,3 +42,14 @@ This is a graph of the post flow of the `overchan.test` newsgroup over 4 years, 
 (thnx anon who made this btw)
 
 ![network topology of 4 years](topology.png "changolia")
+
+## Donations
+
+Like this project? Why not help by funding it? This address pays for the server that runs `2hu-ch.org`
+
+Bitcoin: [15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE](bitcoin://15yuMzuueV8y5vPQQ39ZqQVz5Ey98DNrjE)
+
+
+## Acknowledgements
+
+* [Deavmi](https://deavmi.carteronline.net/) - Making the documentation beautiful.
