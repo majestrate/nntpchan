@@ -8,7 +8,7 @@ VENDOR_JS=$(REPO)/contrib/js/vendor
 SRND_DIR=$(REPO)/contrib/backends/srndv2
 SRND=$(REPO)/srndv2
 
-all: build
+all: clean build
 
 build: js srnd
 

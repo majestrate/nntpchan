@@ -6,18 +6,25 @@ import (
 )
 
 type LineWriter struct {
-	w io.Writer
+	w    io.Writer
+	Left int64
 }
 
-func NewLineWriter(w io.Writer) *LineWriter {
+func NewLineWriter(w io.Writer, limit int64) *LineWriter {
 	return &LineWriter{
-		w: w,
+		w:    w,
+		Left: limit,
 	}
 }
 
 func (l *LineWriter) Write(data []byte) (n int, err error) {
-	n = len(data)
+	if l.Left <= 0 {
+		err = ErrOversizedMessage
+		return
+	}
 	data = bytes.Replace(data, []byte{13, 10}, []byte{10}, -1)
-	_, err = l.w.Write(data)
+	n, err = l.w.Write(data)
+	l.Left -= int64(n)
+
 	return
 }

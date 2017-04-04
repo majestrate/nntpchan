@@ -596,7 +596,7 @@ func (self *NNTPDaemon) Run() {
 			nntp.Pack()
 			file := self.store.CreateFile(nntp.MessageID())
 			if file != nil {
-				err = nntp.WriteTo(file)
+				err = nntp.WriteTo(file, MaxMessageSize)
 				file.Close()
 				if err == nil {
 					self.loadFromInfeed(nntp.MessageID())

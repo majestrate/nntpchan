@@ -83,9 +83,9 @@ type NNTPMessage interface {
 	// all headers
 	Headers() ArticleHeaders
 	// write out everything
-	WriteTo(wr io.Writer) error
+	WriteTo(wr io.Writer, limit int64) error
 	// write out body
-	WriteBody(wr io.Writer) error
+	WriteBody(wr io.Writer, limit int64) error
 	// attach a file
 	Attach(att NNTPAttachment)
 	// get the plaintext message if it exists
@@ -175,7 +175,7 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 	signed.signedPart = &nntpAttachment{}
 	// write body to sign buffer
 	mw := io.MultiWriter(sha, signed.signedPart)
-	err = nntp.WriteTo(mw)
+	err = nntp.WriteTo(mw, MaxMessageSize)
 	mw.Write([]byte{10})
 	if err == nil {
 		// build keypair
@@ -198,15 +198,20 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 	return
 }
 
-func (self *nntpArticle) WriteTo(wr io.Writer) (err error) {
+func (self *nntpArticle) WriteTo(wr io.Writer, limit int64) (err error) {
 	// write headers
+	var n int
 	hdrs := self.headers
 	for hdr, hdr_vals := range hdrs {
 		for _, hdr_val := range hdr_vals {
-			wr.Write([]byte(hdr))
-			wr.Write([]byte(": "))
-			wr.Write([]byte(hdr_val))
-			_, err = wr.Write([]byte{10})
+			n, err = wr.Write([]byte(hdr))
+			limit -= int64(n)
+			n, err = wr.Write([]byte(": "))
+			limit -= int64(n)
+			n, err = wr.Write([]byte(hdr_val))
+			limit -= int64(n)
+			n, err = wr.Write([]byte{10})
+			limit -= int64(n)
 			if err != nil {
 				log.Println("error while writing headers", err)
 				return
@@ -214,14 +219,19 @@ func (self *nntpArticle) WriteTo(wr io.Writer) (err error) {
 		}
 	}
 	// done headers
-	_, err = wr.Write([]byte{10})
+	n, err = wr.Write([]byte{10})
+	limit -= int64(n)
 	if err != nil {
 		log.Println("error while writing body", err)
 		return
 	}
 
-	// write body
-	err = self.WriteBody(wr)
+	if limit > 0 {
+		// write body
+		err = self.WriteBody(wr, limit)
+	} else {
+		err = ErrOversizedMessage
+	}
 	return
 }
 
@@ -359,10 +369,15 @@ func (self *nntpArticle) Attach(att NNTPAttachment) {
 	self.attachments = append(self.attachments, att)
 }
 
-func (self *nntpArticle) WriteBody(wr io.Writer) (err error) {
+func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 	// this is a signed message, don't treat it special
+	var n int
 	if self.signedPart != nil {
-		_, err = wr.Write(self.signedPart.Bytes())
+		n, err = wr.Write(self.signedPart.Bytes())
+		limit -= int64(n)
+		if limit <= 0 {
+			err = ErrOversizedMessage
+		}
 		return
 	}
 	self.Pack()
@@ -375,7 +390,8 @@ func (self *nntpArticle) WriteBody(wr io.Writer) (err error) {
 
 	boundary, ok := params["boundary"]
 	if ok {
-		w := multipart.NewWriter(NewLineWriter(wr))
+		nlw := NewLineWriter(wr, limit)
+		w := multipart.NewWriter(nlw)
 
 		err = w.SetBoundary(boundary)
 		if err == nil {
@@ -411,9 +427,13 @@ func (self *nntpArticle) WriteBody(wr io.Writer) (err error) {
 		}
 		err = w.Close()
 		w = nil
+		if nlw.Left <= 0 {
+			err = ErrOversizedMessage
+		}
 	} else {
+		nlw := NewLineWriter(wr, limit)
 		// write out message
-		_, err = io.WriteString(wr, self.message)
+		_, err = io.WriteString(nlw, self.message)
 	}
 	return err
 }

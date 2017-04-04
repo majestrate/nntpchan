@@ -381,7 +381,7 @@ func (self *httpFrontend) poll() {
 			f := self.daemon.store.CreateFile(nntp.MessageID())
 			if f != nil {
 				b := new(bytes.Buffer)
-				err := nntp.WriteTo(b)
+				err := nntp.WriteTo(b, self.daemon.messageSizeLimitFor(nntp.Newsgroup()))
 				if err == nil {
 					r := bufio.NewReader(b)
 					var msg *mail.Message
@@ -955,7 +955,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		e(errors.New("failed to store article"))
 		return
 	} else {
-		err = nntp.WriteTo(f)
+		err = nntp.WriteTo(f, self.daemon.messageSizeLimitFor(nntp.Newsgroup()))
 		f.Close()
 		if err == nil {
 			go self.daemon.loadFromInfeed(nntp.MessageID())
