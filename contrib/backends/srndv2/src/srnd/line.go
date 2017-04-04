@@ -22,9 +22,13 @@ func (l *LineWriter) Write(data []byte) (n int, err error) {
 		err = ErrOversizedMessage
 		return
 	}
+	wr := len(data)
 	data = bytes.Replace(data, []byte{13, 10}, []byte{10}, -1)
 	n, err = l.w.Write(data)
 	l.Left -= int64(n)
-
+	if err != nil {
+		return n, err
+	}
+	n = wr
 	return
 }
