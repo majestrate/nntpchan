@@ -441,43 +441,41 @@ func (self *templateEngine) genGraphs(prefix string, wr io.Writer, db Database) 
 
 }
 
-// generate front page and board list
+func (self *templateEngine) genBoardList(prefix, name string, wr io.Writer, db Database) {
+	// the graph for the front page
+	var frontpage_graph boardPageRows
+
+	// for each group
+	groups := db.GetAllNewsgroups()
+	for _, group := range groups {
+		// posts this hour
+		hour := db.CountPostsInGroup(group, 3600)
+		// posts today
+		day := db.CountPostsInGroup(group, 86400)
+		// posts total
+		all := db.CountPostsInGroup(group, 0)
+		frontpage_graph = append(frontpage_graph, boardPageRow{
+			All:   all,
+			Day:   day,
+			Hour:  hour,
+			Board: group,
+		})
+	}
+	param := map[string]interface{}{
+		"prefix":   prefix,
+		"frontend": name,
+	}
+	sort.Sort(frontpage_graph)
+	param["graph"] = frontpage_graph
+	_, err := io.WriteString(wr, self.renderTemplate("boardlist.mustache", param))
+	if err != nil {
+		log.Println("error writing board list page", err)
+	}
+}
+
+// generate front page
 func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name string, indexwr, boardswr io.Writer, db Database) {
-	/*
-		// the graph for the front page
-		var frontpage_graph boardPageRows
 
-		// for each group
-		groups := db.GetAllNewsgroups()
-		for _, group := range groups {
-			// posts this hour
-			hour := db.CountPostsInGroup(group, 3600)
-			// posts today
-			day := db.CountPostsInGroup(group, 86400)
-			// posts total
-			all := db.CountPostsInGroup(group, 0)
-			frontpage_graph = append(frontpage_graph, boardPageRow{
-				All:   all,
-				Day:   day,
-				Hour:  hour,
-				Board: group,
-			})
-		}
-
-		var posts_graph postsGraph
-
-		posts := db.GetLastDaysPosts(10)
-		if posts == nil {
-			// wtf?
-		} else {
-			for _, entry := range posts {
-				posts_graph = append(posts_graph, postsGraphRow{
-					day: entry.Time(),
-					Num: entry.Count(),
-				})
-			}
-		}
-	*/
 	models := db.GetLastPostedPostModels(prefix, 20)
 
 	wr := indexwr
@@ -488,7 +486,7 @@ func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name st
 	/*
 		sort.Sort(posts_graph)
 		param["postsgraph"] = self.renderTemplate("posts_graph.mustache", map[string]interface{}{"graph": posts_graph})
-		sort.Sort(frontpage_graph)
+
 		if len(frontpage_graph) > top_count {
 			param["boardgraph"] = frontpage_graph[:top_count]
 		} else {
@@ -507,11 +505,7 @@ func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name st
 	}
 	/*
 		wr = boardswr
-		param["graph"] = frontpage_graph
-		_, err = io.WriteString(wr, self.renderTemplate("boardlist.mustache", param))
-		if err != nil {
-			log.Println("error writing board list page", err)
-		}
+
 	*/
 }
 

@@ -99,7 +99,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if strings.HasPrefix(file, "boards.html") {
-		template.genFrontPage(10, self.prefix, self.name, ioutil.Discard, w, self.database)
+		template.genBoardList(self.prefix, self.name, w, self.database)
 		return
 	}
 
