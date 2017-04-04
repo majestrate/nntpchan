@@ -963,8 +963,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 			return
 		}
 		// clean up
-		DelFile(self.daemon.store.GetFilename(nntp.MessageID()))
-		self.daemon.database.DeleteArticle(nntp.MessageID())
+		self.daemon.expire.ExpirePost(nntp.MessageID())
 		e(err)
 	}
 }
