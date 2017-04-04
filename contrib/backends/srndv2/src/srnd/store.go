@@ -25,7 +25,7 @@ import (
 var ErrOversizedMessage = errors.New("oversized message")
 
 // ~ 10 MB unbased64'd
-const DefaultMaxMessageSize = 1024 * 1024 * 10 * 6
+const DefaultMaxMessageSize = 1024 * 1024 * 10
 
 // HARD max message size
 const MaxMessageSize = 1024 * 1024 * 1024
@@ -517,6 +517,7 @@ func read_message_body(body *io.LimitedReader, hdr map[string][]string, store Ar
 			part, err := partReader.NextPart()
 			if err == io.EOF {
 				if body.N >= 0 {
+					log.Println("got", body.N, "bytes remaining")
 					callback(nntp)
 				} else {
 					log.Println("dropping oversized message")
