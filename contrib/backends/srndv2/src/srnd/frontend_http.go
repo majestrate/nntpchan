@@ -220,9 +220,7 @@ type httpFrontend struct {
 
 // do we allow this newsgroup?
 func (self httpFrontend) AllowNewsgroup(group string) bool {
-	// XXX: hardcoded nntp prefix
-	// TODO: make configurable nntp prefix
-	return strings.HasPrefix(group, "overchan.") && newsgroupValidFormat(group) || group == "ctl" && group != "overchan."
+	return newsgroupValidFormat(group) || group == "ctl" && !strings.HasSuffix(group, ".")
 }
 
 func (self httpFrontend) PostsChan() chan frontendPost {
@@ -391,7 +389,11 @@ func (self *httpFrontend) poll() {
 					if err == nil {
 						err = writeMIMEHeader(f, msg.Header)
 						if err == nil {
-							err = self.daemon.store.ProcessMessageBody(f, textproto.MIMEHeader(msg.Header), msg.Body)
+							body := &io.LimitedReader{
+								R: msg.Body,
+								N: self.daemon.messageSizeLimitFor(nntp.Newsgroup()),
+							}
+							err = self.daemon.store.ProcessMessageBody(f, textproto.MIMEHeader(msg.Header), body)
 						}
 					}
 				}

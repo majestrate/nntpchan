@@ -362,6 +362,11 @@ func (self *NNTPDaemon) activeFeeds() (feeds []*feedStatus) {
 	return
 }
 
+func (self *NNTPDaemon) messageSizeLimitFor(newsgroup string) int64 {
+	// TODO: per newsgroup
+	return mapGetInt64(self.conf.store, "max_message_size", DefaultMaxMessageSize)
+}
+
 func (self *NNTPDaemon) persistFeed(conf *FeedConfig, mode string, n int) {
 	log.Println(conf.Name, "persisting in", mode, "mode")
 	backoff := time.Second

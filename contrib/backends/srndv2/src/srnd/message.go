@@ -421,7 +421,7 @@ func (self *nntpArticle) WriteBody(wr io.Writer) (err error) {
 // verify a signed message's body
 // innerHandler must close reader when done
 // returns error if one happens while verifying article
-func verifyMessage(pk, sig string, body io.Reader, innerHandler func(map[string][]string, io.Reader)) (err error) {
+func verifyMessage(pk, sig string, body *io.LimitedReader, innerHandler func(map[string][]string, io.Reader)) (err error) {
 	log.Println("unwrapping signed message from", pk)
 	pk_bytes := unhex(pk)
 	sig_bytes := unhex(sig)
@@ -437,7 +437,10 @@ func verifyMessage(pk, sig string, body io.Reader, innerHandler func(map[string]
 		}
 		hdr_reader.Close()
 	}(pr)
-	body = io.TeeReader(body, pw)
+	body = &io.LimitedReader{
+		R: io.TeeReader(body, pw),
+		N: body.N,
+	}
 	// copy body 128 bytes at a time
 	var buff [128]byte
 	_, err = io.CopyBuffer(h, body, buff[:])

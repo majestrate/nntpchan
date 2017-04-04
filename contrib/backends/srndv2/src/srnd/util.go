@@ -351,6 +351,18 @@ func mapGetInt(m map[string]string, key string, fallback int) int {
 	return fallback
 }
 
+// get from a map an uint64 given a key or fall back to a default value
+func mapGetInt64(m map[string]string, key string, fallback int64) int64 {
+	val, ok := m[key]
+	if ok {
+		i, err := strconv.ParseInt(val, 10, 64)
+		if err == nil {
+			return i
+		}
+	}
+	return fallback
+}
+
 func isSage(str string) bool {
 	str = strings.ToLower(str)
 	return str == "sage" || strings.HasPrefix(str, "sage ")

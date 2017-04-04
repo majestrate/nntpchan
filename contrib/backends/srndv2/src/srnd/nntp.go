@@ -526,7 +526,7 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 
 // store message, unpack attachments, register with daemon, send to daemon for federation
 // in that order
-func (self *nntpConnection) storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) (err error) {
+func (self *nntpConnection) storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body *io.LimitedReader) (err error) {
 	var f io.WriteCloser
 	msgid := getMessageID(hdr)
 	if msgid == "" {
@@ -721,7 +721,11 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 							go daemon.askForArticle(ArticleEntry{reference, newsgroup})
 						}
 						// store message
-						err = self.storeMessage(daemon, hdr, msg.Body)
+						r := &io.LimitedReader{
+							R: msg.Body,
+							N: daemon.messageSizeLimitFor(newsgroup),
+						}
+						err = self.storeMessage(daemon, hdr, r)
 						if err == nil {
 							code = 239
 							reason = "gotten"
@@ -807,7 +811,11 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 									log.Println(self.name, "got reply to", reference, "but we don't have it")
 									go daemon.askForArticle(ArticleEntry{reference, newsgroup})
 								}
-								err = self.storeMessage(daemon, hdr, r)
+								body := &io.LimitedReader{
+									R: r,
+									N: daemon.messageSizeLimitFor(newsgroup),
+								}
+								err = self.storeMessage(daemon, hdr, body)
 								if err == nil {
 									conn.PrintfLine("235 We got it")
 								} else {
@@ -1162,7 +1170,11 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 								}
 							}
 							if success && daemon.database.HasNewsgroup(newsgroup) {
-								err = self.storeMessage(daemon, hdr, msg.Body)
+								body := &io.LimitedReader{
+									R: msg.Body,
+									N: daemon.messageSizeLimitFor(newsgroup),
+								}
+								err = self.storeMessage(daemon, hdr, body)
 							}
 						}
 					}
@@ -1173,6 +1185,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 						// failed posting
 						if err != nil {
 							log.Println(self.name, "failed nntp POST", err)
+							reason = err.Error()
 						}
 						conn.PrintfLine("441 Posting Failed %s", reason)
 					}
@@ -1412,10 +1425,13 @@ func (self *nntpConnection) requestArticle(daemon *NNTPDaemon, conn *textproto.C
 					}
 				} else {
 					// yeh we want it open up a file to store it in
-					err = self.storeMessage(daemon, hdr, msg.Body)
+					body := &io.LimitedReader{
+						R: msg.Body,
+						N: daemon.messageSizeLimitFor(hdr.Get("Newsgroups")),
+					}
+					err = self.storeMessage(daemon, hdr, body)
 					if err != nil {
 						log.Println(self.name, "failed to obtain article", err)
-						// probably an invalid signature or format
 						daemon.database.BanArticle(msgid, err.Error())
 					}
 				}

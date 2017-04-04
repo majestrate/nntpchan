@@ -309,6 +309,8 @@ func readAttachmentFromMimePartAndStore(part *multipart.Part, store ArticleStore
 		// attachment isn't there
 		// move it into it
 		err = os.Rename(fpath, att_fpath)
+	} else {
+		DelFile(fpath)
 	}
 	if err == nil {
 		// now thumbnail

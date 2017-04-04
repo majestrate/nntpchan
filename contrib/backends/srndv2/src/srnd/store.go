@@ -22,6 +22,14 @@ import (
 	"strings"
 )
 
+var ErrOversizedMessage = errors.New("oversized message")
+
+// ~ 10 MB unbased64'd
+const DefaultMaxMessageSize = 1024 * 1024 * 10 * 6
+
+// HARD max message size
+const MaxMessageSize = 1024 * 1024 * 1024
+
 type ArticleStore interface {
 
 	// full filepath to attachment directory
@@ -57,7 +65,7 @@ type ArticleStore interface {
 	// process body of nntp message, register attachments and the article
 	// write the body into writer as we go through the body
 	// does NOT write mime header
-	ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body io.Reader) error
+	ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body *io.LimitedReader) error
 	// register this post with the daemon
 	RegisterPost(nntp NNTPMessage) error
 	// register signed message
@@ -429,7 +437,7 @@ func (self *articleStore) getMIMEHeader(messageID string) (hdr textproto.MIMEHea
 	return hdr
 }
 
-func (self *articleStore) ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body io.Reader) (err error) {
+func (self *articleStore) ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body *io.LimitedReader) (err error) {
 	err = read_message_body(body, hdr, self, wr, false, func(nntp NNTPMessage) {
 		err = self.RegisterPost(nntp)
 		if err == nil {
@@ -457,14 +465,23 @@ func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
 		if err == nil {
 			chnl := make(chan NNTPMessage)
 			hdr := textproto.MIMEHeader(msg.Header)
-			err = read_message_body(msg.Body, hdr, nil, nil, true, func(nntp NNTPMessage) {
+			body := &io.LimitedReader{
+				R: msg.Body,
+				N: MaxMessageSize,
+			}
+			err = read_message_body(body, hdr, nil, nil, true, func(nntp NNTPMessage) {
 				c := chnl
 				// inject pubkey for mod
 				nntp.Headers().Set("X-PubKey-Ed25519", hdr.Get("X-PubKey-Ed25519"))
 				c <- nntp
 				close(c)
 			})
-			nntp = <-chnl
+			if err == nil {
+				nntp = <-chnl
+			} else {
+				log.Println("GetMessage() failed to load", msgid, err)
+				close(chnl)
+			}
 		}
 	}
 	return
@@ -477,7 +494,7 @@ func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
 // if writer is nil and discardAttachmentBody is true the body is discarded entirely
 // if writer is nil and discardAttachmentBody is false the body is loaded into the nntp message
 // if the body contains a signed message it unrwarps 1 layer of signing
-func read_message_body(body io.Reader, hdr map[string][]string, store ArticleStore, wr io.Writer, discardAttachmentBody bool, callback func(NNTPMessage)) error {
+func read_message_body(body *io.LimitedReader, hdr map[string][]string, store ArticleStore, wr io.Writer, discardAttachmentBody bool, callback func(NNTPMessage)) error {
 	nntp := new(nntpArticle)
 	nntp.headers = ArticleHeaders(hdr)
 	content_type := nntp.ContentType()
@@ -488,7 +505,10 @@ func read_message_body(body io.Reader, hdr map[string][]string, store ArticleSto
 		return err
 	}
 	if wr != nil && !discardAttachmentBody {
-		body = io.TeeReader(body, wr)
+		body = &io.LimitedReader{
+			R: io.TeeReader(body, wr),
+			N: body.N,
+		}
 	}
 	boundary, ok := params["boundary"]
 	if ok || content_type == "multipart/mixed" {
@@ -496,7 +516,13 @@ func read_message_body(body io.Reader, hdr map[string][]string, store ArticleSto
 		for {
 			part, err := partReader.NextPart()
 			if err == io.EOF {
-				callback(nntp)
+				if body.N >= 0 {
+					callback(nntp)
+				} else {
+					log.Println("dropping oversized message")
+					nntp.Reset()
+					return ErrOversizedMessage
+				}
 				return nil
 			} else if err == nil {
 				hdr := part.Header
@@ -552,7 +578,11 @@ func read_message_body(body io.Reader, hdr map[string][]string, store ArticleSto
 		// verify message
 		err = verifyMessage(pk, sig, body, func(h map[string][]string, innerBody io.Reader) {
 			// handle inner message
-			err := read_message_body(innerBody, h, store, nil, true, callback)
+			ir := &io.LimitedReader{
+				R: innerBody,
+				N: body.N,
+			}
+			err := read_message_body(ir, h, store, nil, true, callback)
 			if err != nil {
 				log.Println("error reading inner signed message", err)
 			}
