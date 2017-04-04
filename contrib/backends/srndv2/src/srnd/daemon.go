@@ -535,28 +535,6 @@ func (self *NNTPDaemon) Run() {
 	self.allow_anon_attachments = self.conf.daemon["allow_anon_attachments"] == "1"
 	self.allow_attachments = self.conf.daemon["allow_attachments"] == "1"
 
-	// do we enable the frontend?
-	if self.conf.frontend["enable"] == "1" {
-		log.Printf("frontend %s enabled", self.conf.frontend["name"])
-
-		cache_host := self.conf.cache["host"]
-		cache_port := self.conf.cache["port"]
-		cache_user := self.conf.cache["user"]
-		cache_passwd := self.conf.cache["password"]
-		self.cache = NewCache(self.conf.cache["type"], cache_host, cache_port, cache_user, cache_passwd, self.conf.cache, self.conf.frontend, self.database, self.store)
-
-		script, ok := self.conf.frontend["markup_script"]
-		if ok {
-			err = SetMarkupScriptFile(script)
-			if err != nil {
-				log.Println("failed to load markup script", err)
-			}
-		}
-
-		self.frontend = NewHTTPFrontend(self, self.cache, self.conf.frontend, self.conf.worker["url"])
-		go self.frontend.Mainloop()
-	}
-
 	// set up admin user if it's specified in the config
 	pubkey, ok := self.conf.frontend["admin_key"]
 	if ok {
@@ -571,6 +549,9 @@ func (self *NNTPDaemon) Run() {
 			log.Printf("failed to add admin mod key, %s", err)
 		}
 	}
+
+	// start frontend
+	go self.frontend.Mainloop()
 
 	log.Println("we have", len(self.conf.feeds), "feeds")
 
@@ -647,7 +628,6 @@ func (self *NNTPDaemon) Run() {
 		log.Println("started worker", threads)
 		threads--
 	}
-
 	// start accepting incoming connections
 	self.acceptloop()
 	<-self.done
@@ -838,7 +818,6 @@ func (self *NNTPDaemon) pump_article_requests() {
 }
 
 func (self *NNTPDaemon) poll(worker int) {
-	modchnl := self.mod.MessageChan()
 	for {
 		select {
 		case msgid := <-self.infeed_load:
@@ -863,7 +842,7 @@ func (self *NNTPDaemon) poll(worker int) {
 				}
 				// send to mod panel
 				if group == "ctl" {
-					modchnl <- msgid
+					self.mod.HandleMessage(msgid)
 				}
 				// inform callback hooks
 				self.informHooks(group, msgid, ref)
@@ -1081,11 +1060,36 @@ func (self *NNTPDaemon) Setup() {
 	log.Println("set up article store...")
 	self.store = createArticleStore(self.conf.store, self.database)
 
-	self.mod = modEngine{
+	// do we enable the frontend?
+	if self.conf.frontend["enable"] == "1" {
+		log.Printf("frontend %s enabled", self.conf.frontend["name"])
+
+		cache_host := self.conf.cache["host"]
+		cache_port := self.conf.cache["port"]
+		cache_user := self.conf.cache["user"]
+		cache_passwd := self.conf.cache["password"]
+		self.cache = NewCache(self.conf.cache["type"], cache_host, cache_port, cache_user, cache_passwd, self.conf.cache, self.conf.frontend, self.database, self.store)
+
+		script, ok := self.conf.frontend["markup_script"]
+		if ok {
+			err = SetMarkupScriptFile(script)
+			if err != nil {
+				log.Println("failed to load markup script", err)
+			}
+		}
+
+		self.frontend = NewHTTPFrontend(self, self.cache, self.conf.frontend, self.conf.worker["url"])
+	}
+
+	self.mod = &modEngine{
 		store:    self.store,
 		database: self.database,
-		chnl:     make(chan string),
+		regen:    self.frontend.RegenOnModEvent,
 	}
 	// inject DB into template engine
 	template.DB = self.database
+}
+
+func (daemon *NNTPDaemon) ModEngine() ModEngine {
+	return daemon.mod
 }

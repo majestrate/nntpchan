@@ -63,7 +63,6 @@ func (self expire) ExpirePost(messageID string) {
 }
 
 func (self expire) ExpireGroup(newsgroup string, keep int) {
-	log.Println("Expire group", newsgroup, keep)
 	threads := self.database.GetRootPostsForExpiration(newsgroup, keep)
 	for _, root := range threads {
 		self.ExpireThread(newsgroup, root)
@@ -127,7 +126,6 @@ func (self expire) ExpireOrphans() {
 }
 
 func (self expire) handleEvent(ev deleteEvent) {
-	log.Println("expire", ev.MessageID())
 	atts := self.database.GetPostAttachments(ev.MessageID())
 	// remove all attachments
 	if atts != nil {
@@ -147,5 +145,5 @@ func (self expire) handleEvent(ev deleteEvent) {
 		log.Println("failed to delete article", err)
 	}
 	// remove article
-	os.Remove(ev.Path())
+	self.store.Remove(ev.MessageID())
 }

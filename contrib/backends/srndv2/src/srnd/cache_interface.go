@@ -8,7 +8,7 @@ import (
 type CacheInterface interface {
 	RegenAll()
 	RegenFrontPage()
-	RegenOnModEvent(string, string, string, int)
+	RegenOnModEvent(newsgroup, msgid, root string, page int)
 	RegenerateBoard(group string)
 	Regen(msg ArticleEntry)
 

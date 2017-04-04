@@ -23,14 +23,9 @@ type AdminFunc func(param map[string]interface{}) (interface{}, error)
 
 // interface for moderation ui
 type ModUI interface {
-
-	// channel for daemon to poll for nntp articles from the mod ui
-	MessageChan() chan NNTPMessage
-
 	// check if this key is allowed to access
 	// return true if it can otherwise false
 	CheckKey(privkey, scope string) (bool, error)
-
 	// serve the base page
 	ServeModPage(wr http.ResponseWriter, r *http.Request)
 	// handle a login POST request
@@ -49,6 +44,8 @@ type ModUI interface {
 	HandleKeyGen(wr http.ResponseWriter, r *http.Request)
 	// handle admin command
 	HandleAdminCommand(wr http.ResponseWriter, r *http.Request)
+	// get outbound message channel
+	MessageChan() chan NNTPMessage
 }
 
 type ModEvent interface {
@@ -149,10 +146,10 @@ func wrapModMessage(mm ModMessage) NNTPMessage {
 }
 
 type ModEngine interface {
-	// chan to send the mod engine posts given message_id
-	MessageChan() chan string
+	// load and handle a mod message from ctl after it's verified
+	HandleMessage(msgid string)
 	// delete post of a poster
-	DeletePost(msgid string, regen RegenFunc) error
+	DeletePost(msgid string) error
 	// ban a cidr
 	BanAddress(cidr string) error
 	// do we allow this public key to delete this message-id ?
@@ -161,28 +158,28 @@ type ModEngine interface {
 	AllowBan(pubkey string) bool
 	// load a mod message
 	LoadMessage(msgid string) NNTPMessage
+	// execute 1 mod action line by a mod with pubkey
+	Execute(ev ModEvent, pubkey string)
+	// do a mod event unconditionally
+	Do(ev ModEvent)
 }
 
 type modEngine struct {
 	database Database
 	store    ArticleStore
-	chnl     chan string
+	regen    RegenFunc
 }
 
-func (self modEngine) LoadMessage(msgid string) NNTPMessage {
+func (self *modEngine) LoadMessage(msgid string) NNTPMessage {
 	return self.store.GetMessage(msgid)
 }
 
-func (self modEngine) MessageChan() chan string {
-	return self.chnl
-}
-
-func (self modEngine) BanAddress(cidr string) (err error) {
+func (self *modEngine) BanAddress(cidr string) (err error) {
 	return self.database.BanAddr(cidr)
 }
 
-func (self modEngine) DeletePost(msgid string, regen RegenFunc) (err error) {
-	hdr, err := self.database.GetHeadersForMessage(msgid)
+func (self *modEngine) DeletePost(msgid string) (err error) {
+	hdr := self.store.GetHeaders(msgid)
 	var delposts []string
 	var page int64
 	var ref, group string
@@ -231,10 +228,6 @@ func (self modEngine) DeletePost(msgid string, regen RegenFunc) (err error) {
 		os.Remove(f)
 	}
 
-	if rootmsgid != "" {
-		self.database.DeleteThread(rootmsgid)
-	}
-
 	for _, delmsg := range delposts {
 		// delete article from post database
 		err = self.database.DeleteArticle(delmsg)
@@ -243,12 +236,17 @@ func (self modEngine) DeletePost(msgid string, regen RegenFunc) (err error) {
 		}
 		// ban article
 		self.database.BanArticle(delmsg, "deleted by moderator")
+		self.store.Remove(delmsg)
 	}
-	regen(group, msgid, ref, int(page))
+
+	if rootmsgid != "" {
+		self.database.DeleteThread(rootmsgid)
+	}
+	self.regen(group, msgid, ref, int(page))
 	return nil
 }
 
-func (self modEngine) AllowBan(pubkey string) bool {
+func (self *modEngine) AllowBan(pubkey string) bool {
 	is_admin, _ := self.database.CheckAdminPubkey(pubkey)
 	if is_admin {
 		// admins can do whatever
@@ -257,7 +255,7 @@ func (self modEngine) AllowBan(pubkey string) bool {
 	return self.database.CheckModPubkeyGlobal(pubkey)
 }
 
-func (self modEngine) AllowDelete(pubkey, msgid string) (allow bool) {
+func (self *modEngine) AllowDelete(pubkey, msgid string) (allow bool) {
 	is_admin, _ := self.database.CheckAdminPubkey(pubkey)
 	if is_admin {
 		// admins can do whatever
@@ -277,88 +275,166 @@ func (self modEngine) AllowDelete(pubkey, msgid string) (allow bool) {
 	return
 }
 
-// run a mod engine logic mainloop
-func RunModEngine(mod ModEngine, regen RegenFunc) {
-
-	chnl := mod.MessageChan()
-	for {
-		msgid := <-chnl
-		nntp := mod.LoadMessage(msgid)
-		if nntp == nil {
-			log.Println("failed to load mod message", msgid)
-			continue
+func (mod *modEngine) HandleMessage(msgid string) {
+	nntp := mod.store.GetMessage(msgid)
+	if nntp == nil {
+		log.Println("failed to load", msgid, "in mod engine, missing message")
+		return
+	}
+	// sanity check
+	if nntp.Newsgroup() == "ctl" {
+		pubkey := nntp.Pubkey()
+		for _, line := range strings.Split(nntp.Message(), "\n") {
+			line = strings.Trim(line, "\r\t\n ")
+			ev := ParseModEvent(line)
+			mod.Execute(ev, pubkey)
 		}
-		// sanity check
-		if nntp.Newsgroup() == "ctl" {
-			pubkey := nntp.Pubkey()
-			for _, line := range strings.Split(nntp.Message(), "\n") {
-				line = strings.Trim(line, "\r\t\n ")
-				ev := ParseModEvent(line)
-				action := ev.Action()
-				if action == "delete" {
-					msgid := ev.Target()
-					if !ValidMessageID(msgid) {
-						// invalid message-id
-						log.Println("invalid message-id for mod delete", msgid, "from", pubkey)
-						continue
-					}
-					// this is a delete action
-					if mod.AllowDelete(pubkey, msgid) {
-						err := mod.DeletePost(msgid, regen)
-						if err != nil {
-							log.Println(msgid, err)
-						}
-					} else {
-						log.Printf("pubkey=%s will not delete %s not trusted", pubkey, msgid)
-					}
-				} else if action == "overchan-inet-ban" {
-					// ban action
-					target := ev.Target()
-					if target[0] == '[' {
-						// probably a literal ipv6 rangeban
-						if mod.AllowBan(pubkey) {
-							err := mod.BanAddress(target)
-							if err != nil {
-								log.Println("failed to do literal ipv6 range ban on", target, err)
-							}
-						} else {
-							log.Println("ignoring literal ipv6 rangeban from", pubkey, "as they are not allowed to ban")
-						}
-						continue
-					}
-					parts := strings.Split(target, ":")
-					if len(parts) == 3 {
-						// encrypted ip
-						encaddr, key := parts[0], parts[1]
-						cidr := decAddr(encaddr, key)
-						if cidr == "" {
-							log.Println("failed to decrypt inet ban")
-						} else if mod.AllowBan(pubkey) {
-							err := mod.BanAddress(cidr)
-							if err != nil {
-								log.Println("failed to do range ban on", cidr, err)
-							}
-						} else {
-							log.Println("ingoring encrypted-ip inet ban from", pubkey, "as they are not allowed to ban")
-						}
-					} else if len(parts) == 1 {
-						// literal cidr
-						cidr := parts[0]
-						if mod.AllowBan(pubkey) {
-							err := mod.BanAddress(cidr)
-							if err != nil {
-								log.Println("failed to do literal range ban on", cidr, err)
-							}
-						} else {
-							log.Println("ingoring literal cidr range ban from", pubkey, "as they are not allowed to ban")
-						}
-					} else {
-						log.Printf("invalid overchan-inet-ban: target=%s", target)
-					}
+	}
+}
+
+func (mod *modEngine) Do(ev ModEvent) {
+	action := ev.Action()
+	if action == "delete" {
+		msgid := ev.Target()
+		if !ValidMessageID(msgid) {
+			// invalid message-id
+			log.Println("invalid message-id", msgid)
+			return
+		}
+		err := mod.DeletePost(msgid)
+		if err != nil {
+			log.Println(msgid, err)
+		} else {
+			log.Println("deleted", msgid)
+		}
+
+	} else if action == "overchan-inet-ban" {
+		// ban action
+		target := ev.Target()
+		if target[0] == '[' {
+			err := mod.BanAddress(target)
+			if err != nil {
+				log.Println("failed to do literal ipv6 range ban on", target, err)
+			} else {
+				log.Println("banned", target)
+			}
+			return
+		}
+		parts := strings.Split(target, ":")
+		if len(parts) == 3 {
+			// encrypted ip
+			encaddr, key := parts[0], parts[1]
+			cidr := decAddr(encaddr, key)
+			if cidr == "" {
+				log.Println("failed to decrypt inet ban")
+			} else {
+				err := mod.BanAddress(cidr)
+				if err != nil {
+					log.Println("failed to do range ban on", cidr, err)
 				} else {
-					log.Println("invalid mod action", action, "from", pubkey)
+					log.Println("banned", cidr)
 				}
 			}
+		} else if len(parts) == 2 {
+			// x-encrypted-ip ban without pad
+			err := mod.database.BanEncAddr(parts[0])
+			if err != nil {
+				log.Println("failed to ban encrypted ip", err)
+			} else {
+				log.Println("banned poster", parts[0])
+			}
+
+		} else if len(parts) == 1 {
+			// literal cidr
+			cidr := parts[0]
+			err := mod.BanAddress(cidr)
+			if err != nil {
+				log.Println("failed to do literal range ban on", cidr, err)
+			} else {
+				log.Println("banned cidr", cidr)
+			}
+
+		} else {
+			log.Printf("invalid overchan-inet-ban: target=%s", target)
 		}
+	} else {
+		log.Println("invalid mod action", action)
+	}
+}
+
+func (mod *modEngine) Execute(ev ModEvent, pubkey string) {
+	action := ev.Action()
+	if action == "delete" {
+		msgid := ev.Target()
+		if !ValidMessageID(msgid) {
+			// invalid message-id
+			log.Println("invalid message-id for mod delete from", pubkey)
+			return
+		}
+		// this is a delete action
+		if mod.AllowDelete(pubkey, msgid) {
+			err := mod.DeletePost(msgid)
+			if err != nil {
+				log.Println(msgid, err)
+			}
+		} else {
+			log.Printf("pubkey=%s will not delete %s not trusted", pubkey, msgid)
+		}
+	} else if action == "overchan-inet-ban" {
+		// ban action
+		target := ev.Target()
+		if target[0] == '[' {
+			// probably a literal ipv6 rangeban
+			if mod.AllowBan(pubkey) {
+				err := mod.BanAddress(target)
+				if err != nil {
+					log.Println("failed to do literal ipv6 range ban on", target, err)
+				}
+			} else {
+				log.Println("ignoring literal ipv6 rangeban from", pubkey, "as they are not allowed to ban")
+			}
+			return
+		}
+		parts := strings.Split(target, ":")
+		if len(parts) == 3 {
+			// encrypted ip
+			encaddr, key := parts[0], parts[1]
+			cidr := decAddr(encaddr, key)
+			if cidr == "" {
+				log.Println("failed to decrypt inet ban")
+			} else if mod.AllowBan(pubkey) {
+				err := mod.BanAddress(cidr)
+				if err != nil {
+					log.Println("failed to do range ban on", cidr, err)
+				}
+			} else {
+				log.Println("ingoring encrypted-ip inet ban from", pubkey, "as they are not allowed to ban")
+			}
+		} else if len(parts) == 2 {
+			// x-encrypted-ip ban without pad
+			if mod.AllowBan(pubkey) {
+				err := mod.database.BanEncAddr(parts[0])
+				if err != nil {
+					log.Println("failed to ban encrypted ip", err)
+				}
+			} else {
+				log.Println("ignoring encrypted-ip ban from", pubkey, "as they are not allowed to ban")
+			}
+		} else if len(parts) == 1 {
+			// literal cidr
+			cidr := parts[0]
+			if mod.AllowBan(pubkey) {
+				err := mod.BanAddress(cidr)
+				if err != nil {
+					log.Println("failed to do literal range ban on", cidr, err)
+				}
+			} else {
+				log.Println("ingoring literal cidr range ban from", pubkey, "as they are not allowed to ban")
+			}
+		} else {
+			log.Printf("invalid overchan-inet-ban: target=%s", target)
+		}
+	} else {
+		log.Println("invalid mod action", action, "from", pubkey)
 	}
 }

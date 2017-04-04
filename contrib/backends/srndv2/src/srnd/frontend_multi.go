@@ -46,6 +46,12 @@ func (self multiFrontend) PostsChan() chan frontendPost {
 	return self.muxedpostchan
 }
 
+func (self multiFrontend) RegenOnModEvent(newsgroup, msgid, root string, page int) {
+	for idx := range self.frontends {
+		self.frontends[idx].RegenOnModEvent(newsgroup, msgid, root, page)
+	}
+}
+
 func MuxFrontends(fronts ...Frontend) Frontend {
 	var front multiFrontend
 	front.muxedpostchan = make(chan frontendPost, 64)

@@ -70,6 +70,9 @@ type ArticleStore interface {
 
 	// get thumbnail info of file by path
 	ThumbInfo(fpath string) (ThumbInfo, error)
+
+	// delete message by message-id
+	Remove(msgid string) error
 }
 type articleStore struct {
 	directory     string
@@ -138,6 +141,16 @@ func (self *articleStore) Init() {
 			log.Fatal("cannot find thumbnail placeholder file: ", self.placeholder, " not found")
 		}
 	}
+}
+
+func (self *articleStore) Remove(msgid string) (err error) {
+	if ValidMessageID(msgid) {
+		fpath := self.GetFilename(msgid)
+		err = os.Remove(fpath)
+	} else {
+		err = errors.New("invalid message-id: " + msgid)
+	}
+	return
 }
 
 func (self *articleStore) RegisterSigned(msgid, pk string) (err error) {

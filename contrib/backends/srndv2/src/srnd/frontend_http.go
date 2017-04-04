@@ -1483,7 +1483,7 @@ func (self *httpFrontend) Mainloop() {
 	var err error
 
 	// run daemon's mod engine with our frontend
-	go RunModEngine(self.daemon.mod, self.cache.RegenOnModEvent)
+	// go RunModEngine(self.daemon.mod, self.cache.RegenOnModEvent)
 
 	// start cache
 	self.cache.Start()
@@ -1515,6 +1515,10 @@ func (self *httpFrontend) endLiveUI() {
 		close(self.end_liveui)
 		self.end_liveui = nil
 	}
+}
+
+func (self *httpFrontend) RegenOnModEvent(newsgroup, msgid, root string, page int) {
+	self.cache.RegenOnModEvent(newsgroup, msgid, root, page)
 }
 
 // create a new http based frontend

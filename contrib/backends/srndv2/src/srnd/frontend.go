@@ -36,4 +36,6 @@ type Frontend interface {
 
 	// trigger a manual regen of indexes for a root post
 	Regen(msg ArticleEntry)
+	// regenerate on mod event
+	RegenOnModEvent(newsgroup, msgid, root string, page int)
 }

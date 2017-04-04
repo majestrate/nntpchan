@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -44,7 +45,32 @@ func main() {
 			if len(os.Args) > 2 {
 				tool := os.Args[2]
 				if tool == "mod" {
-					if len(os.Args) >= 5 {
+					if len(os.Args) == 4 && os.Args[3] == "do" {
+						daemon.Setup()
+						eng := daemon.ModEngine()
+						r := bufio.NewReader(os.Stdin)
+						var err error
+						for err == nil {
+							var line string
+							fmt.Print("\nmod> ")
+							line, err = r.ReadString(10)
+							if err == nil {
+								line = strings.Trim(line, "\n")
+								if line == "help" {
+									fmt.Println("usage:")
+									fmt.Println("delete <message-id>")
+									fmt.Println("overchan-inet-ban 1.1.1.1/32")
+									fmt.Println("exit")
+								} else if line == "quit" || line == "exit" {
+									fmt.Println("bai")
+									return
+								} else {
+									ev := srnd.ParseModEvent(line)
+									eng.Do(ev)
+								}
+							}
+						}
+					} else if len(os.Args) >= 5 {
 						action := os.Args[3]
 						if action == "add" {
 							pk := os.Args[4]
@@ -62,9 +88,11 @@ func main() {
 							if err != nil {
 								log.Fatal(err)
 							}
+						} else {
+							fmt.Fprintf(os.Stdout, "usage: %s tool mod [[add|del] pubkey]|[do modactiongoeshere]\n", os.Args[0])
 						}
 					} else {
-						fmt.Fprintf(os.Stdout, "usage: %s tool mod [add|del] pubkey\n", os.Args[0])
+						fmt.Fprintf(os.Stdout, "usage: %s tool mod [[add|del] pubkey]|[do modactiongoeshere]\n", os.Args[0])
 					}
 				} else if tool == "rethumb" {
 					if len(os.Args) >= 4 {
