@@ -22,6 +22,7 @@ $(MINIFY):
 js-deps: $(MINIFY)
 
 $(JS): js-deps
+	rm -f $(JS)
 	for f in $(CONTRIB_JS)/*.js ; do $(MINIFY) --mime=text/javascript >> $(JS) < $$f ; done
 	$(MINIFY) --mime=text/javascript >> $(JS) < $(REPO)/contrib/js/entry.js
 	for f in $(LOCAL_JS)/*.js ; do $(MINIFY) --mime=text/javascript >> $(JS) < $$f ; done
