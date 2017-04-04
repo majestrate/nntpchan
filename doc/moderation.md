@@ -3,7 +3,7 @@ Moderating NNTPChan
 
 Once you have done [the initial setup you](setting-up.md) you can grant users mod privileges.
 
-###Generate TripCode
+### Generate TripCode
 
 Navigate to http://[yourNodeURL]/mod/keygen (e.g. http://oniichanylo2tsi4.onion/mod/keygen) and save both your secret an public key.
 
@@ -11,7 +11,7 @@ E.g.
 
 ![Image 0](tripcode-1.png)
 
-###Use TripCode
+### Use TripCode
 
 If you want to be uniquely identified when posting on NNTPChan you can 'authenticate' yourself by putting in the name field name#yourprivatekey
 
@@ -22,7 +22,7 @@ E.g.
 ![Image 1](tripcode-0.png)
 
 
-###Add Moderators
+### Add Moderators
 
 To add a new moderator you need to ask for his public key. Then following [Managing your NNTPChan node with the CLI](cli.md):
 

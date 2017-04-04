@@ -1,11 +1,11 @@
 `feeds.ini`
 ===========
 
-##Peering
+## Peering
 
 In order to actually be distributed, you need another person to sync posts with, otherwise what's the point right?
 
-###Peering over the regular internet with TLS
+### Peering over the regular internet with TLS
 
 Requirements:
 
@@ -29,7 +29,7 @@ If Alice owns `nntp.alice.net` and Bob owns `nntp.bob.com` and are both using po
     [feed-bob]
     host = nntp.bob.com
     port = 1199
-    
+
     [bob]
     overchan.* = 1
     ctl = 1
@@ -64,13 +64,13 @@ Alice keeps `overchan-alice-nntp.alice.net.key` secret and never shares it
 Bob keeps `overchan-bob-nntp.bob.com.key` secret and never shares it
 
 
-###Peering Authentication with passwords
+### Peering Authentication with passwords
 
 adding / removing credentials via the command line:
 
     # add an nntp login via command line
     srndv2 tool nntp add-login user-name-here pass-word-here
-    
+
     # remove an nntp login via command line
     srndv2 tool nntp del-login user-name-here
 
@@ -90,9 +90,9 @@ Example `feeds.ini`:
     [authenticated]
     overchan.* = 1
     ctl = 1
-     
 
-###Peering over Tor
+
+### Peering over Tor
 
 Install Tor
 
@@ -126,7 +126,7 @@ Then to peer with someone over tor add this to you feeds.ini
     ctl=1
 
 
-##Options
+## Options
 
 ####You need one connection and one settings block for each connection
 
@@ -157,7 +157,7 @@ Connection settings for a peer
     proxy-type=socks4a
     proxy-host=127.0.0.1
     proxy-port=9050
-    
+
 Proxy settings, straight forward. Supported proxy types are `socks4a` and `none`
 
     [them.onion]
@@ -166,7 +166,7 @@ NNTP synchronization settings
 
     overchan=1
 
-Sync all boards, use 
+Sync all boards, use
 
     overchan.bad=0
 
@@ -180,6 +180,6 @@ This WILL be the nntpchan pastebin, but it's not implemented yet
 
 Allows you to recieve moderation notifications from other boards, it's also used for decentralized moderation
 
-##Alternative config location
+## Alternative config location
 
-If you would like to have your feeds.ini somewhere other than in the working directory, you can set the `SRND_FEEDS_INI_PATH` environment variable. For example, if you would like to use `/etc/nntpchan/meems.ini`, edit `~/.profile` and add `export SRND_FEEDS_INI_PATH=/etc/nntpchan/meems.ini`. 
+If you would like to have your feeds.ini somewhere other than in the working directory, you can set the `SRND_FEEDS_INI_PATH` environment variable. For example, if you would like to use `/etc/nntpchan/meems.ini`, edit `~/.profile` and add `export SRND_FEEDS_INI_PATH=/etc/nntpchan/meems.ini`.

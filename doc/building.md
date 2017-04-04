@@ -3,7 +3,7 @@ Building NNPTChan
 
 This document will help you build the NNTPChan software from the source code.
 
-##Requirements
+## Requirements
 
 NNTPChan can run on the following operating systems:
 
@@ -17,68 +17,50 @@ Dependancies:
 * imagemagick
 * ffmpeg
 * sox
-* go _1.6_ or _higher_ **with redis driver**
-* go _1.3_ or _higher_ **without redis driver**
+* go _1.6_ or higher
+* GNU make
 
-##Debian instructions
+## Debian instructions
 
 These are installation instructions for Debian.
 
-###Install Go
+### Install Go
 
 Install the Go programming language version _1.6_ from the [Go website](https://golang.org/dl/).
 
-###Install the dependancies
+### Install the dependancies
 
     sudo apt-get update
-    sudo apt-get --no-install-recommends install imagemagick libsodium-dev ffmpeg sox build-essential git ca-certificates
+    sudo apt-get --no-install-recommends install imagemagick libsodium-dev ffmpeg sox build-essential git ca-certificates postgresql postgresql-client
 
-###Installing Redis
-
-Run this to install Redis - if you want to use Redis.
-
-    su
-    apt-get install redis-server
-
-###Installing Postgres (WIP)
-
-Run this to install Postgres - if you want to use Postgres.
-
-    # install as root
-    su
-    apt-get install --no-install-recommends postgresql postgresql-client
-
-###Get the NNTPChan source
+### Get the NNTPChan source
 
     git clone https://github.com/majestrate/nntpchan --depth=1
     cd nntpchan
 
-###Now compile!
+### Now compile!
 
-If you want to compile with Redis support (recommended - Redis is easy to use) then run:
+Run `make`:
 
-    ./build.sh
+    make
 
-If you want to build without support for Redis then build with the `--no-redis` flag:
 
-    ./build.sh --no-redis
-
-##Trisquel instructions (WIP)
+## Trisquel instructions (WIP)
 
 These are installation instructions for Trisquel.
 
-###Install Go
+### Install Go
 
 Run this to install Go.
 
     sudo apt-get update
     sudo apt-get install golang-1.6
 
-###Installing dependancies (standard)
+### Installing dependancies (standard)
 
-    sudo apt-get --no-install-recommends install imagemagick libsodium-dev sox build-essential git ca-certificates
+    sudo apt-get --no-install-recommends install imagemagick libsodium-dev sox build-essential git ca-certificates postgresql postgresql-client
 
-###Installing dependancies (`ffmpeg` is not available in Trisquel repos - there must be compiled)
+### Installing dependancies (`ffmpeg` is not available in Trisquel repos - there must be compiled)
 
 This will install `ffmpeg` to `/usr/local/bin/ffmpeg`:
 
@@ -90,29 +72,13 @@ This will install `ffmpeg` to `/usr/local/bin/ffmpeg`:
     cd ..
     rm -rf ffmpeg
 
-###Installing Redis
-
-Run this to install Redis - if you want to use Redis.
-
-    sudo apt-get install redis-server
-
-###Installing Postgres (WIP)
-
-Run this to install Postgres - if you want to use Postgres.
-
-    sudo apt-get install --no-install-recommends postgresql postgresql-client
-
-###Get the NNTPChan source
+### Get the NNTPChan source
 
     git clone https://github.com/majestrate/nntpchan --depth=1
     cd nntpchan
 
-###Now compile!
+### Now compile!
 
-If you want to compile with Redis support (recommended - Redis is easy to use) then run:
+run `make`
 
-    ./build.sh
-
-If you want to build without support for Redis then build with the `--no-redis` flag:
-
-    ./build.sh --no-redis
+    make

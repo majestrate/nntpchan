@@ -20,12 +20,12 @@ Download the golang tarball, extract it to `/usr/local`, and add it to the globa
 
 ```
 cd /opt
-wget https://storage.googleapis.com/golang/go1.7.3.linux-amd64.tar.gz
-tar -C /usr/local/ -xvzf go1.7.3.linux-amd64.tar.gz
+wget https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz
+tar -C /usr/local/ -xvzf go1.8.linux-amd64.tar.gz
 echo 'export PATH="$PATH:/usr/local/go/bin"' >> /etc/profile
 ```
 
-Your `PATH` is set at login, so log out and back in before proceeding. 
+Your `PATH` is set at login, so log out and back in before proceeding.
 
 ## Install nntpchan
 
@@ -33,7 +33,7 @@ Your `PATH` is set at login, so log out and back in before proceeding.
 cd /opt
 git clone https://github.com/majestrate/nntpchan.git
 cd nntpchan
-./build.sh
+make
 ```
 
 Now you can proceed with [setting up NNTPChan](setting-up.md). When you get to the "set paths to external programs" step, you should change the ffmpeg path to `/usr/bin/avconv`.

@@ -4,7 +4,7 @@ NNTPChan Documentation
 
 Hey, welcome to the documentation. This will help you use and develop with NNTPChan.
 
-##End-user related
+## End-user related
 
 1. [Building NNTPChan](building.md) -  Building the source code
 2. [Setting up NNTPChan](setting-up.md) - Configuring the node
@@ -13,7 +13,7 @@ Hey, welcome to the documentation. This will help you use and develop with NNTPC
 5. [Moderating NNTPChan](moderation.md) - Keep your node clean
 5. [Configuring your news reader for NNTPChan](extras/configure-newsreader.md) - Setup **Mozilla Thunderbird** or **Pan** to send and receive articles from your NNTPChan node of choice.
 
-##Developer related
+## Developer related
 
 1. [Protocol](developer/protocol.md) - NNTPChan's protocol specification
 2. [JSON-RPC API](developer/api.md) - NNTPChan's JSON-RPC API
