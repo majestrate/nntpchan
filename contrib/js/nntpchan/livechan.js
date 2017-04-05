@@ -1429,4 +1429,4 @@ Chat.prototype.generateChat = function(data) {
   chat.appendChild(header);
   chat.appendChild(body);
   return chat;
-}
+};
