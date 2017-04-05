@@ -41,7 +41,7 @@
       {{#threads}}
         <div class="thread" id="thread_{{OP.PostHash}}">
 	        <div class="truncated_post">
-            <div>{{#i18n.Translations}}{{posted_on_label}}{{/i18n.Translations}} <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></div>  
+            <div>{{#i18n.Translations}}{{posted_on_label}}{{/i18n.Translations}} <a href="{{{BoardURL}}}"><span class="ukko_boardname">{{OP.Board}}</span></a></div>
             <div class="thread_header">
               <span class="thread_posts">
                 {{PostCount}} posts
@@ -64,20 +64,8 @@
           {{/Replies}}
         </div>
           {{/Truncate}}
-        <hr />  
+        <hr />
       {{/threads}}
-      </div>
-      <div id="ukko_paginator">
-        {{#prev}}
-          <span id="ukko_prev">
-            <a href="{{prefix}}o/{{no}}/">previous</a>
-          </span>
-        {{/prev}}
-        {{#next}}
-          <span id="ukko_next">
-            <a href="{{prefix}}o/{{no}}/">next</a>
-          </span>
-        {{/next}}
       </div>
       <script type="text/javascript" >
           var prefix = "{{prefix}}";
@@ -86,7 +74,19 @@
           if(init) init(prefix);
           ready(prefix);
       </script>
-    <hr/>
+      <hr/>
+      <div id="ukko_paginator">
+          {{#prev}}
+              <span id="ukko_prev">
+                  <a href="{{prefix}}o/{{no}}/">previous</a>
+              </span>
+          {{/prev}}
+          {{#next}}
+              <span id="ukko_next">
+                  <a href="{{prefix}}o/{{no}}/">next</a>
+              </span>
+          {{/next}}
+      </div>
     <footer>
     <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
     <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>

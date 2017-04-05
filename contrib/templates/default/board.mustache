@@ -68,12 +68,6 @@
         </div>
       {{/board.Threads}}
     </div>
-    <div class="pagelist">{{# board.PageList }}[<a href="{{LinkURL}}"> {{Text}} </a>]  {{/ board.PageList }}
-    <span class="navbar-sep">
-     |
-    </span>
-    <a href="{{board.Prefix}}catalog-{{board.Name}}.html"> {{#i18n.Translations}}{{catalog_label}}{{/i18n.Translations}} </a>
-    </div>
     <script type="text/javascript">
       var prefix = "{{board.Prefix}}";
       var e = document.getElementById("nntpchan_banner");
@@ -82,6 +76,12 @@
       ready(prefix);
     </script>
     <hr/>
+    <div class="pagelist">{{# board.PageList }}[<a href="{{LinkURL}}"> {{Text}} </a>]  {{/ board.PageList }}
+        <span class="navbar-sep">
+            |
+        </span>
+        <a href="{{board.Prefix}}catalog-{{board.Name}}.html"> {{#i18n.Translations}}{{catalog_label}}{{/i18n.Translations}} </a>
+    </div>
     <footer>
     <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
     <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
