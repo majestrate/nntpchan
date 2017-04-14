@@ -48,11 +48,22 @@ type ModUI interface {
 	MessageChan() chan NNTPMessage
 }
 
+type ModAction string
+
+const ModInetBan = ModAction("overchan-inet-ban")
+const ModDelete = ModAction("overchan-delete")
+const ModRemoveAttachment = ModAction("overchan-del-attachment")
+const ModStick = ModAction("overchan-stick")
+const ModLock = ModAction("overchan-lock")
+const ModHide = ModAction("overchan-hide")
+const ModSage = ModAction("overchan-sage")
+const ModDeleteAlt = ModAction("delete")
+
 type ModEvent interface {
 	// turn it into a string for putting into an article
 	String() string
 	// what type of mod event
-	Action() string
+	Action() ModAction
 	// what reason for the event
 	Reason() string
 	// what is the event acting on
@@ -69,8 +80,8 @@ func (self simpleModEvent) String() string {
 	return string(self)
 }
 
-func (self simpleModEvent) Action() string {
-	return strings.Split(string(self), " ")[0]
+func (self simpleModEvent) Action() ModAction {
+	return ModAction(strings.Split(string(self), " ")[0])
 }
 
 func (self simpleModEvent) Reason() string {
@@ -156,6 +167,8 @@ type ModEngine interface {
 	AllowDelete(pubkey, msgid string) bool
 	// do we allow this public key to do inet-ban?
 	AllowBan(pubkey string) bool
+	// allow janitor
+	AllowJanitor(pubkey string) bool
 	// load a mod message
 	LoadMessage(msgid string) NNTPMessage
 	// execute 1 mod action line by a mod with pubkey
@@ -255,6 +268,18 @@ func (self *modEngine) AllowBan(pubkey string) bool {
 	return self.database.CheckModPubkeyGlobal(pubkey)
 }
 
+func (self *modEngine) AllowJanitor(pubkey string) bool {
+	is_admin, _ := self.database.CheckAdminPubkey(pubkey)
+	if is_admin {
+		return true
+	}
+	if self.database.CheckModPubkeyGlobal(pubkey) {
+		return true
+	}
+	// TODO: more checks
+	return false
+}
+
 func (self *modEngine) AllowDelete(pubkey, msgid string) (allow bool) {
 	is_admin, _ := self.database.CheckAdminPubkey(pubkey)
 	if is_admin {
@@ -294,7 +319,8 @@ func (mod *modEngine) HandleMessage(msgid string) {
 
 func (mod *modEngine) Do(ev ModEvent) {
 	action := ev.Action()
-	if action == "delete" {
+	target := ev.Target()
+	if action == ModDelete || action == ModDeleteAlt {
 		msgid := ev.Target()
 		if !ValidMessageID(msgid) {
 			// invalid message-id
@@ -308,9 +334,8 @@ func (mod *modEngine) Do(ev ModEvent) {
 			log.Println("deleted", msgid)
 		}
 
-	} else if action == "overchan-inet-ban" {
+	} else if action == ModInetBan {
 		// ban action
-		target := ev.Target()
 		if target[0] == '[' {
 			err := mod.BanAddress(target)
 			if err != nil {
@@ -357,6 +382,27 @@ func (mod *modEngine) Do(ev ModEvent) {
 		} else {
 			log.Printf("invalid overchan-inet-ban: target=%s", target)
 		}
+	} else if action == ModHide {
+		// TODO: implement
+	} else if action == ModLock {
+		// TODO: implement
+	} else if action == ModSage {
+		// TODO: implement
+	} else if action == ModStick {
+		// TODO: implement
+	} else if action == ModRemoveAttachment {
+		var delfiles []string
+		atts := mod.database.GetPostAttachments(target)
+		if atts != nil {
+			for _, att := range atts {
+				delfiles = append(delfiles, mod.store.AttachmentFilepath(att))
+				delfiles = append(delfiles, mod.store.ThumbnailFilepath(att))
+			}
+		}
+		for _, f := range delfiles {
+			log.Println("remove file", f)
+			os.Remove(f)
+		}
 	} else {
 		log.Println("invalid mod action", action)
 	}
@@ -364,77 +410,28 @@ func (mod *modEngine) Do(ev ModEvent) {
 
 func (mod *modEngine) Execute(ev ModEvent, pubkey string) {
 	action := ev.Action()
-	if action == "delete" {
-		msgid := ev.Target()
-		if !ValidMessageID(msgid) {
-			// invalid message-id
-			log.Println("invalid message-id for mod delete from", pubkey)
-			return
+	target := ev.Target()
+	switch action {
+	case ModDeleteAlt:
+	case ModDelete:
+		if mod.AllowDelete(pubkey, target) {
+			mod.Do(ev)
 		}
-		// this is a delete action
-		if mod.AllowDelete(pubkey, msgid) {
-			err := mod.DeletePost(msgid)
-			if err != nil {
-				log.Println(msgid, err)
-			}
-		} else {
-			log.Printf("pubkey=%s will not delete %s not trusted", pubkey, msgid)
+		return
+	case ModInetBan:
+		if mod.AllowBan(pubkey) {
+			mod.Do(ev)
 		}
-	} else if action == "overchan-inet-ban" {
-		// ban action
-		target := ev.Target()
-		if target[0] == '[' {
-			// probably a literal ipv6 rangeban
-			if mod.AllowBan(pubkey) {
-				err := mod.BanAddress(target)
-				if err != nil {
-					log.Println("failed to do literal ipv6 range ban on", target, err)
-				}
-			} else {
-				log.Println("ignoring literal ipv6 rangeban from", pubkey, "as they are not allowed to ban")
-			}
-			return
+		return
+	case ModHide:
+	case ModLock:
+	case ModSage:
+	case ModStick:
+	case ModRemoveAttachment:
+		if mod.AllowJanitor(pubkey) {
+			mod.Do(ev)
 		}
-		parts := strings.Split(target, ":")
-		if len(parts) == 3 {
-			// encrypted ip
-			encaddr, key := parts[0], parts[1]
-			cidr := decAddr(encaddr, key)
-			if cidr == "" {
-				log.Println("failed to decrypt inet ban")
-			} else if mod.AllowBan(pubkey) {
-				err := mod.BanAddress(cidr)
-				if err != nil {
-					log.Println("failed to do range ban on", cidr, err)
-				}
-			} else {
-				log.Println("ingoring encrypted-ip inet ban from", pubkey, "as they are not allowed to ban")
-			}
-		} else if len(parts) == 2 {
-			// x-encrypted-ip ban without pad
-			if mod.AllowBan(pubkey) {
-				err := mod.database.BanEncAddr(parts[0])
-				if err != nil {
-					log.Println("failed to ban encrypted ip", err)
-				}
-			} else {
-				log.Println("ignoring encrypted-ip ban from", pubkey, "as they are not allowed to ban")
-			}
-		} else if len(parts) == 1 {
-			// literal cidr
-			cidr := parts[0]
-			if mod.AllowBan(pubkey) {
-				err := mod.BanAddress(cidr)
-				if err != nil {
-					log.Println("failed to do literal range ban on", cidr, err)
-				}
-			} else {
-				log.Println("ingoring literal cidr range ban from", pubkey, "as they are not allowed to ban")
-			}
-		} else {
-			log.Printf("invalid overchan-inet-ban: target=%s", target)
-		}
-	} else {
-		log.Println("invalid mod action", action, "from", pubkey)
+	default:
+		// invalid action
 	}
 }

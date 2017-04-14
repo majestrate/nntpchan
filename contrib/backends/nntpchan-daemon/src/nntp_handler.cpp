@@ -19,7 +19,7 @@ namespace nntpchan
   {
     if(m_auth) delete m_auth;
   }
-  
+
   void NNTPServerHandler::HandleLine(const std::string &line)
   {
     if(m_state == eStateReadCommand) {
@@ -55,7 +55,7 @@ namespace nntpchan
       } else {
         // get mode
       }
-      
+
     } else {
       // unknown command
       QueueLine("500 Unknown Command");
@@ -64,7 +64,24 @@ namespace nntpchan
 
   void NNTPServerHandler::SwitchMode(const std::string & mode)
   {
-    
+    if (mode == "READER") {
+      m_mode = mode;
+      if(PostingAllowed()) {
+        QueueLine("200 Posting is permitted yo");
+      } else {
+        QueueLine("201 Posting is not permitted yo");
+      }
+    } else if (mode == "STREAM") {
+      m_mode = mode;
+      if (PostingAllowed()) {
+        QueueLine("203 Streaming enabled");
+      } else {
+        QueueLine("483 Streaming Denied");
+      }
+    } else {
+      // unknown mode
+      QueueLine("500 Unknown mode");
+    }
   }
 
   void NNTPServerHandler::Quit()
@@ -83,10 +100,10 @@ namespace nntpchan
   {
     return m_authed || m_auth == nullptr;
   }
-  
+
   void NNTPServerHandler::Greet()
   {
-    if(PostingAllowed()) 
+    if(PostingAllowed())
       QueueLine("200 Posting allowed");
     else
       QueueLine("201 Posting not allowed");

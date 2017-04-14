@@ -877,7 +877,7 @@ func (self *NNTPDaemon) poll(worker int) {
 						}
 						minconn := lowestBacklogConnection(send)
 						if minconn != nil {
-							minconn.offerStream(nntp.MessageID(), sz)
+							go minconn.offerStream(nntp.MessageID(), sz)
 						}
 					}
 				}
