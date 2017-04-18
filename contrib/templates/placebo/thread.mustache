@@ -19,20 +19,19 @@
         <link rel="stylesheet" href="/static/krane.css" />
     </head>
     <body>
-        {{{ board.Navbar }}}
         <hr />
         <div class="sitetitle">
             <h2><a href="{{thread.Prefix}}">OVERCHAN</a></h2>
             <b>decentralized and distributed</b>
         </div>
-        <center><b>{{Board.Name}}</b></center>
-        {{{Postform}}}
+        <center><b>{{thread.Board}}</b></center>
+        {{{postform}}}
 
             <div class="thread">
-                {{{OP.RenderPost}}}
-                {{#Replies}}
+                {{{thread.OP.RenderPost}}}
+                {{#thread.Replies}}
                     {{{RenderPost}}}
-                {{/Replies}}
+                {{/thread.Replies}}
             </div>
             <hr style="clear: both;">
         <hr />
