@@ -28,7 +28,7 @@
     <a href="{{Source}}" class="image_link" target="_blank" title="{{Filename}}"><img src="{{Thumbnail}}" class="image" /></a>
     {{/post.Attachments}}
     <a name="{{post.PostHash}}"></a><span class="topicline"><b>{{post.subject}}</b> {{post.Name}} <span class="published">{{post.Posted}}</span>  <a href="{{post.PostURL}}" onclick="return '>>{{post.ShortHash}}';">&#8470;</a>
-    <a href="{{post.PostURL}}" onclick="return quickreply('${articlehash}', '${articlehash_full}');">&#8470; {{post.ShortHash}}</a>
+    <a href="{{post.PostURL}}" onclick="return quickreply('${articlehash}', '${articlehash_full}');"> {{post.ShortHash}}</a>
     </span>
     <span class="frontend"> {{post.MessageID}} </span>
     <br /><br />
