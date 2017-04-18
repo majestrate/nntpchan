@@ -10,7 +10,7 @@
   - Board ( the name of the board )
   - Navbar ( a function that renders the navbar, should not be escaped )
   - Threads ( a list of Thread Models with the last few replies )
-                                   }}
+                 }}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
           "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -27,15 +27,17 @@
             <b>decentralized and distributed</b>
         </div>
         <center><b>{{Board.Name}}</b></center>
-        {{{Postform}}}
+        {{{form}}}
         {{#Threads}}
+            {{#Truncate}}
             <div class="thread">
-            {{{OP.RenderPost}}}
-            {{#Replies}}
-            {{{RenderPost}}}
-            {{/Replies}}
+                {{{OP.RenderPost}}}
+                {{#Replies}}
+                    {{{RenderPost}}}
+                {{/Replies}}
             </div>
             <hr style="clear: both;">
+            {{/Truncate}}
         {{/Threads}}
         <hr />
         <footer>

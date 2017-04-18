@@ -17,13 +17,15 @@
         <hr />
         <center><b>OVERCHAN</b></center>
         {{#threads}}
+            {{#Truncate}}
             <div class="thread">
-                {{{OP.RenderPost}}}
+                {{{OP.RenderTruncatedPost}}}
                 {{#Replies}}
-                    {{{RenderPost}}}
+                    {{{RenderTruncatedPost}}}
                 {{/Replies}}
             </div>
             <hr style="clear: both;">
+            {{/Truncate}}
         {{/threads}}
         <hr />
         <footer>
