@@ -19,13 +19,14 @@
         <link rel="stylesheet" href="/static/krane.css" />
     </head>
     <body>
+        {{{ thread.Navbar }}}
         <hr />
         <div class="sitetitle">
             <h2><a href="{{thread.Prefix}}">OVERCHAN</a></h2>
             <b>decentralized and distributed</b>
         </div>
         <center><b>{{thread.Board}}</b></center>
-        {{{postform}}}
+        {{{form}}}
 
             <div class="thread">
                 {{{thread.OP.RenderPost}}}
