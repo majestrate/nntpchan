@@ -1,0 +1,44 @@
+{{!
+ thread.mustache -- renders to a thread-*.html page, shows the entire thread
+ template parameters:
+ - board ( the Board Model of the board this thread was posted in )
+ - thread ( the Thread Model of the current thread being rendered )
+
+ Thread Model attributes:
+ - OP , the Post Model of the original poster
+ - Replies , a list of all the replies or empty if none
+ - Board , the name of the Board this thread is on
+ - BoardURL , the url that points to the board index page
+}}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+          "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>{{board.Board}}</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" href="/static/krane.css" />
+    </head>
+    <body>
+        {{{ board.Navbar }}}
+        <hr />
+        <div class="sitetitle">
+            <h2><a href="{{thread.Prefix}}">OVERCHAN</a></h2>
+            <b>decentralized and distributed</b>
+        </div>
+        <center><b>{{Board.Name}}</b></center>
+        {{{Postform}}}
+
+            <div class="thread">
+                {{{OP.RenderPost}}}
+                {{#Replies}}
+                    {{{RenderPost}}}
+                {{/Replies}}
+            </div>
+            <hr style="clear: both;">
+        <hr />
+        <footer>
+            <p class="legal">All posts on this site are the responsibility of the individual poster and not the administration, pursuant to 47 U.S.C. § 230.</p>
+            <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
+        </footer>
+    </body>
+</html>

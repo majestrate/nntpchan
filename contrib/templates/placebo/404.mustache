@@ -1,0 +1,25 @@
+{{!
+  404.mustache -- 404 page
+  template parameters:
+  - prefix (the site prefix)
+}}
+
+<html>
+  <head>
+    <title> 404 </title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{{prefix}}static/site.css" />
+    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css" />
+    <script type="text/javascript" src="{{prefix}}static/nntpchan.js"></script>
+  </head>
+  <body>
+    <center>
+      <div class="not_found">
+        <img src="{{prefix}}static/404.png"></img>
+        <div class="not_found_message">
+          {{#i18n.Translations}}{{resource_not_found}}{{/i18n.Translations}}
+        </div>
+      </div>
+    </center>
+  </body>
+</html>

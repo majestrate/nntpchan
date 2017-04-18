@@ -1,0 +1,42 @@
+{{!
+ postform.mustache -- the form for posting
+
+ template parameters:
+ - post_url ( the url of the post form )
+ - reference ( the post we are replying to, or empty string if it's an op )
+ - button ( the text for the reply button )
+ - files ( bool, do we allow attachments ? )
+ - csrf ( csrf token )
+                 }}
+<div class="postform" align="center">
+    <form method="POST" action="{{post_url}}" enctype="multipart/form-data">
+        <input type="hidden" name="reference" value="{{reference}}" id="postform_reference"/>
+        <table cellspacing="1" cellpadding="0">
+            <tr>
+                <th>Name</th>
+                <td><input type="text" name="name" class="posttext" /></td>
+            </tr>
+            <tr>
+                <th>Subject</th>
+                <td><input type="text" name="subject" class="posttext" /></td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td><textarea name="message" class="postarea"></textarea></td>
+            </tr>
+            {{#files}}
+            <tr>
+                <th>File</th>
+                <td>
+                    <table cellspacing="0" cellpadding="0" width="100%">
+                        <tr>
+                            <td><input type="file" name="file" class="postfile" multiple /></td>
+                            <td align="right"><input type="submit" value="{{button}}" class="postbutton"/></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            {{/files}}
+        </table>
+    </form>
+</div>
