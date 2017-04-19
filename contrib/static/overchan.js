@@ -176,6 +176,10 @@ onready(function() {
         for (var idx = 0; idx < es.length ; idx ++ ) {
             hide_elem(es[idx]);
         }
+        es = elem.getElementsByClassName("topicline");
+        for (var idx = 0; idx < es.length ; idx ++ ) {
+            hide_elem(es[idx]);
+        }
         elem.dataset.userhide = "yes";
         elem.setHideLabel("[show]");
     };
@@ -204,6 +208,10 @@ onready(function() {
             unhide_elem(es[idx]);
         }
         es = elem.getElementsByClassName("message_span");
+        for (var idx = 0; idx < es.length ; idx ++ ) {
+            unhide_elem(es[idx]);
+        }
+        es = elem.getElementsByClassName("topicline");
         for (var idx = 0; idx < es.length ; idx ++ ) {
             unhide_elem(es[idx]);
         }
