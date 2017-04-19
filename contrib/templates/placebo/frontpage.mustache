@@ -9,10 +9,19 @@
   - prefix ( the site's prefix )
 }}
 
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+          "http://www.w3.org/TR/html4/strict.dtd">
+<html prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
   <head>
       <link rel="stylesheet" href="{{prefix}}static/krane.css" />
       <link rel="stylesheet" href="{{prefix}}static/user.css" />
+      <meta property="og:site_name" content="changolia" />
+      <meta property="og:type" content="website"/>
+      <meta property="og:title" content="changolia"/>
+      <meta property="og:description" content="Most of the rest of the wild west"/>
+      <meta property="og:url" content="{{prefix}}"/>
+      <meta property="og:image"
+            content="{{prefix}}static/changolia-logo.png"/>
     <title> CHANGOLIA </title>
   </head>
   <body>
