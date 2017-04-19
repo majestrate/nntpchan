@@ -31,7 +31,7 @@
         <br />
         {{{form}}}
 
-            <div class="thread">
+            <div class="thread" id="thread_{{thread.OP.PostHash}}">
                 {{{thread.OP.RenderPost}}}
                 {{#thread.Replies}}
                     {{{RenderPost}}}
