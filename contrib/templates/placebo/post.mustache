@@ -1,10 +1,10 @@
 <div id="{{post.PostHash}}"
-     {{#OP}}
+     {{#IsOP}}
      class="messageroot"
-     {{/OP}}
-     {{^OP}}
+     {{/IsOP}}
+     {{^IsOP}}
      class="message"
-     {{/OP}}
+     {{/IsOP}}
      data-frontend="{{post.Frontend}}"
      data-newsgroup="{{post.Board}}"
      data-msgid="{{post.MessageID}}"
