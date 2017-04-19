@@ -358,3 +358,7 @@
           animation-timing-function: linear;
           animation-iteration-count: infinite;
       }
+
+      #paginator {
+          margin-left: 4em;
+      }
