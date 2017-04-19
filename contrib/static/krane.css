@@ -390,3 +390,8 @@
       .messageroot > .hider {
           float: left;
       }
+
+      #faq {
+          margin-left: 3em;
+          width: 75%;
+      }
