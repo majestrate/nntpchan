@@ -395,3 +395,25 @@
           margin-left: 3em;
           width: 75%;
       }
+
+      .topicline {
+          padding-left: 30px;
+      }
+
+      [data-origin="tor"] {
+          background-image: url('/static/tor.png');
+          background-repeat: no-repeat;
+          background-position: top left;
+      }
+
+      [data-origin="i2p"] {
+          background-image: url('/static/i2p.png');
+          background-repeat: no-repeat;
+          background-position: top left;
+      }
+
+      [data-origin="clearnet"] {
+          background-image: url('/static/clearnet.png');
+          background-repeat: no-repeat;
+          background-position: top left;
+      }
