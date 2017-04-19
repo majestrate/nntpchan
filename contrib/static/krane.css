@@ -336,3 +336,7 @@
         display: block;
         margin: 0;
       }
+
+      .overboard > .thread {
+          margin-left: 5em;
+      }

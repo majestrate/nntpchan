@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="{{prefix}}static/krane.css" />
         <script type="text/javascript" src="/static/overchan.js"></script>
     </head>
-    <body>
+    <body class="overboard">
         <hr />
         <center><b>OVERCHAN</b></center>
         <div id="paginator">
@@ -31,9 +31,9 @@
         </div>
         {{#threads}}
             {{#Truncate}}
-            Posted on <a href="{{BoardURL}}">{{Board}}</a>
-            <br />
             <div class="thread">
+                Posted on <a href="{{BoardURL}}">{{Board}}</a>
+                <br />
                 {{{OP.RenderTruncatedPost}}}
                 <div class="excluded">{{MissingPostCount}} posts excluded</div>
                 {{#Replies}}
