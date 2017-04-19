@@ -16,6 +16,18 @@
     <body>
         <hr />
         <center><b>OVERCHAN</b></center>
+        <div id="paginator">
+            {{#prev}}
+                <span id="prev">
+                    <a href="{{prefix}}o/{{no}}/">previous</a>
+                </span>
+            {{/prev}}
+            {{#next}}
+                <span id="next">
+                    <a href="{{prefix}}o/{{no}}/">next</a>
+                </span>
+            {{/next}}
+        </div>
         {{#threads}}
             {{#Truncate}}
             Posted on <a href="{{BoardURL}}">{{Board}}</a>
