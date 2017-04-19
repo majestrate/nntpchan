@@ -41,7 +41,7 @@
       }
       .message, .highlight {
         margin-left: 25px;
-        margin-bottom: 1px;
+        margin-bottom: 1em;
         border: 1px solid #363636;
         background: #1c1c1c;
         border-radius: 0px;
