@@ -32,6 +32,7 @@
             {{#Truncate}}
             <div class="thread">
                 {{{OP.RenderPost}}}
+                <div class="excluded">{{MissingPostCount}} posts excluded</div>
                 {{#Replies}}
                     {{{RenderPost}}}
                 {{/Replies}}
