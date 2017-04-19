@@ -374,7 +374,7 @@
           background-size: 128px;
       }
 
-      .threadpage > .thread {
+      .thread {
           display: table-cell;
           width: auto;
           hieght: auto;
@@ -382,7 +382,6 @@
           text-align: middle;
       }
 
-      .threadpage > .message {
-          display: inline-block;
-
+      .message {
+          float: left;
       }
