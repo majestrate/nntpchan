@@ -32,7 +32,7 @@
         {{{form}}}
         {{#board.Threads}}
             {{#Truncate}}
-            <div class="thread">
+            <div class="thread" id="thread_{{OP.PostHash}}">
                 {{{OP.RenderPost}}}
                 <div class="excluded">{{MissingPostCount}} posts excluded</div>
                 {{#Replies}}
@@ -47,5 +47,8 @@
             <p class="legal">To make a DMCA request or report illegal content, please contact the administration</p>
         </footer>
         <hr />
+        <script type="text/javascript">
+         ready();
+        </script>
     </body>
 </html>
