@@ -373,3 +373,16 @@
           background-attachment: fixed;
           background-size: 128px;
       }
+
+      .threadpage > .thread {
+          display: table-cell;
+          width: auto;
+          hieght: auto;
+          vertical-align: center;
+          text-align: middle;
+      }
+
+      .threadpage > .message {
+          display: inline-block;
+
+      }
