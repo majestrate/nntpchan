@@ -376,10 +376,6 @@
 
       .thread {
           display: table-cell;
-          width: auto;
-          hieght: auto;
-          vertical-align: center;
-          text-align: middle;
       }
 
       .message {
