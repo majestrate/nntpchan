@@ -363,4 +363,5 @@
           margin-left: 4em;
       }
 
-      [data-subject~="None"] { display: none; }
+      [data-subject="None"] { display: none; }
+      [data-sage="1"] { background: darkred; }
