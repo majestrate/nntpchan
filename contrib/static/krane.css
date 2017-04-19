@@ -378,6 +378,10 @@
           display: table-cell;
       }
 
+      .messageroot {
+          display: inline-block;
+      }
+
       .message {
           float: left;
           clear: left;
@@ -409,6 +413,7 @@
       [data-origin="i2p"] {
           background-image: url('/static/i2p.png');
           background-repeat: no-repeat;
+
           background-position: top right;
       }
 
