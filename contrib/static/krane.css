@@ -386,3 +386,7 @@
       .hider {
           float: right;
       }
+
+      .messageroot > .hider {
+          float: left;
+      }
