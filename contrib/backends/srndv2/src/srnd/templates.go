@@ -303,7 +303,7 @@ func (self *templateEngine) genThread(allowFiles, requireCaptcha bool, root Arti
 			self.renderJSON(wr, t)
 		} else {
 			form := renderPostForm(prefix, newsgroup, msgid, allowFiles, requireCaptcha)
-			self.writeTemplate("thread.mustache", map[string]interface{}{"thread": t, "board": map[string]interface{}{"Name": newsgroup, "Frontend": frontend, "AllowFiles": allowFiles}, "form": form}, wr)
+			self.writeTemplate("thread.mustache", map[string]interface{}{"thread": t, "board": map[string]interface{}{"Name": newsgroup, "Frontend": frontend, "AllowFiles": allowFiles}, "form": form, "prefix": prefix}, wr)
 		}
 	} else {
 		log.Println("templates: error getting thread for ", msgid, err.Error())
