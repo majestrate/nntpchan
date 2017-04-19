@@ -365,3 +365,10 @@
 
       [data-subject="None"] { display: none; }
       [data-sage="1"] { background: darkred; }
+
+      .overboard, .threadpage, .boardpage {
+          background-image: url('/static/changolia-logo.png');
+          background-repeat: no-repeat;
+          background-position: right top;
+          background-attachment: fixed;
+      }
