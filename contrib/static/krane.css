@@ -339,6 +339,7 @@
 
       .thread {
           margin-left: 5em;
+          display: inline-block;
       }
 
       footer {
