@@ -157,7 +157,7 @@ func NewVarnishCache(varnish_url, bind_addr, prefix, webroot, name string, attac
 			},
 		},
 	}
-	cache.prefix = prefix
+	cache.prefix = "/"
 	cache.handler = &nullHandler{
 		prefix:         prefix,
 		name:           name,
