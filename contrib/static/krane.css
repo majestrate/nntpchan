@@ -382,3 +382,7 @@
           float: left;
           clear: left;
       }
+
+      .hider {
+          float: right;
+      }
