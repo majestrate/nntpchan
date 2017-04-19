@@ -2,7 +2,7 @@
  navbar.mustache -- element on the top of each nod-mod page
 
  TODO: make this not suck, have a board list, have board page list
- 
+
  template parameters:
  - name ( the name of whatever resource we are on, board/thread )
  - frontend ( the name of the frontend we are on )
@@ -19,11 +19,11 @@
      |
    </span>
    <span class="navbar-links">
-     
+
      <span class="navbar-links-title">
        Pages:
      </span>
-     <span class="navbar-link"><a href="{{prefix}}static/search.html">Search</a></span>  
+     <span class="navbar-link"><a href="{{prefix}}static/search.html">Search</a></span>
      {{# links }}
      <span class="navbar-link"><a href="{{LinkURL}}">{{Text}}</a></span>
      {{/ links }}
@@ -31,26 +31,25 @@
    <span class="navbar-sep">
      |
    </span>
-   <span class="navbar-links"> 
+   <span class="navbar-links">
      <span class="navbar-link"><a href="{{prefix}}">{{#i18n.Translations}}{{front_page_title}}{{/i18n.Translations}}</a></span>
    </span>
    <span class="navbar-sep">
      |
    </span>
-   <span class="navbar-links"> 
+   <span class="navbar-links">
      <span class="navbar-link"><a href="{{prefix}}o/">{{#i18n.Translations}}{{overboard_title}}{{/i18n.Translations}}</a></span>
    </span>
    <span class="navbar-sep">
      |
    </span>
-   <span class="navbar-links"> 
+   <span class="navbar-links">
      <span class="navbar-link"><label onclick="enable_theme('{{prefix}}','bloodgod')">bloodgod</a></span>
      <span class="navbar-link"><label onclick="enable_theme('{{prefix}}','dayman')">dayman</a></span>
      <span class="navbar-link"><label onclick="enable_theme('{{prefix}}','tomorrow')">tomorrow</a></span>
-     <span class="navbar-link"><label onclick="enable_theme('{{prefix}}','site')">yotsuba</a></span>     
+     <span class="navbar-link"><label onclick="enable_theme('{{prefix}}','site')">yotsuba</a></span>
    </span>
    <span class="navbar-sep">
      |
    </span>
  </div>
- <hr />
