@@ -384,7 +384,7 @@ func (self *post) Pubkey() string {
 }
 
 func (self *post) Sage() bool {
-	return self.sage
+	return isSage(self.Subject())
 }
 
 func (self *post) CSSClass() string {
