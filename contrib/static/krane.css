@@ -378,10 +378,6 @@
           display: table-cell;
       }
 
-      .messageroot {
-          display: inline-block;
-      }
-
       .message {
           float: left;
           clear: left;
