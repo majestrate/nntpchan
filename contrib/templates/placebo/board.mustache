@@ -20,13 +20,11 @@
         <link rel="stylesheet" href="/static/krane.css" />
     </head>
     <body>
-        {{{ board.Navbar }}}
-        <hr />
         <div class="sitetitle">
             <h2><a href="{{Prefix}}">OVERCHAN</a></h2>
             <b>decentralized and distributed</b>
         </div>
-        <center><b>{{Board.Name}}</b></center>
+        <center><b>{{board.Name}}</b></center>
         {{{form}}}
         {{#board.Threads}}
             {{#Truncate}}
