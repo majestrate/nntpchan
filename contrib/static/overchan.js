@@ -6,7 +6,7 @@ function onready(f) {
 }
 
 function ready() {
-    for (var f in _onreadyfuncs) f();
+    for(var idx = 0; idx < _onreadyfuncs.length; idx++) _onreadyfuncs[idx]();
 }
 
 
