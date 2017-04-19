@@ -11,7 +11,7 @@
  - BoardURL , the url that points to the board index page
 }}
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-          "http://www.w3.org/TR/html4/strict.dtd">
+          "http://www.w3.org/TR/html4/strict.dtd>"
 <html prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
     <head>
         <title>{{board.Board}}</title>
@@ -23,9 +23,9 @@
         <meta property="og:type" content="website"/>
         <meta property="og:title" content="{{board.Board}}"/>
         <meta property="og:description" content="thread no. {{thread.OP.PostHash}} on changolia"/>
-        <meta property="og:url" content="{{thread.OP.PostURL}}"/>
+        <meta property="og:url" content="{{board.Prefix}}t/{{thread.OP.PostHash}}/"/>
         <meta property="og:image"
-              content="{{thread.Prefix}}static/changolia-logo.png"/>
+              content="{{board.Prefix}}static/changolia-logo.png"/>
     </head>
     <body class="threadpage">
         {{{thread.Navbar}}}
