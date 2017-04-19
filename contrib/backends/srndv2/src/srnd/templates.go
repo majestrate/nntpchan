@@ -495,7 +495,7 @@ func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name st
 	*/
 	param["frontend"] = frontend_name
 	param["totalposts"] = db.ArticleCount()
-
+	param["prefix"] = prefix
 	// render and inject navbar
 	param["navbar"] = self.renderTemplate("navbar.mustache", map[string]interface{}{"name": "Front Page", "frontend": frontend_name, "prefix": prefix})
 
