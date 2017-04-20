@@ -51,7 +51,7 @@ type ModUI interface {
 type ModAction string
 
 const ModInetBan = ModAction("overchan-inet-ban")
-const ModDelete = ModAction("overchan-delete")
+const ModDelete = ModAction("delete")
 const ModRemoveAttachment = ModAction("overchan-del-attachment")
 const ModStick = ModAction("overchan-stick")
 const ModLock = ModAction("overchan-lock")
@@ -81,7 +81,14 @@ func (self simpleModEvent) String() string {
 }
 
 func (self simpleModEvent) Action() ModAction {
-	return ModAction(strings.Split(string(self), " ")[0])
+	switch strings.Split(string(self), " ")[0] {
+	case "delete":
+		return ModDelete
+
+	case "overchan-inet-ban":
+		return ModInetBan
+	}
+	return ""
 }
 
 func (self simpleModEvent) Reason() string {
