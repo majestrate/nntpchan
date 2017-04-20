@@ -315,8 +315,10 @@ func (mod *modEngine) HandleMessage(msgid string) {
 		pubkey := nntp.Pubkey()
 		for _, line := range strings.Split(nntp.Message(), "\n") {
 			line = strings.Trim(line, "\r\t\n ")
-			ev := ParseModEvent(line)
-			mod.Execute(ev, pubkey)
+			if len(line) > 0 {
+				ev := ParseModEvent(line)
+				mod.Execute(ev, pubkey)
+			}
 		}
 	}
 }
@@ -325,7 +327,7 @@ func (mod *modEngine) Do(ev ModEvent) {
 	action := ev.Action()
 	target := ev.Target()
 	if action == ModDelete || action == ModDeleteAlt {
-		msgid := ev.Target()
+		msgid := target
 		if !ValidMessageID(msgid) {
 			// invalid message-id
 			log.Println("invalid message-id", msgid)
