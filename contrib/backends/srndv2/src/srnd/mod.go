@@ -84,7 +84,6 @@ func (self simpleModEvent) Action() ModAction {
 	switch strings.Split(string(self), " ")[0] {
 	case "delete":
 		return ModDelete
-
 	case "overchan-inet-ban":
 		return ModInetBan
 	}
@@ -425,7 +424,6 @@ func (mod *modEngine) Execute(ev ModEvent, pubkey string) {
 	action := ev.Action()
 	target := ev.Target()
 	switch action {
-	case ModDeleteAlt:
 	case ModDelete:
 		if mod.AllowDelete(pubkey, target) {
 			mod.Do(ev)
