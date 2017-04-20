@@ -89,7 +89,11 @@ func (self simpleModEvent) Reason() string {
 }
 
 func (self simpleModEvent) Target() string {
-	return strings.Split(string(self), " ")[1]
+	parts := strings.Split(string(self), " ")
+	if len(parts) > 1 {
+		return parts[1]
+	}
+	return ""
 }
 
 func (self simpleModEvent) Scope() string {
