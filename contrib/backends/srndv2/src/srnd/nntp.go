@@ -17,7 +17,10 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
+
+const nntpDummyArticle = "<keepalive@dummy.tld>"
 
 type nntpStreamEvent string
 
@@ -89,6 +92,9 @@ type nntpConnection struct {
 	backlog int64
 	// function used to close connection abruptly
 	abort func()
+
+	// streaming keepalive timer
+	keepalive *time.Ticker
 }
 
 // get message backlog in bytes
@@ -364,6 +370,8 @@ func (self *nntpConnection) handleStreaming(daemon *NNTPDaemon, conn *textproto.
 		case ev := <-self.takethis:
 			self.messageSetPendingState(ev.msgid, "takethis", ev.sz)
 			err = self.handleStreamEvent(nntpTAKETHIS(ev.msgid), daemon, conn)
+		case <-self.keepalive.C:
+			err = conn.PrintfLine("CHECK %s", nntpDummyArticle)
 		}
 	}
 	return
@@ -581,6 +589,9 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 		msgid = parts[0]
 	}
 	if code == 238 {
+		if msgid == nntpDummyArticle {
+			return
+		}
 		self.messageSetPendingState(msgid, "takethis", 0)
 		// they want this article
 		sz, _ := daemon.store.GetMessageSize(msgid)
@@ -593,14 +604,23 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 		return
 		// TODO: remember success
 	} else if code == 431 {
+		if msgid == nntpDummyArticle {
+			return
+		}
 		// CHECK said we would like this article later
 		self.messageSetProcessed(msgid)
 	} else if code == 439 {
+		if msgid == nntpDummyArticle {
+			return
+		}
 		// TAKETHIS failed
 		log.Println(msgid, "was not sent to", self.name, "denied:", line)
 		self.messageSetProcessed(msgid)
 		// TODO: remember denial
 	} else if code == 438 {
+		if msgid == nntpDummyArticle {
+			return
+		}
 		// they don't want the article
 		// TODO: remeber rejection
 		self.messageSetProcessed(msgid)
@@ -1199,6 +1219,8 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 }
 
 func (self *nntpConnection) startStreaming(daemon *NNTPDaemon, reader bool, conn *textproto.Conn) {
+	self.keepalive = time.NewTicker(time.Minute)
+	defer self.keepalive.Stop()
 	for {
 		err := self.handleStreaming(daemon, conn)
 		if err == nil {
