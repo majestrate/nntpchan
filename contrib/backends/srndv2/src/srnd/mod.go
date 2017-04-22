@@ -51,7 +51,7 @@ type ModUI interface {
 type ModAction string
 
 const ModInetBan = ModAction("overchan-inet-ban")
-const ModDelete = ModAction("overchan-delete")
+const ModDelete = ModAction("delete")
 const ModRemoveAttachment = ModAction("overchan-del-attachment")
 const ModStick = ModAction("overchan-stick")
 const ModLock = ModAction("overchan-lock")
@@ -81,7 +81,13 @@ func (self simpleModEvent) String() string {
 }
 
 func (self simpleModEvent) Action() ModAction {
-	return ModAction(strings.Split(string(self), " ")[0])
+	switch strings.Split(string(self), " ")[0] {
+	case "delete":
+		return ModDelete
+	case "overchan-inet-ban":
+		return ModInetBan
+	}
+	return ""
 }
 
 func (self simpleModEvent) Reason() string {
@@ -89,7 +95,11 @@ func (self simpleModEvent) Reason() string {
 }
 
 func (self simpleModEvent) Target() string {
-	return strings.Split(string(self), " ")[1]
+	parts := strings.Split(string(self), " ")
+	if len(parts) > 1 {
+		return parts[1]
+	}
+	return ""
 }
 
 func (self simpleModEvent) Scope() string {
@@ -311,8 +321,10 @@ func (mod *modEngine) HandleMessage(msgid string) {
 		pubkey := nntp.Pubkey()
 		for _, line := range strings.Split(nntp.Message(), "\n") {
 			line = strings.Trim(line, "\r\t\n ")
-			ev := ParseModEvent(line)
-			mod.Execute(ev, pubkey)
+			if len(line) > 0 {
+				ev := ParseModEvent(line)
+				mod.Execute(ev, pubkey)
+			}
 		}
 	}
 }
@@ -321,7 +333,7 @@ func (mod *modEngine) Do(ev ModEvent) {
 	action := ev.Action()
 	target := ev.Target()
 	if action == ModDelete || action == ModDeleteAlt {
-		msgid := ev.Target()
+		msgid := target
 		if !ValidMessageID(msgid) {
 			// invalid message-id
 			log.Println("invalid message-id", msgid)
@@ -412,7 +424,6 @@ func (mod *modEngine) Execute(ev ModEvent, pubkey string) {
 	action := ev.Action()
 	target := ev.Target()
 	switch action {
-	case ModDeleteAlt:
 	case ModDelete:
 		if mod.AllowDelete(pubkey, target) {
 			mod.Do(ev)

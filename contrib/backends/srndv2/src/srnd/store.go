@@ -469,11 +469,11 @@ func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
 				R: msg.Body,
 				N: MaxMessageSize,
 			}
-			err = read_message_body(body, hdr, nil, nil, true, func(nntp NNTPMessage) {
+			err = read_message_body(body, hdr, nil, nil, true, func(n NNTPMessage) {
 				c := chnl
 				// inject pubkey for mod
-				nntp.Headers().Set("X-PubKey-Ed25519", hdr.Get("X-PubKey-Ed25519"))
-				c <- nntp
+				n.Headers().Set("X-PubKey-Ed25519", hdr.Get("X-PubKey-Ed25519"))
+				c <- n
 				close(c)
 			})
 			if err == nil {
