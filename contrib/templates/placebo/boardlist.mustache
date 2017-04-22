@@ -8,44 +8,34 @@
 <!doctype html>
 <html>
   <head>
-    <link rel="stylesheet" href="{{prefix}}static/site.css"></link>
-    <link id="current_theme" rel="stylesheet" href="{{prefix}}static/user.css"></link>
+    <link rel="stylesheet" href="{{prefix}}static/krane.css"></link>
     <title> {{frontend}} {{#i18n.Translations}}{{board_list_title}}{{/i18n.Translations}} </title>
+    <meta property="og:site_name" content="changolia" />
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="board list"/>
+    <meta property="og:url" content="{{prefix}}boards.html"/>
+    <meta property="og:description" content="changolia board list on {{frontend}}"/>
+    <meta property="og:image"
+          content="{{prefix}}static/changolia-logo.png"/>
+
   </head>
   <body>
-    <center>
-    <div class="index-outer">
-      <div class="index-inner">
-        <table id="board_graph">
-          <thead>
-            <tr>
-              <th> {{#i18n.Translations}}{{board_label}}{{/i18n.Translations}} </th>
-              <th> {{#i18n.Translations}}{{pph_label}}{{/i18n.Translations}} </th>
-              <th> {{#i18n.Translations}}{{ppd_label}}{{/i18n.Translations}} </th>
-              <th> {{#i18n.Translations}}{{total}}{{/i18n.Translations}} </th>
-            </tr>
-           </thead>
-           <tbody>
-            {{# graph}}
-            <tr>
-              <td>
-                <a href="{{prefix}}b/{{Board}}/">{{Board}}</a>
+      <table class="activity" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+              <td class="usage_td">
               </td>
-              <td>
-                {{Hour}}
+              <td class="post_td" align="center">
               </td>
-              <td>
-                {{Day}}
+              <td class="board_td">
+                  <table cellspacing="0" class="datatable" style="border-collapse: inherit;">
+                      <tr><th>posts today</th><th>post rate</th><th>board</th></tr>
+                      {{#graph}}
+                          <tr><td class="right">{{Day}}</td><td class="right">{{Hour}} PPH</td><td><a href="{{prefix}}b/{{Board}}/"{{Board}}</td></tr>
+                      {{/graph}}
+                  </table>
               </td>
-              <td>
-                {{All}}
-              </td>
-            </tr>
-            {{/ graph}}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    </center>
+          </tr>
+      </table>
+
   </body>
 </html>
