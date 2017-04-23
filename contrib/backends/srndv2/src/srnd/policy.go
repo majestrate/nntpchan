@@ -4,8 +4,8 @@
 package srnd
 
 import (
-	"log"
 	"regexp"
+	"strings"
 )
 
 type FeedPolicy struct {
@@ -15,18 +15,22 @@ type FeedPolicy struct {
 // do we allow this newsgroup?
 func (self *FeedPolicy) AllowsNewsgroup(newsgroup string) (result bool) {
 	var k, v string
+	var allows, disallows int
 	for k, v = range self.rules {
+		v = strings.Trim(v, " ")
 		match, err := regexp.MatchString(k, newsgroup)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if match {
-			if v == "0" {
-				return false
-			} else if v == "1" {
-				result = true
+		if err == nil {
+			if match {
+				if v == "1" {
+					allows++
+				} else if v == "0" {
+					disallows++
+				}
 			}
 		}
 	}
-	return result
+
+	result = allows > 0 && disallows == 0
+
+	return
 }
