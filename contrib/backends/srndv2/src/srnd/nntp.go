@@ -1225,14 +1225,11 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 func (self *nntpConnection) startStreaming(daemon *NNTPDaemon, reader bool, conn *textproto.Conn) {
 	self.keepalive = time.NewTicker(time.Minute)
 	defer self.keepalive.Stop()
-	for {
-		err := self.handleStreaming(daemon, conn)
-		if err == nil {
-			log.Println(self.name, "done with streaming")
-			return
-		} else {
-			log.Println(self.name, "error while streaming:", err)
-		}
+	err := self.handleStreaming(daemon, conn)
+	if err == nil {
+		log.Println(self.name, "done with streaming")
+	} else {
+		log.Println(self.name, "error while streaming:", err)
 	}
 }
 
