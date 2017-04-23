@@ -440,7 +440,7 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 		ban = true
 		return
 	} else if !self.policy.AllowsNewsgroup(newsgroup) {
-		reason = "newsground not allowed by feed policy"
+		reason = "newsgroup not allowed by feed policy"
 		ban = true
 		return
 	} else if !(ValidMessageID(msgid) || (reference != "" && !ValidMessageID(reference))) {
