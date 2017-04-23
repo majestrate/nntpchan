@@ -15,7 +15,7 @@ type FeedPolicy struct {
 // do we allow this newsgroup?
 func (self *FeedPolicy) AllowsNewsgroup(newsgroup string) (result bool) {
 	var k, v string
-	var allows, disallows int
+	var allows int
 	for k, v = range self.rules {
 		v = strings.Trim(v, " ")
 		match, err := regexp.MatchString(k, newsgroup)
