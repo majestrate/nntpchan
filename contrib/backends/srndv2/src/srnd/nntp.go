@@ -61,7 +61,7 @@ type nntpConnection struct {
 	// what article is currently selected
 	selected_article string
 	// the policy for federation
-	policy FeedPolicy
+	policy *FeedPolicy
 	// lock help when expecting non pipelined activity
 	access sync.Mutex
 
@@ -439,7 +439,7 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 		reason = "poster's pubkey is banned"
 		ban = true
 		return
-	} else if !self.policy.AllowsNewsgroup(newsgroup) {
+	} else if self.policy != nil && !self.policy.AllowsNewsgroup(newsgroup) {
 		reason = "newsgroup not allowed by feed policy"
 		ban = true
 		return

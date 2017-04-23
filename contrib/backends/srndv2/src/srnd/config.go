@@ -58,17 +58,18 @@ type HookConfig struct {
 }
 
 type SRNdConfig struct {
-	daemon   map[string]string
-	crypto   *CryptoConfig
-	store    map[string]string
-	database map[string]string
-	cache    map[string]string
-	feeds    []FeedConfig
-	frontend map[string]string
-	system   map[string]string
-	worker   map[string]string
-	pprof    *ProfilingConfig
-	hooks    []*HookConfig
+	daemon        map[string]string
+	crypto        *CryptoConfig
+	store         map[string]string
+	database      map[string]string
+	cache         map[string]string
+	feeds         []FeedConfig
+	frontend      map[string]string
+	system        map[string]string
+	worker        map[string]string
+	pprof         *ProfilingConfig
+	hooks         []*HookConfig
+	inboundPolicy *FeedPolicy
 }
 
 // check for config files
@@ -219,8 +220,16 @@ func GenSRNdConfig() *configparser.Configuration {
 }
 
 // save a list of feeds to overwrite feeds.ini
-func SaveFeeds(feeds []FeedConfig) (err error) {
+func SaveFeeds(feeds []FeedConfig, inboundPolicy *FeedPolicy) (err error) {
 	conf := configparser.NewConfiguration()
+
+	if inboundPolicy != nil {
+		s := conf.NewSection("")
+		for k, v := range inboundPolicy.rules {
+			s.Add(k, v)
+		}
+	}
+
 	for _, feed := range feeds {
 		if len(feed.Name) == 0 {
 			// don't do feed with no name
@@ -381,8 +390,8 @@ func ReadConfig() *SRNdConfig {
 			fname = os.Getenv("SRND_FEEDS_INI_PATH")
 		}
 	}
-
-	confs, err := feedParse(fname)
+	var confs []FeedConfig
+	confs, sconf.inboundPolicy, err = feedParse(fname)
 	if err != nil {
 		log.Fatal("failed to parse", fname, err)
 	}
@@ -399,7 +408,7 @@ func ReadConfig() *SRNdConfig {
 		if err == nil {
 			for _, f := range feeds {
 				log.Println("load feed", f)
-				confs, err := feedParse(f)
+				confs, _, err := feedParse(f)
 				if err != nil {
 					log.Fatal("failed to parse feed", f, err)
 				}
@@ -411,12 +420,20 @@ func ReadConfig() *SRNdConfig {
 	return &sconf
 }
 
-func feedParse(fname string) (confs []FeedConfig, err error) {
+func feedParse(fname string) (confs []FeedConfig, inboundPolicy *FeedPolicy, err error) {
 
 	conf, err := configparser.Read(fname)
 
 	if err != nil {
-		return nil, err
+		return
+	}
+
+	default_sect, err := conf.Section("")
+	if err == nil {
+		opts := default_sect.Options()
+		inboundPolicy = &FeedPolicy{
+			rules: opts,
+		}
 	}
 
 	sections, err := conf.Find("feed-*")

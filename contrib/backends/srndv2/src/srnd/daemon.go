@@ -295,7 +295,7 @@ func (self *NNTPDaemon) storeFeedsConfig() (err error) {
 	for _, status := range feeds {
 		feedconfigs = append(feedconfigs, *status.State.Config)
 	}
-	err = SaveFeeds(feedconfigs)
+	err = SaveFeeds(feedconfigs, self.conf.inboundPolicy)
 	return
 }
 
@@ -410,7 +410,7 @@ func (self *NNTPDaemon) persistFeed(conf *FeedConfig, mode string, n int) {
 				continue
 			}
 			nntp := createNNTPConnection(conf.Addr)
-			nntp.policy = conf.policy
+			nntp.policy = &conf.policy
 			nntp.feedname = conf.Name
 			nntp.name = fmt.Sprintf("%s-%d-%s", conf.Name, n, mode)
 			stream, reader, use_tls, err := nntp.outboundHandshake(textproto.NewConn(conn), conf)
@@ -948,6 +948,7 @@ func (self *NNTPDaemon) acceptloop() {
 		}
 		addr := conn.RemoteAddr()
 		nntp.name = fmt.Sprintf("%s-inbound-feed", addr.String())
+		nntp.policy = self.conf.inboundPolicy
 		c := textproto.NewConn(conn)
 		// send banners and shit
 		err = nntp.inboundHandshake(c)
