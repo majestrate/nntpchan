@@ -24,13 +24,13 @@ func (self *FeedPolicy) AllowsNewsgroup(newsgroup string) (result bool) {
 				if v == "1" {
 					allows++
 				} else if v == "0" {
-					disallows++
+					return false
 				}
 			}
 		}
 	}
 
-	result = allows > 0 && disallows == 0
+	result = allows > 0
 
 	return
 }
