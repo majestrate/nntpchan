@@ -439,7 +439,7 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 		reason = "poster's pubkey is banned"
 		ban = true
 		return
-	} else if self.policy != nil && !self.policy.AllowsNewsgroup(newsgroup) {
+	} else if !self.policy.AllowsNewsgroup(newsgroup) {
 		reason = "newsground not allowed by feed policy"
 		ban = true
 	} else if !(ValidMessageID(msgid) || (reference != "" && !ValidMessageID(reference))) {
