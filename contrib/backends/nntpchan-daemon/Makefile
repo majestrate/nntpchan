@@ -1,9 +1,4 @@
 
-EXE = nntpd
-
-TOOL = nntpchan-tool
-
-CXX = g++
 REPO=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 SRC_PATH = $(REPO)/src
 
@@ -11,24 +6,40 @@ SOURCES := $(wildcard $(SRC_PATH)/*.cpp)
 HEADERS := $(wildcard $(SRC_PATH)/*.hpp)
 OBJECTS := $(SOURCES:.cpp=.o)
 
+TOOL_SRC_PATH := $(REPO)/tools
+
+TOOL_SRC := $(wildcard $(TOOL_SRC_PATH)/*.cpp)
+TOOLS := $(TOOL_SRC:.cpp=)
+
+DAEMON_SRC = $(REPO)/daemon
+
 PKGS := libuv libsodium
 
 LD_FLAGS := $(shell pkg-config --libs $(PKGS))
 INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I $(REPO)/src
-CXXFLAGS := -std=c++11 -Wall -Wextra $(INC_FLAGS) -g
+CXXFLAGS := -std=c++11 -Wall -Wextra $(INC_FLAGS)
 
-LIB = libnntpchan.a
+ifeq ($(DEBUG),1)
+	CXXFLAGS += -g
+endif
 
-all: $(EXE) $(TOOL)
+LIB = $(REPO)/libnntpchan.a
+
+EXE = $(REPO)/nntpd
+
+
+all: $(EXE) $(TOOLS)
 
 $(LIB): $(OBJECTS)
 	$(AR) -r $(LIB) $(OBJECTS)
 
 $(EXE): $(LIB)
-	$(CXX) -o $(EXE) $(CXXFLAGS) nntpd.cpp $(LIB) $(LD_FLAGS)
+	$(CXX) $(CXXFLAGS) $(DAEMON_SRC)/main.cpp $(LIB) $(LD_FLAGS) -o $(EXE)
 
-$(TOOL): $(LIB)
-	$(CXX) -o $(TOOL) $(CXXFLAGS) tool.cpp $(LIB) $(LD_FLAGS)
+$(TOOL_SRC): $(LIB)
+
+$(TOOLS): $(TOOL_SRC)
+	$(CXX)  $(CXXFLAGS) $< $(LIB) $(LD_FLAGS) -o $@
 
 build-test: $(LIB)
 	$(CXX) -o test $(CXXFLAGS) test.cpp $(LIB) $(LD_FLAGS)
@@ -40,4 +51,4 @@ test: build-test
 	$(CXX) $(CXXFLAGS) -c -o $@
 
 clean:
-	rm -f $(OBJECTS) $(LIB) $(EXE) $(TOOL) test
+	rm -f $(OBJECTS) $(LIB) $(EXE) $(TOOLS)

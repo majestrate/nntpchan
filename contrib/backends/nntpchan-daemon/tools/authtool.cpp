@@ -9,11 +9,12 @@
 
 static void print_help(const std::string & exename)
 {
-  std::cout << "usage: " << exename << " [help|gencred|checkcred]" << std::endl;
+  std::cout << "usage: " << exename << " [help|gen|check]" << std::endl;
 }
 
-static void print_long_help() {
-  
+static void print_long_help()
+{
+
 }
 
 static void gen_passwd(const std::string & username, const std::string & passwd)
@@ -58,16 +59,16 @@ int main(int argc, char * argv[])
     print_long_help();
     return 0;
   }
-  if (cmd == "gencred") {
+  if (cmd == "gen") {
     if(argc == 4) {
       gen_passwd(argv[2], argv[3]);
       return 0;
     } else {
-      std::cout << "usage: " << argv[0] << " passwd username password" << std::endl;
+      std::cout << "usage: " << argv[0] << " gen username password" << std::endl;
       return 1;
     }
   }
-  if(cmd == "checkcred" ) {
+  if(cmd == "check" ) {
     std::string cred;
     std::cout << "credential: " ;
     if(!std::getline(std::cin, cred)) {

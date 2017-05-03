@@ -1,5 +1,6 @@
 #include "ini.hpp"
 
+#include "crypto.hpp"
 #include "storage.hpp"
 #include "nntp_server.hpp"
 #include "event.hpp"
@@ -14,6 +15,8 @@ int main(int argc, char * argv[]) {
     std::cerr << "usage: " << argv[0] << " config.ini" << std::endl;
     return 1;
   }
+
+  nntpchan::Crypto crypto();
 
   nntpchan::Mainloop loop;
 
