@@ -45,23 +45,23 @@ namespace nntpchan
   void NNTPServerHandler::HandleCommand(const std::deque<std::string> & command)
   {
     auto cmd = command[0];
-    std::transform(cmd.begin(), cmd.end(), cmd.begin(),
-                   [](unsigned char ch) { return std::toupper(ch); });
+    std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
     std::size_t cmdlen = command.size();
     std::cerr << "handle command [" << cmd << "] " << (int) cmdlen << std::endl;
     if (cmd == "QUIT") {
       Quit();
       return;
     } else if (cmd == "MODE" ) {
-      if(cmdlen == 1) {
+      if(cmdlen == 2) {
         // set mode
         SwitchMode(command[1]);
       } else if(cmdlen) {
         // too many arguments
+        QueueLine("500 too many arguments");
       } else {
         // get mode
+        QueueLine("500 wrong arguments");
       }
-
     } else {
       // unknown command
       QueueLine("500 Unknown Command");
@@ -70,15 +70,17 @@ namespace nntpchan
 
   void NNTPServerHandler::SwitchMode(const std::string & mode)
   {
-    if (mode == "READER") {
-      m_mode = mode;
+    std::string m = mode;
+    std::transform(m.begin(), m.end(), m.begin(), ::toupper);
+    if (m == "READER") {
+      m_mode = m;
       if(PostingAllowed()) {
         QueueLine("200 Posting is permitted yo");
       } else {
         QueueLine("201 Posting is not permitted yo");
       }
-    } else if (mode == "STREAM") {
-      m_mode = mode;
+    } else if (m == "STREAM") {
+      m_mode = m;
       if (PostingAllowed()) {
         QueueLine("203 Streaming enabled");
       } else {

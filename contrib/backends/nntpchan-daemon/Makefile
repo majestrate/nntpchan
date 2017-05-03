@@ -22,7 +22,7 @@ LIB = libnntpchan.a
 all: $(EXE) $(TOOL)
 
 $(LIB): $(OBJECTS)
-	$(AR) -q $(LIB) $(OBJECTS)
+	$(AR) -r $(LIB) $(OBJECTS)
 
 $(EXE): $(LIB)
 	$(CXX) -o $(EXE) $(CXXFLAGS) nntpd.cpp $(LIB) $(LD_FLAGS)
