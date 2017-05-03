@@ -16,20 +16,20 @@ int main(int argc, char * argv[]) {
   }
 
   nntpchan::Mainloop loop;
-  
+
   nntpchan::NNTPServer nntp(loop);
-  
+
   std::string fname(argv[1]);
 
   std::ifstream i(fname);
 
   if(i.is_open()) {
     INI::Parser conf(i);
-    
+
     std::vector<std::string> requiredSections = {"nntp", "storage"};
-    
+
     auto & level = conf.top();
-    
+
     for ( const auto & section : requiredSections ) {
       if(level.sections.find(section) == level.sections.end()) {
         std::cerr << "config file " << fname << " does not have required section: ";
@@ -46,7 +46,7 @@ int main(int argc, char * argv[]) {
     }
 
     nntp.SetStoragePath(storeconf["path"]);
-    
+
     auto & nntpconf = level.sections["nntp"].values;
 
     if (nntpconf.find("bind") == nntpconf.end()) {
@@ -75,29 +75,26 @@ int main(int argc, char * argv[]) {
       } else {
         std::cerr << "unknown frontend type '" << ftype << "'" << std::endl;
       }
-          
+
     }
-    
+
     auto & a = nntpconf["bind"];
 
     try {
-      nntp.Bind(a);  
+      nntp.Bind(a);
     } catch ( std::exception & ex ) {
       std::cerr << "failed to bind: " << ex.what() << std::endl;
       return 1;
     }
-    try {
-      std::cerr << "run mainloop" << std::endl;
-      loop.Run();
-    } catch ( std::exception & ex ) {
-      std::cerr << "exception in mainloop: " << ex.what() << std::endl;
-      return 2;
-    }
-    
+
+    std::cerr << "run mainloop" << std::endl;
+    loop.Run();
+    std::cerr << "stopped mainloop" << std::endl;
+
   } else {
     std::cerr << "failed to open " << fname << std::endl;
     return 1;
   }
-    
-  
+
+
 }

@@ -13,7 +13,7 @@ namespace nntpchan
     LineReader(size_t lineLimit);
 
     /** @brief queue inbound data from connection */
-    virtual void OnData(const char * data, ssize_t s);
+    void Data(const char * data, ssize_t s);
 
     /** implements IConnHandler */
     virtual bool ShouldClose();

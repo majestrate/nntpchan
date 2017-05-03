@@ -21,7 +21,7 @@ namespace nntpchan
     char * buff = new char[l];
     // read file
     m_instream->read(buff, l);
-    OnData(buff, l);
+    Data(buff, l);
     delete [] buff;
     return m_found;
   }

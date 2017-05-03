@@ -15,6 +15,7 @@ namespace nntpchan
 
   void Server::Close()
   {
+    std::cout << "Close server" << std::endl;
     uv_close((uv_handle_t*)&m_server, [](uv_handle_t * s) {
       Server * self = (Server*)s->data;
       if (self) delete self;
@@ -39,8 +40,10 @@ namespace nntpchan
       OnAcceptError(status);
       return;
     }
+    std::cout << "new conn" << std::endl;
     IServerConn * conn = CreateConn(s);
     assert(conn);
+    m_conns.push_back(conn);
     conn->Greet();
   }
 
@@ -73,15 +76,14 @@ namespace nntpchan
     return line;
   }
 
-  IServerConn::IServerConn(uv_loop_t * l, uv_stream_t * s, Server * parent, IConnHandler * h)
+  IServerConn::IServerConn(uv_loop_t * l, uv_stream_t * st, Server * parent, IConnHandler * h)
   {
     m_loop = l;
-    m_stream = s;
     m_parent = parent;
     m_handler = h;
     uv_tcp_init(l, &m_conn);
     m_conn.data = this;
-    uv_accept(s, (uv_stream_t*) &m_conn);
+    uv_accept(st, (uv_stream_t*) &m_conn);
     uv_read_start((uv_stream_t*) &m_conn, [] (uv_handle_t * h, size_t s, uv_buf_t * b) {
         IServerConn * self = (IServerConn*) h->data;
         if(self == nullptr) return;
@@ -94,6 +96,7 @@ namespace nntpchan
         IServerConn * self = (IServerConn*) s->data;
         if(self == nullptr) return;
         if(nread > 0) {
+          std::cout << "read " << nread << std::endl;
           self->m_handler->OnData(b->base, nread);
           self->SendNextReply();
           if(self->m_handler->ShouldClose())
@@ -118,7 +121,7 @@ namespace nntpchan
   void IServerConn::SendString(const std::string & str)
   {
     WriteBuffer * b = new WriteBuffer(str);
-    uv_write(&b->w, *this, &b->b, 1, [](uv_write_t * w, int status) {
+    uv_write(&b->w, (uv_stream_t*)&m_conn, &b->b, 1, [](uv_write_t * w, int status) {
         (void) status;
         WriteBuffer * wb = (WriteBuffer *) w->data;
         if(wb)

@@ -58,7 +58,7 @@ namespace nntpchan
   void NNTPServerConn::SendNextReply()
   {
     IConnHandler * handler = GetHandler();
-    if(handler->HasNextLine()) {
+    while(handler->HasNextLine()) {
       auto line = handler->GetNextLine();
       SendString(line + "\n");
     }

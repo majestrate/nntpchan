@@ -50,11 +50,9 @@ namespace nntpchan
     void SendString(const std::string & str);
     Server * Parent() { return m_parent; };
     IConnHandler * GetHandler() { return m_handler; };
-    operator uv_stream_t * () { return m_stream; };
     uv_loop_t * GetLoop() { return m_loop; };
   private:
     uv_tcp_t m_conn;
-    uv_stream_t * m_stream;
     uv_loop_t * m_loop;
     Server * m_parent;
     IConnHandler * m_handler;

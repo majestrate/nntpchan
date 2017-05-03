@@ -5,7 +5,7 @@ namespace nntpchan {
 
   LineReader::LineReader(size_t limit) : m_close(false), lineLimit(limit) {}
 
-  void LineReader::OnData(const char * d, ssize_t l)
+  void LineReader::Data(const char * d, ssize_t l)
   {
     if(l <= 0) return;
     // process leftovers
@@ -32,6 +32,8 @@ namespace nntpchan {
       // leftovers
       m_leftovers = std::string(data, begin-idx);
     }
+    else
+      m_leftovers = "";
   }
 
   void LineReader::OnLine(const char *d, const size_t l)

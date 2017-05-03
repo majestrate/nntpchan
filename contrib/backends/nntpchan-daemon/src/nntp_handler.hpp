@@ -16,9 +16,9 @@ namespace nntpchan
 
     virtual bool ShouldClose();
 
-    virtual void OnData(const char * data, ssize_t sz);
-
     void SetAuth(NNTPCredentialDB * creds);
+
+    virtual void OnData(const char *, ssize_t);
 
     void Greet();
 

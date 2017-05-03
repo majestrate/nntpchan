@@ -21,7 +21,7 @@ namespace nntpchan
 
   void Mainloop::Run(uv_run_mode mode)
   {
-    uv_run(m_loop, mode);
+    assert(uv_run(m_loop, mode) == 0);
   }
-  
+
 }
