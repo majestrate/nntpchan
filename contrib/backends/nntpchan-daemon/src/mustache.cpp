@@ -17,18 +17,22 @@
  limitations under the License.
 */
 
-#define _GNU_SOURCE
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
 
-#include "mustach.h"
+#include "mustache.hpp"
 
 #define NAME_LENGTH_MAX   1024
 #define DEPTH_MAX         256
+
+namespace nntpchan
+{
+namespace mustache
+{
+
 
 static int getpartial(struct mustach_itf *itf, void *closure, const char *name, char **result)
 {
@@ -54,7 +58,7 @@ static int getpartial(struct mustach_itf *itf, void *closure, const char *name, 
 	return rc;
 }
 
-static int process(const char *template, struct mustach_itf *itf, void *closure, FILE *file, const char *opstr, const char *clstr)
+static int process(const char *templ, struct mustach_itf *itf, void *closure, FILE *file, const char *opstr, const char *clstr)
 {
 	char name[NAME_LENGTH_MAX + 1], *partial, c;
 	const char *beg, *term;
@@ -67,20 +71,20 @@ static int process(const char *template, struct mustach_itf *itf, void *closure,
 	cllen = strlen(clstr);
 	depth = 0;
 	for(;;) {
-		beg = strstr(template, opstr);
+		beg = strstr(templ, opstr);
 		if (beg == NULL) {
 			/* no more mustach */
 			if (emit)
-				fwrite(template, strlen(template), 1, file);
+				fwrite(templ, strlen(templ), 1, file);
 			return depth ? MUSTACH_ERROR_UNEXPECTED_END : 0;
 		}
 		if (emit)
-			fwrite(template, (size_t)(beg - template), 1, file);
+			fwrite(templ, (size_t)(beg - templ), 1, file);
 		beg += oplen;
 		term = strstr(beg, clstr);
 		if (term == NULL)
 			return MUSTACH_ERROR_UNEXPECTED_END;
-		template = term + cllen;
+		templ = term + cllen;
 		len = (size_t)(term - beg);
 		c = *beg;
 		switch(c) {
@@ -96,7 +100,7 @@ static int process(const char *template, struct mustach_itf *itf, void *closure,
 			} else {
 				if (term[l] != '}')
 					return MUSTACH_ERROR_BAD_UNESCAPE_TAG;
-				template++;
+				templ++;
 			}
 			c = '&';
 		case '^':
@@ -153,7 +157,7 @@ static int process(const char *template, struct mustach_itf *itf, void *closure,
 					return rc;
 			}
 			stack[depth].name = beg;
-			stack[depth].again = template;
+			stack[depth].again = templ;
 			stack[depth].length = len;
 			stack[depth].emit = emit;
 			stack[depth].entered = rc;
@@ -169,7 +173,7 @@ static int process(const char *template, struct mustach_itf *itf, void *closure,
 			if (rc < 0)
 				return rc;
 			if (rc) {
-				template = stack[depth++].again;
+				templ = stack[depth++].again;
 			} else {
 				emit = stack[depth].emit;
 				if (emit && stack[depth].entered)
@@ -200,15 +204,15 @@ static int process(const char *template, struct mustach_itf *itf, void *closure,
 	}
 }
 
-int fmustach(const char *template, struct mustach_itf *itf, void *closure, FILE *file)
+int fmustach(const char *templ, struct mustach_itf *itf, void *closure, FILE *file)
 {
 	int rc = itf->start ? itf->start(closure) : 0;
 	if (rc == 0)
-		rc = process(template, itf, closure, file, "{{", "}}");
+		rc = process(templ, itf, closure, file, "{{", "}}");
 	return rc;
 }
 
-int fdmustach(const char *template, struct mustach_itf *itf, void *closure, int fd)
+int fdmustach(const char *templ, struct mustach_itf *itf, void *closure, int fd)
 {
 	int rc;
 	FILE *file;
@@ -218,13 +222,13 @@ int fdmustach(const char *template, struct mustach_itf *itf, void *closure, int 
 		rc = MUSTACH_ERROR_SYSTEM;
 		errno = ENOMEM;
 	} else {
-		rc = fmustach(template, itf, closure, file);
+		rc = fmustach(templ, itf, closure, file);
 		fclose(file);
 	}
 	return rc;
 }
 
-int mustach(const char *template, struct mustach_itf *itf, void *closure, char **result, size_t *size)
+int mustach(const char *templ, struct mustach_itf *itf, void *closure, char **result, size_t *size)
 {
 	int rc;
 	FILE *file;
@@ -238,7 +242,7 @@ int mustach(const char *template, struct mustach_itf *itf, void *closure, char *
 		rc = MUSTACH_ERROR_SYSTEM;
 		errno = ENOMEM;
 	} else {
-		rc = fmustach(template, itf, closure, file);
+		rc = fmustach(templ, itf, closure, file);
 		if (rc == 0)
 			/* adds terminating null */
 			rc = fputc(0, file) ? MUSTACH_ERROR_SYSTEM : 0;
@@ -254,4 +258,5 @@ int mustach(const char *template, struct mustach_itf *itf, void *closure, char *
 	}
 	return rc;
 }
-
+}
+}
