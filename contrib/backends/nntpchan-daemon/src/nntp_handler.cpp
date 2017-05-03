@@ -59,7 +59,6 @@ namespace nntpchan
       if(end)
       {
         std::size_t diff = end - data ;
-        std::cerr << diff << std::endl;
         if(m_article)
           m_article->write(data, diff);
         ArticleObtained();
@@ -71,7 +70,6 @@ namespace nntpchan
       if(end)
       {
         std::size_t diff = end - data ;
-        std::cerr << diff << std::endl;
         if(m_article)
           m_article->write(data, diff);
         ArticleObtained();

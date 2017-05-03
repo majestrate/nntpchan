@@ -56,7 +56,7 @@ namespace nntpchan
     uv_loop_t * m_loop;
     Server * m_parent;
     IConnHandler * m_handler;
-    char m_readbuff[4096];
+    char m_readbuff[65536];
   };
 
   class Server
