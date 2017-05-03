@@ -41,8 +41,8 @@ namespace nntpchan
     }
     else if(m_state == eStateStoreArticle)
     {
-      OnData(line.c_str(), line.size());
-      OnData("\n", 1);
+      std::string l = line + "\r\n";
+      OnData(l.c_str(), l.size());
     }
     else
     {
@@ -55,27 +55,15 @@ namespace nntpchan
     if(l <= 0 ) return;
     if(m_state == eStateStoreArticle)
     {
-      const char * end = strstr(data, "\n.\n");
+      const char * end = strstr(data, "\r\n.\r\n");
       if(end)
       {
         std::size_t diff = end - data ;
         if(m_article)
-          m_article->write(data, diff);
-        ArticleObtained();
-        diff += 3;
-        OnData(end+3, l-diff);
-        return;
-      }
-      end = strstr(data, "\r\n.\r\n");
-      if(end)
-      {
-        std::size_t diff = end - data ;
-        if(m_article)
-          m_article->write(data, diff);
+          m_article->write(data, diff+2);
         ArticleObtained();
         diff += 5;
-        OnData(end+5, l-diff);
-        return;
+        Data(end+5, l-diff);
         return;
       }
       if(m_article)
