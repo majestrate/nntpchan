@@ -22,6 +22,7 @@ int main(int argc, char * argv[]) {
 
   nntpchan::NNTPServer nntp(loop);
 
+
   std::string fname(argv[1]);
 
   std::ifstream i(fname);
@@ -29,7 +30,7 @@ int main(int argc, char * argv[]) {
   if(i.is_open()) {
     INI::Parser conf(i);
 
-    std::vector<std::string> requiredSections = {"nntp", "storage"};
+    std::vector<std::string> requiredSections = {"nntp", "articles"};
 
     auto & level = conf.top();
 
@@ -41,14 +42,14 @@ int main(int argc, char * argv[]) {
       }
     }
 
-    auto & storeconf = level.sections["storage"].values;
+    auto & storeconf = level.sections["articles"].values;
 
-    if (storeconf.find("path") == storeconf.end()) {
-      std::cerr << "storage section does not have 'path' value" << std::endl;
+    if (storeconf.find("store_path") == storeconf.end()) {
+      std::cerr << "storage section does not have 'store_path' value" << std::endl;
       return 1;
     }
 
-    nntp.SetStoragePath(storeconf["path"]);
+    nntp.SetStoragePath(storeconf["store_path"]);
 
     auto & nntpconf = level.sections["nntp"].values;
 
@@ -56,6 +57,13 @@ int main(int argc, char * argv[]) {
       std::cerr << "nntp section does not have 'bind' value" << std::endl;
       return 1;
     }
+
+    if(nntpconf.find("instance_name") == nntpconf.end()) {
+      std::cerr << "nntp section lacks 'instance_name' value" << std::endl;
+      return 1;
+    }
+
+    nntp.SetInstanceName(nntpconf["instance_name"]);
 
     if (nntpconf.find("authdb") != nntpconf.end()) {
       nntp.SetLoginDB(nntpconf["authdb"]);
@@ -77,6 +85,7 @@ int main(int argc, char * argv[]) {
         nntp.SetFrontend(new nntpchan::ExecFrontend(frontconf["exec"]));
       } else {
         std::cerr << "unknown frontend type '" << ftype << "'" << std::endl;
+        return 1;
       }
 
     }
@@ -90,9 +99,9 @@ int main(int argc, char * argv[]) {
       return 1;
     }
 
-    std::cerr << "run mainloop" << std::endl;
+    std::cerr << "nntpd for " << nntp.InstanceName() << " bound to " << a << std::endl;
+
     loop.Run();
-    std::cerr << "stopped mainloop" << std::endl;
 
   } else {
     std::cerr << "failed to open " << fname << std::endl;

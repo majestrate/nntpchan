@@ -1,6 +1,8 @@
 #include "nntp_handler.hpp"
+#include "message.hpp"
 #include <algorithm>
 #include <cctype>
+#include <cstring>
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -9,6 +11,7 @@ namespace nntpchan
 {
   NNTPServerHandler::NNTPServerHandler(const std::string & storage) :
     LineReader(1024),
+    m_article(nullptr),
     m_auth(nullptr),
     m_store(storage),
     m_authed(false),
@@ -23,7 +26,8 @@ namespace nntpchan
 
   void NNTPServerHandler::HandleLine(const std::string &line)
   {
-    if(m_state == eStateReadCommand) {
+    if(m_state == eStateReadCommand)
+    {
       std::deque<std::string> command;
       std::istringstream s;
       s.str(line);
@@ -35,11 +39,52 @@ namespace nntpchan
       else
         QueueLine("501 Syntax error");
     }
+    else if(m_state == eStateStoreArticle)
+    {
+      OnData(line.c_str(), line.size());
+      OnData("\n", 1);
+    }
+    else
+    {
+      std::cerr << "invalid state" << std::endl;
+    }
   }
 
   void NNTPServerHandler::OnData(const char * data, ssize_t l)
   {
-    Data(data, l);
+    if(l <= 0 ) return;
+    if(m_state == eStateStoreArticle)
+    {
+      const char * end = strstr(data, "\n.\n");
+      if(end)
+      {
+        std::size_t diff = end - data ;
+        std::cerr << diff << std::endl;
+        if(m_article)
+          m_article->write(data, diff);
+        ArticleObtained();
+        diff += 3;
+        OnData(end+3, l-diff);
+        return;
+      }
+      end = strstr(data, "\r\n.\r\n");
+      if(end)
+      {
+        std::size_t diff = end - data ;
+        std::cerr << diff << std::endl;
+        if(m_article)
+          m_article->write(data, diff);
+        ArticleObtained();
+        diff += 5;
+        OnData(end+5, l-diff);
+        return;
+        return;
+      }
+      if(m_article)
+        m_article->write(data, l);
+    }
+    else
+      Data(data, l);
   }
 
   void NNTPServerHandler::HandleCommand(const std::deque<std::string> & command)
@@ -47,11 +92,18 @@ namespace nntpchan
     auto cmd = command[0];
     std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
     std::size_t cmdlen = command.size();
-    std::cerr << "handle command [" << cmd << "] " << (int) cmdlen << std::endl;
+    for(const auto & part : command)
+      std::cerr << " " << part;
+    std::cerr << std::endl;
     if (cmd == "QUIT") {
       Quit();
       return;
-    } else if (cmd == "MODE" ) {
+    }
+    else if (cmd[0] == '5')
+    {
+        return;
+    }
+    else if (cmd == "MODE" ) {
       if(cmdlen == 2) {
         // set mode
         SwitchMode(command[1]);
@@ -62,10 +114,59 @@ namespace nntpchan
         // get mode
         QueueLine("500 wrong arguments");
       }
+    } else if(cmd == "CAPABILITIES") {
+      QueueLine("101 I support the following:");
+      QueueLine("READER");
+      QueueLine("IMPLEMENTATION nntpchan-daemon");
+      QueueLine("VERSION 2");
+      QueueLine("STREAMING");
+      QueueLine(".");
+    } else if (cmd == "CHECK") {
+      if(cmdlen == 2) {
+        const std::string & msgid = command[1];
+        if(IsValidMessageID(msgid) && m_store.Accept(msgid))
+        {
+          QueueLine("238 "+msgid);
+          return;
+        }
+        QueueLine("438 "+msgid);
+      }
+      else
+        QueueLine("501 syntax error");
+    } else if (cmd == "TAKETHIS") {
+      if (cmdlen == 2)
+      {
+        const std::string & msgid = command[1];
+        if(m_store.Accept(msgid))
+        {
+          m_article = m_store.OpenWrite(msgid);
+        }
+        m_articleName = msgid;
+        EnterState(eStateStoreArticle);
+        return;
+      }
+      QueueLine("501 invalid syntax");
     } else {
       // unknown command
       QueueLine("500 Unknown Command");
     }
+  }
+
+  void NNTPServerHandler::ArticleObtained()
+  {
+    if(m_article)
+    {
+      m_article->flush();
+      m_article->close();
+      delete m_article;
+      m_article = nullptr;
+      QueueLine("239 "+m_articleName);
+      std::cerr << "stored " << m_articleName << std::endl;
+    }
+    else
+      QueueLine("439 "+m_articleName);
+    m_articleName = "";
+    EnterState(eStateReadCommand);
   }
 
   void NNTPServerHandler::SwitchMode(const std::string & mode)
@@ -92,10 +193,15 @@ namespace nntpchan
     }
   }
 
+  void NNTPServerHandler::EnterState(State st)
+  {
+    std::cerr << "enter state " << st << std::endl;
+    m_state = st;
+  }
+
   void NNTPServerHandler::Quit()
   {
-    std::cerr << "quitting" << std::endl;
-    m_state = eStateQuit;
+    EnterState(eStateQuit);
     QueueLine("205 quitting");
   }
 

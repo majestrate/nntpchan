@@ -44,6 +44,16 @@ namespace nntpchan
     m_storagePath = path;
   }
 
+  void NNTPServer::SetInstanceName(const std::string & name)
+  {
+    m_servername = name;
+  }
+
+  std::string NNTPServer::InstanceName() const
+  {
+    return m_servername;
+  }
+
   void NNTPServer::SetFrontend(Frontend * f)
   {
     if(m_frontend) delete m_frontend;

@@ -15,16 +15,21 @@ namespace nntpchan {
       return;
     }
     std::size_t idx = 0;
+    std::size_t pos = 0;
     ssize_t begin = l;
     const char * data = current.c_str();
     while(l-- > 0) {
       char c = data[idx++];
       if(c == '\n') {
-        OnLine(data, idx-1);
+        OnLine(data, pos);
+        pos = 0;
         data += idx;
       } else if (c == '\r' && data[idx] == '\n') {
-        OnLine(data, idx-1);
+        OnLine(data, pos);
         data += idx + 1;
+        pos = 0;
+      } else {
+        pos ++;
       }
     }
     if (idx < begin)

@@ -40,7 +40,6 @@ namespace nntpchan
       OnAcceptError(status);
       return;
     }
-    std::cout << "new conn" << std::endl;
     IServerConn * conn = CreateConn(s);
     assert(conn);
     m_conns.push_back(conn);
@@ -96,7 +95,6 @@ namespace nntpchan
         IServerConn * self = (IServerConn*) s->data;
         if(self == nullptr) return;
         if(nread > 0) {
-          std::cout << "read " << nread << std::endl;
           self->m_handler->OnData(b->base, nread);
           self->SendNextReply();
           if(self->m_handler->ShouldClose())

@@ -21,6 +21,10 @@ namespace nntpchan
 
     void SetLoginDB(const std::string path);
 
+    void SetInstanceName(const std::string & name);
+
+    std::string InstanceName() const;
+
     void SetFrontend(Frontend * f);
 
     void Close();
@@ -33,6 +37,7 @@ namespace nntpchan
 
     std::string m_logindbpath;
     std::string m_storagePath;
+    std::string m_servername;
 
     Frontend * m_frontend;
 

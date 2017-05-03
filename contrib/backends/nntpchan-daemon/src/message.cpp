@@ -2,13 +2,12 @@
 
 namespace nntpchan
 {
-  bool IsValidMessageID(const MessageID & msgid)
+  bool IsValidMessageID(const std::string & msgid)
   {
-    auto itr = msgid.begin();
-    auto end = msgid.end();
-    --end;
-    if (*itr != '<') return false;
-    if (*end != '>') return false;
+    if(msgid[0] != '<') return false;
+    if(msgid[msgid.size()-1] != '>') return false;
+    auto itr = msgid.begin() + 1;
+    auto end = msgid.end() - 1;
     bool atfound = false;
     while(itr != end) {
       auto c = *itr;
@@ -18,10 +17,10 @@ namespace nntpchan
         atfound = true;
         continue;
       }
-      if (c == '$' || c == '_' || c == '-') continue;
-      if (c > '0' && c < '9') continue;
-      if (c > 'A' && c < 'Z') continue;
-      if (c > 'a' && c < 'z') continue;
+      if (c == '$' || c == '_' || c == '-' || c == '.') continue;
+      if (c >= '0' && c <= '9') continue;
+      if (c >= 'A' && c <= 'Z') continue;
+      if (c >= 'a' && c <= 'z') continue;
       return false;
     }
     return true;

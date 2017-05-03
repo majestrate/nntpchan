@@ -12,7 +12,7 @@ namespace nntpchan
   ArticleStorage::ArticleStorage(const std::string & fpath) {
     SetPath(fpath);
   }
-  
+
   ArticleStorage::~ArticleStorage()
   {
   }
@@ -25,16 +25,29 @@ namespace nntpchan
     mkdir(basedir.c_str(), 0700);
   }
 
-  bool ArticleStorage::Accept(const MessageID & msgid)
+  bool ArticleStorage::Accept(const std::string& msgid)
   {
     if (!IsValidMessageID(msgid)) return false;
-    std::stringstream ss;
-    ss << basedir << GetPathSep() << msgid;
-    auto s = ss.str();
+    auto s = MessagePath(msgid);
     FILE * f = fopen(s.c_str(), "r");
     if ( f == nullptr) return errno == ENOENT;
     fclose(f);
     return false;
+  }
+
+  std::string ArticleStorage::MessagePath(const std::string & msgid)
+  {
+    return basedir + GetPathSep() + msgid;
+  }
+
+  std::fstream * ArticleStorage::OpenRead(const std::string & msgid)
+  {
+    return OpenMode(msgid, std::ios::in);
+  }
+
+  std::fstream * ArticleStorage::OpenWrite(const std::string & msgid)
+  {
+    return OpenMode(msgid, std::ios::out);
   }
 
   char ArticleStorage::GetPathSep()
@@ -42,5 +55,5 @@ namespace nntpchan
     return '/';
   }
 
-  
+
 }

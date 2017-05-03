@@ -34,6 +34,11 @@ namespace nntpchan
     };
 
   private:
+
+    void EnterState(State st);
+
+    void ArticleObtained();
+
     // handle quit command, this queues a reply
     void Quit();
 
@@ -43,6 +48,8 @@ namespace nntpchan
     bool PostingAllowed();
 
   private:
+    std::string m_articleName;
+    std::fstream * m_article;
     NNTPCredentialDB * m_auth;
     ArticleStorage m_store;
     std::string m_mode;
