@@ -17,18 +17,21 @@ LD_FLAGS := $(shell pkg-config --libs $(PKGS))
 INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I $(REPO)/src
 CXXFLAGS := -std=c++11 -Wall -Wextra $(INC_FLAGS) -g
 
-
+LIB = libnntpchan.a
 
 all: $(EXE) $(TOOL)
 
-$(EXE): $(OBJECTS)
-	$(CXX) -o $(EXE)  $(OBJECTS) $(CXXFLAGS) nntpd.cpp $(LD_FLAGS)
+$(LIB): $(OBJECTS)
+	$(AR) -q $(LIB) $(OBJECTS)
 
-$(TOOL): $(OBJECTS)
-	$(CXX) -o $(TOOL) $(OBJECTS) $(CXXFLAGS) tool.cpp  $(LD_FLAGS)
+$(EXE): $(LIB)
+	$(CXX) -o $(EXE) $(CXXFLAGS) nntpd.cpp $(LIB) $(LD_FLAGS)
 
-build-test: $(OBJECTS)
-	$(CXX) -o test $(OBJECTS) $(CXXFLAGS) test.cpp $(LD_FLAGS)
+$(TOOL): $(LIB)
+	$(CXX) -o $(TOOL) $(CXXFLAGS) tool.cpp $(LIB) $(LD_FLAGS)
+
+build-test: $(LIB)
+	$(CXX) -o test $(CXXFLAGS) test.cpp $(LIB) $(LD_FLAGS)
 
 test: build-test
 	./test
@@ -37,4 +40,4 @@ test: build-test
 	$(CXX) $(CXXFLAGS) -c -o $@
 
 clean:
-	rm -f $(OBJECTS) $(EXE) $(TOOL) test
+	rm -f $(OBJECTS) $(LIB) $(EXE) $(TOOL) test

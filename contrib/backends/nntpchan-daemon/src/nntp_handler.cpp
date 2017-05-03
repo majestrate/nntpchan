@@ -8,6 +8,7 @@
 namespace nntpchan
 {
   NNTPServerHandler::NNTPServerHandler(const std::string & storage) :
+    LineReader(1024),
     m_auth(nullptr),
     m_store(storage),
     m_authed(false),

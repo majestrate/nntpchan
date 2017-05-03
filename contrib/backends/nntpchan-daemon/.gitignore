@@ -1,4 +1,5 @@
 *.o
+*.a
 nntpd
 nntpchan-tool
 test

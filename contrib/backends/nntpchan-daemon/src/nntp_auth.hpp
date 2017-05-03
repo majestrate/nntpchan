@@ -20,20 +20,21 @@ namespace nntpchan
     virtual bool CheckLogin(const std::string & user, const std::string & passwd) = 0;
     virtual ~NNTPCredentialDB() {}
   };
-  
+
   /** @brief nntp credential db using hashed+salted passwords */
   class HashedCredDB : public NNTPCredentialDB, public LineReader
   {
   public:
+    HashedCredDB();
     bool CheckLogin(const std::string & user, const std::string & passwd);
   protected:
     void SetStream(std::istream * i);
-    
+
     std::string Hash(const std::string & data, const std::string & salt);
     void HandleLine(const std::string & line);
   private:
     bool ProcessLine(const std::string & line);
-    
+
     std::mutex m_access;
     std::string m_user, m_passwd;
     bool m_found;

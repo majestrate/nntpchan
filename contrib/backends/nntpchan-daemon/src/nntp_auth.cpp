@@ -7,6 +7,8 @@
 
 namespace nntpchan
 {
+  HashedCredDB::HashedCredDB() : LineReader(1024) {}
+
   bool HashedCredDB::CheckLogin(const std::string & user, const std::string & passwd)
   {
     std::unique_lock<std::mutex> lock(m_access);
@@ -58,7 +60,7 @@ namespace nntpchan
   {
     m_instream = s;
   }
-  
+
   std::string HashedCredDB::Hash(const std::string & data, const std::string & salt)
   {
     SHA512Digest h;
@@ -71,7 +73,7 @@ namespace nntpchan
     m_fname(fname),
     f(nullptr)
   {
-    
+
   }
 
   HashedFileDB::~HashedFileDB()
@@ -95,4 +97,3 @@ namespace nntpchan
     return false;
   }
 }
-

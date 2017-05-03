@@ -38,7 +38,7 @@ namespace nntpchan
       NNTPServer * self = (NNTPServer *) s->data;
       self->OnAccept(s, status);
     };
-    
+
     assert(uv_listen(*this, 5, cb) == 0);
   }
 
@@ -53,7 +53,7 @@ namespace nntpchan
     std::ifstream i;
     i.open(m_logindbpath);
     if(i.is_open()) creds = new HashedFileDB(m_logindbpath);
-    
+
     NNTPServerConn * conn = new NNTPServerConn(m_loop, s, m_storagePath, creds);
     conn->Greet();
   }
@@ -63,7 +63,7 @@ namespace nntpchan
   {
     m_logindbpath = path;
   }
-  
+
 
   void NNTPServer::SetStoragePath(const std::string & path)
   {
@@ -75,7 +75,7 @@ namespace nntpchan
     if(m_frontend) delete m_frontend;
     m_frontend = f;
   }
-  
+
   NNTPServerConn::NNTPServerConn(uv_loop_t * l, uv_stream_t * s, const std::string & storage, NNTPCredentialDB * creds) :
     m_handler(storage)
   {
@@ -110,7 +110,7 @@ namespace nntpchan
         }
       });
   }
-  
+
   void NNTPServerConn::SendNextReply()
   {
     if(m_handler.HasNextLine()) {
@@ -125,7 +125,7 @@ namespace nntpchan
     m_handler.Greet();
     SendNextReply();
   }
-  
+
   void NNTPServerConn::SendString(const std::string & str)
   {
     WriteBuffer * b = new WriteBuffer(str);
@@ -145,5 +145,5 @@ namespace nntpchan
           delete self;
         s->data = nullptr;
     });
-  }  
+  }
 }
