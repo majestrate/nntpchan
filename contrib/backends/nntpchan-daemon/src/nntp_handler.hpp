@@ -8,23 +8,25 @@
 
 namespace nntpchan
 {
-  class NNTPServerHandler : public LineReader
+  class NNTPServerHandler : public LineReader, public IConnHandler
   {
   public:
     NNTPServerHandler(const std::string & storage);
     ~NNTPServerHandler();
-    
-    bool Done();
+
+    virtual bool ShouldClose();
+
+    virtual void OnData(const char * data, ssize_t sz);
 
     void SetAuth(NNTPCredentialDB * creds);
 
     void Greet();
-    
+
   protected:
     void HandleLine(const std::string & line);
     void HandleCommand(const std::deque<std::string> & command);
   private:
-    
+
     enum State {
       eStateReadCommand,
       eStateStoreArticle,
@@ -39,7 +41,7 @@ namespace nntpchan
     void SwitchMode(const std::string & mode);
 
     bool PostingAllowed();
-    
+
   private:
     NNTPCredentialDB * m_auth;
     ArticleStorage m_store;

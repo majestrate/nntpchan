@@ -4,7 +4,6 @@
 #include <deque>
 #include <functional>
 #include <string>
-#include <vector>
 
 namespace nntpchan
 {
@@ -14,6 +13,9 @@ namespace nntpchan
 
   struct IConnHandler
   {
+
+    virtual ~IConnHandler() {};
+
     /** got inbound data */
     virtual void OnData(const char * data, ssize_t s) = 0;
 
@@ -29,6 +31,9 @@ namespace nntpchan
     /** queue a data send */
     void QueueLine(const std::string & line);
 
+    virtual void Greet() = 0;
+
+
   private:
     std::deque<std::string> m_sendlines;
   };
@@ -37,20 +42,23 @@ namespace nntpchan
   struct IServerConn
   {
     IServerConn(uv_loop_t * l, uv_stream_t * s, Server * parent, IConnHandler * h);
-    virtual ~IServerConn() = 0;
-    virtual void Close() = 0;
+    virtual ~IServerConn();
+    virtual void Close();
     virtual void Greet() = 0;
     virtual void SendNextReply() = 0;
     virtual bool IsTimedOut() = 0;
+    void SendString(const std::string & str);
     Server * Parent() { return m_parent; };
     IConnHandler * GetHandler() { return m_handler; };
     operator uv_stream_t * () { return m_stream; };
     uv_loop_t * GetLoop() { return m_loop; };
   private:
+    uv_tcp_t m_conn;
     uv_stream_t * m_stream;
     uv_loop_t * m_loop;
     Server * m_parent;
     IConnHandler * m_handler;
+    char m_readbuff[4096];
   };
 
   class Server
@@ -83,7 +91,7 @@ namespace nntpchan
     operator uv_stream_t * () { return (uv_stream_t *) &m_server; }
 
     void OnAccept(uv_stream_t * s, int status);
-    std::vector<IServerConn *> m_conns;
+    std::deque<IServerConn *> m_conns;
     uv_tcp_t m_server;
     uv_loop_t * m_loop;
   };

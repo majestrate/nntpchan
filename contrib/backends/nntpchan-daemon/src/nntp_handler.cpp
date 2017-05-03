@@ -21,6 +21,11 @@ namespace nntpchan
     if(m_auth) delete m_auth;
   }
 
+  void NNTPServerHandler::OnData(const char * data, ssize_t sz)
+  {
+    LineReader::OnData(data, sz);
+  }
+
   void NNTPServerHandler::HandleLine(const std::string &line)
   {
     if(m_state == eStateReadCommand) {
@@ -92,7 +97,7 @@ namespace nntpchan
     QueueLine("205 quitting");
   }
 
-  bool NNTPServerHandler::Done()
+  bool NNTPServerHandler::ShouldClose()
   {
     return m_state == eStateQuit;
   }

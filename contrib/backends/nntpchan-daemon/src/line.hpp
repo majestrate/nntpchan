@@ -6,7 +6,7 @@ namespace nntpchan
 {
 
   /** @brief a buffered line reader */
-  class LineReader : public IConnHandler
+  class LineReader
   {
   public:
 
