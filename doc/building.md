@@ -51,10 +51,7 @@ These are installation instructions for Trisquel.
 
 ### Install Go
 
-Run this to install Go.
-
-    sudo apt-get update
-    sudo apt-get install golang-1.6
+Visit the [Go website](https://go-lang.org/d/) which contains instructions to installing (and uninstalling) the Go programming language version _1.6_.
 
 ### Installing dependancies (standard)
 
