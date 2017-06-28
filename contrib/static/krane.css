@@ -198,6 +198,7 @@
         background: #141414;
         border: 1px solid #3B3B3B;
         border-collapse: collapse;
+        width: 100%;
       }
       .datatable th {
         background: #1C1C1C;
@@ -364,7 +365,7 @@
       }
 
       [data-subject="None"] { display: none; }
-      [data-sage="1"] { background: darkred; }
+      [data-sage="1"] { filter: saturate(0); }
 
       .overboard, .threadpage, .boardpage {
           background-image: url('/static/changolia-logo.png');
