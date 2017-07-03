@@ -680,6 +680,8 @@ th > label {
 
 [data-subject~="None"] { display: none; }
 
+[data-name~="nigger"] { background: url('/static/blackface.jpg'); }
+
 .navbar + hr,
 	.thread > hr,
 	#ukko_threads > hr,
