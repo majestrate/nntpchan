@@ -423,5 +423,5 @@
 [data-name~="nigger"] { 
 background-image: url('/static/blackface.png');
 background-size: 25%;
-background-repeat: space;
+background-repeat: repeat;
 }
