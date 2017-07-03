@@ -420,4 +420,8 @@
           background-position: top right;
       }
 
-[data-name~="nigger"] { background: url('/static/blackface.png') 100% 100% ; }
+[data-name~="nigger"] { 
+background-image: url('/static/blackface.png');
+background-size: 25%;
+background-repeat: space;
+}
