@@ -80,6 +80,10 @@ func formatline(line, prefix string) (markup string) {
 			markup += "<span class='memearrows'>"
 			markup += escapeline(line)
 			markup += "</span>"
+		} else if strings.HasPrefix(line_nospace, "<") {
+			markup += "<span class='fagarrows'>"
+			markup += escapeline(line)
+			markup += "</span>"
 		} else {
 			// regular line
 			// for each word

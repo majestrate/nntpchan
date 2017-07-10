@@ -425,3 +425,7 @@ background-image: url('/static/blackface.png');
 background-size: 25%;
 background-repeat: repeat;
 }
+
+.fagarrows { 
+    color: #E0727F; 
+} 
