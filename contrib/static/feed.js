@@ -49,8 +49,10 @@ function inject_nntp_feed_element(feed, elem) {
   elem.appendChild(name);
   var conns = document.createElement("div");
   conns.setAttribute("class", "connections");
-  for ( var idx = 0 ; idx < feed.Conns.length; idx ++ ) {
-    conns.appendChild(createConnectionElement(feed.Conns[idx]));
+  if (feed.Conns) {
+    for ( var idx = 0 ; idx < feed.Conns.length; idx ++ ) {
+      conns.appendChild(createConnectionElement(feed.Conns[idx]));
+    }
   }
   elem.appendChild(conns);
 }
