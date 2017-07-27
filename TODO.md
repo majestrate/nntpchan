@@ -1,7 +1,7 @@
 ## TODO ##
 
 * extra stylesheets
-* more alternative templates
 * javascript free mod panel
-* liveui 
+* better mod panel
 * easier peering
+* improve command line mod tools
