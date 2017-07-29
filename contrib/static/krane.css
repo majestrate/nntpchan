@@ -420,12 +420,17 @@
           background-position: top right;
       }
 
-[data-name~="nigger"] { 
+[data-name~="nigger"] {
 background-image: url('/static/blackface.png');
 background-size: 25%;
 background-repeat: repeat;
 }
 
-.fagarrows { 
-    color: #E0727F; 
-} 
+.fagarrows {
+    color: #E0727F;
+}
+
+.message_span {
+    white-space: pre-line;
+    word-break: break-word;
+}
