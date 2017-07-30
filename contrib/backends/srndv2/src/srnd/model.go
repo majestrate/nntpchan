@@ -57,6 +57,7 @@ type PostModel interface {
 	Board() string
 	Sage() bool
 	Pubkey() string
+	PubkeyHex() string
 	Reference() string
 	ReferenceHash() string
 

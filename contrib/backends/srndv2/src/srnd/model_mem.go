@@ -376,6 +376,10 @@ func (self *post) ShortHash() string {
 	return ShortHashMessageID(self.MessageID())
 }
 
+func (self *post) PubkeyHex() string {
+	return self.Key
+}
+
 func (self *post) Pubkey() string {
 	if len(self.Key) > 0 {
 		return fmt.Sprintf("<label title=\"%s\">%s</label>", self.Key, makeTripcode(self.Key))
