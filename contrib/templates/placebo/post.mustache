@@ -12,6 +12,7 @@
      data-msgidhash="{{post.PostHash}}"
      data-rootmsgid="{{post.Reference}}"
      data-rootmsgidhash="{{post.ReferenceHash}}"
+     data-pubkey="{{post.Pubkey}}"
      {{#post.Sage}}
      data-sage="1"
      {{/post.Sage}}
@@ -28,7 +29,7 @@
     {{#post.Attachments}}
     <a href="{{Source}}" class="image_link" target="_blank" title="{{Filename}}"><img src="{{Thumbnail}}" class="image" /></a>
     {{/post.Attachments}}
-    <a name="{{post.PostHash}}"></a><span class="topicline"><b data-subject="{{post.Subject}}" class="subject">{{post.Subject}}</b> {{post.Name}} <span class="published">{{post.Date}}</span>  <a href="{{post.PostURL}}">&#8470;</a>
+    <a name="{{post.PostHash}}"></a><span class="topicline"><b data-subject="{{post.Subject}}" class="subject">{{post.Subject}}</b> {{post.Name}} <span class="published">{{post.Date}}</span> {{{post.Tripcode}}} <a href="{{post.PostURL}}">&#8470;</a>
     <a href="#" onclick="return quickreply('{{post.ShortHash}}', '{{post.PostHash}}', '{{post.PostURL}}');"> {{post.ShortHash}}</a>
     </span>
     <br /><br />
