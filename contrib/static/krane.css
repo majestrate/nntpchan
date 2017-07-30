@@ -426,6 +426,13 @@ background-size: 25%;
 background-repeat: repeat;
 }
 
+/** change me as needed, admin's pubkey */
+[data-pubkey~="039a876792db66966241e63140e7df79df488033360064b67d890635814e925e"] {
+    background-image: url('/static/admin.png');
+    background-size: 25%;
+    background-repeat: repeat;
+}
+
 .fagarrows {
     color: #E0727F;
 }
