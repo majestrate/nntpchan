@@ -36,7 +36,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		msg, err := self.database.GetMessageIDByHash(hash)
 		if err == nil {
 
-			if !db.HasArticleLocal(msg.MessageID()) {
+			if !self.database.HasArticleLocal(msg.MessageID()) {
 				goto notfound
 			}
 
