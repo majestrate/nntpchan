@@ -271,7 +271,12 @@ func decAddr(encaddr, key string) string {
 		res_bytes[idx] = encaddr_bytes[idx] ^ b
 	}
 	res := string(res_bytes)
-	return strings.Trim(res, " ")
+	res = strings.Trim(res, " ")
+	if strings.Index(res, "/") == -1 {
+		// TODO: ipv6
+		res += "/32"
+	}
+	return res
 }
 
 var exp_valid_newsgroup = regexp.MustCompilePOSIX(`^[a-zA-Z0-9.]{1,128}$`)
