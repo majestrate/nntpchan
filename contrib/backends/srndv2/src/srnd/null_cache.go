@@ -128,10 +128,16 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if len(hash) == 0 {
 			goto notfound
 		}
+
 		msg, err := self.database.GetMessageIDByHash(hash)
 		if err != nil {
 			goto notfound
 		}
+
+		if !self.database.HasArticleLocal(msg.MessageID()) {
+			goto notfound
+		}
+
 		template.genThread(self.attachments, self.requireCaptcha, msg, self.prefix, self.name, w, self.database, isjson)
 		return
 	}

@@ -292,11 +292,12 @@ func (self *templateEngine) genThread(allowFiles, requireCaptcha bool, root Arti
 	newsgroup := root.Newsgroup()
 	msgid := root.MessageID()
 
-	if !db.HasArticleLocal(msgid) {
-		log.Println("don't have", msgid, "locally, not regenerating")
-		return
-	}
-
+	/*
+		if !db.HasArticleLocal(msgid) {
+			log.Println("don't have", msgid, "locally, not regenerating")
+			return
+		}
+	*/
 	t, err := db.GetThreadModel(prefix, msgid)
 	if err == nil {
 		if json {
