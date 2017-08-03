@@ -35,6 +35,11 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		hash := parts[0]
 		msg, err := self.database.GetMessageIDByHash(hash)
 		if err == nil {
+
+			if !db.HasArticleLocal(msg.MessageID()) {
+				goto notfound
+			}
+
 			template.genThread(self.attachments, self.requireCaptcha, msg, self.prefix, self.name, w, self.database, isjson)
 			return
 		} else {
