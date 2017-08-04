@@ -150,7 +150,7 @@ func (self *PostgresDatabase) prepareStatements() {
 	self.stmt = map[string]string{
 		NewsgroupBanned:                 "SELECT COUNT(newsgroup) FROM BannedGroups WHERE newsgroup = $1",
 		ArticleBanned:                   "SELECT COUNT(message_id) FROM BannedArticles WHERE message_id = $1",
-		GetAllNewsgroups:                "SELECT name FROM Newsgroups",
+		GetAllNewsgroups:                "SELECT name FROM Newsgroups WHERE name NOT IN ( SELECT newsgroup FROM BannedGroups )",
 		GetPostsInGroup:                 "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr FROM ArticlePosts WHERE newsgroup = $1 ORDER BY time_posted",
 		GetPostModel:                    "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr FROM ArticlePosts WHERE message_id = $1 LIMIT 1",
 		GetArticlePubkey:                "SELECT pubkey FROM ArticleKeys WHERE message_id = $1",
