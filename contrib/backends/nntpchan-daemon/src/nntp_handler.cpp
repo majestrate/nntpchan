@@ -1,7 +1,5 @@
 #include "nntp_handler.hpp"
-#include "io.hpp"
 #include "message.hpp"
-
 #include <algorithm>
 #include <cctype>
 #include <cstring>
@@ -127,9 +125,7 @@ namespace nntpchan
         const std::string & msgid = command[1];
         if(m_store.Accept(msgid))
         {
-          std::ostream * file = m_store.OpenWrite(msgid);
-          m_filter = new MessageFilter(msgid);
-          m_article = nntpchan::io::multiWriter({file, m_filter});
+          m_article = m_store.OpenWrite(msgid);
         }
         m_articleName = msgid;
         EnterState(eStateStoreArticle);
