@@ -4,6 +4,7 @@
 #include <string>
 #include "line.hpp"
 #include "nntp_auth.hpp"
+#include "nntp_filter.hpp"
 #include "storage.hpp"
 
 namespace nntpchan
@@ -50,6 +51,7 @@ namespace nntpchan
   private:
     std::string m_articleName;
     std::fstream * m_article;
+    MessageFilter * m_filter;
     NNTPCredentialDB * m_auth;
     ArticleStorage m_store;
     std::string m_mode;
