@@ -68,6 +68,12 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if !hasgroup {
 			goto notfound
 		}
+
+		banned, _ := self.database.NewsgroupBanned(group)
+		if banned {
+			goto notfound
+		}
+
 		pages := self.database.GetGroupPageCount(group)
 		if page >= int(pages) {
 			goto notfound
