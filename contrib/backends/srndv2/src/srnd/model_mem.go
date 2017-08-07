@@ -424,7 +424,7 @@ func (self *post) Frontend() string {
 	if idx == -1 {
 		return "malformed"
 	}
-	return self.Message_id[idx : len(self.Message_id)-2]
+	return self.Message_id[1+idx : len(self.Message_id)-1]
 }
 
 func (self *post) Board() string {
