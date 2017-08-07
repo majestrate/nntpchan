@@ -420,11 +420,11 @@ func (self *post) MessageID() string {
 }
 
 func (self *post) Frontend() string {
-	idx := strings.LastIndex(self.MessagePath, "@")
+	idx := strings.LastIndex(self.Message_id, "@")
 	if idx == -1 {
 		return "malformed"
 	}
-	return self.MessagePath[idx : len(self.MessagePath)-2]
+	return self.Message_id[idx : len(self.Message_id)-2]
 }
 
 func (self *post) Board() string {
