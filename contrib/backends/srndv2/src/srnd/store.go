@@ -439,7 +439,6 @@ func (self *articleStore) getMIMEHeader(messageID string) (hdr textproto.MIMEHea
 
 func (self *articleStore) ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body *io.LimitedReader, spamfilter func(string) bool) (err error) {
 	err = read_message_body(body, hdr, self, wr, false, func(nntp NNTPMessage) {
-		log.Println(nntp.Message())
 		if !spamfilter(nntp.Message()) {
 			err = errors.New("spam message")
 			return
