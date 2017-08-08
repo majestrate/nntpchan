@@ -94,6 +94,9 @@ func main() {
 					} else {
 						fmt.Fprintf(os.Stdout, "usage: %s tool mod [[add|del] pubkey]|[do modactiongoeshere]\n", os.Args[0])
 					}
+				} else if tool == "expire" {
+					daemon.Setup()
+					daemon.ExpireAll()
 				} else if tool == "rethumb" {
 					if len(os.Args) >= 4 {
 						threads := runtime.NumCPU()

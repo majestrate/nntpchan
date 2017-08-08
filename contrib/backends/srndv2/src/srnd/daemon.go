@@ -488,6 +488,12 @@ func (self *NNTPDaemon) syncPull(proxy_type, proxy_addr, remote_addr string) {
 	}
 }
 
+func (self *NNTPDaemon) ExpireAll() {
+	log.Println("expiring all orphans")
+	self.expire = createExpirationCore(self.database, self.store, self.informHooks)
+	self.expire.ExpireOrphans()
+}
+
 // run daemon
 func (self *NNTPDaemon) Run() {
 
