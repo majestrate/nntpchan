@@ -393,7 +393,7 @@ func (self *httpFrontend) poll() {
 								R: msg.Body,
 								N: self.daemon.messageSizeLimitFor(nntp.Newsgroup()),
 							}
-							err = self.daemon.store.ProcessMessageBody(f, textproto.MIMEHeader(msg.Header), body)
+							err = self.daemon.store.ProcessMessageBody(f, textproto.MIMEHeader(msg.Header), body, self.daemon.CheckText)
 						}
 					}
 				}

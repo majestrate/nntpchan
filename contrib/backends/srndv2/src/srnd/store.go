@@ -65,7 +65,7 @@ type ArticleStore interface {
 	// process body of nntp message, register attachments and the article
 	// write the body into writer as we go through the body
 	// does NOT write mime header
-	ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body *io.LimitedReader) error
+	ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body *io.LimitedReader, spamfilter func(string) bool) error
 	// register this post with the daemon
 	RegisterPost(nntp NNTPMessage) error
 	// register signed message
@@ -437,8 +437,12 @@ func (self *articleStore) getMIMEHeader(messageID string) (hdr textproto.MIMEHea
 	return hdr
 }
 
-func (self *articleStore) ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body *io.LimitedReader) (err error) {
+func (self *articleStore) ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body *io.LimitedReader, spamfilter func(string) bool) (err error) {
 	err = read_message_body(body, hdr, self, wr, false, func(nntp NNTPMessage) {
+		if !spamfilter(nntp.Message()) {
+			err = errors.New("spam message")
+			return
+		}
 		err = self.RegisterPost(nntp)
 		if err == nil {
 			pk := hdr.Get("X-PubKey-Ed25519")
