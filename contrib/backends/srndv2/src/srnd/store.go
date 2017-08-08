@@ -428,7 +428,9 @@ func (self *articleStore) getMIMEHeader(messageID string) (hdr textproto.MIMEHea
 			var msg *mail.Message
 			msg, err = readMIMEHeader(r)
 			f.Close()
-			hdr = textproto.MIMEHeader(msg.Header)
+			if msg != nil {
+				hdr = textproto.MIMEHeader(msg.Header)
+			}
 		}
 		if err != nil {
 			log.Println("failed to load article headers for", messageID, err)
