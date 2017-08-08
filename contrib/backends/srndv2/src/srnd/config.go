@@ -452,6 +452,7 @@ func ReadConfig() *SRNdConfig {
 		if err != nil {
 			log.Fatalf("failed to load %s: %s", filterFile, err)
 		}
+		log.Println("loaded filters")
 	}
 	return &sconf
 }
