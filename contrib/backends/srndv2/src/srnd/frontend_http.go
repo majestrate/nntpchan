@@ -803,6 +803,11 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		return
 	}
 
+	if !self.daemon.CheckText(pr.Message) {
+		e(errors.New("spam"))
+		return
+	}
+
 	if len(pr.Frontend) == 0 {
 		// :-DDD
 		pr.Frontend = "mongo.db.is.web.scale"
