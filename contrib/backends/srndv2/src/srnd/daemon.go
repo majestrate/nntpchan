@@ -131,6 +131,16 @@ type NNTPDaemon struct {
 	article_lifetime  time.Duration
 }
 
+// return true if text passes all checks and is okay for posting
+func (self *NNTPDaemon) CheckText(text string) bool {
+	for _, re := range self.conf.filter.globalFilters {
+		if re.MatchString(text) {
+			return false
+		}
+	}
+	return true
+}
+
 func (self NNTPDaemon) End() {
 	if self.listener != nil {
 		self.listener.Close()
@@ -476,6 +486,12 @@ func (self *NNTPDaemon) syncPull(proxy_type, proxy_addr, remote_addr string) {
 			log.Println(nntp.name, "error occurred when scraping", err)
 		}
 	}
+}
+
+func (self *NNTPDaemon) ExpireAll() {
+	log.Println("expiring all orphans")
+	self.expire = createExpirationCore(self.database, self.store, self.informHooks)
+	self.expire.ExpireOrphans()
 }
 
 // run daemon

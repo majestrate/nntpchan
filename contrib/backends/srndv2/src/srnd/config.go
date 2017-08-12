@@ -5,17 +5,44 @@
 package srnd
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/base32"
 	"fmt"
 	"github.com/majestrate/configparser"
 	"github.com/majestrate/nacl"
+	"io/ioutil"
 	"log"
 	"net"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 )
+
+type FilterConfig struct {
+	globalFilters []*regexp.Regexp
+}
+
+func (fc *FilterConfig) LoadFile(fname string) (err error) {
+	var data []byte
+	data, err = ioutil.ReadFile(fname)
+	if err == nil {
+		r := bytes.NewReader(data)
+		sc := bufio.NewScanner(r)
+		for sc.Scan() {
+			txt := sc.Text()
+			idx := strings.Index(txt, "#")
+			if idx >= 0 {
+				txt = txt[:idx]
+			}
+			fc.globalFilters = append(fc.globalFilters, regexp.MustCompile(txt))
+		}
+
+	}
+	return
+}
 
 type FeedConfig struct {
 	policy           FeedPolicy
@@ -70,6 +97,7 @@ type SRNdConfig struct {
 	pprof         *ProfilingConfig
 	hooks         []*HookConfig
 	inboundPolicy *FeedPolicy
+	filter        FilterConfig
 }
 
 // check for config files
@@ -417,6 +445,15 @@ func ReadConfig() *SRNdConfig {
 		}
 	}
 
+	filterFile := "filters.txt"
+
+	if CheckFile(filterFile) {
+		err = sconf.filter.LoadFile(filterFile)
+		if err != nil {
+			log.Fatalf("failed to load %s: %s", filterFile, err)
+		}
+		log.Printf("loaded %d filters", len(sconf.filter.globalFilters))
+	}
 	return &sconf
 }
 

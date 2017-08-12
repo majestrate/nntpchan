@@ -565,7 +565,7 @@ func (self *nntpConnection) storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEH
 	// now store attachments and article
 	err = writeMIMEHeader(f, hdr)
 	if err == nil {
-		err = daemon.store.ProcessMessageBody(f, hdr, body)
+		err = daemon.store.ProcessMessageBody(f, hdr, body, daemon.CheckText)
 		if err == nil {
 			// tell daemon
 			daemon.loadFromInfeed(msgid)

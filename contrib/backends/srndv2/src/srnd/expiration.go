@@ -77,6 +77,7 @@ func (self expire) ExpireThread(group, rootMsgid string) {
 		}
 	}
 	self.database.DeleteThread(rootMsgid)
+	self.database.DeleteArticle(rootMsgid)
 	self.expireCache(group, rootMsgid, rootMsgid)
 }
 

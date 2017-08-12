@@ -393,7 +393,7 @@ func (self *httpFrontend) poll() {
 								R: msg.Body,
 								N: self.daemon.messageSizeLimitFor(nntp.Newsgroup()),
 							}
-							err = self.daemon.store.ProcessMessageBody(f, textproto.MIMEHeader(msg.Header), body)
+							err = self.daemon.store.ProcessMessageBody(f, textproto.MIMEHeader(msg.Header), body, self.daemon.CheckText)
 						}
 					}
 				}
@@ -800,6 +800,11 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 	// TODO: make configurable
 	if len(pr.Message) > 1024*1024 {
 		e(errors.New("your message is too big"))
+		return
+	}
+
+	if !self.daemon.CheckText(pr.Message) {
+		e(errors.New("spam"))
 		return
 	}
 
