@@ -24,6 +24,25 @@
                 <th>Comment</th>
                 <td><textarea id="comment" name="message" class="postarea"></textarea></td>
             </tr>
+            {{^DisableCaptcha}}
+                <tr>
+                    <th>
+                        {{#i18n.Translations}}{{captcha}}{{/i18n.Translations}}
+                    </th>
+                    <td>
+                        <img id="captcha_img" src="{{prefix}}captcha/img" alt="captcha" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{#i18n.Translations}}{{solution}}{{/i18n.Translations}}
+                    </th>
+                    <td>
+                        <input type="text" name="captcha" autocomplete="off" id="captcha_solution" height="175" width="350"/>
+                    </td>
+                </tr>
+
+            {{/DisableCaptcha}}
             {{#files}}
             <tr>
                 <th>File</th>
