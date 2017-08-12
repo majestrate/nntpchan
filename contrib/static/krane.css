@@ -441,3 +441,7 @@ background-repeat: repeat;
     white-space: pre-line;
     word-break: break-word;
 }
+
+#captcha_img {
+    background-color: white;
+}
