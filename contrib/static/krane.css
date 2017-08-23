@@ -433,6 +433,13 @@ background-repeat: repeat;
     background-repeat: repeat;
 }
 
+/** another mod */
+[data-pubkey~="f59602a8497d21c0bda92c01cf33d1d0b2e41d5065eebcafdcbf99f973d1c10"]{
+   background-image: url('/static/mgs_mod.jpeg');
+   background-repeat: no-repeat;
+   background-position: right bottom;
+}
+
 .fagarrows {
     color: #E0727F;
 }
