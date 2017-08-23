@@ -11,7 +11,7 @@
 
 ## Bugs and issues
 
-*PLEASE* report any bugs you find while building, setting-up or using NNTPChan on the [GitHub issue tracker](https://github.com/majestrate/nntpchan/issues) or on the [GitGud issue tracker](https://gitgud.io/uguu/nntpchan/issues) so that the probelms can be resolved or discussed.
+*PLEASE* report any bugs you find while building, setting-up or using NNTPChan on the [GitHub issue tracker](https://github.com/majestrate/nntpchan/issues) or on the [GitGud issue tracker](https://gitgud.io/jeff/nntpchan/issues) so that the probelms can be resolved or discussed.
 
 ## Clients
 
