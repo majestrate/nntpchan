@@ -13,7 +13,6 @@ import (
 	"fmt"
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/sessions"
-	"github.com/majestrate/nacl"
 	"io"
 	"log"
 	"net"
@@ -416,12 +415,9 @@ func (self httpModUI) CheckPubkey(pubkey, scope string) (bool, error) {
 func (self httpModUI) CheckKey(privkey, scope string) (bool, error) {
 	privkey_bytes, err := hex.DecodeString(privkey)
 	if err == nil {
-		kp := nacl.LoadSignKey(privkey_bytes)
-		if kp != nil {
-			defer kp.Free()
-			pubkey := hex.EncodeToString(kp.Public())
-			return self.CheckPubkey(pubkey, scope)
-		}
+		pk, _ := seedToKeyPair(privkey_bytes)
+		pubkey := hex.EncodeToString(pk)
+		return self.CheckPubkey(pubkey, scope)
 	}
 	log.Println("invalid key format for key", privkey)
 	return false, err

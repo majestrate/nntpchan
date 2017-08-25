@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dchest/blake2b"
-	"github.com/majestrate/nacl"
 	"io"
 	"log"
 	"mime"
@@ -181,22 +180,15 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 	mw.Write([]byte{10})
 	if err == nil {
 		// build keypair
-		kp := nacl.LoadSignKey(seed)
-		if kp == nil {
-			log.Println("failed to load seed for signing article")
-			return
-		}
-		defer kp.Free()
-		sk := kp.Secret()
-		pk := getSignPubkey(sk)
+		pk, sk := seedToKeyPair(seed)
 		// sign it nigguh
 		digest := sha.Sum(nil)
-		sig := cryptoSign(digest, sk)
+		sig := cryptoSignFucky(digest, sk)
 		// log that we signed it
 		// log.Printf("signed %s pubkey=%s sig=%s hash=%s", nntp.MessageID(), pk, sig, hexify(digest))
 		signed.headers.Set("X-Signature-Ed25519-SHA512", sig)
-		signed.headers.Set("X-PubKey-Ed25519", pk)
-		sig = cryptoSignNew(blake.Sum(nil), sk)
+		signed.headers.Set("X-PubKey-Ed25519", hexify(pk[:]))
+		sig = cryptoSignProper(blake.Sum(nil), sk)
 		signed.headers.Set("X-Signature-Ed25519-BLAKE2B", sig)
 	}
 	return
@@ -472,7 +464,7 @@ func verifyMessageSHA512(pk, sig string, body *io.LimitedReader, innerHandler fu
 		hash := h.Sum(nil)
 		log.Printf("hash=%s", hexify(hash))
 		log.Printf("sig=%s", hexify(sig_bytes))
-		if nacl.CryptoVerifyFucky(hash, sig_bytes, pk_bytes) {
+		if nacl_cryptoVerifyFucky(hash, sig_bytes, pk_bytes) {
 			log.Println("signature is valid :^)")
 		} else {
 			err = errors.New("invalid signature")
@@ -510,7 +502,7 @@ func verifyMessageBLAKE2B(pk, sig string, body *io.LimitedReader, innerHandler f
 		hash := h.Sum(nil)
 		log.Printf("hash=%s", hexify(hash))
 		log.Printf("sig=%s", hexify(sig_bytes))
-		if nacl.CryptoVerifyDetached(hash, sig_bytes, pk_bytes) {
+		if nacl_cryptoVerifyDetached(hash, sig_bytes, pk_bytes) {
 			log.Println("signature is valid :^)")
 		} else {
 			err = errors.New("invalid signature")

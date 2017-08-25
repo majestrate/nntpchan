@@ -7,7 +7,6 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"github.com/majestrate/nacl"
 	"log"
 	"net"
 	"net/http"
@@ -166,14 +165,10 @@ func (self *NNTPDaemon) WrapSign(nntp NNTPMessage) {
 		if seed == nil {
 			log.Println("invalid secretkey will not sign")
 		} else {
-			kp := nacl.LoadSignKey(seed)
-			defer kp.Free()
-			sec := kp.Secret()
+			pk, sec := seedToKeyPair(seed)
 			sig := msgidFrontendSign(sec, nntp.MessageID())
-			pk := hexify(kp.Public())
 			nntp.Headers().Add("X-Frontend-Signature", sig)
-			nntp.Headers().Add("X-Frontend-Pubkey", pk)
-			log.Println("signed", nntp.MessageID(), "as from", pk)
+			nntp.Headers().Add("X-Frontend-Pubkey", hexify(pk))
 		}
 	} else {
 		log.Println("sending", nntp.MessageID(), "unsigned")
@@ -467,8 +462,7 @@ func (self *NNTPDaemon) syncPull(proxy_type, proxy_addr, remote_addr string) {
 		if reader {
 			// we can do it
 			err = nntp.scrapeServer(self, conn)
-			if err == nil {
-				// we succeeded
+			if err == nil { // we succeeded
 				log.Println(nntp.name, "Scrape successful")
 				nntp.Quit(conn)
 				conn.Close()

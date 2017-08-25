@@ -10,7 +10,6 @@ import (
 	"encoding/base32"
 	"fmt"
 	"github.com/majestrate/configparser"
-	"github.com/majestrate/nacl"
 	"io/ioutil"
 	"log"
 	"net"
@@ -240,7 +239,7 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect.Add("json-api", "0")
 	sect.Add("json-api-username", "fucking-change-this-value")
 	sect.Add("json-api-password", "seriously-fucking-change-this-value")
-	secret_bytes := nacl.RandBytes(8)
+	secret_bytes := randbytes(8)
 	secret := base32.StdEncoding.EncodeToString(secret_bytes)
 	sect.Add("api-secret", secret)
 

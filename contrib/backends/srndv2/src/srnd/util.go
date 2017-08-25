@@ -6,12 +6,12 @@ package srnd
 
 import (
 	"bufio"
+	"crypto/rand"
 	"crypto/sha1"
 	"crypto/sha512"
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"github.com/majestrate/nacl"
 	"golang.org/x/crypto/curve25519"
 	"golang.org/x/crypto/ed25519"
 	"io"
@@ -104,9 +104,15 @@ func OpenFileWriter(fname string) (io.WriteCloser, error) {
 	return os.Create(fname)
 }
 
+func randbytes(l int) []byte {
+	b := make([]byte, l)
+	io.ReadFull(rand.Reader, b)
+	return b
+}
+
 // make a random string
 func randStr(length int) string {
-	return hex.EncodeToString(nacl.RandBytes(length))[length:]
+	return hex.EncodeToString(randbytes(length))[length:]
 }
 
 // time for right now as int64
@@ -212,7 +218,7 @@ func i2pDestHashLen() int {
 // generate a new encryption key for it
 // return the encryption key and the encrypted address
 func newAddrEnc(addr string) (string, string) {
-	key_bytes := nacl.RandBytes(encAddrBytes())
+	key_bytes := randbytes(encAddrBytes())
 	key := base64.StdEncoding.EncodeToString(key_bytes)
 	return key, encAddr(addr, key)
 }
@@ -291,13 +297,16 @@ func ValidNewsgroup(newsgroup string) bool {
 	return newsgroupValidFormat(newsgroup)
 }
 
+func genKeypair() (pk, sk []byte) {
+	sk = randbytes(32)
+	pk, _ = seedToKeyPair(sk)
+	return
+}
+
 // generate a new signing keypair
 // public, secret
 func newSignKeypair() (string, string) {
-	kp := nacl.GenSignKeypair()
-	defer kp.Free()
-	pk := kp.Public()
-	sk := kp.Seed()
+	pk, sk := genKeypair()
 	return hex.EncodeToString(pk), hex.EncodeToString(sk)
 }
 
@@ -387,15 +396,16 @@ func hexify(data []byte) string {
 // extract pubkey from secret key
 // return as hex
 func getSignPubkey(sk []byte) string {
-	k, _ := nacl.GetSignPubkey(sk)
-	return hexify(k)
+	_, pk := seedToKeyPair(sk)
+	return hexify(pk)
 }
 
 // sign data with secret key the fucky srnd way
 // return signature as hex
-func cryptoSign(h, sk []byte) string {
+// XXX: DEPRECATED
+func cryptoSignFucky(h, sk []byte) string {
 	// sign
-	sig := nacl.CryptoSignFucky(h, sk)
+	sig := nacl_cryptoSignFucky(h, sk)
 	if sig == nil {
 		return "[failed to sign]"
 	}
@@ -403,19 +413,20 @@ func cryptoSign(h, sk []byte) string {
 }
 
 // convert seed to secret key
-func seedToSecretNew(seed []byte) (full ed25519.PrivateKey) {
-	var out [32]byte
+func seedToKeyPair(seed []byte) (full ed25519.PrivateKey, pub ed25519.PublicKey) {
 	var in [32]byte
+	var out [32]byte
 	copy(in[:], seed[0:32])
 	curve25519.ScalarBaseMult(&out, &in)
+	copy(pub[:], out[:])
 	copy(full[:], in[:])
-	copy(full[:32], out[:])
+	copy(full[:32], pub[:])
 	return
 }
 
-func cryptoSignNew(h, sk []byte) string {
+func cryptoSignProper(h, sk []byte) string {
 	// convert key
-	key := seedToSecretNew(sk)
+	key, _ := seedToKeyPair(sk)
 	// sign
 	sig := ed25519.Sign(key, h)
 	if sig == nil {
@@ -429,7 +440,7 @@ func cryptoSignNew(h, sk []byte) string {
 func parseTripcodeSecret(str string) []byte {
 	// try decoding hex
 	raw := unhex(str)
-	keylen := nacl.CryptoSignSeedLen()
+	keylen := 32
 	if raw == nil || len(raw) != keylen {
 		// treat this as a "regular" chan tripcode
 		// decode as bytes then pad the rest with 0s if it doesn't fit
@@ -670,17 +681,17 @@ func extractRealIP(r *http.Request) (ip string, err error) {
 
 func serverPubkeyIsValid(pubkey string) bool {
 	b := unhex(pubkey)
-	return b != nil && len(b) == nacl.CryptoSignPubKeySize()
+	return b != nil && len(b) == 32
 }
 
 func verifyFrontendSig(pubkey, sig, msgid string) bool {
 	s := unhex(sig)
 	k := unhex(pubkey)
 	h := sha512.Sum512([]byte(msgid))
-	return nacl.CryptoVerifyFucky(h[:], s, k)
+	return nacl_cryptoVerifyFucky(h[:], s, k)
 }
 
 func msgidFrontendSign(sk []byte, msgid string) string {
 	h := sha512.Sum512([]byte(msgid))
-	return cryptoSign(h[:], sk)
+	return cryptoSignFucky(h[:], sk)
 }
