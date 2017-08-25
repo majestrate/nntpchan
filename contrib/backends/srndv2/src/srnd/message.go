@@ -180,7 +180,7 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 	mw.Write([]byte{10})
 	if err == nil {
 		// build keypair
-		pk, sk := seedToKeyPair(seed)
+		pk, sk := naclSeedToKeyPair(seed)
 		// sign it nigguh
 		digest := sha.Sum(nil)
 		sig := cryptoSignFucky(digest, sk)
@@ -188,8 +188,8 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 		// log.Printf("signed %s pubkey=%s sig=%s hash=%s", nntp.MessageID(), pk, sig, hexify(digest))
 		signed.headers.Set("X-Signature-Ed25519-SHA512", sig)
 		signed.headers.Set("X-PubKey-Ed25519", hexify(pk[:]))
-		sig = cryptoSignProper(blake.Sum(nil), sk)
-		signed.headers.Set("X-Signature-Ed25519-BLAKE2B", sig)
+		//sig = cryptoSignProper(blake.Sum(nil), sk)
+		//signed.headers.Set("X-Signature-Ed25519-BLAKE2B", sig)
 	}
 	return
 }

@@ -165,7 +165,7 @@ func (self *NNTPDaemon) WrapSign(nntp NNTPMessage) {
 		if seed == nil {
 			log.Println("invalid secretkey will not sign")
 		} else {
-			pk, sec := seedToKeyPair(seed)
+			pk, sec := naclSeedToKeyPair(seed)
 			sig := msgidFrontendSign(sec, nntp.MessageID())
 			nntp.Headers().Add("X-Frontend-Signature", sig)
 			nntp.Headers().Add("X-Frontend-Pubkey", hexify(pk))

@@ -415,7 +415,7 @@ func (self httpModUI) CheckPubkey(pubkey, scope string) (bool, error) {
 func (self httpModUI) CheckKey(privkey, scope string) (bool, error) {
 	privkey_bytes, err := hex.DecodeString(privkey)
 	if err == nil {
-		pk, _ := seedToKeyPair(privkey_bytes)
+		pk, _ := naclSeedToKeyPair(privkey_bytes)
 		pubkey := hex.EncodeToString(pk)
 		return self.CheckPubkey(pubkey, scope)
 	}

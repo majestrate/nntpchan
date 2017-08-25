@@ -921,7 +921,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 	// pack it before sending so that the article is well formed
 	// sign if needed
 	if len(tripcode_privkey) == 32 {
-		pk, _ := seedToKeyPair(tripcode_privkey)
+		pk, _ := naclSeedToKeyPair(tripcode_privkey)
 		nntp.headers.Set("X-PubKey-Ed25519", hexify(pk))
 		nntp.Pack()
 		err = self.daemon.store.RegisterPost(nntp)

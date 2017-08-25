@@ -298,7 +298,7 @@ func ValidNewsgroup(newsgroup string) bool {
 
 func genKeypair() (pk, sk []byte) {
 	sk = randbytes(32)
-	pk, _ = seedToKeyPair(sk)
+	pk, _ = naclSeedToKeyPair(sk)
 	return
 }
 
@@ -395,7 +395,7 @@ func hexify(data []byte) string {
 // extract pubkey from secret key
 // return as hex
 func getSignPubkey(sk []byte) string {
-	pk, _ := seedToKeyPair(sk)
+	pk, _ := naclSeedToKeyPair(sk)
 	return hexify(pk)
 }
 
@@ -411,31 +411,9 @@ func cryptoSignFucky(h, sk []byte) string {
 	return hexify(sig)
 }
 
-/*
-// convert seed to secret key
-func seedToKeyPair(seed []byte) (pub ed25519.PublicKey, full ed25519.PrivateKey) {
-	pub = make(ed25519.PublicKey, ed25519.PublicKeySize)
-	full = make(ed25519.PrivateKey, ed25519.PrivateKeySize)
-	h := sha512.Sum512(seed)
-	seed = h[:]
-	seed[0] &= 248
-	seed[31] &= 127
-	seed[31] |= 64
-	var in [32]byte
-	var out [32]byte
-	copy(in[:], seed[0:32])
-	naclScalarBaseMult(&out, &in)
-	copy(pub[:], out[:])
-	copy(full[0:32], in[:])
-	copy(full[32:64], pub[:])
-	log.Println("pk=", hexify(pub[:]))
-	return
-}
-*/
-
 func cryptoSignProper(h, sk []byte) string {
-	// convert key
-	_, key := seedToKeyPair(sk)
+	key := make(ed25519.PrivateKey, ed25519.PrivateKeySize)
+	copy(key, sk)
 	// sign
 	sig := ed25519.Sign(key, h)
 	if sig == nil {
