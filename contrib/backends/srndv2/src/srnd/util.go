@@ -405,7 +405,7 @@ func getSignPubkey(sk []byte) string {
 // XXX: DEPRECATED
 func cryptoSignFucky(h, sk []byte) string {
 	// sign
-	sig := nacl_cryptoSignFucky(h, sk)
+	sig := naclCryptoSignFucky(h, sk)
 	if sig == nil {
 		return "[failed to sign]"
 	}
@@ -413,7 +413,7 @@ func cryptoSignFucky(h, sk []byte) string {
 }
 
 // convert seed to secret key
-func seedToKeyPair(seed []byte) (full ed25519.PrivateKey, pub ed25519.PublicKey) {
+func seedToKeyPair(seed []byte) (pub ed25519.PublicKey, full ed25519.PrivateKey) {
 	var in [32]byte
 	var out [32]byte
 	copy(in[:], seed[0:32])
@@ -426,7 +426,7 @@ func seedToKeyPair(seed []byte) (full ed25519.PrivateKey, pub ed25519.PublicKey)
 
 func cryptoSignProper(h, sk []byte) string {
 	// convert key
-	key, _ := seedToKeyPair(sk)
+	_, key := seedToKeyPair(sk)
 	// sign
 	sig := ed25519.Sign(key, h)
 	if sig == nil {
@@ -688,7 +688,7 @@ func verifyFrontendSig(pubkey, sig, msgid string) bool {
 	s := unhex(sig)
 	k := unhex(pubkey)
 	h := sha512.Sum512([]byte(msgid))
-	return nacl_cryptoVerifyFucky(h[:], s, k)
+	return naclCryptoVerifyFucky(h[:], s, k)
 }
 
 func msgidFrontendSign(sk []byte, msgid string) string {
