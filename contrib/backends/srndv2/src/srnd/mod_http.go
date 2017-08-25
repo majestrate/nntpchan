@@ -701,7 +701,7 @@ func (self httpModUI) HandleLogin(wr http.ResponseWriter, r *http.Request) {
 }
 
 func (self httpModUI) HandleKeyGen(wr http.ResponseWriter, r *http.Request) {
-	pk, sk := newSignKeypair()
+	pk, sk := newNaclSignKeypair()
 	tripcode := makeTripcode(pk)
 	self.writeTemplateParam(wr, r, "keygen.mustache", map[string]interface{}{"public": pk, "secret": sk, "tripcode": tripcode})
 }

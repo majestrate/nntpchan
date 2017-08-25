@@ -297,7 +297,7 @@ func handleKeyPost(self *dialogNode, form url.Values, conf *configparser.Configu
 
 func prepareKeyModel(self *dialogNode, err error, conf *configparser.Configuration) templateModel {
 	param := make(map[string]interface{})
-	public, secret := newSignKeypair()
+	public, secret := newNaclSignKeypair()
 	param["dialog"] = &KeyModel{ErrorModel{err}, StepModel{self}, public, secret}
 	return param
 }

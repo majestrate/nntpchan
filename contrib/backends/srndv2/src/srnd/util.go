@@ -296,7 +296,7 @@ func ValidNewsgroup(newsgroup string) bool {
 	return newsgroupValidFormat(newsgroup)
 }
 
-func genKeypair() (pk, sk []byte) {
+func genNaclKeypair() (pk, sk []byte) {
 	sk = randbytes(32)
 	pk, _ = naclSeedToKeyPair(sk)
 	return
@@ -304,8 +304,8 @@ func genKeypair() (pk, sk []byte) {
 
 // generate a new signing keypair
 // public, secret
-func newSignKeypair() (string, string) {
-	pk, sk := genKeypair()
+func newNaclSignKeypair() (string, string) {
+	pk, sk := genNaclKeypair()
 	return hex.EncodeToString(pk), hex.EncodeToString(sk)
 }
 

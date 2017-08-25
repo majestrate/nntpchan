@@ -84,7 +84,7 @@ func reThumbnail(threads int, store ArticleStore, missing bool) {
 
 // generate a keypair from the command line
 func KeygenTool() {
-	pub, sec := newSignKeypair()
+	pub, sec := newNaclSignKeypair()
 	log.Println("public key:", pub)
 	log.Println("secret key:", sec)
 }
