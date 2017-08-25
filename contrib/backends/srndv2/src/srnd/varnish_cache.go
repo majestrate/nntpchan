@@ -57,6 +57,8 @@ func (self *VarnishCache) RegenAll() {
 
 func (self *VarnishCache) RegenFrontPage() {
 	self.invalidate(fmt.Sprintf("%s%s", self.varnish_url, self.prefix))
+	// TODO: this is also lazy af
+	self.invalidate(fmt.Sprintf("%s%shistory.html", self.varnish_url, self.prefix))
 }
 
 func (self *VarnishCache) invalidateUkko() {
@@ -66,8 +68,6 @@ func (self *VarnishCache) invalidateUkko() {
 	self.invalidate(fmt.Sprintf("%s%so/", self.varnish_url, self.prefix))
 	// TODO: this is lazy af
 	self.RegenFrontPage()
-	// TODO: this is also lazy af
-	self.invalidate(fmt.Sprintf("%s%shistory.html", self.varnish_url, self.prefix))
 }
 
 func (self *VarnishCache) pollRegen() {
