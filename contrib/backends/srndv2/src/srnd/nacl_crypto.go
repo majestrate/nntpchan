@@ -2,6 +2,7 @@ package srnd
 
 import (
 	"github.com/majestrate/nacl"
+	"golang.org/x/crypto/curve25519"
 )
 
 func naclCryptoVerifyFucky(h, sig, pk []byte) bool {
@@ -19,3 +20,5 @@ func naclCryptoVerifyDetached(hash, sig, pk []byte) bool {
 func naclCryptoSignDetached(hash, sk []byte) []byte {
 	return nacl.CryptoSignDetached(hash, sk)
 }
+
+var naclScalarBaseMult = curve25519.ScalarBaseMult

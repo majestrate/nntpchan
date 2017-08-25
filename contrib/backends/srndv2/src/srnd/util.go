@@ -12,7 +12,6 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"golang.org/x/crypto/curve25519"
 	"golang.org/x/crypto/ed25519"
 	"io"
 	"log"
@@ -419,10 +418,11 @@ func seedToKeyPair(seed []byte) (pub ed25519.PublicKey, full ed25519.PrivateKey)
 	var in [32]byte
 	var out [32]byte
 	copy(in[:], seed[0:32])
-	curve25519.ScalarBaseMult(&out, &in)
+	naclScalarBaseMult(&out, &in)
 	copy(pub[:], out[:])
-	copy(full[:], in[:])
-	copy(full[32:], pub[:])
+	copy(full[0:32], in[:])
+	copy(full[32:64], pub[:])
+	log.Println("pk=", hexify(pub[:]))
 	return
 }
 
