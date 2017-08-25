@@ -145,6 +145,7 @@ const SearchByHash_1 = "SearchByHash_1"
 const SearchByHash_2 = "SearchByHash_2"
 const GetNNTPPostsInGroup = "GetNNTPPostsInGroup"
 const GetCitesByPostHashLike = "GetCitesByPostHashLike"
+const GetYearlyPostHistory = "GetYearlyPostHistory"
 
 func (self *PostgresDatabase) prepareStatements() {
 	self.stmt = map[string]string{
@@ -210,6 +211,7 @@ func (self *PostgresDatabase) prepareStatements() {
 		SearchByHash_2:                  "SELECT message_newsgroup, message_id, message_ref_id FROM Articles WHERE message_newsgroup = $2 AND message_id_hash LIKE $1 ORDER BY time_obtained DESC",
 		GetNNTPPostsInGroup:             "SELECT message_no, ArticlePosts.message_id, subject, time_posted, ref_id, name, path FROM ArticleNumbers INNER JOIN ArticlePosts ON ArticleNumbers.message_id = ArticlePosts.message_id WHERE ArticlePosts.newsgroup = $1 ORDER BY message_no",
 		GetCitesByPostHashLike:          "SELECT message_id, message_ref_id FROM Articles WHERE message_id_hash LIKE $1",
+		GetYearlyPostHistory:            "WITH times(endtime, begintime) AS ( SELECT CAST(EXTRACT(epoch from i) AS BIGINT) AS endtime, CAST(EXTRACT(epoch from i - interval '1 month') AS BIGINT) AS begintime FROM generate_series(now() - interval '10 year', now(), '1 month'::interval) i ) SELECT begintime, endtime, ( SELECT count(*) FROM ArticlePosts WHERE time_posted > begintime AND time_posted < endtime) FROM times",
 	}
 
 }
@@ -1720,34 +1722,14 @@ func (self *PostgresDatabase) GetLastPostedPostModels(prefix string, n int64) (p
 }
 
 func (self *PostgresDatabase) GetMonthlyPostHistory() (posts []PostEntry) {
-	var oldest int64
-	now := time.Now()
-	now = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC)
-	err := self.conn.QueryRow(self.stmt[GetMonthlyPostHistory]).Scan(&oldest)
-	if err == nil {
-		// we got the oldest
-		// convert it to the oldest year/date
-		old := time.Unix(oldest, 0)
-		old = time.Date(old.Year(), old.Month(), 1, 0, 0, 0, 0, time.UTC)
-		// count up from oldest to newest
-		for now.Unix() >= old.Unix() {
-			var count int64
-			var next_month time.Time
-			if now.Month() < 12 {
-				next_month = time.Date(old.Year(), old.Month()+1, 1, 0, 0, 0, 0, time.UTC)
-			} else {
-				next_month = time.Date(old.Year()+1, 1, 1, 0, 0, 0, 0, time.UTC)
-			}
-			// get the post count in that montth
-			err = self.conn.QueryRow(self.stmt[GetLastDaysPosts], old.Unix(), next_month.Unix()).Scan(&count)
-			if err == nil {
-				posts = append(posts, PostEntry{old.Unix(), count})
-				old = next_month
-			} else {
-				posts = nil
-				break
-			}
+	rows, err := self.conn.Query(self.stmt[GetYearlyPostHistory])
+	if rows != nil {
+		for rows.Next() {
+			var begin, end, mag int64
+			rows.Scan(&begin, &end, &mag)
+			posts = append(posts, PostEntry{begin, mag})
 		}
+		rows.Close()
 	}
 	if err != nil {
 		log.Println("failed getting monthly post history", err)
