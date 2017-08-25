@@ -418,7 +418,7 @@ func seedToKeyPair(seed []byte) (pub ed25519.PublicKey, full ed25519.PrivateKey)
 	h := sha512.Sum512(seed)
 	seed = h[:]
 	seed[0] &= 248
-	seed[31] &= 63
+	seed[31] &= 127
 	seed[31] |= 64
 	var in [32]byte
 	var out [32]byte
