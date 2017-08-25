@@ -421,6 +421,7 @@ func (self *templateEngine) genGraphs(prefix string, wr io.Writer, db Database) 
 
 	if posts == nil {
 		// wtf?
+		log.Println("no monthly posts gotten wtfug yo?")
 	} else {
 		for _, entry := range posts {
 			all_posts = append(all_posts, postsGraphRow{
