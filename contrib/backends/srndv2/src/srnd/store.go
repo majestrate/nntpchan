@@ -575,25 +575,35 @@ func read_message_body(body *io.LimitedReader, hdr map[string][]string, store Ar
 	} else if media_type == "message/rfc822" {
 		// tripcoded message
 		sig := nntp.headers.Get("X-Signature-Ed25519-Sha512", "")
+		var blake bool
+		if sig == "" {
+			sig = nntp.headers.Get("X-Signature-Ed25519-Blake2b", "")
+			blake = sig != ""
+		}
 		pk := nntp.Pubkey()
-		if pk == "" || sig == "" {
+		if (pk == "" || sig == "") && !blake {
 			log.Println("invalid sig or pubkey", sig, pk)
 			nntp.Reset()
 			return errors.New("invalid headers")
 		}
 		// process inner body
 		// verify message
-		err = verifyMessage(pk, sig, body, func(h map[string][]string, innerBody io.Reader) {
+		f := func(h map[string][]string, innerBody io.Reader) {
 			// handle inner message
 			ir := &io.LimitedReader{
 				R: innerBody,
 				N: body.N,
 			}
-			err := read_message_body(ir, h, store, nil, true, callback)
-			if err != nil {
-				log.Println("error reading inner signed message", err)
+			e := read_message_body(ir, h, store, nil, true, callback)
+			if e != nil {
+				log.Println("error reading inner signed message", e)
 			}
-		})
+		}
+		if blake {
+			err = verifyMessageBLAKE2B(pk, sig, body, f)
+		} else {
+			err = verifyMessageSHA512(pk, sig, body, f)
+		}
 		if err != nil {
 			log.Println("error reading inner message", err)
 		}

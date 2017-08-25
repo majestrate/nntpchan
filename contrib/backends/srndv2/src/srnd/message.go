@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/dchest/blake2b"
 	"github.com/majestrate/nacl"
 	"io"
 	"log"
@@ -162,7 +163,7 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 	// copy headers
 	// copy into signed part
 	for k := range h {
-		if k == "X-PubKey-Ed25519" || k == "X-Signature-Ed25519-SHA512" {
+		if k == "X-PubKey-Ed25519" || k == "X-Signature-Ed25519-SHA512" || k == "X-Signature-Ed25519-BLAKE2B" {
 			// don't set signature or pubkey header
 		} else if k == "Content-Type" {
 			signed.headers.Set(k, "message/rfc822; charset=UTF-8")
@@ -172,9 +173,10 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 		}
 	}
 	sha := sha512.New()
+	blake := blake2b.New256()
 	signed.signedPart = &nntpAttachment{}
 	// write body to sign buffer
-	mw := io.MultiWriter(sha, signed.signedPart)
+	mw := io.MultiWriter(sha, blake, signed.signedPart)
 	err = nntp.WriteTo(mw, MaxMessageSize)
 	mw.Write([]byte{10})
 	if err == nil {
@@ -191,9 +193,11 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 		digest := sha.Sum(nil)
 		sig := cryptoSign(digest, sk)
 		// log that we signed it
-		log.Printf("signed %s pubkey=%s sig=%s hash=%s", nntp.MessageID(), pk, sig, hexify(digest))
+		// log.Printf("signed %s pubkey=%s sig=%s hash=%s", nntp.MessageID(), pk, sig, hexify(digest))
 		signed.headers.Set("X-Signature-Ed25519-SHA512", sig)
 		signed.headers.Set("X-PubKey-Ed25519", pk)
+		sig = cryptoSignNew(blake.Sum(nil), sk)
+		signed.headers.Set("X-Signature-Ed25519-BLAKE2B", sig)
 	}
 	return
 }
@@ -441,7 +445,7 @@ func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 // verify a signed message's body
 // innerHandler must close reader when done
 // returns error if one happens while verifying article
-func verifyMessage(pk, sig string, body *io.LimitedReader, innerHandler func(map[string][]string, io.Reader)) (err error) {
+func verifyMessageSHA512(pk, sig string, body *io.LimitedReader, innerHandler func(map[string][]string, io.Reader)) (err error) {
 	log.Println("unwrapping signed message from", pk)
 	pk_bytes := unhex(pk)
 	sig_bytes := unhex(sig)
@@ -469,6 +473,44 @@ func verifyMessage(pk, sig string, body *io.LimitedReader, innerHandler func(map
 		log.Printf("hash=%s", hexify(hash))
 		log.Printf("sig=%s", hexify(sig_bytes))
 		if nacl.CryptoVerifyFucky(hash, sig_bytes, pk_bytes) {
+			log.Println("signature is valid :^)")
+		} else {
+			err = errors.New("invalid signature")
+		}
+	}
+	// flush pipe
+	pw.Close()
+	return
+}
+
+func verifyMessageBLAKE2B(pk, sig string, body *io.LimitedReader, innerHandler func(map[string][]string, io.Reader)) (err error) {
+	log.Println("unwrapping signed message from", pk)
+	pk_bytes := unhex(pk)
+	sig_bytes := unhex(sig)
+	h := blake2b.New256()
+	pr, pw := io.Pipe()
+	// read header
+	// handle inner body
+	go func(hdr_reader *io.PipeReader) {
+		r := bufio.NewReader(hdr_reader)
+		msg, err := readMIMEHeader(r)
+		if err == nil {
+			innerHandler(msg.Header, msg.Body)
+		}
+		hdr_reader.Close()
+	}(pr)
+	body = &io.LimitedReader{
+		R: io.TeeReader(body, pw),
+		N: body.N,
+	}
+	// copy body 128 bytes at a time
+	var buff [128]byte
+	_, err = io.CopyBuffer(h, body, buff[:])
+	if err == nil {
+		hash := h.Sum(nil)
+		log.Printf("hash=%s", hexify(hash))
+		log.Printf("sig=%s", hexify(sig_bytes))
+		if nacl.CryptoVerifyDetached(hash, sig_bytes, pk_bytes) {
 			log.Println("signature is valid :^)")
 		} else {
 			err = errors.New("invalid signature")

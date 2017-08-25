@@ -400,6 +400,15 @@ func cryptoSign(h, sk []byte) string {
 	return hexify(sig)
 }
 
+func cryptoSignNew(h, sk []byte) string {
+	// sign
+	sig := nacl.CryptoSignDetached(h, sk)
+	if sig == nil {
+		return "[failed to sign]"
+	}
+	return hexify(sig)
+}
+
 // given a tripcode after the #
 // make a seed byteslice
 func parseTripcodeSecret(str string) []byte {
