@@ -135,10 +135,10 @@ func main() {
 						fmt.Fprintf(os.Stdout, "Usage: %s tool nntp [add-login|del-login]\n", os.Args[0])
 					}
 				} else {
-					fmt.Fprintf(os.Stdout, "Usage: %s tool [rethumb|keygen|nntp|mod]\n", os.Args[0])
+					fmt.Fprintf(os.Stdout, "Usage: %s tool [rethumb|keygen|nntp|mod|expire]\n", os.Args[0])
 				}
 			} else {
-				fmt.Fprintf(os.Stdout, "Usage: %s tool [rethumb|keygen|nntp|mod]\n", os.Args[0])
+				fmt.Fprintf(os.Stdout, "Usage: %s tool [rethumb|keygen|nntp|mod|expire]\n", os.Args[0])
 			}
 		} else {
 			log.Println("Invalid action:", action)
