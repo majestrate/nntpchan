@@ -12,6 +12,8 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/majestrate/nacl"
+	"golang.org/x/crypto/curve25519"
+	"golang.org/x/crypto/ed25519"
 	"io"
 	"log"
 	"net"
@@ -400,9 +402,22 @@ func cryptoSign(h, sk []byte) string {
 	return hexify(sig)
 }
 
+// convert seed to secret key
+func seedToSecretNew(seed []byte) (full ed25519.PrivateKey) {
+	var out [32]byte
+	var in [32]byte
+	copy(in[:], seed[0:32])
+	curve25519.ScalarBaseMult(&out, &in)
+	copy(full[:], in[:])
+	copy(full[:32], out[:])
+	return
+}
+
 func cryptoSignNew(h, sk []byte) string {
+	// convert key
+	key := seedToSecretNew(sk)
 	// sign
-	sig := nacl.CryptoSignDetached(h, sk)
+	sig := ed25519.Sign(key, h)
 	if sig == nil {
 		return "[failed to sign]"
 	}
