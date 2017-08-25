@@ -411,6 +411,7 @@ func cryptoSignFucky(h, sk []byte) string {
 	return hexify(sig)
 }
 
+/*
 // convert seed to secret key
 func seedToKeyPair(seed []byte) (pub ed25519.PublicKey, full ed25519.PrivateKey) {
 	pub = make(ed25519.PublicKey, ed25519.PublicKeySize)
@@ -430,6 +431,7 @@ func seedToKeyPair(seed []byte) (pub ed25519.PublicKey, full ed25519.PrivateKey)
 	log.Println("pk=", hexify(pub[:]))
 	return
 }
+*/
 
 func cryptoSignProper(h, sk []byte) string {
 	// convert key

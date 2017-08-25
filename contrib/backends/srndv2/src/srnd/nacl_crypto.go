@@ -21,4 +21,11 @@ func naclCryptoSignDetached(hash, sk []byte) []byte {
 	return nacl.CryptoSignDetached(hash, sk)
 }
 
+func seedToKeyPair(seed []byte) (pk, sk []byte) {
+	kp := nacl.LoadSignKey(seed)
+	defer kp.Free()
+	pk, sk = kp.Public(), kp.Secret()
+	return
+}
+
 var naclScalarBaseMult = curve25519.ScalarBaseMult
