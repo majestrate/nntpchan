@@ -395,7 +395,7 @@ func hexify(data []byte) string {
 // extract pubkey from secret key
 // return as hex
 func getSignPubkey(sk []byte) string {
-	_, pk := seedToKeyPair(sk)
+	pk, _ := seedToKeyPair(sk)
 	return hexify(pk)
 }
 
