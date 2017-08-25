@@ -417,6 +417,7 @@ func (self *templateEngine) genGraphs(prefix string, wr io.Writer, db Database) 
 
 	var all_posts postsGraph
 	// this may take a bit
+	log.Println("getting monthly post history...")
 	posts := db.GetMonthlyPostHistory()
 
 	if posts == nil {
