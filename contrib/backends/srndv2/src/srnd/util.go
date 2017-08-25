@@ -415,6 +415,11 @@ func cryptoSignFucky(h, sk []byte) string {
 func seedToKeyPair(seed []byte) (pub ed25519.PublicKey, full ed25519.PrivateKey) {
 	pub = make(ed25519.PublicKey, ed25519.PublicKeySize)
 	full = make(ed25519.PrivateKey, ed25519.PrivateKeySize)
+	h := sha512.Sum512(seed)
+	seed = h[:]
+	seed[0] &= 248
+	seed[31] &= 63
+	seed[31] |= 64
 	var in [32]byte
 	var out [32]byte
 	copy(in[:], seed[0:32])
