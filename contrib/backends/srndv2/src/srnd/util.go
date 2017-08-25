@@ -414,13 +414,15 @@ func cryptoSignFucky(h, sk []byte) string {
 
 // convert seed to secret key
 func seedToKeyPair(seed []byte) (pub ed25519.PublicKey, full ed25519.PrivateKey) {
+	pub = make(ed25519.PublicKey, ed25519.PublicKeySize)
+	full = make(ed25519.PrivateKey, ed25519.PrivateKeySize)
 	var in [32]byte
 	var out [32]byte
 	copy(in[:], seed[0:32])
 	curve25519.ScalarBaseMult(&out, &in)
 	copy(pub[:], out[:])
 	copy(full[:], in[:])
-	copy(full[:32], pub[:])
+	copy(full[32:], pub[:])
 	return
 }
 
