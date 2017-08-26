@@ -502,7 +502,7 @@ func verifyMessageBLAKE2B(pk, sig string, body *io.LimitedReader, innerHandler f
 		hash := h.Sum(nil)
 		log.Printf("hash=%s", hexify(hash))
 		log.Printf("sig=%s", hexify(sig_bytes))
-		if naclCryptoVerifyDetached(hash, sig_bytes, pk_bytes) {
+		if naclCryptoVerifyFucky(hash, sig_bytes, pk_bytes) {
 			log.Println("signature is valid :^)")
 		} else {
 			err = errors.New("invalid signature")

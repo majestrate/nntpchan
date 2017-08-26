@@ -10,3 +10,9 @@ pure:
 
 clean:
 	GOPATH=$(REPO) go clean -v
+
+test:
+	GOPATH=$(REPO) go test -v -tags libsodium srnd
+
+test-pure:
+	GOPATH=$(REPO) go test -v srnd

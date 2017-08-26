@@ -1,0 +1,23 @@
+Subject: My moderation decision/perspective
+From: mgs <poster@web.oniichan.onion>
+X-Signature-Ed25519-SHA512: 6e0478722d0de3c0896e8aa7bd9bb1fa94ba6831faf0c54c4aa1d91a191382f85ae57833a6e00f1d4da53048df0e0cb8402df5f952948aa53fb5788ca9242f02
+X-Frontend-Pubkey: b1dcaa6ba60c1381a5823c3c61c995afeaead79896f95f9748da5fe1cf6ea43f
+Path: web.oniichan.onion
+Content-Type: message/rfc822; charset=UTF-8
+Newsgroups: overchan.moderation
+Message-ID: <b880c1483096181@web.oniichan.onion>
+Date: Fri, 30 Dec 2016 11:09:41 +0000
+X-PubKey-Ed25519: 9a659a2c761009374b510f2eb133cf7e67220f93c8912fd4668c601144823121
+X-Frontend-Signature: 11eb01c8a137e29f4e7a8b25a2cf38b5d913db9d4faaca5c5f8946b0e7f83d826bd3af6c9fc6a40c1091c09ad437b2b9d9aa41617c63a464e5b1833ed77fe202
+
+Path: web.oniichan.onion
+Content-Type: text/plain; charset=utf-8
+Newsgroups: overchan.moderation
+Subject: My moderation decision/perspective
+From: mgs <poster@web.oniichan.onion>
+Message-ID: <b880c1483096181@web.oniichan.onion>
+Date: Fri, 30 Dec 2016 11:09:41 +0000
+
+Like the subject says, I will update in this thread on decisions I made on ctl with briefs/explanations. Anyone is actually welcomed to comment, discuss, and opinionate here, but not spam. If anyone uses this very thread to spam, I will delete, the node owners will see it, and I will reply it here exactly saying so.
+
+Iow: please critique.
