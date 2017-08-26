@@ -33,10 +33,6 @@ $(SRND):
 	$(MAKE) -C $(SRND_DIR)
 	cp $(SRND_DIR)/srndv2 $(SRND)
 
-pure:
-	$(MAKE) -C $(SRND_DIR) pure
-	cp $(SRND_DIR)/srndv2 $(SRND)
-
 clean:
 	rm -f $(SRND) $(JS)
 	$(MAKE) -C $(SRND_DIR) clean
