@@ -29,8 +29,8 @@ func naclSeedToKeyPair(seed []byte) (pk, sk []byte) {
 	sk[31] |= 64
 	// scalarmult magick shit
 	pk = scalarBaseMult(sk[0:32])
+	copy(sk[0:32], seed[0:32])
 	copy(sk[32:64], pk[0:32])
-
 	return
 }
 

@@ -24,10 +24,10 @@ func TestSeedToKeypair(t *testing.T) {
 func TestSign(t *testing.T) {
 
 	msgid := "<wut@wut.wut>"
-	seed := randbytes(32)
-	pk, sec := naclSeedToKeyPair(seed)
+	var seed [32]byte
+	pk, sec := naclSeedToKeyPair(seed[:])
 	sig := msgidFrontendSign(sec, msgid)
-	t.Log(sig)
+	t.Logf("seed=%s pk=%s sk=%s sig=%s", hexify(seed[:]), hexify(pk), hexify(sec), sig)
 	if !verifyFrontendSig(hexify(pk), sig, msgid) {
 		t.Fail()
 	}
