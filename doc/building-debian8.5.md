@@ -3,8 +3,8 @@
 Install the initial dependencies:
 
 ```
-apt-get -y --no-install-recommends install imagemagick libsodium-dev sox git ca-certificates \
-libav-tools build-essential tcl8.5 postgresql postgresql-contrib
+apt-get -y --no-install-recommends install imagemagick sox git ca-certificates \
+ffmpeg build-essential tcl8.5 postgresql postgresql-contrib
 ```
 
 ##Configure postgresql
@@ -20,8 +20,8 @@ Download the golang tarball, extract it to `/usr/local`, and add it to the globa
 
 ```
 cd /opt
-wget https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz
-tar -C /usr/local/ -xvzf go1.8.linux-amd64.tar.gz
+wget https://storage.googleapis.com/golang/go1.9.linux-amd64.tar.gz
+tar -C /usr/local/ -xvzf go1.9.linux-amd64.tar.gz
 echo 'export PATH="$PATH:/usr/local/go/bin"' >> /etc/profile
 ```
 

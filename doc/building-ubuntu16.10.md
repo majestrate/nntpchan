@@ -1,7 +1,7 @@
 Install the initial dependencies:
 
-    # apt-get -y --no-install-recommends install imagemagick libsodium-dev sox git ca-certificates \
-    libav-tools build-essential tcl8.5 postgresql postgresql-contrib golang-go
+    # apt-get -y --no-install-recommends install imagemagick sox git ca-certificates \
+    ffmpeg build-essential tcl8.5 postgresql postgresql-contrib golang-go
 
 Configure PostgreSQL:
 
