@@ -6,7 +6,7 @@ package srnd
 
 import "fmt"
 
-var major_version = 4
+var major_version = 5
 var minor_version = 0
 var program_name = "srnd"
 
