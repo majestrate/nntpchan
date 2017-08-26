@@ -24,7 +24,7 @@ func naclSeedToKeyPair(seed []byte) (pk, sk []byte) {
 	h := sha512.Sum512(seed)
 	sk = h[:]
 	sk[0] &= 248
-	sk[31] &= 63
+	sk[31] &= 127
 	sk[31] |= 64
 
 	// scalarmult magick shit
