@@ -9,6 +9,30 @@ import (
 	"testing"
 )
 
+const asdKey = "3c7850617b4fe116c98f4ed4a2eaf00ab219d16dd6351d9ee786f9fc710bad55"
+
+func TestSeedToKeypair(t *testing.T) {
+	seed := parseTripcodeSecret("asd")
+	pk, _ := naclSeedToKeyPair(seed)
+	hexpk := hexify(pk)
+	if hexpk != asdKey {
+		t.Logf("%s != %s", asdKey, hexpk)
+		t.Fail()
+	}
+}
+
+func TestSign(t *testing.T) {
+
+	msgid := "<wut@wut.wut>"
+	seed := randbytes(32)
+	pk, sec := naclSeedToKeyPair(seed)
+	sig := msgidFrontendSign(sec, msgid)
+	t.Log(sig)
+	if !verifyFrontendSig(hexify(pk), sig, msgid) {
+		t.Fail()
+	}
+}
+
 func TestVerify(t *testing.T) {
 	d := filepath.Join("testdata", "article.test.txt")
 

@@ -4,7 +4,7 @@ package srnd
 
 import (
 	"crypto/sha512"
-	"golang.org/x/crypto/curve25519"
+	"edwards25519"
 	"golang.org/x/crypto/ed25519"
 )
 
@@ -21,16 +21,14 @@ func naclCryptoSignFucky(hash, sk []byte) []byte {
 }
 
 func naclSeedToKeyPair(seed []byte) (pk, sk []byte) {
-	h := sha512.Sum512(seed)
+
+	h := sha512.Sum512(seed[0:32])
 	sk = h[:]
 	sk[0] &= 248
-	sk[31] &= 127
+	sk[31] &= 63
 	sk[31] |= 64
-
 	// scalarmult magick shit
-	pk = scalarBaseMult(sk)
-
-	copy(sk[0:32], seed[0:32])
+	pk = scalarBaseMult(sk[0:32])
 	copy(sk[32:64], pk[0:32])
 
 	return
@@ -39,8 +37,10 @@ func naclSeedToKeyPair(seed []byte) (pk, sk []byte) {
 func scalarBaseMult(sk []byte) (pk []byte) {
 	var skey [32]byte
 	var pkey [32]byte
-	copy(skey[0:32], sk[0:32])
-	curve25519.ScalarBaseMult(&pkey, &skey)
-	pk = pkey[0:32]
+	copy(skey[:], sk[0:32])
+	var h edwards25519.ExtendedGroupElement
+	edwards25519.GeScalarMultBase(&h, &skey)
+	h.ToBytes(&pkey)
+	pk = pkey[:]
 	return
 }
