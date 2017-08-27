@@ -1,8 +1,13 @@
 package crypto
 
 import (
-	"nntpchan/lib/crypto/nacl"
+	"crypto/rand"
+	"io"
 )
 
 // generate random bytes
-var RandBytes = nacl.RandBytes
+func RandBytes(n int) []byte {
+	b := make([]byte, n)
+	io.ReadFull(rand.Reader, b)
+	return b
+}

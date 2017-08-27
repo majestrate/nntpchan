@@ -20,10 +20,9 @@ func (fucky *fuckyNacl) Sign() (s Signature) {
 	if h == nil {
 		panic("fuck.hash.Sum == nil")
 	}
-	kp := nacl.LoadSignKey(fucky.k)
-	defer kp.Free()
-	sk := kp.Secret()
-	sig := nacl.CryptoSignFucky(h, sk)
+
+	_, sec := nacl.SeedToKeyPair(fucky.k)
+	sig := nacl.CryptoSignFucky(h, sec)
 	if sig == nil {
 		panic("fucky signer's call to nacl.CryptoSignFucky returned nil")
 	}
@@ -40,7 +39,7 @@ func (fucky *fuckyNacl) resetState() {
 func (fucky *fuckyNacl) Verify(sig Signature) (valid bool) {
 	h := fucky.hash.Sum(nil)
 	if h == nil {
-		panic("fuck.hash.Sum == nil")
+		panic("fucky.hash.Sum == nil")
 	}
 	valid = nacl.CryptoVerifyFucky(h, sig, fucky.k)
 	fucky.resetState()
@@ -66,17 +65,13 @@ func CreateVerifier(pk []byte) Verifer {
 
 // get the public component given the secret key
 func ToPublic(sk []byte) (pk []byte) {
-	kp := nacl.LoadSignKey(sk)
-	defer kp.Free()
-	pk = kp.Public()
+	pk, _ = nacl.SeedToKeyPair(sk)
 	return
 }
 
 // create a standard keypair
 func GenKeypair() (pk, sk []byte) {
-	kp := nacl.GenSignKeypair()
-	defer kp.Free()
-	pk = kp.Public()
-	sk = kp.Seed()
+	sk = RandBytes(32)
+	pk, _ = nacl.SeedToKeyPair(sk)
 	return
 }

@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"nntpchan/lib/crypto/nacl"
+	"nntpchan/lib/crypto"
 )
 
 // given an address
 // generate a new encryption key for it
 // return the encryption key and the encrypted address
 func NewAddrEnc(addr string) (string, string) {
-	key_bytes := nacl.RandBytes(encAddrBytes())
+	key_bytes := crypto.RandBytes(encAddrBytes())
 	key := base64.StdEncoding.EncodeToString(key_bytes)
 	return key, EncAddr(addr, key)
 }

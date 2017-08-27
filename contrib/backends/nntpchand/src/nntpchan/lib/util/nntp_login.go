@@ -4,7 +4,7 @@ import (
 	"crypto/sha512"
 	"encoding/base64"
 	"encoding/hex"
-	"nntpchan/lib/crypto/nacl"
+	"nntpchan/lib/crypto"
 )
 
 // generate a login salt for nntp users
@@ -25,5 +25,5 @@ func NntpLoginCredHash(passwd, salt string) (str string) {
 
 // make a random string
 func randStr(length int) string {
-	return hex.EncodeToString(nacl.RandBytes(length))[length:]
+	return hex.EncodeToString(crypto.RandBytes(length))[length:]
 }
