@@ -41,3 +41,7 @@ Where `username` is the username of the user to be deleted.
 commandline interface for moderator actions
 
     ./srndv2 tool mod do
+
+you can also pipe local mod commands via stdin
+
+    echo "delete <somemessage@server.tld>" | ./srndv2 tool mod do
