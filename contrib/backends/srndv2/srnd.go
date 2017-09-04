@@ -45,7 +45,7 @@ func main() {
 			if len(os.Args) > 2 {
 				tool := os.Args[2]
 				if tool == "mod" {
-					if len(os.Args) == 4 && os.Args[3] == "do" {
+					if len(os.Args) >= 4 && strings.ToLower(os.Args[3]) == "do" {
 						daemon.Setup()
 						eng := daemon.ModEngine()
 						r := bufio.NewReader(os.Stdin)

@@ -68,6 +68,7 @@ NNTPChan needs to know the paths to the listed programs on your system.
 Check out the following in order:
 
 1. Setting up data-storage system (choose i or ii)
-  1. [Setting up using Postgres](database/postgres/configure-postgres.md)
+
+1. [Setting up using Postgres](database/postgres/configure-postgres.md)
 2. [Setting up NNTPChan system](srnd.md)
 3. [Setting up feeds](feeds.md)
