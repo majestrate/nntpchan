@@ -33,6 +33,10 @@ type httpFrontend struct {
 	db database.Database
 }
 
+func (f *httpFrontend) Name() string {
+	return fmt.Sprintf("frontend-%s", f.addr)
+}
+
 // reload http frontend
 // reloads middleware
 func (f *httpFrontend) Reload(c *config.FrontendConfig) {

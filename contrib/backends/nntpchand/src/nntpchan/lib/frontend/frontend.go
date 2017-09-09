@@ -27,6 +27,9 @@ type Frontend interface {
 
 	// reload config
 	Reload(c *config.FrontendConfig)
+
+	// get frontend name
+	Name() string
 }
 
 // create a new http frontend give frontend config

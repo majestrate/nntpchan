@@ -1,5 +1,9 @@
 package config
 
+import (
+	"fmt"
+)
+
 type FrontendConfig struct {
 	// bind to address
 	BindAddr string `json:"bind"`
@@ -11,6 +15,10 @@ type FrontendConfig struct {
 	Static string `json:"static_dir"`
 	// http middleware configuration
 	Middleware *MiddlewareConfig `json:"middleware"`
+}
+
+func (cfg *FrontendConfig) Name() string {
+	return fmt.Sprintf("frontend-%s", cfg.BindAddr)
 }
 
 // default Frontend Configuration

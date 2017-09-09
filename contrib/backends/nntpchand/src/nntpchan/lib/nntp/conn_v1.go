@@ -622,6 +622,10 @@ func (c *v1Conn) printfLine(format string, args ...interface{}) error {
 }
 
 func (c *v1Conn) readline() (line string, err error) {
+	if c.C == nil || c.C.R == nil {
+		err = errors.New("connection closed")
+		return
+	}
 	line, err = c.C.ReadLine()
 	log.WithFields(log.Fields{
 		"pkg":     "nntp-conn",

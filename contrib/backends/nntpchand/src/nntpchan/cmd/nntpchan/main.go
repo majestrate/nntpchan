@@ -95,13 +95,14 @@ func Main() {
 		}
 		nserv.Hooks = hooks
 	}
-
+	var frontends []frontend.Frontend
 	var db database.Database
 	for _, fconf := range conf.Frontends {
 		var f frontend.Frontend
 		f, err = frontend.NewHTTPFrontend(fconf, db)
 		if err == nil {
 			go f.Serve()
+			frontends = append(frontends, f)
 		}
 	}
 
@@ -121,6 +122,15 @@ func Main() {
 					log.Infof("reloading config: %s", cfgFname)
 					nserv.ReloadServer(conf.NNTP)
 					nserv.ReloadFeeds(conf.Feeds)
+					for idx := range frontends {
+						f := frontends[idx]
+						for i := range conf.Frontends {
+							c := conf.Frontends[i]
+							if c != nil && c.Name() == f.Name() {
+								f.Reload(c)
+							}
+						}
+					}
 				} else {
 					log.Errorf("failed to reload config: %s", err)
 				}

@@ -97,6 +97,7 @@ func (sd *socksDialer) Dial(remote string) (c net.Conn, err error) {
 					}).Warn("connect via socks proxy failed")
 					c.Close()
 					c = nil
+					err = errors.New("could not connect via socks proxy")
 				}
 			} else {
 				// error reading reply
@@ -106,6 +107,7 @@ func (sd *socksDialer) Dial(remote string) (c net.Conn, err error) {
 				}).Error("failed to read socks response ", err)
 				c.Close()
 				c = nil
+				err = errors.New("socks proxy gave no reply")
 			}
 		} else {
 			if err == nil {
