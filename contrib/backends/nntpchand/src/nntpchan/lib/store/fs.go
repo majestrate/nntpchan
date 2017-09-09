@@ -39,6 +39,8 @@ func (fs FilesystemStorage) GetWatermark(newsgroup string) (hi, lo uint64, err e
 	var hdr textproto.MIMEHeader
 	hdr, err = fs.getMetadataForNewsgroup(newsgroup)
 	if err == nil {
+		log.Debugf("hdr = %s", hdr)
+		log.Debugf("hiwater = %s", hdr.Get(HighWaterHeader))
 		hi, err = strconv.ParseUint(hdr.Get(HighWaterHeader), 10, 64)
 		if err == nil {
 			lo, err = strconv.ParseUint(hdr.Get(LowWaterHeader), 10, 64)
@@ -52,21 +54,27 @@ func (fs FilesystemStorage) getMetadataForNewsgroup(newsgroup string) (hdr textp
 	fp := fs.metadataFileForNewsgroup(newsgroup)
 	_, err = os.Stat(fp)
 	if os.IsNotExist(err) {
+		log.Infof("create metadata for %s", newsgroup)
 		f, err = os.OpenFile(fp, os.O_RDWR|os.O_CREATE, 0600)
 		if err == nil {
+			c := textproto.NewConn(f)
 			h := make(textproto.MIMEHeader)
 			h.Set(HighWaterHeader, "0")
-			c := textproto.NewConn(f)
-			for k := range hdr {
+			h.Set(LowWaterHeader, "0")
+			for k := range h {
 				for _, v := range h[k] {
 					err = c.PrintfLine("%s: %s", k, v)
 					if err != nil {
 						c.Close()
+						f.Close()
+						log.Errorf("failed to write metadata file: %s", err)
 						return
 					}
 				}
 			}
+			c.PrintfLine("")
 			c.Close()
+			f.Close()
 		}
 	}
 	f, err = os.OpenFile(fp, os.O_RDWR, 0600)
@@ -74,6 +82,7 @@ func (fs FilesystemStorage) getMetadataForNewsgroup(newsgroup string) (hdr textp
 		c := textproto.NewConn(f)
 		hdr, err = c.ReadMIMEHeader()
 		c.Close()
+		f.Close()
 	}
 	return
 }
@@ -88,7 +97,7 @@ func (fs FilesystemStorage) nextIDForNewsgroup(newsgroup string) (id uint64, err
 		if err == nil {
 			hdr.Set(HighWaterHeader, fmt.Sprintf("%d", id))
 			var f *os.File
-			f, err = os.OpenFile(fs.metadataFileForNewsgroup(newsgroup), os.O_WRONLY, 0600)
+			f, err = os.OpenFile(fs.metadataFileForNewsgroup(newsgroup), os.O_WRONLY|os.O_CREATE, 0600)
 			if err == nil {
 				c := textproto.NewConn(f)
 				for k := range hdr {
@@ -96,11 +105,14 @@ func (fs FilesystemStorage) nextIDForNewsgroup(newsgroup string) (id uint64, err
 						err = c.PrintfLine("%s: %s", k, v)
 						if err != nil {
 							c.Close()
+							f.Close()
 							return
 						}
 					}
 				}
+				c.PrintfLine("")
 				c.Close()
+				f.Close()
 			}
 		}
 	}
@@ -234,13 +246,16 @@ func (fs FilesystemStorage) StoreArticle(r io.Reader, msgid, newsgroup string) (
 				nntpid, err = fs.nextIDForNewsgroup(newsgroup)
 				if err == nil {
 					err = os.Symlink(filepath.Join("..", "..", "articles", msgid), filepath.Join(g, fmt.Sprintf("%d", nntpid)))
+				} else {
+					log.Errorf("invalid metadata for newsgroup: %s", err.Error())
 				}
 				if err != nil {
 					log.WithFields(log.Fields{
-						"pkg":   "fs-store",
-						"msgid": msgid,
-						"group": newsgroup,
-					}).Debug("failed to link article")
+						"pkg":    "fs-store",
+						"msgid":  msgid,
+						"group":  newsgroup,
+						"reason": err.Error(),
+					}).Error("failed to link article")
 				}
 			} else {
 				log.WithFields(log.Fields{

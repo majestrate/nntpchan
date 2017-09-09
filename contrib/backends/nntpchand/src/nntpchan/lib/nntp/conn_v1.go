@@ -885,7 +885,7 @@ func (c *v1Conn) readArticle(newpost bool, hooks EventHooks) (ps PolicyStatus, e
 
 			fpath, err := c.storage.StoreArticle(r, msgid.String(), e.Newsgroup().String())
 			r.Close()
-			if err == nil {
+			if err == nil || err == io.EOF {
 				log.WithFields(log.Fields{
 					"pkg":     "nntp-conn",
 					"msgid":   msgid,
