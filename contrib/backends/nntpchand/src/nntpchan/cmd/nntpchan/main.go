@@ -99,10 +99,13 @@ func Main() {
 	var db database.Database
 	for _, fconf := range conf.Frontends {
 		var f frontend.Frontend
-		f, err = frontend.NewHTTPFrontend(fconf, db)
+		f, err = frontend.NewHTTPFrontend(&fconf, db, nserv.Storage)
 		if err == nil {
+			log.Infof("serving frontend %s", f.Name())
 			go f.Serve()
 			frontends = append(frontends, f)
+		} else {
+			log.Fatalf("failed to set up frontend %s: %s", fconf.Name(), err.Error())
 		}
 	}
 
@@ -122,12 +125,14 @@ func Main() {
 					log.Infof("reloading config: %s", cfgFname)
 					nserv.ReloadServer(conf.NNTP)
 					nserv.ReloadFeeds(conf.Feeds)
+					nserv.ReloadStorage(conf.Store)
 					for idx := range frontends {
 						f := frontends[idx]
 						for i := range conf.Frontends {
 							c := conf.Frontends[i]
-							if c != nil && c.Name() == f.Name() {
-								f.Reload(c)
+							if c.Name() == f.Name() {
+								// TODO: inject storage config?
+								f.Reload(&c)
 							}
 						}
 					}

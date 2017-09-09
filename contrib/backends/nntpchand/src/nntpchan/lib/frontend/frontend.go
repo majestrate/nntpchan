@@ -5,6 +5,7 @@ import (
 	"nntpchan/lib/database"
 	"nntpchan/lib/model"
 	"nntpchan/lib/nntp"
+	"nntpchan/lib/store"
 )
 
 // a frontend that displays nntp posts and allows posting
@@ -33,7 +34,7 @@ type Frontend interface {
 }
 
 // create a new http frontend give frontend config
-func NewHTTPFrontend(c *config.FrontendConfig, db database.Database) (f Frontend, err error) {
+func NewHTTPFrontend(c *config.FrontendConfig, db database.Database, s store.Storage) (f Frontend, err error) {
 
 	var mid Middleware
 	if c.Middleware != nil {
@@ -43,7 +44,7 @@ func NewHTTPFrontend(c *config.FrontendConfig, db database.Database) (f Frontend
 
 	if err == nil {
 		// create http frontend only if no previous errors
-		f, err = createHttpFrontend(c, mid, db)
+		f, err = createHttpFrontend(c, mid, db, s)
 	}
 	return
 }

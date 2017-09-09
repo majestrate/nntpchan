@@ -11,7 +11,10 @@ import (
 type Database interface {
 	ThreadByMessageID(msgid string) (*model.Thread, error)
 	ThreadByHash(hash string) (*model.Thread, error)
+	MessageIDByHash(hash string) (string, error)
 	BoardPage(newsgroup string, pageno, perpage int) (*model.BoardPage, error)
+	StorePost(post model.Post) error
+	Init() error
 }
 
 // get new database connector from configuration

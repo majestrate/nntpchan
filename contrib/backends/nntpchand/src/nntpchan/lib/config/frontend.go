@@ -15,6 +15,8 @@ type FrontendConfig struct {
 	Static string `json:"static_dir"`
 	// http middleware configuration
 	Middleware *MiddlewareConfig `json:"middleware"`
+	// storage config
+	Storage *StoreConfig `json:"-"`
 }
 
 func (cfg *FrontendConfig) Name() string {

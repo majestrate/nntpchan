@@ -59,6 +59,11 @@ func (s *Server) ReloadFeeds(feeds []*config.FeedConfig) {
 
 }
 
+// reload storage configuration
+func (s *Server) ReloadStorage(c *config.StoreConfig) {
+
+}
+
 func (s *Server) GotArticle(msgid MessageID, group Newsgroup) {
 	log.WithFields(log.Fields{
 		"pkg":   "nntp-server",

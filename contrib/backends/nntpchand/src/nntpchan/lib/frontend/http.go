@@ -11,6 +11,7 @@ import (
 	"nntpchan/lib/database"
 	"nntpchan/lib/model"
 	"nntpchan/lib/nntp"
+	"nntpchan/lib/store"
 	"time"
 )
 
@@ -31,6 +32,8 @@ type httpFrontend struct {
 	apiserve *api.Server
 	// database driver
 	db database.Database
+	// article storage
+	storage store.Storage
 }
 
 func (f *httpFrontend) Name() string {
@@ -92,11 +95,15 @@ func (f *httpFrontend) SentArticleVia(msgid nntp.MessageID, feedname string) {
 	// TODO: implement
 }
 
-func createHttpFrontend(c *config.FrontendConfig, mid Middleware, db database.Database) (f *httpFrontend, err error) {
+func createHttpFrontend(c *config.FrontendConfig, mid Middleware, db database.Database, s store.Storage) (f *httpFrontend, err error) {
 	f = new(httpFrontend)
 	// set db
 	// db.Ensure() called elsewhere
 	f.db = db
+
+	// set up storage
+	// s.Ensure() called elsewhere
+	f.storage = s
 
 	// set bind address
 	f.addr = c.BindAddr
