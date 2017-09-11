@@ -865,7 +865,10 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					if daemon.database.HasNewsgroup(group) {
 						// we has newsgroup
 						var hi, lo int64
-						count, err := daemon.database.CountAllArticlesInGroup(group)
+						// THIS is heavy as shit
+						//count, err := daemon.database.CountAllArticlesInGroup(group)
+						var err error
+						count := 0
 						if err == nil {
 							hi, lo, err = daemon.database.GetLastAndFirstForGroup(group)
 							if err == nil {
@@ -899,13 +902,13 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 				// for each group
 				for _, group := range groups {
 					// get low/high water mark
-					lo, hi, err := daemon.database.GetLastAndFirstForGroup(group)
-					if err == nil {
-						// XXX: we ignore errors here :\
-						_, _ = io.WriteString(dw, fmt.Sprintf("%s %d %d y\n", group, lo, hi))
-					} else {
-						log.Println(self.name, "could not get low/high water mark for", group, err)
-					}
+					// XXX: heavy as shit
+					//lo, hi, err := daemon.database.GetLastAndFirstForGroup(group)
+					//if err == nil {
+					_, _ = io.WriteString(dw, fmt.Sprintf("%s 0 0 y\n", group))
+					//} else {
+					//	log.Println(self.name, "could not get low/high water mark for", group, err)
+					//}
 				}
 				// flush dotwriter
 				dw.Close()
