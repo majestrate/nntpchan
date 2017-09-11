@@ -872,7 +872,7 @@ func (self *PostgresDatabase) ArticleBanned(messageID string) (result bool) {
 	err := self.conn.QueryRow(self.stmt[ArticleBanned], messageID).Scan(&count)
 	if err == nil {
 		result = count > 0
-	} else {
+	} else if err != sql.ErrNoRows {
 		log.Println("error checking if article is banned", err)
 	}
 	return
@@ -1307,9 +1307,9 @@ func (self *PostgresDatabase) GetLastBumpedThreadsPaginated(newsgroup string, th
 func (self *PostgresDatabase) GroupHasPosts(group string) bool {
 
 	var count int64
-	err := self.conn.QueryRow("SELECT COUNT(message_id) FROM ArticlePosts WHERE newsgroup = $1", group).Scan(&count)
-	if err != nil {
-		log.Println("error counting posts in group", group, err)
+	err := self.conn.QueryRow("SELECT 1 FROM ArticlePosts WHERE newsgroup = $1", group).Scan(&count)
+	if err == sql.ErrNoRows {
+		err = nil
 	}
 	return count > 0
 }
@@ -1589,7 +1589,10 @@ func (self *PostgresDatabase) UnbanAddr(addr string) (err error) {
 func (self *PostgresDatabase) CheckEncIPBanned(encaddr string) (banned bool, err error) {
 	var result int64
 	err = self.conn.QueryRow(self.stmt[CheckEncIPBanned], encaddr).Scan(&result)
-	banned = result > 0 && err != sql.ErrNoRows
+	if err == sql.ErrNoRows {
+		err = nil
+	}
+	banned = result > 0
 	return
 }
 
@@ -1638,7 +1641,7 @@ func (self *PostgresDatabase) UnMarkModPubkeyCanModGroup(pubkey, group string) (
 func (self *PostgresDatabase) IsExpired(root_message_id string) bool {
 	var count int
 	err := self.conn.QueryRow(self.stmt[IsExpired], root_message_id).Scan(&count)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		log.Println("error checking for expired article:", err)
 	}
 	return count == 0
