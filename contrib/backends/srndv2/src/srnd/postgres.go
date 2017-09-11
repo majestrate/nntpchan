@@ -1318,30 +1318,21 @@ func (self *PostgresDatabase) GroupHasPosts(group string) bool {
 func (self *PostgresDatabase) HasNewsgroup(group string) bool {
 	var count int64
 	err := self.conn.QueryRow(self.stmt[HasNewsgroup], group).Scan(&count)
-	if err != nil {
-		log.Println("failed to check for newsgroup", group, err)
-	}
-	return count > 0
+	return err != sql.ErrNoRows && count > 0
 }
 
 // check if an article exists
 func (self *PostgresDatabase) HasArticle(message_id string) bool {
 	var count int64
 	err := self.conn.QueryRow(self.stmt[HasArticle], message_id).Scan(&count)
-	if err != nil {
-		log.Println("failed to check for article", message_id, err)
-	}
-	return count > 0
+	return err != sql.ErrNoRows && count > 0
 }
 
 // check if an article exists locally
 func (self *PostgresDatabase) HasArticleLocal(message_id string) bool {
 	var count int64
 	err := self.conn.QueryRow(self.stmt[HasArticleLocal], message_id).Scan(&count)
-	if err != nil {
-		log.Println("failed to check for local article", message_id, err)
-	}
-	return count > 0
+	return err != sql.ErrNoRows && count > 0
 }
 
 // count articles we have
@@ -1598,7 +1589,7 @@ func (self *PostgresDatabase) UnbanAddr(addr string) (err error) {
 func (self *PostgresDatabase) CheckEncIPBanned(encaddr string) (banned bool, err error) {
 	var result int64
 	err = self.conn.QueryRow(self.stmt[CheckEncIPBanned], encaddr).Scan(&result)
-	banned = result > 0
+	banned = result > 0 && err != sql.ErrNoRows
 	return
 }
 
@@ -1745,6 +1736,8 @@ func (self *PostgresDatabase) CheckNNTPLogin(username, passwd string) (valid boo
 		if len(login_hash) > 0 && len(login_salt) > 0 {
 			valid = nntpLoginCredHash(passwd, login_salt) == login_hash
 		}
+	} else if err == sql.ErrNoRows {
+		err = nil
 	}
 	return
 }
@@ -1765,6 +1758,9 @@ func (self *PostgresDatabase) CheckNNTPUserExists(username string) (exists bool,
 	var count int64
 	err = self.conn.QueryRow(self.stmt[CheckNNTPUserExists], username).Scan(&count)
 	exists = count > 0
+	if err == sql.ErrNoRows {
+		err = nil
+	}
 	return
 }
 
