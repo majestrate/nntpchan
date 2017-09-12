@@ -1625,11 +1625,17 @@ func (self *PostgresDatabase) GetLastAndFirstForGroup(group string) (last, first
 
 func (self *PostgresDatabase) GetMessageIDForNNTPID(group string, id int64) (msgid string, err error) {
 	err = self.conn.QueryRow(self.stmt[GetMessageIDForNNTPID], group, id).Scan(&msgid)
+	if err == sql.ErrNoRows {
+		err = nil
+	}
 	return
 }
 
 func (self *PostgresDatabase) GetNNTPIDForMessageID(group, msgid string) (id int64, err error) {
 	err = self.conn.QueryRow(self.stmt[GetNNTPIDForMessageID], group, msgid).Scan(&id)
+	if err == sql.ErrNoRows {
+		err = nil
+	}
 	return
 }
 
