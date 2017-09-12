@@ -1,4 +1,4 @@
-#How to install nntpchan on Debian 8.5 Jessie
+# How to install nntpchan on Debian stable
 
 Install the initial dependencies:
 
@@ -7,7 +7,7 @@ apt-get -y --no-install-recommends install imagemagick sox git ca-certificates \
 ffmpeg build-essential tcl8.5 postgresql postgresql-contrib
 ```
 
-##Configure postgresql
+## Configure postgresql
 
 ```
 su - postgres -c "createuser --pwprompt --encrypted srnd"
@@ -36,6 +36,6 @@ cd nntpchan
 make
 ```
 
-Now you can proceed with [setting up NNTPChan](setting-up.md). When you get to the "set paths to external programs" step, you should change the ffmpeg path to `/usr/bin/avconv`.
+Now you can proceed with [setting up NNTPChan](setting-up.md). When you get to the "set paths to external programs" step.
 
 Run `./srndv2 setup` and follow the instructions [here](setting-up.md).
