@@ -2,8 +2,8 @@ package network
 
 import (
 	"errors"
-	"nntpchan/lib/config"
 	"net"
+	"nntpchan/lib/config"
 	"strings"
 )
 

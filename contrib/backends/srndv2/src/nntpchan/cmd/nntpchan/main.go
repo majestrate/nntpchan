@@ -2,13 +2,13 @@ package main
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"net"
+	"net/http"
+	_ "net/http/pprof"
 	"nntpchan/lib/config"
 	"nntpchan/lib/nntp"
 	"nntpchan/lib/store"
 	"nntpchan/lib/webhooks"
-	"net"
-	"net/http"
-	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"syscall"

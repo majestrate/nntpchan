@@ -2,11 +2,11 @@ package nntp
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"net"
 	"nntpchan/lib/config"
 	"nntpchan/lib/database"
 	"nntpchan/lib/network"
 	"nntpchan/lib/store"
-	"net"
 	"time"
 )
 

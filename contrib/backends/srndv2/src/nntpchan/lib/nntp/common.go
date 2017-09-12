@@ -1,10 +1,10 @@
 package nntp
 
 import (
-	"nntpchan/lib/crypto"
 	"crypto/sha1"
 	"fmt"
 	"io"
+	"nntpchan/lib/crypto"
 	"regexp"
 	"strings"
 	"time"

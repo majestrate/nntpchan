@@ -1,8 +1,8 @@
 package nntp
 
 import (
-	"nntpchan/lib/nntp/message"
 	"io"
+	"nntpchan/lib/nntp/message"
 )
 
 // defines interface for filtering an nntp article

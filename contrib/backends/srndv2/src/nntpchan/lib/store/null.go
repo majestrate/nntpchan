@@ -1,8 +1,8 @@
 package store
 
 import (
-	"nntpchan/lib/util"
 	"io"
+	"nntpchan/lib/util"
 	"os"
 )
 

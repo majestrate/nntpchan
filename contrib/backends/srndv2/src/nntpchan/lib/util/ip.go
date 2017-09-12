@@ -3,9 +3,9 @@ package util
 import (
 	"encoding/base64"
 	"fmt"
-	"nntpchan/lib/crypto/nacl"
 	"log"
 	"net"
+	"nntpchan/lib/crypto/nacl"
 )
 
 // given an address

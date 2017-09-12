@@ -4,10 +4,10 @@ package main
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"net"
 	"nntpchan/lib/config"
 	"nntpchan/lib/nntp"
 	"nntpchan/lib/store"
-	"net"
 )
 
 func main() {

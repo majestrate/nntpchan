@@ -2,9 +2,9 @@ package database
 
 import (
 	"errors"
+	"net"
 	"nntpchan/lib/config"
 	"nntpchan/lib/model"
-	"net"
 	"strings"
 )
 
