@@ -1,15 +1,19 @@
+GO ?= $(GOROOT)/bin/go
 REPO=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+VERSION=$(shell $(GO) version | cut -d' ' -f3)
 
-all: srndv2
+all: build
 
-srndv2:
-	GOPATH=$(REPO) go build -v
+build: srndv2
+
+assert-go:
+	test $(VERSION) = go1.9
+
+srndv2: assert-go
+	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) build -v
 
 clean:
-	GOPATH=$(REPO) go clean -v
+	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) clean -v
 
 test:
-	GOPATH=$(REPO) go test -v -tags libsodium srnd
-
-test-pure:
-	GOPATH=$(REPO) go test -v srnd
+	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) test -v srnd

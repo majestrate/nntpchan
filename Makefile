@@ -7,6 +7,8 @@ LOCAL_JS=$(REPO)/contrib/js/nntpchan
 VENDOR_JS=$(REPO)/contrib/js/vendor
 SRND_DIR=$(REPO)/contrib/backends/srndv2
 SRND=$(REPO)/srndv2
+GOROOT=$(shell go env GOROOT)
+GO=$(GOROOT)/bin/go
 
 all: clean build
 
@@ -30,12 +32,12 @@ $(JS): js-deps
 
 
 $(SRND):
-	$(MAKE) -C $(SRND_DIR)
+	GOROOT=$(GOROOT) $(MAKE) -C $(SRND_DIR)
 	cp $(SRND_DIR)/srndv2 $(SRND)
 
 clean:
 	rm -f $(SRND) $(JS)
-	$(MAKE) -C $(SRND_DIR) clean
+	GOROOT=$(GOROOT) $(MAKE) -C $(SRND_DIR) clean
 
 distclean: clean
 	rm -rf $(REPO_GOPATH)
