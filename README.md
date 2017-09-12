@@ -41,6 +41,8 @@ This is a graph of the post flow of the `overchan.test` newsgroup over 4 years, 
 
 ![network topology of 4 years](topology.png "changolia")
 
+[source code for map generation](https://github.com/nilesr/nntpchan-mapper)
+
 ## Donations
 
 Like this project? Why not help by funding it? This address pays for the server that runs `2hu-ch.org`
