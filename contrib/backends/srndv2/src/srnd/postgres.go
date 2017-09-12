@@ -146,6 +146,7 @@ const SearchByHash_2 = "SearchByHash_2"
 const GetNNTPPostsInGroup = "GetNNTPPostsInGroup"
 const GetCitesByPostHashLike = "GetCitesByPostHashLike"
 const GetYearlyPostHistory = "GetYearlyPostHistory"
+const GetNewsgroupList = "GetNewsgroupList"
 
 func (self *PostgresDatabase) prepareStatements() {
 	self.stmt = map[string]string{
@@ -191,6 +192,7 @@ func (self *PostgresDatabase) prepareStatements() {
 		GetMessageIDByHash:              "SELECT message_id, message_newsgroup FROM Articles WHERE message_id_hash = $1 LIMIT 1",
 		CheckEncIPBanned:                "SELECT 1 FROM EncIPBans WHERE encaddr = $1",
 		GetFirstAndLastForGroup:         "WITH x(min_no, max_no) AS ( SELECT MIN(message_no) AS min_no, MAX(message_no) AS max_no FROM ArticleNumbers WHERE newsgroup = $1) SELECT CASE WHEN min_no IS NULL THEN 0 ELSE min_no END AS min_no FROM x UNION SELECT CASE WHEN max_no IS NULL THEN 1 ELSE max_no END AS max_no FROM x",
+		GetNewsgroupList:                "SELECT newsgroup, min(message_no), max(message_no) FROM ArticlePosts GROUP BY newsgroup",
 		GetMessageIDForNNTPID:           "SELECT message_id FROM ArticleNumbers WHERE newsgroup = $1 AND message_no = $2 LIMIT 1",
 		GetNNTPIDForMessageID:           "SELECT message_no FROM ArticleNumbers WHERE newsgroup = $1 AND message_id = $2 LIMIT 1",
 		IsExpired:                       "WITH x(msgid) AS ( SELECT message_id FROM Articles WHERE message_id = $1 INTERSECT ( SELECT message_id FROM ArticlePosts WHERE message_id = $1 ) ) SELECT COUNT(*) FROM x",
@@ -1891,5 +1893,21 @@ func (self *PostgresDatabase) SearchByHash(prefix, group, text string, chnl chan
 		}
 	}
 	close(chnl)
+	return
+}
+
+func (self *PostgresDatabase) GetNewsgroupList() (list NewsgroupList, err error) {
+	var rows *sql.Rows
+	rows, err = self.conn.Query(self.stmt[GetNewsgroupList])
+	if err == nil {
+		for rows.Next() {
+			var l NewsgroupListEntry
+			var lo, hi int64
+			rows.Scan(&l[0], &lo, &hi)
+			l[1] = fmt.Sprintf("%d", lo)
+			l[2] = fmt.Sprintf("%d", hi)
+		}
+		rows.Close()
+	}
 	return
 }

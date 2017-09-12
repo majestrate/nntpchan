@@ -65,6 +65,11 @@ type PostingStats struct {
 	History []PostingStatsEntry
 }
 
+// newsgroup, first, last
+type NewsgroupListEntry [3]string
+
+type NewsgroupList []NewsgroupListEntry
+
 type Database interface {
 	Close()
 	CreateTables()
@@ -322,6 +327,9 @@ type Database interface {
 
 	// get post message-id where hash is similar to string
 	GetCitesByPostHashLike(like string) ([]MessageIDTuple, error)
+
+	// get newsgroup list with watermarks
+	GetNewsgroupList() (NewsgroupList, error)
 }
 
 func NewDatabase(db_type, schema, host, port, user, password string) Database {

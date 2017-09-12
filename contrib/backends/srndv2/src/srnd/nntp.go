@@ -1030,19 +1030,18 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					conn.PrintfLine("411 No Such Newsgroup")
 				}
 			} else if cmd == "LIST" && parts[1] == "NEWSGROUPS" {
-				conn.PrintfLine("215 list of newsgroups follows")
 				// handle list command
-				groups := daemon.database.GetAllNewsgroups()
-				dw := conn.DotWriter()
-				for _, group := range groups {
-					last, first, err := daemon.database.GetLastAndFirstForGroup(group)
-					if err == nil {
-						io.WriteString(dw, fmt.Sprintf("%s %d %d y\r\n", group, first, last))
-					} else {
-						log.Println("cannot get last/first ids for group", group, err)
+				list, err := daemon.database.GetNewsgroupList()
+				if err == nil {
+					conn.PrintfLine("215 list of newsgroups follows")
+					dw := conn.DotWriter()
+					for _, entry := range list {
+						io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[1], entry[2]))
 					}
+					dw.Close()
+				} else {
+					conn.PrintfLine("500 failed to get list: %s", err.Error())
 				}
-				dw.Close()
 			} else if cmd == "STAT" {
 				if len(self.group) == 0 {
 					if len(parts) == 2 {
@@ -1135,19 +1134,17 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 			}
 		} else {
 			if line == "LIST" {
-				conn.PrintfLine("215 list of newsgroups follows")
-				// handle list command
-				groups := daemon.database.GetAllNewsgroups()
-				dw := conn.DotWriter()
-				for _, group := range groups {
-					last, first, err := daemon.database.GetLastAndFirstForGroup(group)
-					if err == nil {
-						io.WriteString(dw, fmt.Sprintf("%s %d %d y\r\n", group, first, last))
-					} else {
-						log.Println("cannot get last/first ids for group", group, err)
+				list, err := daemon.database.GetNewsgroupList()
+				if err == nil {
+					conn.PrintfLine("215 list of newsgroups follows")
+					dw := conn.DotWriter()
+					for _, entry := range list {
+						io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[1], entry[2]))
 					}
+					dw.Close()
+				} else {
+					conn.PrintfLine("500 failed to get list: %s", err.Error())
 				}
-				dw.Close()
 			} else if line == "POST" {
 				if !self.authenticated {
 					// needs tls to work if not logged in
