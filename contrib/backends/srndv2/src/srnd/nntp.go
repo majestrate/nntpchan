@@ -370,9 +370,8 @@ func (self *nntpConnection) handleStreaming(daemon *NNTPDaemon, conn *textproto.
 					}
 				}
 				self.pending_access.Unlock()
-			} else {
-				time.Sleep(time.Second)
 			}
+			time.Sleep(time.Millisecond * 100)
 		}
 	}
 	return
