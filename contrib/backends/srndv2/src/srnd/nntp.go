@@ -68,7 +68,7 @@ type nntpConnection struct {
 	// ARTICLE <message-id>
 	article chan string
 	// map of message-id -> stream state
-	pending map[string]syncEvent
+	pending map[string]*syncEvent
 	// lock for accessing self.pending map
 	pending_access sync.Mutex
 
@@ -122,7 +122,7 @@ func createNNTPConnection(addr string) *nntpConnection {
 	return &nntpConnection{
 		hostname: host,
 		article:  make(chan string, 1024),
-		pending:  make(map[string]syncEvent),
+		pending:  make(map[string]*syncEvent),
 	}
 }
 
@@ -297,6 +297,7 @@ func (self *nntpConnection) handleStreamEvent(ev nntpStreamEvent, daemon *NNTPDa
 			}
 		} else if cmd == "CHECK" {
 			conn.PrintfLine("%s", ev)
+			self.pending[msgid].state = "pending"
 		} else {
 			log.Println("invalid stream command", ev)
 		}
@@ -330,7 +331,7 @@ func (self *nntpConnection) messageSetPendingState(msgid, state string, sz int64
 		s.state = state
 		self.pending[msgid] = s
 	} else {
-		self.pending[msgid] = syncEvent{msgid: msgid, sz: sz, state: state}
+		self.pending[msgid] = &syncEvent{msgid: msgid, sz: sz, state: state}
 	}
 	self.pending_access.Unlock()
 }
