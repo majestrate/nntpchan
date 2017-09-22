@@ -156,7 +156,7 @@ textarea, select {
         width: 95%;
     }
     .livechan_chat_input_submit {
-        min-width: 100px;
+        min-width: 50px;
     }
 }
 
