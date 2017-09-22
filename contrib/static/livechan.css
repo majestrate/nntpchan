@@ -152,6 +152,9 @@ textarea, select {
     .livechan_convobar_root {
         width: 40%;
     }
+    .livechan_chat_output {
+        width: 50%;
+    }
 }
 
 .livechan_convobar_item {
