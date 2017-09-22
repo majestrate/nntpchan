@@ -1,3 +1,4 @@
+GOROOT ?= $(shell go env GOROOT)
 GO ?= $(GOROOT)/bin/go
 REPO=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 VERSION=$(shell $(GO) version | cut -d' ' -f3)
