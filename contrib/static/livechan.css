@@ -148,6 +148,12 @@ textarea, select {
     width: 10%;
 }
 
+@media only screen and (max-device-width: 480px) {
+    .livechan_convobar_root {
+        width: 40%;
+    }
+}
+
 .livechan_convobar_item {
     padding: 5px;
     margin: 5px;
@@ -261,6 +267,7 @@ textarea, select {
     float: left;
     clear: both;
 }
+
 .livechan_chat_output_chat:last-child{
     margin-bottom:2em;
 }
