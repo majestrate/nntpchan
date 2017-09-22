@@ -150,10 +150,10 @@ textarea, select {
 
 @media only screen and (max-device-width: 480px) {
     .livechan_convobar_root {
-        width: 40%;
+        width: 0%;
     }
     .livechan_chat_output {
-        width: 50%;
+        width: 95%;
     }
 }
 
