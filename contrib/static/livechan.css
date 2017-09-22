@@ -155,6 +155,9 @@ textarea, select {
     .livechan_chat_output {
         width: 95%;
     }
+    .livechan_chat_input_submit {
+        min-width: 100px;
+    }
 }
 
 .livechan_convobar_item {
