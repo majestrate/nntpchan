@@ -1921,7 +1921,7 @@ func (self *PostgresDatabase) GetNewsgroupList() (list NewsgroupList, err error)
 func (self *PostgresDatabase) FindCitesInText(text string) (msgids []string, err error) {
 	hashes := findBacklinks(text)
 	if len(hashes) > 0 {
-		q := "SELECT message_id FROM ArticlePosts WHERE message_id_hash IN ( "
+		q := "SELECT message_id FROM Articles WHERE message_id_hash IN ( "
 		var params []string
 		var qparams []interface{}
 		for idx := range hashes {
