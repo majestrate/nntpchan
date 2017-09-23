@@ -560,6 +560,17 @@ func (self *nntpConnection) storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEH
 		_, err = io.Copy(Discard, body)
 		return
 	}
+
+	// ask for replies
+	replyTos := strings.Split(hdr.Get("In-Reply-To"), " ")
+	for _, reply := range replyTos {
+		if ValidMessageID(reply) {
+			if !daemon.store.HasArticle(reply) {
+				go daemon.askForArticle(reply)
+			}
+		}
+	}
+
 	path := hdr.Get("Path")
 	hdr.Set("Path", daemon.instance_name+"!"+path)
 	// now store attachments and article
@@ -741,7 +752,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 						newsgroup := hdr.Get("Newsgroups")
 						if reference != "" && ValidMessageID(reference) && !daemon.store.HasArticle(reference) && !daemon.database.IsExpired(reference) {
 							log.Println(self.name, "got reply to", reference, "but we don't have it")
-							go daemon.askForArticle(ArticleEntry{reference, newsgroup})
+							go daemon.askForArticle(reference)
 						}
 						// store message
 						r := &io.LimitedReader{
@@ -832,7 +843,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 								newsgroup := hdr.Get("Newsgroups")
 								if reference != "" && ValidMessageID(reference) && !daemon.store.HasArticle(reference) && !daemon.database.IsExpired(reference) {
 									log.Println(self.name, "got reply to", reference, "but we don't have it")
-									go daemon.askForArticle(ArticleEntry{reference, newsgroup})
+									go daemon.askForArticle(reference)
 								}
 								body := &io.LimitedReader{
 									R: r,
@@ -1179,7 +1190,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 								if reference != "" && ValidMessageID(reference) {
 									if !daemon.store.HasArticle(reference) && !daemon.database.IsExpired(reference) {
 										log.Println(self.name, "got reply to", reference, "but we don't have it")
-										go daemon.askForArticle(ArticleEntry{reference, newsgroup})
+										go daemon.askForArticle(reference)
 									} else {
 										h := daemon.store.GetMIMEHeader(reference)
 										if strings.Trim(h.Get("References"), " ") == "" {

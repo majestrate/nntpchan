@@ -330,6 +330,9 @@ type Database interface {
 
 	// get newsgroup list with watermarks
 	GetNewsgroupList() (NewsgroupList, error)
+
+	// find cites in text
+	FindCitesInText(msg string) ([]string, error)
 }
 
 func NewDatabase(db_type, schema, host, port, user, password string) Database {

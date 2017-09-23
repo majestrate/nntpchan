@@ -865,6 +865,17 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 
 	// set message
 	nntp.message = nntpSanitize(pr.Message)
+
+	cites, err := self.daemon.database.FindCitesInText(nntp.message)
+	if err != nil {
+		e(err)
+		return
+	}
+
+	if len(cites) > 0 {
+		nntp.headers.Set("In-Reply-To", strings.Join(cites, " "))
+	}
+
 	// set date
 	nntp.headers.Set("Date", timeNowStr())
 	// append path from frontend

@@ -114,7 +114,7 @@ type NNTPDaemon struct {
 	// channel for broadcasting a message to all feeds given their newsgroup, message_id
 	send_all_feeds chan ArticleEntry
 	// channel for broadcasting an ARTICLE command to all feeds in reader mode
-	ask_for_article chan ArticleEntry
+	ask_for_article chan string
 	// operation of daemon done after sending bool down this channel
 	done chan bool
 
@@ -123,7 +123,7 @@ type NNTPDaemon struct {
 	send_articles_mtx sync.RWMutex
 	send_articles     []ArticleEntry
 	ask_articles_mtx  sync.RWMutex
-	ask_articles      []ArticleEntry
+	ask_articles      []string
 
 	pump_ticker       *time.Ticker
 	expiration_ticker *time.Ticker
@@ -535,7 +535,7 @@ func (self *NNTPDaemon) Run() {
 	self.get_feeds = make(chan chan []*feedStatus)
 	self.get_feed = make(chan *feedStatusQuery)
 	self.modify_feed_policy = make(chan *modifyFeedPolicyEvent)
-	self.ask_for_article = make(chan ArticleEntry)
+	self.ask_for_article = make(chan string)
 
 	self.pump_ticker = time.NewTicker(time.Millisecond * 100)
 	if self.conf.daemon["archive"] == "1" {
@@ -823,10 +823,10 @@ func (self *NNTPDaemon) pump_article_requests() {
 	}
 	articles = nil
 	self.ask_articles_mtx.Lock()
-	articles = append(articles, self.ask_articles...)
+	msgids := self.ask_articles
 	self.ask_articles = nil
 	self.ask_articles_mtx.Unlock()
-	for _, entry := range articles {
+	for _, entry := range msgids {
 		self.ask_for_article <- entry
 	}
 	articles = nil
@@ -898,15 +898,13 @@ func (self *NNTPDaemon) poll(worker int) {
 				for _, f := range feeds {
 					var send []*nntpConnection
 					for _, feed := range f.Conns {
-						if feed.policy.AllowsNewsgroup(nntp.Newsgroup()) {
-							if strings.HasSuffix(feed.name, "-reader") {
-								send = append(send, feed)
-							}
+						if strings.HasSuffix(feed.name, "-reader") {
+							send = append(send, feed)
 						}
 					}
 					minconn := lowestBacklogConnection(send)
 					if minconn != nil {
-						minconn.askForArticle(nntp.MessageID())
+						go minconn.askForArticle(nntp)
 					}
 				}
 			}
@@ -928,9 +926,9 @@ func lowestBacklogConnection(conns []*nntpConnection) (minconn *nntpConnection) 
 	return
 }
 
-func (self *NNTPDaemon) askForArticle(e ArticleEntry) {
+func (self *NNTPDaemon) askForArticle(msgid string) {
 	self.ask_articles_mtx.Lock()
-	self.ask_articles = append(self.ask_articles, e)
+	self.ask_articles = append(self.ask_articles, msgid)
 	self.ask_articles_mtx.Unlock()
 }
 
