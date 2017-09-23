@@ -1921,15 +1921,14 @@ func (self *PostgresDatabase) GetNewsgroupList() (list NewsgroupList, err error)
 func (self *PostgresDatabase) FindCitesInText(text string) (msgids []string, err error) {
 	hashes := findBacklinks(text)
 	if len(hashes) > 0 {
-		q := "SELECT message_id FROM Articles WHERE message_id_hash IN ( "
+		q := "SELECT message_id FROM Articles WHERE "
 		var params []string
 		var qparams []interface{}
 		for idx := range hashes {
-			params = append(params, fmt.Sprintf("$%d", idx+1))
-			qparams = append(qparams, hashes[idx])
+			params = append(params, fmt.Sprintf(" message_id_hash ILIKE $%d", idx+1))
+			qparams = append(qparams, strings.Trim(hashes[idx][2:], " ")+"%")
 		}
-		q += strings.Join(params, ", ")
-		q += " )"
+		q += strings.Join(params, " OR ")
 		var rows *sql.Rows
 		rows, err = self.conn.Query(q, qparams...)
 		if err == sql.ErrNoRows {
