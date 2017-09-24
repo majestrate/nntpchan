@@ -1362,7 +1362,7 @@ func (self *nntpConnection) scrapeServer(daemon *NNTPDaemon, conn *textproto.Con
 	success := true
 	if success {
 		// send newsgroups command
-		err = conn.PrintfLine("NEWSGROUPS %d 000000 GMT", timeNow())
+		err = conn.PrintfLine("LIST NEWSGROUPS")
 		if err == nil {
 			// read response line
 			code, _, err := conn.ReadCodeLine(231)
