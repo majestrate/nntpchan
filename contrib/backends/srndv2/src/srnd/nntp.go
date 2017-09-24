@@ -1365,8 +1365,8 @@ func (self *nntpConnection) scrapeServer(daemon *NNTPDaemon, conn *textproto.Con
 		err = conn.PrintfLine("LIST NEWSGROUPS")
 		if err == nil {
 			// read response line
-			code, _, err := conn.ReadCodeLine(231)
-			if code == 231 {
+			code, _, err := conn.ReadCodeLine(0)
+			if code == 231 || code == 215 {
 				var groups []string
 				// valid response, we expect a multiline
 				dr := conn.DotReader()
