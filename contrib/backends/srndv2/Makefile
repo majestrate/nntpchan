@@ -11,7 +11,7 @@ assert-go:
 	test $(VERSION) = go1.9
 
 srndv2: assert-go
-	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) build -v
+	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) build -ldflags "-X srnd.GitVersion=-$(shell git rev-parse --short HEAD)" -v
 
 clean:
 	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) clean -v

@@ -140,10 +140,12 @@ func main() {
 			} else {
 				fmt.Fprintf(os.Stdout, "Usage: %s tool [rethumb|keygen|nntp|mod|expire]\n", os.Args[0])
 			}
+		} else if action == "version" {
+			fmt.Println(srnd.Version())
 		} else {
 			log.Println("Invalid action:", action)
 		}
 	} else {
-		fmt.Fprintf(os.Stdout, "Usage: %s [setup|run|tool]\n", os.Args[0])
+		fmt.Fprintf(os.Stdout, "Usage: %s [setup|run|tool|version]\n", os.Args[0])
 	}
 }
