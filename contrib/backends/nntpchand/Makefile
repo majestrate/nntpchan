@@ -5,7 +5,10 @@ all: clean build
 build: nntpchand
 
 nntpchand:
-	GOPATH=$(REPO) go build -v
+	GOROOT=$(GOROOT) GOPATH=$(REPO) go build -v
+
+test:
+	GOROOT=$(GOROOT) GOPATH=$(REPO) go test ./...
 
 clean:
 	GOPATH=$(REPO) go clean -v

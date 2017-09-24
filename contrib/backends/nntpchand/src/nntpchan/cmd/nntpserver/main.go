@@ -4,10 +4,10 @@ package main
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"github.com/majestrate/srndv2/lib/config"
-	"github.com/majestrate/srndv2/lib/nntp"
-	"github.com/majestrate/srndv2/lib/store"
 	"net"
+	"nntpchan/lib/config"
+	"nntpchan/lib/nntp"
+	"nntpchan/lib/store"
 )
 
 func main() {

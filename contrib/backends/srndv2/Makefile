@@ -17,4 +17,4 @@ clean:
 	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) clean -v
 
 test:
-	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) test -v srnd
+	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) test srnd

@@ -42,10 +42,10 @@ $(TOOLS): $(TOOL_SRC)
 	$(CXX)  $(CXXFLAGS) $< $(LIB) $(LD_FLAGS) -o $@
 
 build-test: $(LIB)
-	$(CXX) -o test $(CXXFLAGS) test.cpp $(LIB) $(LD_FLAGS)
+	$(CXX) -o $(REPO)/test $(CXXFLAGS) test.cpp $(LIB) $(LD_FLAGS)
 
 test: build-test
-	./test
+	$(REPO)/test
 
 %.o: src/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@

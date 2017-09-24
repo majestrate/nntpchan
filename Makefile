@@ -6,6 +6,8 @@ CONTRIB_JS=$(REPO)/contrib/js/contrib
 LOCAL_JS=$(REPO)/contrib/js/nntpchan
 VENDOR_JS=$(REPO)/contrib/js/vendor
 SRND_DIR=$(REPO)/contrib/backends/srndv2
+NNTPCHAND_DIR=$(REPO)/contrib/backends/nntpchand
+NNTPCHAN_DAEMON_DIR=$(REPO)/contrib/backends/nntpchan-daemon
 SRND=$(REPO)/srndv2
 GOROOT=$(shell go env GOROOT)
 GO=$(GOROOT)/bin/go
@@ -34,6 +36,15 @@ $(JS): js-deps
 $(SRND):
 	GOROOT=$(GOROOT) $(MAKE) -C $(SRND_DIR)
 	cp $(SRND_DIR)/srndv2 $(SRND)
+
+test: test-go test-native
+
+test-go:
+	GOROOT=$(GOROOT) $(MAKE) -C $(SRND_DIR) test
+	GOROOT=$(GOROOT) $(MAKE) -C $(NNTPCHAND_DIR) test
+
+test-native:
+	GOROOT=$(GOROOT) $(MAKE) -C $(NNTPCHAN_DAEMON_DIR) test
 
 clean:
 	rm -f $(SRND) $(JS)
