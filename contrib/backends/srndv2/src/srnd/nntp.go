@@ -1365,7 +1365,7 @@ func (self *nntpConnection) scrapeServer(daemon *NNTPDaemon, conn *textproto.Con
 		err = conn.PrintfLine("LIST NEWSGROUPS")
 		if err == nil {
 			// read response line
-			code, _, err := conn.ReadCodeLine(0)
+			code, line, err := conn.ReadCodeLine(0)
 			if code == 231 || code == 215 {
 				var groups []string
 				// valid response, we expect a multiline
@@ -1413,7 +1413,7 @@ func (self *nntpConnection) scrapeServer(daemon *NNTPDaemon, conn *textproto.Con
 				}
 			} else if err == nil {
 				// invalid response no error
-				log.Println(self.name, "gave us invalid response to newsgroups command", code)
+				log.Println(self.name, "gave us invalid response to newsgroups command", line)
 			} else {
 				// invalid response with error
 				log.Println(self.name, "error while reading response from newsgroups command", err)
