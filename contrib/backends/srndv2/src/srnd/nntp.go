@@ -1393,11 +1393,13 @@ func (self *nntpConnection) scrapeServer(daemon *NNTPDaemon, conn *textproto.Con
 						if banned {
 							// we don't want it
 						} else if err == nil {
-							// scrape the group
-							err = self.scrapeGroup(daemon, conn, group)
-							if err != nil {
-								log.Println(self.name, "did not scrape", group, err)
-								break
+							if daemon.AllowsNewsgroup(group) {
+								// scrape the group
+								err = self.scrapeGroup(daemon, conn, group)
+								if err != nil {
+									log.Println(self.name, "did not scrape", group, err)
+									break
+								}
 							}
 						} else {
 							// error while checking for ban

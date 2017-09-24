@@ -808,6 +808,9 @@ func (self *PostgresDatabase) AddModPubkey(pubkey string) error {
 
 func (self *PostgresDatabase) GetGroupForMessage(message_id string) (group string, err error) {
 	err = self.conn.QueryRow("SELECT newsgroup FROM ArticlePosts WHERE message_id = $1", message_id).Scan(&group)
+	if err == sql.ErrNoRows {
+		err = nil
+	}
 	return
 }
 
@@ -830,6 +833,8 @@ func (self *PostgresDatabase) GetInfoForMessage(msgid string) (root string, news
 		perpage, _ := self.GetPagesPerBoard(newsgroup)
 		err = self.conn.QueryRow("WITH thread(bump) AS (SELECT last_bump FROM ArticleThreads WHERE root_message_id = $1 ) SELECT COUNT(*) FROM ( SELECT last_bump FROM ArticleThreads INNER JOIN thread ON (thread.bump <= ArticleThreads.last_bump AND newsgroup = $2 ) ) AS amount", root, newsgroup).Scan(&page)
 		page = page / int64(perpage)
+	} else if err == sql.ErrNoRows {
+		err = nil
 	}
 	return
 }
@@ -956,6 +961,9 @@ func (self *PostgresDatabase) UnmarkPubkeyAdmin(pubkey string) (err error) {
 func (self *PostgresDatabase) CheckAdminPubkey(pubkey string) (admin bool, err error) {
 	var count int64
 	err = self.conn.QueryRow("SELECT COUNT(pubkey) FROM ModPrivs WHERE pubkey = $1 AND permission = $2", pubkey, "admin").Scan(&count)
+	if err == sql.ErrNoRows {
+		err = nil
+	}
 	if err == nil {
 		admin = count > 0
 	}
@@ -1106,10 +1114,11 @@ func (self *PostgresDatabase) GetPostModel(prefix, messageID string) PostModel {
 		// quiet fail
 		self.conn.QueryRow(self.stmt[GetArticlePubkey], messageID).Scan(&model.Key)
 		return model
-	} else {
+	} else if err != sql.ErrNoRows {
 		log.Println("failed to prepare query for geting post model for", messageID, err)
 		return nil
 	}
+	return nil
 }
 
 func (self *PostgresDatabase) GetCitesByPostHashLike(like string) (cites []MessageIDTuple, err error) {

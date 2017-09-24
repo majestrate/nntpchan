@@ -9,6 +9,12 @@
 
 [This](doc) is a step-by-step guide for getting up-and-running with NNTPChan as well as documentation for developers who want to either work on NNTPChan directly or use NNTPChan in their aplications with the API.
 
+TL;DR edition (after installing [dependancies](doc/):
+
+    $ git clone https://github.com/majestrate/nntpchan
+    $ make
+    $ ./srndv2 setup 
+
 ## Bugs and issues
 
 *PLEASE* report any bugs you find while building, setting-up or using NNTPChan on the [GitHub issue tracker](https://github.com/majestrate/nntpchan/issues), the [issue tracker on tor](http://git.psii2pdloxelodts.onion/psi/nntpchan/), the [issue tracker on i2p](http://git.psi.i2p/psi/nntpchan/) or on the [GitGud issue tracker](https://gitgud.io/jeff/nntpchan/issues) so that the probelms can be resolved or discussed.

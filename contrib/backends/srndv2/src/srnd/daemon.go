@@ -304,6 +304,10 @@ func (self *NNTPDaemon) storeFeedsConfig() (err error) {
 	return
 }
 
+func (self *NNTPDaemon) AllowsNewsgroup(group string) bool {
+	return self.conf.inboundPolicy == nil || self.conf.inboundPolicy.AllowsNewsgroup(group)
+}
+
 // change a feed's policy given the feed's name
 // return error if one occurs while modifying feed's policy
 func (self *NNTPDaemon) modifyFeedPolicy(feedname string, policy FeedPolicy) (err error) {
@@ -373,6 +377,10 @@ func (self *NNTPDaemon) messageSizeLimitFor(newsgroup string) int64 {
 }
 
 func (self *NNTPDaemon) persistFeed(conf *FeedConfig, mode string, n int) {
+	if conf.disable {
+		log.Println(conf.Name, "is disabled not persisting")
+		return
+	}
 	log.Println(conf.Name, "persisting in", mode, "mode")
 	backoff := time.Second
 	for {

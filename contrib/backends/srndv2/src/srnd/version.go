@@ -7,7 +7,7 @@ package srnd
 import "fmt"
 
 const major_version = 5
-const minor_version = 0
+const minor_version = 1
 const program_name = "srnd"
 
 var GitVersion string

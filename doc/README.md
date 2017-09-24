@@ -17,3 +17,4 @@ Hey, welcome to the documentation. This will help you use and develop with NNTPC
 
 1. [Protocol](developer/protocol.md) - NNTPChan's protocol specification
 2. [JSON-RPC API](developer/api.md) - NNTPChan's JSON-RPC API
+3. [In Progress Sub Projects](developer/subprojects.md) - Ongoing subprojects that are not deployed on the mainline network yet

@@ -57,6 +57,7 @@ type FeedConfig struct {
 	Name             string
 	sync_interval    time.Duration
 	connections      int
+	disable          bool
 }
 
 type APIConfig struct {
@@ -107,16 +108,16 @@ func CheckConfig() {
 		if !CheckFile(os.Getenv("SRND_INI_PATH")) {
 			log.Printf("No config file found at %s...", os.Getenv("SRND_INI_PATH"))
 			var conf *configparser.Configuration
-			if !InstallerEnabled() {
-				log.Println("Creating srnd.ini in working directory...")
-				conf = GenSRNdConfig()
-			} else {
+			if InstallerEnabled() {
 				res := make(chan *configparser.Configuration)
 				installer := NewInstaller(res)
 				go installer.Start()
 				conf = <-res
 				installer.Stop()
 				close(res)
+			} else {
+				log.Println("Creating srnd.ini in working directory...")
+				conf = GenSRNdConfig()
 			}
 			err := configparser.Save(conf, "srnd.ini")
 			if err != nil {
@@ -138,18 +139,26 @@ func CheckConfig() {
 // generate default feeds.ini
 func GenFeedsConfig() error {
 	conf := configparser.NewConfiguration()
-	sect := conf.NewSection("feed-dummy")
-	sect.Add("proxy-type", "socks4a")
+
+	sect := conf.NewSection("global")
+	sect.Add("overchan.overchan", "1")
+	sect.Add("ctl", "1")
+	sect.Add("*", "0")
+
+	sect = conf.NewSection("feed-2hu")
+	sect.Add("proxy-type", "None")
 	sect.Add("proxy-host", "127.0.0.1")
 	sect.Add("proxy-port", "9050")
-	sect.Add("host", "dummy")
+	sect.Add("host", "2hu-ch.org")
 	sect.Add("port", "119")
-	sect.Add("connections", "1")
+	sect.Add("connections", "0")
+	sect.Add("sync", "1")
+	sect.Add("disable", "1")
 
-	sect = conf.NewSection("dummy")
-	sect.Add("overchan.*", "1")
-	sect.Add("ano.paste", "0")
+	sect = conf.NewSection("2hu")
+	sect.Add("overchan.overchan", "1")
 	sect.Add("ctl", "1")
+	sect.Add("*", "0")
 
 	return configparser.Save(conf, "feeds.ini")
 }
@@ -171,6 +180,7 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect.Add("feeds", filepath.Join(".", "feeds.d"))
 	sect.Add("archive", "0")
 	sect.Add("article_lifetime", "0")
+	sect.Add("filters_file", "filters.txt")
 
 	// profiling settings
 	sect = conf.NewSection("pprof")
@@ -182,10 +192,15 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect.Add("enable", "0")
 	sect.Add("exec", "/bin/true")
 
+	hostname, _ := os.Hostname()
+	if hostname == "" {
+		hostname = "!!please-manually-set-this"
+	}
+
 	// crypto related section
 	sect = conf.NewSection("crypto")
 	sect.Add("tls-keyname", "overchan")
-	sect.Add("tls-hostname", "!!put-hostname-or-ip-of-server-here")
+	sect.Add("tls-hostname", hostname)
 	sect.Add("tls-trust-dir", "certs")
 
 	// article store section
@@ -242,7 +257,7 @@ func GenSRNdConfig() *configparser.Configuration {
 	secret_bytes := randbytes(8)
 	secret := base32.StdEncoding.EncodeToString(secret_bytes)
 	sect.Add("api-secret", secret)
-
+	sect.Add("rapeme", "no")
 	return conf
 }
 
@@ -309,7 +324,7 @@ func ReadConfig() *SRNdConfig {
 		log.Fatal("cannot read config file ", fname)
 		return nil
 	}
-	var sconf SRNdConfig
+	sconf := new(SRNdConfig)
 
 	s, err = conf.Section("pprof")
 	if err == nil {
@@ -356,6 +371,12 @@ func ReadConfig() *SRNdConfig {
 	}
 
 	sconf.daemon = s.Options()
+
+	filtersFile := s.ValueOf("filters_file")
+
+	if filtersFile == "" {
+		filtersFile = "filters.txt"
+	}
 
 	s, err = conf.Section("database")
 	if err != nil {
@@ -420,7 +441,7 @@ func ReadConfig() *SRNdConfig {
 	var confs []FeedConfig
 	confs, sconf.inboundPolicy, err = feedParse(fname)
 	if err != nil {
-		log.Fatal("failed to parse", fname, err)
+		log.Fatal("failed to load feeds: ", err)
 	}
 
 	sconf.feeds = append(sconf.feeds, confs...)
@@ -437,23 +458,22 @@ func ReadConfig() *SRNdConfig {
 				log.Println("load feed", f)
 				confs, _, err := feedParse(f)
 				if err != nil {
-					log.Fatal("failed to parse feed", f, err)
+					log.Fatal("failed to parse feed ", f, ": ", err)
 				}
 				sconf.feeds = append(sconf.feeds, confs...)
 			}
 		}
 	}
 
-	filterFile := "filters.txt"
-
-	if CheckFile(filterFile) {
-		err = sconf.filter.LoadFile(filterFile)
+	if CheckFile(filtersFile) {
+		log.Println("loading content filter file", filtersFile)
+		err = sconf.filter.LoadFile(filtersFile)
 		if err != nil {
-			log.Fatalf("failed to load %s: %s", filterFile, err)
+			log.Fatalf("failed to load %s: %s", filtersFile, err)
 		}
 		log.Printf("loaded %d filters", len(sconf.filter.globalFilters))
 	}
-	return &sconf
+	return sconf
 }
 
 func feedParse(fname string) (confs []FeedConfig, inboundPolicy *FeedPolicy, err error) {
@@ -464,7 +484,7 @@ func feedParse(fname string) (confs []FeedConfig, inboundPolicy *FeedPolicy, err
 		return
 	}
 
-	default_sect, err := conf.Section("")
+	default_sect, err := conf.Section("global")
 	if err == nil {
 		opts := default_sect.Options()
 		inboundPolicy = &FeedPolicy{
@@ -504,6 +524,9 @@ func feedParse(fname string) (confs []FeedConfig, inboundPolicy *FeedPolicy, err
 				}
 				fconf.sync_interval = time.Second * time.Duration(i)
 			}
+
+			// check for feed disabled
+			fconf.disable = sect.ValueOf("disable") == "1"
 
 			// concurrent connection count
 			fconf.connections = mapGetInt(sect.Options(), "connections", 1)

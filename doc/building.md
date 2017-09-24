@@ -47,3 +47,4 @@ Run `make`:
 
     make
 
+Next [set up the daemon](setting-up.md)

@@ -326,7 +326,7 @@ func (self *Installer) HandleInstallerPost(wr http.ResponseWriter, r *http.Reque
 		next, newErr := self.currentNode.post(self.currentNode, r.PostForm, self.config)
 		if next == nil {
 			self.result <- self.config
-			//defer self.srv.Stop(10 * time.Second)
+			go self.srv.Stop(5 * time.Second)
 		}
 		self.currentNode = next
 		self.currentErr = newErr
@@ -490,7 +490,7 @@ func checkHost(host string) error {
 
 func (self *Installer) Start() {
 	log.Println("starting installer on", self.srv.Server.Addr)
-	log.Println("open up http://127.0.0.1:18000 to do initial configuration")
+	log.Println(fmt.Sprintf("open up http://youserver%s/ to do initial configuration", self.srv.Server.Addr))
 	self.srv.ListenAndServe()
 }
 
@@ -499,5 +499,5 @@ func (self *Installer) Stop() {
 }
 
 func InstallerEnabled() bool {
-	return os.Getenv("SRND_NO_INSTALLER") != "1"
+	return os.Getenv("SRND_INSTALLER") != "0"
 }
