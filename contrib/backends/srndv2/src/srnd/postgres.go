@@ -1921,6 +1921,7 @@ func (self *PostgresDatabase) GetNewsgroupList() (list NewsgroupList, err error)
 			rows.Scan(&l[0], &lo, &hi)
 			l[1] = fmt.Sprintf("%d", lo)
 			l[2] = fmt.Sprintf("%d", hi)
+			list = append(list, l)
 		}
 		rows.Close()
 	}
