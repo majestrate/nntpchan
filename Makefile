@@ -70,7 +70,9 @@ test-native:
 	GOROOT=$(GOROOT) $(MAKE) -C $(NNTPCHAN_DAEMON_DIR) test
 
 
-clean: clean-js clean-srnd clean-beta clean-native
+clean: clean-js clean-srnd
+
+clean-full: clean clean-beta clean-native
 
 clean-srnd:
 	rm -f $(SRND)
