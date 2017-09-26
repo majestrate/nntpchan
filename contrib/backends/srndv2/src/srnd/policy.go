@@ -29,8 +29,11 @@ func (self *FeedPolicy) AllowsNewsgroup(newsgroup string) (result bool) {
 			}
 		}
 	}
-
-	result = allows > 0
+	if len(self.rules) > 0 {
+		result = allows > 0
+	} else {
+		result = true
+	}
 
 	return
 }
