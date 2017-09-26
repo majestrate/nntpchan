@@ -1110,7 +1110,12 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					var hdr string
 					if len(parts) == 2 {
 						// XHDR headername
-
+						hdr = parts[1]
+						if self.selected_article == "" {
+							conn.PrintfLine("420 No Current Article selected")
+							return
+						}
+						msgid = self.selected_article
 					} else if len(parts) == 3 {
 						// message id
 						msgid = parts[2]
