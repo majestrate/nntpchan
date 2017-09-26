@@ -874,7 +874,7 @@ func (self *NNTPDaemon) poll(worker int) {
 				// send to frontend
 				if self.frontend != nil {
 					if self.frontend.AllowNewsgroup(group) {
-						self.frontend.PostsChan() <- frontendPost{msgid, ref, group}
+						self.frontend.HandleNewPost(frontendPost{msgid, ref, group})
 					}
 				}
 			}

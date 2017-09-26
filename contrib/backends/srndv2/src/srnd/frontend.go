@@ -25,8 +25,8 @@ func (p frontendPost) Newsgroup() string {
 // frontend interface for any type of frontend
 type Frontend interface {
 
-	// channel that is for the frontend to pool for new posts from the nntpd
-	PostsChan() chan frontendPost
+	// handle new post from nntpd
+	HandleNewPost(p frontendPost)
 
 	// run mainloop
 	Mainloop()
@@ -36,6 +36,7 @@ type Frontend interface {
 
 	// trigger a manual regen of indexes for a root post
 	Regen(msg ArticleEntry)
+
 	// regenerate on mod event
 	RegenOnModEvent(newsgroup, msgid, root string, page int)
 }

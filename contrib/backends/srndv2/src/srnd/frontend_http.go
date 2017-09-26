@@ -171,13 +171,12 @@ func (lc *liveChan) handleMessage(front *httpFrontend, cmd *liveCommand) {
 }
 
 type httpFrontend struct {
-	modui        ModUI
-	httpmux      *mux.Router
-	daemon       *NNTPDaemon
-	cache        CacheInterface
-	recvpostchan chan frontendPost
-	bindaddr     string
-	name         string
+	modui    ModUI
+	httpmux  *mux.Router
+	daemon   *NNTPDaemon
+	cache    CacheInterface
+	bindaddr string
+	name     string
 
 	secret string
 
@@ -220,10 +219,6 @@ type httpFrontend struct {
 // do we allow this newsgroup?
 func (self httpFrontend) AllowNewsgroup(group string) bool {
 	return newsgroupValidFormat(group) || group == "ctl" && !strings.HasSuffix(group, ".")
-}
-
-func (self httpFrontend) PostsChan() chan frontendPost {
-	return self.recvpostchan
 }
 
 func (self *httpFrontend) Regen(msg ArticleEntry) {
@@ -406,31 +401,31 @@ func (self *httpFrontend) poll() {
 			} else {
 				log.Println("failed to register mod message, file was not opened")
 			}
-		case nntp := <-self.recvpostchan:
-			// get root post and tell frontend to regen that thread
-			msgid := nntp.MessageID()
-			group := nntp.Newsgroup()
-			ref := nntp.Reference()
-			self.informLiveUI(msgid, ref, group)
-			if len(ref) > 0 {
-				msgid = ref
-			}
-			entry := ArticleEntry{msgid, group}
-			// regnerate thread
-			self.regenThreadChan <- entry
-			// regen the newsgroup we're in
-			// TODO: regen only what we need to
-			pages := self.daemon.database.GetGroupPageCount(group)
-			// regen all pages
-			var page int64
-			for ; page < pages; page++ {
-				req := groupRegenRequest{
-					group: group,
-					page:  int(page),
-				}
-				self.regenGroupChan <- req
-			}
 		}
+	}
+}
+func (self *httpFrontend) HandleNewPost(nntp frontendPost) {
+	msgid := nntp.MessageID()
+	group := nntp.Newsgroup()
+	ref := nntp.Reference()
+	go self.informLiveUI(msgid, ref, group)
+	if len(ref) > 0 {
+		msgid = ref
+	}
+	entry := ArticleEntry{msgid, group}
+	// regnerate thread
+	self.regenThreadChan <- entry
+	// regen the newsgroup we're in
+	// TODO: regen only what we need to
+	pages := self.daemon.database.GetGroupPageCount(group)
+	// regen all pages
+	var page int64
+	for ; page < pages; page++ {
+		req := groupRegenRequest{
+			group: group,
+			page:  int(page),
+		}
+		self.regenGroupChan <- req
 	}
 }
 
@@ -1569,7 +1564,7 @@ func NewHTTPFrontend(daemon *NNTPDaemon, cache CacheInterface, config map[string
 		Path:   front.prefix,
 		MaxAge: 600,
 	}
-	front.recvpostchan = make(chan frontendPost)
+
 	front.regenThreadChan = front.cache.GetThreadChan()
 	front.regenGroupChan = front.cache.GetGroupChan()
 
