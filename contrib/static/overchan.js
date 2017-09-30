@@ -88,10 +88,10 @@ onready(function() {
       e.innerHTML = "posting ";
       submitPost(document.forms[0], e, function(err) {
         e.innerHTML = err || "posted";
-        setTimeout(1000, function() {
+        setTimeout(function() {
           e.disabled = false;
           e.innerHTML = origText;
-        });
+        }, 1000);
         var img = document.getElementById("captcha_img");
         if (img) {
           reloadImg(img);
