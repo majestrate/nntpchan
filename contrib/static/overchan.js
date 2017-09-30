@@ -72,7 +72,7 @@ onready(function() {
         elem.innerHTML += ".";
       }
     };
-    ajax.open(form.method, form.action+"?t=json");
+    ajax.open(form.method, form.action+"/json");
     ajax.send(new FormData(form));
   };
   var elems = document.getElementsByClassName("postbutton");
