@@ -131,15 +131,15 @@ onready(function() {
         console.log(msg, j.url);
         e.innerHTML = msg;
         if(window.location.pathname === j.url) {
-          var img = document.getElementById("captcha_img");
-          if (img) {
-            reloadImg(img);
-          }
           reloadThreadJSON(j.message_id);
         } else if (j && j.url) {
           // do redirect
           window.location.pathname = j.url;
           return;
+        }
+        var img = document.getElementById("captcha_img");
+        if (img) {
+          reloadImg(img);
         }
         setTimeout(function() {
           e.disabled = false;
