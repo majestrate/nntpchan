@@ -1,16 +1,16 @@
 
 var _onreadyfuncs = [];
 
-function onready(f) {
+var onready = function(f) {
     _onreadyfuncs.push(function() {f();});
-}
+};
 
-function ready() {
+var ready = function() {
     for(var idx = 0; idx < _onreadyfuncs.length; idx++) _onreadyfuncs[idx]();
-}
+};
 
 
-function quickreply(shorthash, longhash, url) {
+var quickreply = function(shorthash, longhash, url) {
     if (!window.location.pathname.startsWith("/t/"))
     {
         window.location.href = url;
@@ -19,9 +19,9 @@ function quickreply(shorthash, longhash, url) {
     var elem = document.getElementById("comment");
     if(!elem) return;
     elem.value += ">>" + shorthash + "\n";
-}
+};
 
-function get_storage() {
+var get_storage = function() {
     var st = null;
     if (window.localStorage) {
         st = window.localStorage;
@@ -29,27 +29,86 @@ function get_storage() {
         st = localStorage;
     }
     return st;
-}
+};
 
-function setSrcQuery(e, q) {
+var setSrcQuery = function(e, q) {
 	var src  = e.src;
 	var p = src.indexOf('?');
 	if (p >= 0) {
 		src = src.substr(0, p);
 	}
 	e.src = src + "?" + q
-}
+};
 
-function reload(el) {
+
+var reloadImg = function(el) {
 	setSrcQuery(el, "reload=" + (new Date()).getTime());
 	return false;
-}
+};
+
+// form resubmit
+onready(function() {
+  var submitPost = function(form, elem, cb) {
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+      if (ajax.readyState == 4) {
+        if(ajax.statusCode == 201) {
+          // success
+          cb(null);
+        } else if (ajax.statusCode == 200) {
+          var err = "unknown error";
+          try {
+            var j = JSON.parse(ajax.responseText);
+            err = j.error || err;
+          } catch (ex) {
+            err = "error parsing reply: "+ ex;
+          }
+          cb(err);
+        } else {
+          cb("http "+ajax.statusCode);
+        }
+      } else {
+        elem.innerHTML += ".";
+      }
+    };
+    ajax.open(form.action+"?t=json", form.method);
+    ajax.send(new FormData(form));
+  };
+  var elems = document.getElementsByClassName("postbutton");
+  if(elems && elems.length > 0 && elems[0]) {
+    var e = elems[0];
+    var parent = e.parentElement;
+    var origText = e.innerHTML;
+    e.remove();
+    e = document.createElement("button");
+    parent.appendChild(e);
+    e.innertHTML = origText;
+    e.onclick = function() {
+      e.disabled = true;
+      e.innerHTML = "posting ";
+      submitPost(document.forms[0], e, function(err) {
+        e.innerHTML = err || "posted";
+        setTimeout(1000, function() {
+          e.disabled = false;
+          e.innerHTML = origText;
+        });
+        var img = document.getElementById("captcha_img");
+        if (img) {
+          reloadImg(img);
+        }
+      });
+    }
+  }
+     
+});
+
 // captcha reload
 onready(function(){
+
   var e = document.getElementById("captcha_img");
   if (e) {
     e.onclick = function() {
-		  reload(e);
+		  reloadImg(e);
 	  };
   }
 });
