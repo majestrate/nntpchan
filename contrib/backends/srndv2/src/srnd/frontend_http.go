@@ -993,19 +993,12 @@ func (self httpFrontend) handle_poster(wr http.ResponseWriter, r *http.Request) 
 func (self *httpFrontend) serve_captcha(wr http.ResponseWriter, r *http.Request) {
 	s, err := self.store.Get(r, self.name)
 	if err == nil {
-		id, ok := s.Values["captcha_id"]
-		if ok {
-			redirect_url := fmt.Sprintf("%scaptcha/%s.png", self.prefix, id)
-			s.Save(r, wr)
-			http.Redirect(wr, r, redirect_url, 302)
-		} else {
-			captcha_id := captcha.New()
-			s.Values["captcha_id"] = captcha_id
-			s.Save(r, wr)
-			redirect_url := fmt.Sprintf("%scaptcha/%s.png", self.prefix, captcha_id)
-			// redirect to the image
-			http.Redirect(wr, r, redirect_url, 302)
-		}
+		captcha_id := captcha.New()
+		s.Values["captcha_id"] = captcha_id
+		s.Save(r, wr)
+		redirect_url := fmt.Sprintf("%scaptcha/%s.png", self.prefix, captcha_id)
+		// redirect to the image
+		http.Redirect(wr, r, redirect_url, 302)
 	} else {
 		// handle session error
 		// TODO: clear cookies?
