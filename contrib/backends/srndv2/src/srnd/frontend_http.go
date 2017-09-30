@@ -414,6 +414,8 @@ func (self *httpFrontend) HandleNewPost(nntp frontendPost) {
 	self.Regen(entry)
 	// regenerate all board pages
 	self.RegenerateBoard(group)
+	// regen front page
+	self.RegenFrontPage()
 }
 
 // create a new captcha, return as json object
