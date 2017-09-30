@@ -54,10 +54,18 @@ var reloadThreadJSON = function() {
       if(ajax.status == 404) {
         console.log("thread gone");
       } else if (ajax.status == 200) {
+        var rootelem = document.getElementById("thread_"+window.location.pathname.split("/")[2]);
         var posts = JSON.parse(ajax.responseText);
         for(var idx = 0; idx < posts.length; idx ++ )
         {
-          
+          var id = posts[idx].HashLong;
+          var e = document.getElementById(id);
+          if(!e) {
+            e = document.createElement("div");
+            e.innerHTML = posts[idx].PostMarkup;
+            rootelem.appendChild(e.childNodes[0]);
+            e.remove();
+          }
         }
       }
     }
