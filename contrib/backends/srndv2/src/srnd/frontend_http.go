@@ -996,6 +996,7 @@ func (self *httpFrontend) serve_captcha(wr http.ResponseWriter, r *http.Request)
 		id, ok := s.Values["captcha_id"]
 		if ok {
 			redirect_url := fmt.Sprintf("%scaptcha/%s.png", self.prefix, id)
+			s.Save(r, wr)
 			http.Redirect(wr, r, redirect_url, 302)
 		} else {
 			captcha_id := captcha.New()
