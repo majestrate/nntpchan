@@ -71,7 +71,7 @@ onready(function() {
         elem.innerHTML += ".";
       }
     };
-    ajax.open(form.action+"?t=json", form.method);
+    ajax.open(form.method, form.action+"?t=json");
     ajax.send(new FormData(form));
   };
   var elems = document.getElementsByClassName("postbutton");
