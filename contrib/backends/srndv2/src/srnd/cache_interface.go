@@ -17,9 +17,6 @@ type CacheInterface interface {
 
 	Start()
 	Close()
-
-	GetThreadChan() chan ArticleEntry
-	GetGroupChan() chan groupRegenRequest
 	GetHandler() http.Handler
 
 	SetRequireCaptcha(required bool)

@@ -9,12 +9,11 @@ import (
 )
 
 type VarnishCache struct {
-	varnish_url     string
-	prefix          string
-	handler         *nullHandler
-	client          *http.Client
-	regenThreadChan chan ArticleEntry
-	regenGroupChan  chan groupRegenRequest
+	varnish_url      string
+	prefix           string
+	handler          *nullHandler
+	client           *http.Client
+	threadsRegenChan chan ArticleEntry
 }
 
 func (self *VarnishCache) invalidate(r string) {
@@ -33,8 +32,8 @@ func (self *VarnishCache) invalidate(r string) {
 func (self *VarnishCache) DeleteBoardMarkup(group string) {
 	n, _ := self.handler.database.GetPagesPerBoard(group)
 	for n > 0 {
-		go self.invalidate(fmt.Sprintf("%s%s%s-%d.html", self.varnish_url, self.prefix, group, n))
-		go self.invalidate(fmt.Sprintf("%s%sb/%s/%d/", self.varnish_url, self.prefix, group, n))
+		self.invalidate(fmt.Sprintf("%s%s%s-%d.html", self.varnish_url, self.prefix, group, n))
+		self.invalidate(fmt.Sprintf("%s%sb/%s/%d/", self.varnish_url, self.prefix, group, n))
 		n--
 	}
 	self.invalidate(fmt.Sprintf("%s%sb/%s/", self.varnish_url, self.prefix, group))
@@ -51,7 +50,7 @@ func (self *VarnishCache) RegenAll() {
 	// we will do this as it's used by rengen on start for frontend
 	groups := self.handler.database.GetAllNewsgroups()
 	for _, group := range groups {
-		self.handler.database.GetGroupThreads(group, self.regenThreadChan)
+		self.handler.database.GetGroupThreads(group, self.threadsRegenChan)
 	}
 }
 
@@ -59,34 +58,18 @@ func (self *VarnishCache) RegenFrontPage() {
 	self.invalidate(fmt.Sprintf("%s%s", self.varnish_url, self.prefix))
 	// TODO: this is also lazy af
 	self.invalidate(fmt.Sprintf("%s%shistory.html", self.varnish_url, self.prefix))
+	self.invalidateUkko(10)
 }
 
-func (self *VarnishCache) invalidateUkko() {
+func (self *VarnishCache) invalidateUkko(pages int) {
 	// TODO: invalidate paginated ukko
 	self.invalidate(fmt.Sprintf("%s%sukko.html", self.varnish_url, self.prefix))
 	self.invalidate(fmt.Sprintf("%s%soverboard/", self.varnish_url, self.prefix))
 	self.invalidate(fmt.Sprintf("%s%so/", self.varnish_url, self.prefix))
-	// TODO: this is lazy af
-	self.RegenFrontPage()
-}
-
-func (self *VarnishCache) pollRegen() {
-	for {
-		select {
-		// consume regen requests
-		case ev := <-self.regenGroupChan:
-			{
-				self.invalidate(fmt.Sprintf("%s%s%s-%d.html", self.varnish_url, self.prefix, ev.group, ev.page))
-				self.invalidate(fmt.Sprintf("%s%sb/%s/%d/", self.varnish_url, self.prefix, ev.group, ev.page))
-				if ev.page == 0 {
-					self.invalidate(fmt.Sprintf("%s%sb/%s/", self.varnish_url, self.prefix, ev.group))
-				}
-			}
-		case ev := <-self.regenThreadChan:
-			{
-				self.Regen(ev)
-			}
-		}
+	n := 0
+	for n < pages {
+		self.invalidate(fmt.Sprintf("%s%so/%d/", self.varnish_url, self.prefix, n))
+		n++
 	}
 }
 
@@ -94,8 +77,8 @@ func (self *VarnishCache) pollRegen() {
 func (self *VarnishCache) RegenerateBoard(group string) {
 	n, _ := self.handler.database.GetPagesPerBoard(group)
 	for n > 0 {
-		go self.invalidate(fmt.Sprintf("%s%s%s-%d.html", self.varnish_url, self.prefix, group, n))
-		go self.invalidate(fmt.Sprintf("%s%s%s/%d/", self.varnish_url, self.prefix, group, n))
+		self.invalidate(fmt.Sprintf("%s%s%s-%d.html", self.varnish_url, self.prefix, group, n))
+		self.invalidate(fmt.Sprintf("%s%sb/%s/%d/", self.varnish_url, self.prefix, group, n))
 		n--
 	}
 	self.invalidate(fmt.Sprintf("%s%sb/%s/", self.varnish_url, self.prefix, group))
@@ -103,28 +86,29 @@ func (self *VarnishCache) RegenerateBoard(group string) {
 
 // regenerate pages after a mod event
 func (self *VarnishCache) RegenOnModEvent(newsgroup, msgid, root string, page int) {
-	self.regenGroupChan <- groupRegenRequest{newsgroup, page}
-	self.regenThreadChan <- ArticleEntry{newsgroup, root}
+	self.Regen(ArticleEntry{newsgroup, root})
+	if page == 0 {
+		self.invalidate(fmt.Sprintf("%s%sb/%s/", self.varnish_url, self.prefix, newsgroup))
+	}
+	self.invalidate(fmt.Sprintf("%s%sb/%s/%d/", self.varnish_url, self.prefix, newsgroup, page))
+}
+
+func (self *VarnishCache) poll() {
+	for {
+		ent := <-self.threadsRegenChan
+		self.Regen(ent)
+	}
 }
 
 func (self *VarnishCache) Start() {
-	go self.pollRegen()
+	go self.poll()
 }
 
 func (self *VarnishCache) Regen(msg ArticleEntry) {
-	go self.invalidate(fmt.Sprintf("%s%s%s-%d.html", self.varnish_url, self.prefix, msg.Newsgroup(), 0))
-	go self.invalidate(fmt.Sprintf("%s%s%s/%d/", self.varnish_url, self.prefix, msg.Newsgroup(), 0))
-	go self.invalidate(fmt.Sprintf("%s%sthread-%s.html", self.varnish_url, self.prefix, HashMessageID(msg.MessageID())))
-	go self.invalidate(fmt.Sprintf("%s%st/%s/", self.varnish_url, self.prefix, HashMessageID(msg.MessageID())))
-	self.invalidateUkko()
-}
-
-func (self *VarnishCache) GetThreadChan() chan ArticleEntry {
-	return self.regenThreadChan
-}
-
-func (self *VarnishCache) GetGroupChan() chan groupRegenRequest {
-	return self.regenGroupChan
+	self.invalidate(fmt.Sprintf("%s%s%s-%d.html", self.varnish_url, self.prefix, msg.Newsgroup(), 0))
+	self.invalidate(fmt.Sprintf("%s%sb/%s/%d/", self.varnish_url, self.prefix, msg.Newsgroup(), 0))
+	self.invalidate(fmt.Sprintf("%s%sthread-%s.html", self.varnish_url, self.prefix, HashMessageID(msg.MessageID())))
+	self.invalidate(fmt.Sprintf("%s%st/%s/", self.varnish_url, self.prefix, HashMessageID(msg.MessageID())))
 }
 
 func (self *VarnishCache) GetHandler() http.Handler {
@@ -141,8 +125,7 @@ func (self *VarnishCache) SetRequireCaptcha(required bool) {
 
 func NewVarnishCache(varnish_url, bind_addr, prefix, webroot, name string, attachments bool, db Database, store ArticleStore) CacheInterface {
 	cache := new(VarnishCache)
-	cache.regenThreadChan = make(chan ArticleEntry, 16)
-	cache.regenGroupChan = make(chan groupRegenRequest, 8)
+	cache.threadsRegenChan = make(chan ArticleEntry)
 	local_addr, err := net.ResolveTCPAddr("tcp", bind_addr)
 	if err != nil {
 		log.Fatalf("failed to resolve %s for varnish cache: %s", bind_addr, err)

@@ -10,9 +10,7 @@ import (
 )
 
 type NullCache struct {
-	regenThreadChan chan ArticleEntry
-	regenGroupChan  chan groupRegenRequest
-	handler         *nullHandler
+	handler *nullHandler
 }
 
 type nullHandler struct {
@@ -202,20 +200,6 @@ func (self *NullCache) SetRequireCaptcha(required bool) {
 	self.handler.requireCaptcha = required
 }
 
-func (self *NullCache) pollRegen() {
-	for {
-		select {
-		// consume regen requests
-		case _ = <-self.regenGroupChan:
-			{
-			}
-		case _ = <-self.regenThreadChan:
-			{
-			}
-		}
-	}
-}
-
 // regen every page of the board
 func (self *NullCache) RegenerateBoard(group string) {
 }
@@ -225,18 +209,9 @@ func (self *NullCache) RegenOnModEvent(newsgroup, msgid, root string, page int) 
 }
 
 func (self *NullCache) Start() {
-	go self.pollRegen()
 }
 
 func (self *NullCache) Regen(msg ArticleEntry) {
-}
-
-func (self *NullCache) GetThreadChan() chan ArticleEntry {
-	return self.regenThreadChan
-}
-
-func (self *NullCache) GetGroupChan() chan groupRegenRequest {
-	return self.regenGroupChan
 }
 
 func (self *NullCache) GetHandler() http.Handler {
@@ -249,8 +224,6 @@ func (self *NullCache) Close() {
 
 func NewNullCache(prefix, webroot, name string, attachments bool, db Database, store ArticleStore) CacheInterface {
 	cache := new(NullCache)
-	cache.regenThreadChan = make(chan ArticleEntry, 16)
-	cache.regenGroupChan = make(chan groupRegenRequest, 8)
 	cache.handler = &nullHandler{
 		prefix:         prefix,
 		name:           name,

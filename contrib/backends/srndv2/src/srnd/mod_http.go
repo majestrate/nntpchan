@@ -35,7 +35,7 @@ type httpModUI struct {
 }
 
 func createHttpModUI(frontend *httpFrontend) httpModUI {
-	return httpModUI{frontend.regenAll, frontend.Regen, frontend.regenerateBoard, frontend.deleteThreadMarkup, frontend.deleteBoardMarkup, make(chan NNTPMessage), frontend.daemon, frontend.daemon.store, frontend.store, frontend.prefix, frontend.prefix + "mod/"}
+	return httpModUI{frontend.regenAll, frontend.Regen, frontend.RegenerateBoard, frontend.deleteThreadMarkup, frontend.deleteBoardMarkup, make(chan NNTPMessage), frontend.daemon, frontend.daemon.store, frontend.store, frontend.prefix, frontend.prefix + "mod/"}
 
 }
 

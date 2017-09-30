@@ -188,9 +188,7 @@ type httpFrontend struct {
 	regen_on_start bool
 	attachments    bool
 
-	prefix          string
-	regenThreadChan chan ArticleEntry
-	regenGroupChan  chan groupRegenRequest
+	prefix string
 
 	store *sessions.CookieStore
 
@@ -224,13 +222,12 @@ func (self httpFrontend) AllowNewsgroup(group string) bool {
 func (self *httpFrontend) Regen(msg ArticleEntry) {
 	self.cache.Regen(msg)
 }
+func (self *httpFrontend) RegenerateBoard(board string) {
+	self.cache.RegenerateBoard(board)
+}
 
 func (self httpFrontend) regenAll() {
 	self.cache.RegenAll()
-}
-
-func (self *httpFrontend) regenerateBoard(group string) {
-	self.cache.RegenerateBoard(group)
 }
 
 func (self httpFrontend) deleteThreadMarkup(root_post_id string) {
@@ -414,19 +411,9 @@ func (self *httpFrontend) HandleNewPost(nntp frontendPost) {
 	}
 	entry := ArticleEntry{msgid, group}
 	// regnerate thread
-	self.regenThreadChan <- entry
-	// regen the newsgroup we're in
-	// TODO: regen only what we need to
-	pages := self.daemon.database.GetGroupPageCount(group)
-	// regen all pages
-	var page int64
-	for ; page < pages; page++ {
-		req := groupRegenRequest{
-			group: group,
-			page:  int(page),
-		}
-		self.regenGroupChan <- req
-	}
+	self.Regen(entry)
+	// regenerate all board pages
+	self.RegenerateBoard(group)
 }
 
 // create a new captcha, return as json object
@@ -1564,9 +1551,6 @@ func NewHTTPFrontend(daemon *NNTPDaemon, cache CacheInterface, config map[string
 		Path:   front.prefix,
 		MaxAge: 600,
 	}
-
-	front.regenThreadChan = front.cache.GetThreadChan()
-	front.regenGroupChan = front.cache.GetGroupChan()
 
 	// liveui related members
 	front.liveui_chnl = make(chan PostModel, 128)
