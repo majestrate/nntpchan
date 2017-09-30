@@ -140,7 +140,7 @@ onready(function() {
             reloadImg(img);
           }
           reloadThreadJSON(j.message_id);
-        } else {
+        } else if (j && j.url) {
           // do redirect
           window.location.pathname = j.url;
         }
