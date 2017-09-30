@@ -82,7 +82,7 @@ onready(function() {
     e.remove();
     e = document.createElement("button");
     parent.appendChild(e);
-    e.innertHTML = origText;
+    e.innerHTML = origText;
     e.onclick = function() {
       e.disabled = true;
       e.innerHTML = "posting ";
