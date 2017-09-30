@@ -90,6 +90,7 @@ onready(function() {
         }
         if(ajax.status == 201) {
           // success
+          form.reset();
           cb(null, j);
         } else if (ajax.status == 200) {
           cb(err, j);
@@ -116,6 +117,12 @@ onready(function() {
       e.disabled = true;
       e.innerHTML = "posting ";
       submitPost(document.forms[0], e, function(err, j) {
+        if(err) {
+          var captcha = document.getElementById("captcha_solution");
+          if(captcha) {
+            captcha.value = "";
+          }
+        }
         var msg = err || "posted";
         console.log(msg, j.url);
         e.innerHTML = msg;
