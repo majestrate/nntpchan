@@ -46,6 +46,26 @@ var reloadImg = function(el) {
 	return false;
 };
 
+var reloadThreadJSON = function() {
+  var url = window.location.href += "/json";
+  var ajax = new XMLHttpRequest();
+  ajax.onreadystatechange = function() {
+    if(ajax.readyState == 4) {
+      if(ajax.status == 404) {
+        console.log("thread gone");
+      } else if (ajax.status == 200) {
+        var posts = JSON.parse(ajax.responseText);
+        for(var idx = 0; idx < posts.length; idx ++ )
+        {
+          
+        }
+      }
+    }
+  };
+  ajax.open("GET", url);
+  ajax.send();
+}
+
 // form resubmit
 onready(function() {
   var submitPost = function(form, elem, cb) {
@@ -89,15 +109,21 @@ onready(function() {
       e.innerHTML = "posting ";
       submitPost(document.forms[0], e, function(err, j) {
         var msg = err || "posted";
-        console.log(msg, j);
+        console.log(msg, j.url);
         e.innerHTML = msg;
-        setTimeout(function() {
-          e.disabled = false;
-          e.innerHTML = origText;
-        }, 1000);
-        var img = document.getElementById("captcha_img");
-        if (img) {
-          reloadImg(img);
+        if(window.location.pathname == j.url) {
+          setTimeout(function() {
+            e.disabled = false;
+            e.innerHTML = origText;
+          }, 1000);
+          var img = document.getElementById("captcha_img");
+          if (img) {
+            reloadImg(img);
+          }
+          reloadThreadJSON();
+        } else {
+          // do redirect
+          window.location.pathname = j.url;
         }
       });
     }
