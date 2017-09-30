@@ -131,10 +131,6 @@ onready(function() {
         console.log(msg, j.url);
         e.innerHTML = msg;
         if(window.location.pathname === j.url) {
-          setTimeout(function() {
-            e.disabled = false;
-            e.innerHTML = origText;
-          }, 1000);
           var img = document.getElementById("captcha_img");
           if (img) {
             reloadImg(img);
@@ -143,7 +139,13 @@ onready(function() {
         } else if (j && j.url) {
           // do redirect
           window.location.pathname = j.url;
+          return;
         }
+        setTimeout(function() {
+          e.disabled = false;
+          e.innerHTML = origText;
+        }, 1000);
+        
       });
     }
   }
