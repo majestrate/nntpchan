@@ -222,8 +222,13 @@ func (self httpFrontend) AllowNewsgroup(group string) bool {
 func (self *httpFrontend) Regen(msg ArticleEntry) {
 	self.cache.Regen(msg)
 }
+
 func (self *httpFrontend) RegenerateBoard(board string) {
 	self.cache.RegenerateBoard(board)
+}
+
+func (self *httpFrontend) RegenFrontPage() {
+	self.cache.RegenFrontPage()
 }
 
 func (self httpFrontend) regenAll() {
