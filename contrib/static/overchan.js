@@ -46,7 +46,7 @@ var reloadImg = function(el) {
 	return false;
 };
 
-var reloadThreadJSON = function() {
+var reloadThreadJSON = function(ourPost) {
   var url = window.location.pathname + "/json";
   var ajax = new XMLHttpRequest();
   ajax.onreadystatechange = function() {
@@ -65,6 +65,10 @@ var reloadThreadJSON = function() {
             e.innerHTML = posts[idx].PostMarkup;
             rootelem.appendChild(e.childNodes[0]);
             e.remove();
+            if(ourPost && posts[idx].Message_id == ourPost) {
+              // focus on our post
+              window.location.href = window.location.href.replace("#", "") + "#"+id;
+            }
           }
         }
       }
@@ -135,7 +139,7 @@ onready(function() {
           if (img) {
             reloadImg(img);
           }
-          reloadThreadJSON();
+          reloadThreadJSON(j.message_id);
         } else {
           // do redirect
           window.location.pathname = j.url;
