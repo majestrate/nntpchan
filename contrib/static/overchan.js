@@ -52,20 +52,21 @@ onready(function() {
     var ajax = new XMLHttpRequest();
     ajax.onreadystatechange = function() {
       if (ajax.readyState == 4) {
+        var err = "unknown error";
+        var j = null;
+        try {
+          j = JSON.parse(ajax.responseText);
+          err = j.error || err;
+        } catch (ex) {
+          err = "error parsing reply: "+ ex;
+        }
         if(ajax.status == 201) {
           // success
-          cb(null);
+          cb(null, j);
         } else if (ajax.status == 200) {
-          var err = "unknown error";
-          try {
-            var j = JSON.parse(ajax.responseText);
-            err = j.error || err;
-          } catch (ex) {
-            err = "error parsing reply: "+ ex;
-          }
-          cb(err);
+          cb(err, j);
         } else {
-          cb("http "+ajax.status);
+          cb("http "+ajax.status, j);
         }
       } else {
         elem.innerHTML += ".";
@@ -86,9 +87,9 @@ onready(function() {
     e.onclick = function() {
       e.disabled = true;
       e.innerHTML = "posting ";
-      submitPost(document.forms[0], e, function(err) {
+      submitPost(document.forms[0], e, function(err, j) {
         var msg = err || "posted";
-        console.log(msg);
+        console.log(msg, j);
         e.innerHTML = msg;
         setTimeout(function() {
           e.disabled = false;
