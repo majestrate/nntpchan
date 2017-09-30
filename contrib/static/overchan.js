@@ -87,7 +87,9 @@ onready(function() {
       e.disabled = true;
       e.innerHTML = "posting ";
       submitPost(document.forms[0], e, function(err) {
-        e.innerHTML = err || "posted";
+        var msg = err || "posted";
+        console.log(msg):
+        e.innerHTML = msg;
         setTimeout(function() {
           e.disabled = false;
           e.innerHTML = origText;
