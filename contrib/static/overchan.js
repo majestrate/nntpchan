@@ -47,7 +47,7 @@ var reloadImg = function(el) {
 };
 
 var reloadThreadJSON = function() {
-  var url = window.location.href += "/json";
+  var url = window.location.pathname + "/json";
   var ajax = new XMLHttpRequest();
   ajax.onreadystatechange = function() {
     if(ajax.readyState == 4) {
