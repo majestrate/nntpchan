@@ -41,8 +41,11 @@ func (self *VarnishCache) DeleteBoardMarkup(group string) {
 
 // try to delete root post's page
 func (self *VarnishCache) DeleteThreadMarkup(root_post_id string) {
-	self.invalidate(fmt.Sprintf("%s%sthread-%s.html", self.varnish_url, self.prefix, HashMessageID(root_post_id)))
-	self.invalidate(fmt.Sprintf("%s%st/%s/", self.varnish_url, self.prefix, HashMessageID(root_post_id)))
+	id := HashMessageID(root_post_id)
+	self.invalidate(fmt.Sprintf("%s%sthread-%s.json", self.varnish_url, self.prefix, id))
+	self.invalidate(fmt.Sprintf("%s%st/%s/json", self.varnish_url, self.prefix, id))
+	self.invalidate(fmt.Sprintf("%s%sthread-%s.html", self.varnish_url, self.prefix, id))
+	self.invalidate(fmt.Sprintf("%s%st/%s/", self.varnish_url, self.prefix, id))
 }
 
 // regen every newsgroup
@@ -62,12 +65,13 @@ func (self *VarnishCache) RegenFrontPage() {
 }
 
 func (self *VarnishCache) invalidateUkko(pages int) {
-	// TODO: invalidate paginated ukko
 	self.invalidate(fmt.Sprintf("%s%sukko.html", self.varnish_url, self.prefix))
-	self.invalidate(fmt.Sprintf("%s%soverboard/", self.varnish_url, self.prefix))
 	self.invalidate(fmt.Sprintf("%s%so/", self.varnish_url, self.prefix))
+	self.invalidate(fmt.Sprintf("%s%sukko.json", self.varnish_url, self.prefix))
+	self.invalidate(fmt.Sprintf("%s%so/json", self.varnish_url, self.prefix))
 	n := 0
 	for n < pages {
+		self.invalidate(fmt.Sprintf("%s%so/%d/json", self.varnish_url, self.prefix, n))
 		self.invalidate(fmt.Sprintf("%s%so/%d/", self.varnish_url, self.prefix, n))
 		n++
 	}
@@ -105,10 +109,7 @@ func (self *VarnishCache) Start() {
 }
 
 func (self *VarnishCache) Regen(msg ArticleEntry) {
-	self.invalidate(fmt.Sprintf("%s%s%s-%d.html", self.varnish_url, self.prefix, msg.Newsgroup(), 0))
-	self.invalidate(fmt.Sprintf("%s%sb/%s/%d/", self.varnish_url, self.prefix, msg.Newsgroup(), 0))
-	self.invalidate(fmt.Sprintf("%s%sthread-%s.html", self.varnish_url, self.prefix, HashMessageID(msg.MessageID())))
-	self.invalidate(fmt.Sprintf("%s%st/%s/", self.varnish_url, self.prefix, HashMessageID(msg.MessageID())))
+	self.DeleteThreadMarkup(msg.MessageID())
 }
 
 func (self *VarnishCache) GetHandler() http.Handler {
