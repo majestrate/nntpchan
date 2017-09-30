@@ -78,7 +78,7 @@ onready(function() {
   if(elems && elems.length > 0 && elems[0]) {
     var e = elems[0];
     var parent = e.parentElement;
-    var origText = e.innerHTML;
+    var origText = e.value;
     e.remove();
     e = document.createElement("button");
     parent.appendChild(e);
