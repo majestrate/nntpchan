@@ -67,7 +67,7 @@ var reloadThreadJSON = function(ourPost) {
             e.remove();
             if(ourPost && posts[idx].Message_id == ourPost) {
               // focus on our post
-              window.location.href = window.location.href.replace("#", "") + "#"+id;
+              window.location.hash = id;
             }
           }
         }
