@@ -88,7 +88,7 @@ onready(function() {
       e.innerHTML = "posting ";
       submitPost(document.forms[0], e, function(err) {
         var msg = err || "posted";
-        console.log(msg):
+        console.log(msg);
         e.innerHTML = msg;
         setTimeout(function() {
           e.disabled = false;
