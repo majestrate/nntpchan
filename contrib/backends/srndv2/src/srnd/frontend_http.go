@@ -990,16 +990,21 @@ func (self httpFrontend) handle_poster(wr http.ResponseWriter, r *http.Request) 
 	}
 }
 
-func (self *httpFrontend) new_captcha(wr http.ResponseWriter, r *http.Request) {
+func (self *httpFrontend) serve_captcha(wr http.ResponseWriter, r *http.Request) {
 	s, err := self.store.Get(r, self.name)
 	if err == nil {
-		captcha_id := captcha.New()
-		s.Values["captcha_id"] = captcha_id
-		s.Save(r, wr)
-		redirect_url := fmt.Sprintf("%scaptcha/%s.png", self.prefix, captcha_id)
-
-		// redirect to the image
-		http.Redirect(wr, r, redirect_url, 302)
+		id, ok := s.Values["captcha_id"]
+		if ok {
+			redirect_url := fmt.Sprintf("%scaptcha/%s.png", self.prefix, id)
+			http.Redirect(wr, r, redirect_url, 302)
+		} else {
+			captcha_id := captcha.New()
+			s.Values["captcha_id"] = captcha_id
+			s.Save(r, wr)
+			redirect_url := fmt.Sprintf("%scaptcha/%s.png", self.prefix, captcha_id)
+			// redirect to the image
+			http.Redirect(wr, r, redirect_url, 302)
+		}
 	} else {
 		// handle session error
 		// TODO: clear cookies?
@@ -1466,7 +1471,7 @@ func (self *httpFrontend) Mainloop() {
 	m.PathPrefix("/static/").Handler(http.FileServer(http.Dir(self.static_dir)))
 	m.PathPrefix("/post/").HandlerFunc(self.handle_poster).Methods("POST")
 	m.Path("/captcha/new").HandlerFunc(self.new_captcha_json).Methods("GET")
-	m.Path("/captcha/img").HandlerFunc(self.new_captcha).Methods("GET")
+	m.Path("/captcha/img").HandlerFunc(self.serve_captcha).Methods("GET")
 	m.Path("/captcha/{f}").Handler(captcha.Server(350, 175)).Methods("GET")
 	m.Path("/new/").HandlerFunc(self.handle_newboard).Methods("GET")
 	m.Path("/api/{meth}").HandlerFunc(self.handle_api).Methods("POST", "GET")
