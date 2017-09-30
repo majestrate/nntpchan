@@ -130,7 +130,7 @@ onready(function() {
         var msg = err || "posted";
         console.log(msg, j.url);
         e.innerHTML = msg;
-        if(window.location.pathname == j.url) {
+        if(window.location.pathname === j.url) {
           setTimeout(function() {
             e.disabled = false;
             e.innerHTML = origText;
