@@ -52,10 +52,10 @@ onready(function() {
     var ajax = new XMLHttpRequest();
     ajax.onreadystatechange = function() {
       if (ajax.readyState == 4) {
-        if(ajax.statusCode == 201) {
+        if(ajax.status == 201) {
           // success
           cb(null);
-        } else if (ajax.statusCode == 200) {
+        } else if (ajax.status == 200) {
           var err = "unknown error";
           try {
             var j = JSON.parse(ajax.responseText);
@@ -65,7 +65,7 @@ onready(function() {
           }
           cb(err);
         } else {
-          cb("http "+ajax.statusCode);
+          cb("http "+ajax.status);
         }
       } else {
         elem.innerHTML += ".";
