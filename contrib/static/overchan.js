@@ -114,8 +114,11 @@ onready(function() {
       console.log(input);
       if(input.files)
       {
-        for (var file in input.files)
+        for (var i =0 ; i < input.files.length; i++)
+        {
+          var file = input.files[i];
           data.append(input.name, file, file.name);
+        }
       }
       else if(input.name)
         data.append(input.name, input.value);
