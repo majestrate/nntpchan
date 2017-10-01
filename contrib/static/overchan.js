@@ -105,8 +105,21 @@ onready(function() {
         elem.innerHTML += ".";
       }
     };
+    var data = new FormData();
+    data.append("message", document.getElementById("comment").value);
+    var inputs = form.getElementsByTagName("input");
+    for(var input : inputs)
+    {
+      if(input.files)
+      {
+        for (var file : input.files)
+          data.append(input.name, file, file.name);
+      }
+      else if(input.name)
+        data.append(input.name, input.value);
+    }
     ajax.open(form.method, form.action+"/json");
-    ajax.send(new FormData(form));
+    ajax.send(data);
   };
   var elems = document.getElementsByClassName("postbutton");
   if(elems && elems.length > 0 && elems[0]) {
