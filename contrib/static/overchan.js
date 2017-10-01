@@ -108,9 +108,9 @@ onready(function() {
     var data = new FormData();
     data.append("message", document.getElementById("comment").value);
     var inputs = form.getElementsByTagName("input");
-    console.log(inputs);
     for(var input in inputs)
     {
+      console.log(input);
       if(input.files)
       {
         for (var file in input.files)
