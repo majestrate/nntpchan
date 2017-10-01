@@ -102,7 +102,7 @@ onready(function() {
           cb("http "+ajax.status, j);
         }
       } else {
-        elem.innerHTML += ".";
+        elem.value += ".";
       }
     };
     var data = new FormData();
@@ -118,7 +118,8 @@ onready(function() {
       else if(input.name)
         data.append(input.name, input.value);
     }
-    ajax.open(form.method, form.action+"/json");
+    console.log("posting...");
+    ajax.open("POST", form.action+"/json");
     ajax.send(data);
   };
   var elems = document.getElementsByClassName("postbutton");
@@ -127,12 +128,14 @@ onready(function() {
     var parent = e.parentElement;
     var origText = e.value;
     e.remove();
-    e = document.createElement("button");
+    e = document.createElement("input");
+    e.type = "button";
     parent.appendChild(e);
-    e.innerHTML = origText;
-    e.onclick = function() {
+    e.value = origText;
+    e.onclick = function(ev) {
+      console.log("clicked post");
       e.disabled = true;
-      e.innerHTML = "posting ";
+      e.value = "posting ";
       submitPost(document.forms[0], e, function(err, j) {
         if(err) {
           var captcha = document.getElementById("captcha_solution");
@@ -142,7 +145,7 @@ onready(function() {
         }
         var msg = err || "posted";
         console.log(msg, j.url);
-        e.innerHTML = msg;
+        e.value = msg;
         if(window.location.pathname === j.url) {
           reloadThreadJSON(j.message_id);
         } else if (j && j.url) {
@@ -156,7 +159,7 @@ onready(function() {
         }
         setTimeout(function() {
           e.disabled = false;
-          e.innerHTML = origText;
+          e.value = origText;
         }, 1000);
         
       });
