@@ -1,13 +1,19 @@
-[feed-dummy]
-proxy-type=socks4a
+overchan.overchan=1
+ctl=1
+*=0
+
+[feed-2hu]
+proxy-type=None
 proxy-host=127.0.0.1
 proxy-port=9050
-host=dummy
+host=2hu-ch.org
 port=119
-connections=1
+connections=0
+sync=1
+disable=1
 
-[dummy]
-overchan.*=1
-ano.paste=0
+[2hu]
+overchan.overchan=1
 ctl=1
+*=0
 

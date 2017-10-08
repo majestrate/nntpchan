@@ -25,7 +25,7 @@ var i18nProvider *i18n = nil
 //Use the language matcher to get the best match for the locale preference
 func InitI18n(locale, dir string) {
 	pref := language.Make(locale) // falls back to en-US on parse error
-
+	log.Println("using locale", pref)
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		log.Fatal(err)
