@@ -9,7 +9,7 @@
 
 [This](doc) is a step-by-step guide for getting up-and-running with NNTPChan as well as documentation for developers who want to either work on NNTPChan directly or use NNTPChan in their aplications with the API.
 
-TL;DR edition (after installing [dependancies](doc/):
+TL;DR edition:
 
 
     $ sudo apt update
