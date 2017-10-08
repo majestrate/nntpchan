@@ -11,6 +11,9 @@
 
 TL;DR edition (after installing [dependancies](doc/):
 
+
+    $ sudo apt update
+    $ sudo apt install --no-install-recommends install imagemagick ffmpeg sox build-essential git ca-certificates postgresql postgresql-client
     $ git clone https://github.com/majestrate/nntpchan
     $ make
     $ ./srndv2 setup 
