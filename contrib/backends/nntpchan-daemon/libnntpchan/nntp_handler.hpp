@@ -16,7 +16,7 @@ namespace nntpchan
 
     virtual bool ShouldClose();
 
-    void SetAuth(NNTPCredentialDB * creds);
+    void SetAuth(CredDB_ptr creds);
 
     virtual void OnData(const char *, ssize_t);
 
@@ -49,8 +49,8 @@ namespace nntpchan
 
   private:
     std::string m_articleName;
-    std::fstream * m_article;
-    NNTPCredentialDB * m_auth;
+    FileHandle_ptr m_article;
+    CredDB_ptr m_auth;
     ArticleStorage m_store;
     std::string m_mode;
     bool m_authed;

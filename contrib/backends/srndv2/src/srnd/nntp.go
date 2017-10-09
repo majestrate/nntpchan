@@ -353,12 +353,16 @@ func (self *nntpConnection) handleStreaming(daemon *NNTPDaemon, conn *textproto.
 		select {
 		case chnl := <-self.die:
 			// someone asked us to die
+			self.pending_access.Lock()
 			conn.PrintfLine("QUIT")
 			conn.Close()
+			self.pending_access.Unlock()
 			chnl <- true
 			return
 		case <-self.keepalive.C:
+			self.pending_access.Lock()
 			err = conn.PrintfLine("CHECK %s", nntpDummyArticle)
+			self.pending_access.Unlock()
 		default:
 			if len(self.pending) > 0 {
 				self.pending_access.Lock()
@@ -562,7 +566,7 @@ func (self *nntpConnection) storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEH
 	}
 
 	// ask for replies
-	replyTos := strings.Split(hdr.Get("In-Reply-To"), " ")
+	replyTos := strings.Split(hdr.Get("Reply-To"), " ")
 	for _, reply := range replyTos {
 		if ValidMessageID(reply) {
 			if !daemon.store.HasArticle(reply) {

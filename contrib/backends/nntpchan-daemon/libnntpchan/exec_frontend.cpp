@@ -14,7 +14,7 @@ namespace nntpchan
 
   ExecFrontend::~ExecFrontend() {}
 
-  void ExecFrontend::ProcessNewMessage(const std::string & fpath)
+  void ExecFrontend::ProcessNewMessage(const fs::path  & fpath)
   {
     Exec({"post", fpath});
   }

@@ -5,6 +5,7 @@
 #include "nntp_server.hpp"
 #include "event.hpp"
 #include "exec_frontend.hpp"
+#include "staticfile_frontend.hpp"
 
 #include <vector>
 #include <string>
@@ -16,7 +17,7 @@ int main(int argc, char * argv[]) {
     return 1;
   }
 
-  nntpchan::Crypto crypto();
+  nntpchan::Crypto crypto;
 
   nntpchan::Mainloop loop;
 
@@ -69,21 +70,48 @@ int main(int argc, char * argv[]) {
       nntp.SetLoginDB(nntpconf["authdb"]);
     }
 
-    if ( level.sections.find("frontend") != level.sections.end()) {
+    if ( level.sections.find("frontend") != level.sections.end())
+    {
       // frontend enabled
       auto & frontconf = level.sections["frontend"].values;
-      if (frontconf.find("type") == frontconf.end()) {
+      if (frontconf.find("type") == frontconf.end())
+      {
         std::cerr << "frontend section provided but 'type' value not provided" << std::endl;
         return 1;
       }
       auto ftype = frontconf["type"];
-      if (ftype == "exec") {
-        if (frontconf.find("exec") == frontconf.end()) {
+      if (ftype == "exec")
+      {
+        if (frontconf.find("exec") == frontconf.end())
+        {
           std::cerr << "exec frontend specified but no 'exec' value provided" << std::endl;
           return 1;
         }
         nntp.SetFrontend(new nntpchan::ExecFrontend(frontconf["exec"]));
-      } else {
+      }
+      else if (ftype == "staticfile")
+      {
+        auto required = { 
+          "template_dir", "out_dir", "template_dialect", "max_pages"
+        };
+        for (const auto & opt : required)
+        {
+          if(frontconf.find(opt) == frontconf.end())
+          {
+            std::cerr << "staticfile frontend specified but no '" << opt << "' value provided" << std::endl;
+            return 1;
+          }
+        }
+        auto maxPages = std::stoi(frontconf["max_pages"]);
+        if(maxPages <= 0)
+        {
+          std::cerr << "max_pages invalid value '" << frontconf["max_pages"] << "'" << std::endl;
+          return 1;
+        }
+        nntp.SetFrontend(new nntpchan::StaticFileFrontend(nntpchan::CreateTemplateEngine(frontconf["template_dialect"]), frontconf["template_dir"], frontconf["out_dir"], maxPages));
+      }
+      else
+      {
         std::cerr << "unknown frontend type '" << ftype << "'" << std::endl;
         return 1;
       }

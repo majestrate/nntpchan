@@ -1,5 +1,5 @@
 #include "nntp_handler.hpp"
-#include "message.hpp"
+#include "sanitize.hpp"
 #include <algorithm>
 #include <cctype>
 #include <cstring>
@@ -21,7 +21,6 @@ namespace nntpchan
 
   NNTPServerHandler::~NNTPServerHandler()
   {
-    if(m_auth) delete m_auth;
   }
 
   void NNTPServerHandler::HandleLine(const std::string &line)
@@ -144,7 +143,6 @@ namespace nntpchan
     {
       m_article->flush();
       m_article->close();
-      delete m_article;
       m_article = nullptr;
       QueueLine("239 "+m_articleName);
       std::cerr << "stored " << m_articleName << std::endl;
@@ -209,9 +207,8 @@ namespace nntpchan
       QueueLine("201 Posting not allowed");
   }
 
-  void NNTPServerHandler::SetAuth(NNTPCredentialDB *creds)
+  void NNTPServerHandler::SetAuth(CredDB_ptr creds)
   {
-    if(m_auth) delete m_auth;
     m_auth = creds;
   }
 }

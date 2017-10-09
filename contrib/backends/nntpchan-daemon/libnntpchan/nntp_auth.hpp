@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <mutex>
+#include <memory>
 #include "line.hpp"
 
 namespace nntpchan
@@ -21,6 +22,8 @@ namespace nntpchan
     virtual ~NNTPCredentialDB() {}
   };
 
+  typedef std::shared_ptr<NNTPCredentialDB> CredDB_ptr;
+  
   /** @brief nntp credential db using hashed+salted passwords */
   class HashedCredDB : public NNTPCredentialDB, public LineReader
   {

@@ -13,7 +13,7 @@ namespace nntpchan
     
     ~ExecFrontend();
 
-    void ProcessNewMessage(const std::string & fpath);
+    void ProcessNewMessage(const fs::path & fpath);
     bool AcceptsNewsgroup(const std::string & newsgroup);
     bool AcceptsMessage(const std::string & msgid);
 

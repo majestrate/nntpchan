@@ -1,6 +1,6 @@
 
 REPO=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-SRC_PATH = $(REPO)/src
+SRC_PATH = $(REPO)/libnntpchan
 
 SOURCES := $(wildcard $(SRC_PATH)/*.cpp)
 HEADERS := $(wildcard $(SRC_PATH)/*.hpp)
@@ -15,9 +15,9 @@ DAEMON_SRC = $(REPO)/daemon
 
 PKGS := libuv libsodium
 
-LD_FLAGS := $(shell pkg-config --libs $(PKGS))
-INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I $(REPO)/src
-CXXFLAGS := -std=c++11 -Wall -Wextra $(INC_FLAGS)
+LD_FLAGS := $(shell pkg-config --libs $(PKGS)) -lstdc++fs
+INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I$(SRC_PATH)
+CXXFLAGS := -std=c++17 -Wall -Wextra -pedantic $(INC_FLAGS)
 
 ifeq ($(DEBUG),1)
 	CXXFLAGS += -g
@@ -28,7 +28,9 @@ LIB = $(REPO)/libnntpchan.a
 EXE = $(REPO)/nntpd
 
 
-all: $(EXE) $(TOOLS)
+all: build
+
+build: $(EXE) $(TOOLS)
 
 $(LIB): $(OBJECTS)
 	$(AR) -r $(LIB) $(OBJECTS)

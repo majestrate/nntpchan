@@ -862,7 +862,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 	}
 
 	if len(cites) > 0 {
-		nntp.headers.Set("In-Reply-To", strings.Join(cites, " "))
+		nntp.headers.Set("Reply-To", strings.Join(cites, " "))
 	}
 
 	// set date

@@ -14,16 +14,15 @@ namespace nntpchan
 
   NNTPServer::~NNTPServer()
   {
-    if (m_frontend) delete m_frontend;
   }
 
   IServerConn * NNTPServer::CreateConn(uv_stream_t * s)
   {
-    NNTPCredentialDB * creds = nullptr;
+    CredDB_ptr creds;
 
     std::ifstream i;
     i.open(m_logindbpath);
-    if(i.is_open()) creds = new HashedFileDB(m_logindbpath);
+    if(i.is_open()) creds = std::make_shared<HashedFileDB>(m_logindbpath);
 
     NNTPServerHandler * handler = new NNTPServerHandler(m_storagePath);
     if(creds)
@@ -49,15 +48,14 @@ namespace nntpchan
     m_servername = name;
   }
 
+  void NNTPServer::SetFrontend(Frontend * f)
+  {
+    m_frontend.reset(f);
+  }
+
   std::string NNTPServer::InstanceName() const
   {
     return m_servername;
-  }
-
-  void NNTPServer::SetFrontend(Frontend * f)
-  {
-    if(m_frontend) delete m_frontend;
-    m_frontend = f;
   }
 
   void NNTPServer::OnAcceptError(int status)
@@ -70,7 +68,7 @@ namespace nntpchan
     IConnHandler * handler = GetHandler();
     while(handler->HasNextLine()) {
       auto line = handler->GetNextLine();
-      SendString(line + "\n");
+      SendString(line + "\r\n");
     }
   }
 

@@ -25,21 +25,21 @@ namespace nntpchan
 
     std::string InstanceName() const;
 
-    void SetFrontend(Frontend * f);
-
     void Close();
 
     virtual IServerConn * CreateConn(uv_stream_t * s);
 
     virtual void OnAcceptError(int status);
 
+    void SetFrontend(Frontend * f);
+    
   private:
 
     std::string m_logindbpath;
     std::string m_storagePath;
     std::string m_servername;
 
-    Frontend * m_frontend;
+    Frontend_ptr m_frontend;
 
   };
 
