@@ -28,7 +28,8 @@ namespace nntpchan {
 
   void LineReader::OnLine(const char *d, const size_t l)
   {
-    std::string line(d, l);
+    std::string line;
+    line += std::string(d, l);
     HandleLine(line);
   }
 

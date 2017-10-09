@@ -86,15 +86,15 @@ namespace nntpchan
     uv_read_start((uv_stream_t*) &m_conn, [] (uv_handle_t * h, size_t s, uv_buf_t * b) {
         IServerConn * self = (IServerConn*) h->data;
         if(self == nullptr) return;
-        b->base = self->m_readbuff;
-        if (s > sizeof(self->m_readbuff))
-          b->len = sizeof(self->m_readbuff);
-        else
-          b->len = s;
+        b->base = new char[s];
       }, [] (uv_stream_t * s, ssize_t nread, const uv_buf_t * b) {
         IServerConn * self = (IServerConn*) s->data;
-        if(self == nullptr) return;
+        if(self == nullptr) {
+          delete [] b->base;
+          return;
+        }
         if(nread > 0) {
+          b->base[nread] = 0;
           self->m_handler->OnData(b->base, nread);
           self->SendNextReply();
           if(self->m_handler->ShouldClose())
@@ -108,6 +108,7 @@ namespace nntpchan
           // got eof or error
           self->Close();
         }
+        delete [] b->base;
       });
   }
 

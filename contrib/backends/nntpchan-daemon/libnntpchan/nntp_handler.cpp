@@ -31,7 +31,7 @@ namespace nntpchan
       std::istringstream s;
       s.str(line);
       for (std::string part; std::getline(s, part, ' '); ) {
-          if(part.size()) command.push_back(std::string(part));
+          if(part.size()) command.push_back(part);
       }
       if(command.size())
         HandleCommand(command);
@@ -59,14 +59,20 @@ namespace nntpchan
       {
         std::size_t diff = end - data ;
         if(m_article)
+        {
           m_article->write(data, diff+2);
+          m_article->flush();
+        }
         ArticleObtained();
         diff += 5;
         Data(end+5, l-diff);
         return;
       }
       if(m_article)
+      {
         m_article->write(data, l);
+        m_article->flush();
+      }
     }
     else
       Data(data, l);
@@ -141,7 +147,6 @@ namespace nntpchan
   {
     if(m_article)
     {
-      m_article->flush();
       m_article->close();
       m_article = nullptr;
       QueueLine("239 "+m_articleName);
