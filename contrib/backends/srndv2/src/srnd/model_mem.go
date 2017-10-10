@@ -624,14 +624,7 @@ func (self *thread) Navbar() string {
 	param := make(map[string]interface{})
 	param["name"] = fmt.Sprintf("Thread %s", self.Posts[0].ShortHash())
 	param["frontend"] = self.Board()
-	var links []LinkModel
-	for idx := range self.links {
-		links = append(links, linkModel{
-			text: self.links[idx].Text(),
-			link: self.links[idx].LinkURL() + "?lang=" + self._i18n.Name,
-		})
-	}
-	param["links"] = links
+	param["links"] = self.links
 	param["prefix"] = self.prefix
 	return template.renderTemplate("navbar.mustache", param, self._i18n)
 }
