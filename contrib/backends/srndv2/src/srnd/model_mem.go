@@ -634,7 +634,11 @@ func (self *thread) Board() string {
 }
 
 func (self *thread) BoardURL() string {
-	return fmt.Sprintf("%sb/%s/", self.Prefix(), self.Board())
+	i18n := self._i18n
+	if i18n == nil {
+		i18n = I18nProvider
+	}
+	return fmt.Sprintf("%sb/%s/?lang=%s", self.Prefix(), self.Board(), i18n.Name)
 }
 
 func (self *thread) PostCount() int {
