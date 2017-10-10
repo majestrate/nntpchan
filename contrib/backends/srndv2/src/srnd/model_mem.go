@@ -172,9 +172,9 @@ func (self *boardModel) Board() string {
 func (self *boardModel) PageList() []LinkModel {
 	var links []LinkModel
 	for i := 0; i < self.pages; i++ {
-		board := fmt.Sprintf("%sb/%s/%d/", self.prefix, self.board, i)
+		board := fmt.Sprintf("%sb/%s/%d/?lang=%s", self.prefix, self.board, i, self._i18n.Name)
 		if i == 0 {
-			board = fmt.Sprintf("%sb/%s/", self.prefix, self.board)
+			board = fmt.Sprintf("%sb/%s/?lang=%s", self.prefix, self.board, self._i18n.Name)
 		}
 		links = append(links, linkModel{
 			link: board,
@@ -624,7 +624,14 @@ func (self *thread) Navbar() string {
 	param := make(map[string]interface{})
 	param["name"] = fmt.Sprintf("Thread %s", self.Posts[0].ShortHash())
 	param["frontend"] = self.Board()
-	param["links"] = self.links
+	var links []LinkModel
+	for idx := range self.links {
+		links = append(links, linkModel{
+			text: self.links[idx].Text(),
+			link: self.links[idx].LinkURL() + "?lang=" + self._i18n.Name,
+		})
+	}
+	param["links"] = links
 	param["prefix"] = self.prefix
 	return template.renderTemplate("navbar.mustache", param, self._i18n)
 }
