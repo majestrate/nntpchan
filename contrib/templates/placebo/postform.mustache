@@ -13,15 +13,15 @@
         <input type="hidden" name="reference" value="{{reference}}" id="postform_reference"/>
         <table cellspacing="1" cellpadding="0">
             <tr>
-                <th>Name</th>
+                <th>{{#i18n.Translations}}{{name}}{{/i18n.Translations}}</th>
                 <td><input type="text" name="name" class="posttext" /></td>
             </tr>
             <tr>
-                <th>Subject</th>
+                <th>{{#i18n.Translations}}{{subject}}{{/i18n.Translations}}</th>
                 <td><input type="text" name="subject" class="posttext" /></td>
             </tr>
             <tr>
-                <th>Comment</th>
+                <th>{{#i18n.Translations}}{{comment}}{{/i18n.Translations}}</th>
                 <td><textarea id="comment" name="message" class="postarea"></textarea></td>
             </tr>
             {{^DisableCaptcha}}
@@ -45,7 +45,7 @@
             {{/DisableCaptcha}}
             {{#files}}
             <tr>
-                <th>File</th>
+                <th>{{#i18n.Translations}}{{file}}{{/i18n.Translations}}</th>
                 <td>
                     <table cellspacing="0" cellpadding="0" width="100%">
                         <tr>

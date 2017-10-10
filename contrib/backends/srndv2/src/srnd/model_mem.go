@@ -486,7 +486,11 @@ func (self *post) Attachments() []AttachmentModel {
 }
 
 func (self *post) PostURL() string {
-	return fmt.Sprintf("%st/%s/#%s", self.Prefix(), HashMessageID(self.Parent), self.PostHash())
+	i18n := self._i18n
+	if i18n == nil {
+		i18n = I18nProvider
+	}
+	return fmt.Sprintf("%st/%s/?lang=%s#%s", self.Prefix(), HashMessageID(self.Parent), i18n.Name, self.PostHash())
 }
 
 func (self *post) Prefix() string {

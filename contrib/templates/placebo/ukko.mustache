@@ -19,7 +19,7 @@
         <meta property="og:type" content="website"/>
         <meta property="og:title" content="overboard"/>
         <meta property="og:description" content="changolia overboard"/>
-        <meta property="og:url" content="{{prefix}}o/"/>
+        <meta property="og:url" content="{{prefix}}o/?lang={{i18n.Name}}"/>
         <meta property="og:image"
               content="{{prefix}}static/changolia-logo.png"/>
     </head>
@@ -34,19 +34,19 @@
         <div id="paginator">
             {{#prev}}
                 <span id="prev">
-                    <a href="{{prefix}}o/{{no}}/">previous</a>
+                    <a href="{{prefix}}o/{{no}}/?lang={{i18n.Name}}">previous</a>
                 </span>
             {{/prev}}
             {{#next}}
                 <span id="next">
-                    <a href="{{prefix}}o/{{no}}/">next</a>
+                    <a href="{{prefix}}o/{{no}}/?lang={{i18n.Name}}">next</a>
                 </span>
             {{/next}}
         </div>
         {{#threads}}
             {{#Truncate}}
             <div class="thread" id="thread_{{OP.PostHash}}">
-                Posted on <a href="{{BoardURL}}">{{Board}}</a>
+                Posted on <a href="{{BoardURL}}?lang={{i18n.Name}}">{{Board}}</a>
                 <br />
                 {{{OP.RenderTruncatedPost}}}
                 <div class="excluded">{{MissingPostCount}} posts excluded</div>
@@ -60,12 +60,12 @@
         <div id="paginator">
             {{#prev}}
                 <span id="prev">
-                    <a href="{{prefix}}o/{{no}}/">previous</a>
+                    <a href="{{prefix}}o/{{no}}/?lang={{i18n.Name}}">previous</a>
                 </span>
             {{/prev}}
             {{#next}}
                 <span id="next">
-                    <a href="{{prefix}}o/{{no}}/">next</a>
+                    <a href="{{prefix}}o/{{no}}/?lang={{i18n.Name}}">next</a>
                 </span>
             {{/next}}
         </div>

@@ -29,7 +29,7 @@ type nullHandler struct {
 func (self *nullHandler) GetI18N(r *http.Request) *I18N {
 	lang := r.URL.Query().Get("lang")
 	if lang == "" {
-		lang = I18nProvider.name
+		lang = I18nProvider.Name
 	}
 	self.access.Lock()
 	i, ok := self.i18n[lang]

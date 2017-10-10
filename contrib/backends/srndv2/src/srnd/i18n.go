@@ -18,7 +18,7 @@ type I18N struct {
 	// root directory for translations
 	translation_dir string
 	// name of locale
-	name string
+	Name string
 }
 
 var I18nProvider *I18N = nil
@@ -71,7 +71,7 @@ func NewI18n(locale, dir string) (*I18N, error) {
 	}
 
 	return &I18N{
-		name:            locale,
+		Name:            locale,
 		translation_dir: dir,
 		Formats:         formats.Options(),
 		Translations:    translations.Options(),
