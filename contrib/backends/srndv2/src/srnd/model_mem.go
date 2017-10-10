@@ -63,7 +63,7 @@ func (self *catalogModel) Navbar() string {
 	param["frontend"] = self.frontend
 	var links []LinkModel
 	links = append(links, linkModel{
-		link: fmt.Sprintf("%sb/%s/", self.prefix, self.board),
+		link: fmt.Sprintf("%sb/%s/?lang=%s", self.prefix, self.board, self._i18n.Name),
 		text: "Board index",
 	})
 	param["prefix"] = self.prefix
