@@ -112,7 +112,7 @@ func (self *VarnishCache) Regen(msg ArticleEntry) {
 	self.DeleteThreadMarkup(msg.MessageID())
 }
 
-func (self *VarnishCache) GetHandler() http.Handler {
+func (self *VarnishCache) GetHandler() CacheHandler {
 	return self.handler
 }
 
@@ -124,7 +124,7 @@ func (self *VarnishCache) SetRequireCaptcha(required bool) {
 	self.handler.requireCaptcha = required
 }
 
-func NewVarnishCache(varnish_url, bind_addr, prefix, webroot, name string, attachments bool, db Database, store ArticleStore) CacheInterface {
+func NewVarnishCache(varnish_url, bind_addr, prefix, webroot, name, translations string, attachments bool, db Database, store ArticleStore) CacheInterface {
 	cache := new(VarnishCache)
 	cache.threadsRegenChan = make(chan ArticleEntry)
 	local_addr, err := net.ResolveTCPAddr("tcp", bind_addr)
@@ -150,6 +150,8 @@ func NewVarnishCache(varnish_url, bind_addr, prefix, webroot, name string, attac
 		attachments:    attachments,
 		database:       db,
 		requireCaptcha: true,
+		i18n:           make(map[string]*I18N),
+		translations:   translations,
 	}
 	cache.varnish_url = varnish_url
 	return cache

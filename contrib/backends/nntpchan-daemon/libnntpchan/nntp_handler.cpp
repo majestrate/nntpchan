@@ -113,7 +113,7 @@ namespace nntpchan
       QueueLine("STREAMING");
       QueueLine(".");
     } else if (cmd == "CHECK") {
-      if(cmdlen == 2) {
+      if(cmdlen >= 2) {
         const std::string & msgid = command[1];
         if(IsValidMessageID(msgid) && m_store.Accept(msgid))
         {

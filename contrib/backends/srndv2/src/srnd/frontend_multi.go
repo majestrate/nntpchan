@@ -10,6 +10,11 @@ type multiFrontend struct {
 	frontends []Frontend
 }
 
+func (self multiFrontend) GetCacheHandler() CacheHandler {
+	// TODO: fixme :^)
+	return nil
+}
+
 func (self multiFrontend) AllowNewsgroup(newsgroup string) bool {
 	return true
 }

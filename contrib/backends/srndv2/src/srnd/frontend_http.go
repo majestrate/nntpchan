@@ -440,7 +440,7 @@ func (self *httpFrontend) new_captcha_json(wr http.ResponseWriter, r *http.Reque
 func (self *httpFrontend) handle_newboard(wr http.ResponseWriter, r *http.Request) {
 	param := make(map[string]interface{})
 	param["prefix"] = self.prefix
-	io.WriteString(wr, template.renderTemplate("newboard.mustache", param))
+	io.WriteString(wr, template.renderTemplate("newboard.mustache", param, self.cache.GetHandler().GetI18N(r)))
 }
 
 // handle new post via http request for a board
@@ -616,7 +616,7 @@ func (self *httpFrontend) handle_postform(wr http.ResponseWriter, r *http.Reques
 			resp_map["prefix"] = self.prefix
 			resp_map["redirect_url"] = url
 			resp_map["reason"] = "captcha incorrect"
-			io.WriteString(wr, template.renderTemplate("post_fail.mustache", resp_map))
+			io.WriteString(wr, template.renderTemplate("post_fail.mustache", resp_map, self.cache.GetHandler().GetI18N(r)))
 		}
 		return
 	}
@@ -650,7 +650,7 @@ func (self *httpFrontend) handle_postform(wr http.ResponseWriter, r *http.Reques
 			resp_map["reason"] = err.Error()
 			resp_map["prefix"] = self.prefix
 			resp_map["redirect_url"] = url
-			io.WriteString(wr, template.renderTemplate("post_fail.mustache", resp_map))
+			io.WriteString(wr, template.renderTemplate("post_fail.mustache", resp_map, self.cache.GetHandler().GetI18N(r)))
 		}
 	}
 
@@ -664,7 +664,7 @@ func (self *httpFrontend) handle_postform(wr http.ResponseWriter, r *http.Reques
 		if sendJson {
 			json.NewEncoder(wr).Encode(map[string]interface{}{"message_id": nntp.MessageID(), "url": url, "error": nil})
 		} else {
-			io.WriteString(wr, template.renderTemplate("post_success.mustache", map[string]interface{}{"prefix": self.prefix, "message_id": nntp.MessageID(), "redirect_url": url}))
+			template.writeTemplate("post_success.mustache", map[string]interface{}{"prefix": self.prefix, "message_id": nntp.MessageID(), "redirect_url": url}, wr, self.cache.GetHandler().GetI18N(r))
 		}
 	}
 	self.handle_postRequest(pr, b, e, s, self.enableBoardCreation)
@@ -1473,7 +1473,7 @@ func (self *httpFrontend) Mainloop() {
 	m.Path("/live").HandlerFunc(self.handle_liveui).Methods("GET")
 	// live ui page
 	m.Path("/livechan/").HandlerFunc(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		template.writeTemplate("live.mustache", map[string]interface{}{"prefix": self.prefix}, w)
+		template.writeTemplate("live.mustache", map[string]interface{}{"prefix": self.prefix}, w, self.cache.GetHandler().GetI18N(r))
 	})).Methods("GET", "HEAD")
 	// live ui api endpoint
 	m.Path("/livechan/api/{meth}").HandlerFunc(self.handle_liveapi).Methods("GET", "POST")
@@ -1519,6 +1519,10 @@ func (self *httpFrontend) endLiveUI() {
 
 func (self *httpFrontend) RegenOnModEvent(newsgroup, msgid, root string, page int) {
 	self.cache.RegenOnModEvent(newsgroup, msgid, root, page)
+}
+
+func (self *httpFrontend) GetCacheHandler() CacheHandler {
+	return self.cache.GetHandler()
 }
 
 // create a new http based frontend

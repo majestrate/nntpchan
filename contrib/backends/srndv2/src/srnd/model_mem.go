@@ -19,12 +19,42 @@ type catalogModel struct {
 	prefix   string
 	board    string
 	threads  []CatalogItemModel
+	_i18n    *I18N
 }
 
 type catalogItemModel struct {
 	page       int
 	replycount int
 	op         PostModel
+}
+
+func (self *catalogModel) I18N(i *I18N) {
+	self._i18n = i
+}
+
+func (self *post) I18N(i *I18N) {
+	self._i18n = i
+	for idx := range self.Files {
+		self.Files[idx].I18N(i)
+	}
+}
+
+func (self *thread) I18N(i *I18N) {
+	self._i18n = i
+	for idx := range self.Posts {
+		self.Posts[idx].I18N(i)
+	}
+}
+
+func (self *boardModel) I18N(i *I18N) {
+	self._i18n = i
+	for idx := range self.threads {
+		self.threads[idx].I18N(i)
+	}
+}
+
+func (self *attachment) I18N(i *I18N) {
+	self._i18n = i
 }
 
 func (self *catalogModel) Navbar() string {
@@ -38,7 +68,7 @@ func (self *catalogModel) Navbar() string {
 	})
 	param["prefix"] = self.prefix
 	param["links"] = links
-	return template.renderTemplate("navbar.mustache", param)
+	return template.renderTemplate("navbar.mustache", param, self._i18n)
 }
 
 func (self *catalogModel) MarshalJSON() (b []byte, err error) {
@@ -78,6 +108,7 @@ func (self *catalogItemModel) ReplyCount() string {
 }
 
 type boardModel struct {
+	_i18n      *I18N
 	allowFiles bool
 	frontend   string
 	prefix     string
@@ -131,7 +162,7 @@ func (self *boardModel) Navbar() string {
 	param["frontend"] = self.frontend
 	param["prefix"] = self.prefix
 	param["links"] = self.PageList()
-	return template.renderTemplate("navbar.mustache", param)
+	return template.renderTemplate("navbar.mustache", param, self._i18n)
 }
 
 func (self *boardModel) Board() string {
@@ -207,6 +238,7 @@ func (self *boardModel) Update(db Database) {
 }
 
 type post struct {
+	_i18n            *I18N
 	truncated        bool
 	prefix           string
 	board            string
@@ -286,6 +318,7 @@ func (self *post) JSON() string {
 }
 
 type attachment struct {
+	_i18n       *I18N
 	prefix      string
 	Path        string
 	Name        string
@@ -405,7 +438,11 @@ func (self *post) OP() bool {
 }
 
 func (self *post) Date() string {
-	return time.Unix(self.Posted, 0).Format(i18nProvider.Format("full_date_format"))
+	i18n := self._i18n
+	if i18n == nil {
+		i18n = I18nProvider
+	}
+	return time.Unix(self.Posted, 0).Format(i18n.Format("full_date_format"))
 }
 
 func (self *post) DateRFC() string {
@@ -479,7 +516,7 @@ func (self *post) SetIndex(idx int) {
 func (self *post) RenderPost() string {
 	param := make(map[string]interface{})
 	param["post"] = self
-	return template.renderTemplate("post.mustache", param)
+	return template.renderTemplate("post.mustache", param, self._i18n)
 }
 
 func (self *post) RenderTruncatedPost() string {
@@ -505,6 +542,7 @@ func (self *post) Truncate() PostModel {
 	}
 
 	return &post{
+		_i18n:       self._i18n,
 		truncated:   true,
 		prefix:      self.prefix,
 		board:       self.board,
@@ -541,6 +579,7 @@ func (self *post) RenderBody() string {
 }
 
 type thread struct {
+	_i18n               *I18N
 	allowFiles          bool
 	prefix              string
 	links               []LinkModel
@@ -583,7 +622,7 @@ func (self *thread) Navbar() string {
 	param["frontend"] = self.Board()
 	param["links"] = self.links
 	param["prefix"] = self.prefix
-	return template.renderTemplate("navbar.mustache", param)
+	return template.renderTemplate("navbar.mustache", param, self._i18n)
 }
 
 func (self *thread) Board() string {
@@ -658,6 +697,7 @@ func (self *thread) Truncate() ThreadModel {
 	trunc := 5
 	if len(self.Posts) > trunc {
 		t := &thread{
+			_i18n:      self._i18n,
 			allowFiles: self.allowFiles,
 			links:      self.links,
 			Posts:      append([]PostModel{self.Posts[0]}, self.Posts[len(self.Posts)-trunc:]...),

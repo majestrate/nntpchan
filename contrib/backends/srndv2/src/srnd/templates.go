@@ -173,9 +173,12 @@ func (self *templateEngine) getTemplate(name string) (t string) {
 }
 
 // render a template, self explanitory
-func (self *templateEngine) renderTemplate(name string, obj map[string]interface{}) string {
+func (self *templateEngine) renderTemplate(name string, obj map[string]interface{}, i18n *I18N) string {
 	t := self.getTemplate(name)
-	obj["i18n"] = i18nProvider
+	if i18n == nil {
+		i18n = I18nProvider
+	}
+	obj["i18n"] = i18n
 	s, err := mustache.Render(t, obj)
 	if err == nil {
 		return s
@@ -185,8 +188,8 @@ func (self *templateEngine) renderTemplate(name string, obj map[string]interface
 }
 
 // write a template to an io.Writer
-func (self *templateEngine) writeTemplate(name string, obj map[string]interface{}, wr io.Writer) (err error) {
-	str := self.renderTemplate(name, obj)
+func (self *templateEngine) writeTemplate(name string, obj map[string]interface{}, wr io.Writer, i18n *I18N) (err error) {
+	str := self.renderTemplate(name, obj, i18n)
 	var r io.Reader
 	r = bytes.NewBufferString(str)
 	if self.Minimize {
@@ -222,47 +225,49 @@ func (self *templateEngine) obtainBoard(prefix, frontend, group string, db Datab
 	return
 }
 
-func (self *templateEngine) genCatalog(prefix, frontend, group string, wr io.Writer, db Database) {
+func (self *templateEngine) genCatalog(prefix, frontend, group string, wr io.Writer, db Database, i18n *I18N) {
 	board := self.obtainBoard(prefix, frontend, group, db)
 	catalog := new(catalogModel)
 	catalog.prefix = prefix
 	catalog.frontend = frontend
 	catalog.board = group
-
+	catalog.I18N(i18n)
 	for page, bm := range board {
 		for _, th := range bm.Threads() {
 			th.Update(db)
 			catalog.threads = append(catalog.threads, &catalogItemModel{op: th.OP(), page: page, replycount: len(th.Replies())})
 		}
 	}
-	self.writeTemplate("catalog.mustache", map[string]interface{}{"board": catalog}, wr)
+	self.writeTemplate("catalog.mustache", map[string]interface{}{"board": catalog}, wr, i18n)
 }
 
 // generate a board page
-func (self *templateEngine) genBoardPage(allowFiles, requireCaptcha bool, prefix, frontend, newsgroup string, page int, wr io.Writer, db Database, json bool) {
+func (self *templateEngine) genBoardPage(allowFiles, requireCaptcha bool, prefix, frontend, newsgroup string, page int, wr io.Writer, db Database, json bool, i18n *I18N) {
 	// get the board page model
 	perpage, _ := db.GetThreadsPerPage(newsgroup)
 	boardPage := db.GetGroupForPage(prefix, frontend, newsgroup, page, int(perpage))
 	boardPage.Update(db)
+	boardPage.I18N(i18n)
 	// render it
 	if json {
 		self.renderJSON(wr, boardPage)
 	} else {
-		form := renderPostForm(prefix, newsgroup, "", allowFiles, requireCaptcha)
-		self.writeTemplate("board.mustache", map[string]interface{}{"board": boardPage, "page": page, "form": form}, wr)
+		form := renderPostForm(prefix, newsgroup, "", allowFiles, requireCaptcha, i18n)
+		self.writeTemplate("board.mustache", map[string]interface{}{"board": boardPage, "page": page, "form": form}, wr, i18n)
 	}
 }
 
-func (self *templateEngine) genUkko(prefix, frontend string, wr io.Writer, database Database, json bool) {
-	self.genUkkoPaginated(prefix, frontend, wr, database, 0, json)
+func (self *templateEngine) genUkko(prefix, frontend string, wr io.Writer, database Database, json bool, i18n *I18N) {
+	self.genUkkoPaginated(prefix, frontend, wr, database, 0, json, i18n)
 }
 
-func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writer, database Database, page int, json bool) {
+func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writer, database Database, page int, json bool, i18n *I18N) {
 	var threads []ThreadModel
 	for _, article := range database.GetLastBumpedThreadsPaginated("", 10, page*10) {
 		root := article[0]
 		thread, err := database.GetThreadModel(prefix, root)
 		if err == nil {
+			thread.I18N(i18n)
 			threads = append(threads, thread)
 		}
 	}
@@ -282,13 +287,13 @@ func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writ
 		navbar["frontend"] = frontend
 		navbar["prefix"] = prefix
 		// inject navbar
-		obj["navbar"] = self.renderTemplate("navbar.mustache", navbar)
+		obj["navbar"] = self.renderTemplate("navbar.mustache", navbar, i18n)
 		// render
-		self.writeTemplate("ukko.mustache", obj, wr)
+		self.writeTemplate("ukko.mustache", obj, wr, i18n)
 	}
 }
 
-func (self *templateEngine) genThread(allowFiles, requireCaptcha bool, root ArticleEntry, prefix, frontend string, wr io.Writer, db Database, json bool) {
+func (self *templateEngine) genThread(allowFiles, requireCaptcha bool, root ArticleEntry, prefix, frontend string, wr io.Writer, db Database, json bool, i18n *I18N) {
 	newsgroup := root.Newsgroup()
 	msgid := root.MessageID()
 
@@ -303,8 +308,9 @@ func (self *templateEngine) genThread(allowFiles, requireCaptcha bool, root Arti
 		if json {
 			self.renderJSON(wr, t)
 		} else {
-			form := renderPostForm(prefix, newsgroup, msgid, allowFiles, requireCaptcha)
-			self.writeTemplate("thread.mustache", map[string]interface{}{"thread": t, "board": map[string]interface{}{"Name": newsgroup, "Frontend": frontend, "AllowFiles": allowFiles}, "form": form, "prefix": prefix}, wr)
+			t.I18N(i18n)
+			form := renderPostForm(prefix, newsgroup, msgid, allowFiles, requireCaptcha, i18n)
+			self.writeTemplate("thread.mustache", map[string]interface{}{"thread": t, "board": map[string]interface{}{"Name": newsgroup, "Frontend": frontend, "AllowFiles": allowFiles}, "form": form, "prefix": prefix}, wr, i18n)
 		}
 	} else {
 		log.Println("templates: error getting thread for ", msgid, err.Error())
@@ -368,18 +374,18 @@ func (self *templateEngine) changeTemplateDir(dirname string) {
 
 func (self *templateEngine) createNotFoundHandler(prefix, frontend string) (h http.Handler) {
 	h = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		self.renderNotFound(w, r, prefix, frontend)
+		self.renderNotFound(w, r, prefix, frontend, nil)
 	})
 	return
 }
 
 // default renderer of 404 pages
-func (self *templateEngine) renderNotFound(wr http.ResponseWriter, r *http.Request, prefix, frontend string) {
+func (self *templateEngine) renderNotFound(wr http.ResponseWriter, r *http.Request, prefix, frontend string, i18n *I18N) {
 	wr.WriteHeader(404)
 	opts := make(map[string]interface{})
 	opts["prefix"] = prefix
 	opts["frontend"] = frontend
-	self.writeTemplate("404.mustache", opts, wr)
+	self.writeTemplate("404.mustache", opts, wr, i18n)
 }
 
 func newTemplateEngine(dir string) *templateEngine {
@@ -399,17 +405,17 @@ func (self *templateEngine) findLink(prefix, hash string) (url string) {
 
 var template = newTemplateEngine(defaultTemplateDir())
 
-func renderPostForm(prefix, board, op_msg_id string, files, captcha bool) string {
+func renderPostForm(prefix, board, op_msg_id string, files, captcha bool, i18n *I18N) string {
 	url := prefix + "post/" + board
 	button := "New Thread"
 	if op_msg_id != "" {
 		button = "Reply"
 	}
-	return template.renderTemplate("postform.mustache", map[string]interface{}{"post_url": url, "reference": op_msg_id, "button": button, "files": files, "prefix": prefix, "DisableCaptcha": !captcha})
+	return template.renderTemplate("postform.mustache", map[string]interface{}{"post_url": url, "reference": op_msg_id, "button": button, "files": files, "prefix": prefix, "DisableCaptcha": !captcha}, i18n)
 }
 
 // generate misc graphs
-func (self *templateEngine) genGraphs(prefix string, wr io.Writer, db Database) {
+func (self *templateEngine) genGraphs(prefix string, wr io.Writer, db Database, i18n *I18N) {
 
 	//
 	// begin gen history.html
@@ -433,7 +439,7 @@ func (self *templateEngine) genGraphs(prefix string, wr io.Writer, db Database) 
 	}
 	sort.Sort(all_posts)
 
-	_, err := io.WriteString(wr, self.renderTemplate("graph_history.mustache", map[string]interface{}{"history": all_posts}))
+	_, err := io.WriteString(wr, self.renderTemplate("graph_history.mustache", map[string]interface{}{"history": all_posts}, i18n))
 	if err != nil {
 		log.Println("error writing history graph", err)
 	}
@@ -444,7 +450,7 @@ func (self *templateEngine) genGraphs(prefix string, wr io.Writer, db Database) 
 
 }
 
-func (self *templateEngine) genBoardList(prefix, name string, wr io.Writer, db Database) {
+func (self *templateEngine) genBoardList(prefix, name string, wr io.Writer, db Database, i18n *I18N) {
 	// the graph for the front page
 	var frontpage_graph boardPageRows
 
@@ -470,22 +476,26 @@ func (self *templateEngine) genBoardList(prefix, name string, wr io.Writer, db D
 	}
 	sort.Sort(frontpage_graph)
 	param["graph"] = frontpage_graph
-	_, err := io.WriteString(wr, self.renderTemplate("boardlist.mustache", param))
+	_, err := io.WriteString(wr, self.renderTemplate("boardlist.mustache", param, i18n))
 	if err != nil {
 		log.Println("error writing board list page", err)
 	}
 }
 
 // generate front page
-func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name string, indexwr, boardswr io.Writer, db Database) {
+func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name string, indexwr, boardswr io.Writer, db Database, i18n *I18N) {
 
 	models := db.GetLastPostedPostModels(prefix, 20)
+
+	for idx := range models {
+		models[idx].I18N(i18n)
+	}
 
 	wr := indexwr
 
 	param := make(map[string]interface{})
 
-	param["overview"] = self.renderTemplate("overview.mustache", map[string]interface{}{"overview": overviewModel(models)})
+	param["overview"] = self.renderTemplate("overview.mustache", map[string]interface{}{"overview": overviewModel(models)}, i18n)
 	/*
 		sort.Sort(posts_graph)
 		param["postsgraph"] = self.renderTemplate("posts_graph.mustache", map[string]interface{}{"graph": posts_graph})
@@ -500,9 +510,9 @@ func (self *templateEngine) genFrontPage(top_count int, prefix, frontend_name st
 	param["totalposts"] = db.ArticleCount()
 	param["prefix"] = prefix
 	// render and inject navbar
-	param["navbar"] = self.renderTemplate("navbar.mustache", map[string]interface{}{"name": "Front Page", "frontend": frontend_name, "prefix": prefix})
+	param["navbar"] = self.renderTemplate("navbar.mustache", map[string]interface{}{"name": "Front Page", "frontend": frontend_name, "prefix": prefix}, i18n)
 
-	_, err := io.WriteString(wr, self.renderTemplate("frontpage.mustache", param))
+	_, err := io.WriteString(wr, self.renderTemplate("frontpage.mustache", param, i18n))
 	if err != nil {
 		log.Println("error writing front page", err)
 	}

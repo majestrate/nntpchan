@@ -32,10 +32,11 @@ type httpModUI struct {
 	store            *sessions.CookieStore
 	prefix           string
 	mod_prefix       string
+	cache            CacheHandler
 }
 
 func createHttpModUI(frontend *httpFrontend) httpModUI {
-	return httpModUI{frontend.regenAll, frontend.Regen, frontend.RegenerateBoard, frontend.deleteThreadMarkup, frontend.deleteBoardMarkup, make(chan NNTPMessage), frontend.daemon, frontend.daemon.store, frontend.store, frontend.prefix, frontend.prefix + "mod/"}
+	return httpModUI{frontend.regenAll, frontend.Regen, frontend.RegenerateBoard, frontend.deleteThreadMarkup, frontend.deleteBoardMarkup, make(chan NNTPMessage), frontend.daemon, frontend.daemon.store, frontend.store, frontend.prefix, frontend.prefix + "mod/", frontend.GetCacheHandler()}
 
 }
 
@@ -474,7 +475,8 @@ func (self httpModUI) writeTemplateParam(wr http.ResponseWriter, r *http.Request
 	param[csrf.TemplateTag] = csrf.TemplateField(r)
 	param["prefix"] = self.prefix
 	param["mod_prefix"] = self.mod_prefix
-	io.WriteString(wr, template.renderTemplate(name, param))
+	i18n := self.cache.GetI18N(r)
+	io.WriteString(wr, template.renderTemplate(name, param, i18n))
 }
 
 // do a function as authenticated

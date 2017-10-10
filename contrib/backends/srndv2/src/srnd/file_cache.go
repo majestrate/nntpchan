@@ -15,6 +15,8 @@ type FileCache struct {
 	database Database
 	store    ArticleStore
 
+	handler http.Handler
+
 	webroot_dir string
 	name        string
 
@@ -112,7 +114,7 @@ func (self *FileCache) regenLongTerm() {
 		log.Println("cannot render history graph", err)
 		return
 	}
-	template.genGraphs(self.prefix, wr, self.database)
+	template.genGraphs(self.prefix, wr, self.database, nil)
 }
 
 func (self *FileCache) pollLongTerm() {
@@ -191,7 +193,7 @@ func (self *FileCache) regenerateThread(root ArticleEntry, json bool) {
 			log.Println("did not write", fname, err)
 			return
 		}
-		template.genThread(self.attachments, self.requireCaptcha, root, self.prefix, self.name, wr, self.database, json)
+		template.genThread(self.attachments, self.requireCaptcha, root, self.prefix, self.name, wr, self.database, json, nil)
 	} else {
 		log.Println("don't have root post", msgid, "not regenerating thread")
 	}
@@ -206,7 +208,7 @@ func (self *FileCache) regenerateBoardPage(board string, page int, json bool) {
 		log.Println("error generating board page", page, "for", board, err)
 		return
 	}
-	template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, board, page, wr, self.database, json)
+	template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, board, page, wr, self.database, json, nil)
 }
 
 // regenerate the catalog for a board
@@ -218,7 +220,7 @@ func (self *FileCache) regenerateCatalog(board string) {
 		log.Println("error generating catalog for", board, err)
 		return
 	}
-	template.genCatalog(self.prefix, self.name, board, wr, self.database)
+	template.genCatalog(self.prefix, self.name, board, wr, self.database, nil)
 }
 
 // regenerate the front page
@@ -236,7 +238,7 @@ func (self *FileCache) RegenFrontPage() {
 		return
 	}
 
-	template.genFrontPage(10, self.prefix, self.name, indexwr, boardswr, self.database)
+	template.genFrontPage(10, self.prefix, self.name, indexwr, boardswr, self.database, nil)
 
 	j_boardswr, err2 := os.Create(filepath.Join(self.webroot_dir, "boards.json"))
 	g := self.database.GetAllNewsgroups()
@@ -258,7 +260,7 @@ func (self *FileCache) regenUkko() {
 		log.Println("error generating ukko markup", err)
 		return
 	}
-	template.genUkko(self.prefix, self.name, wr, self.database, false)
+	template.genUkko(self.prefix, self.name, wr, self.database, false, nil)
 
 	// json
 	fname = filepath.Join(self.webroot_dir, "ukko.json")
@@ -268,7 +270,7 @@ func (self *FileCache) regenUkko() {
 		log.Println("error generating ukko json", err)
 		return
 	}
-	template.genUkko(self.prefix, self.name, wr, self.database, true)
+	template.genUkko(self.prefix, self.name, wr, self.database, true, nil)
 	i := 0
 	for i < 10 {
 		fname := fmt.Sprintf("ukko-%d.html", i)
@@ -279,14 +281,14 @@ func (self *FileCache) regenUkko() {
 			return
 		}
 		defer f.Close()
-		template.genUkkoPaginated(self.prefix, self.name, f, self.database, i, false)
+		template.genUkkoPaginated(self.prefix, self.name, f, self.database, i, false, nil)
 		j, err := os.Create(jname)
 		if err != nil {
 			log.Printf("failed to create json ukko", i, err)
 			return
 		}
 		defer j.Close()
-		template.genUkkoPaginated(self.prefix, self.name, j, self.database, i, true)
+		template.genUkkoPaginated(self.prefix, self.name, j, self.database, i, true, nil)
 	}
 }
 
@@ -334,8 +336,16 @@ func (self *FileCache) GetGroupChan() chan groupRegenRequest {
 	return self.regenGroupChan
 }
 
-func (self *FileCache) GetHandler() http.Handler {
-	return http.FileServer(http.Dir(self.webroot_dir))
+func (self *FileCache) GetI18N(r *http.Request) *I18N {
+	return nil
+}
+
+func (self *FileCache) GetHandler() CacheHandler {
+	return self
+}
+
+func (self *FileCache) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	self.handler.ServeHTTP(w, r)
 }
 
 func (self *FileCache) Close() {
@@ -348,7 +358,7 @@ func (self *FileCache) SetRequireCaptcha(require bool) {
 
 func NewFileCache(prefix, webroot, name string, threads int, attachments bool, db Database, store ArticleStore) CacheInterface {
 	cache := new(FileCache)
-
+	cache.handler = http.FileServer(http.Dir(webroot))
 	cache.regenBoardTicker = time.NewTicker(time.Second * 10)
 	cache.longTermTicker = time.NewTicker(time.Hour)
 	cache.ukkoTicker = time.NewTicker(time.Second * 30)

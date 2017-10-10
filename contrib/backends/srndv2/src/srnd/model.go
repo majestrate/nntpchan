@@ -19,6 +19,9 @@ type BaseModel interface {
 
 	// to json string
 	JSON() string
+
+	// inject I18N
+	I18N(i *I18N)
 }
 
 type ThumbInfo struct {
@@ -253,11 +256,11 @@ func (p *postsGraphRow) GraphRune(r string) (s string) {
 }
 
 func (p postsGraphRow) Date() (s string) {
-	return p.day.Format(i18nProvider.Format("month_date_format"))
+	return p.day.Format(I18nProvider.Format("month_date_format"))
 }
 
 func (p postsGraphRow) Day() (s string) {
-	return p.day.Format(i18nProvider.Format("day_date_format"))
+	return p.day.Format(I18nProvider.Format("day_date_format"))
 }
 
 func (p postsGraphRow) RegularGraph() (s string) {

@@ -316,7 +316,7 @@ func (self *Installer) HandleInstallerGet(wr http.ResponseWriter, r *http.Reques
 		wr.WriteHeader(404)
 	} else {
 		m := self.currentNode.model(self.currentNode, self.currentErr, self.config)
-		template.writeTemplate(self.currentNode.templateName, m, wr)
+		template.writeTemplate(self.currentNode.templateName, m, wr, nil)
 	}
 }
 

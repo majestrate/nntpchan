@@ -90,15 +90,16 @@ namespace nntpchan
       }, [] (uv_stream_t * s, ssize_t nread, const uv_buf_t * b) {
         IServerConn * self = (IServerConn*) s->data;
         if(self == nullptr) {
-          delete [] b->base;
+          if(b->base)
+            delete [] b->base;
           return;
         }
         if(nread > 0) {
-          b->base[nread] = 0;
           self->m_handler->OnData(b->base, nread);
           self->SendNextReply();
           if(self->m_handler->ShouldClose())
             self->Close();
+          delete [] b->base;
         } else {
           if (nread != UV_EOF) {
             std::cerr << "error in nntp server conn alloc: ";
@@ -108,7 +109,6 @@ namespace nntpchan
           // got eof or error
           self->Close();
         }
-        delete [] b->base;
       });
   }
 

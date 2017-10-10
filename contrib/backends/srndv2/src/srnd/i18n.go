@@ -9,26 +9,36 @@ import (
 	"strings"
 )
 
-type i18n struct {
+type I18N struct {
 	locale language.Tag
 	// loaded translations
-	translations map[string]string
+	Translations map[string]string
 	// loaded formats
-	formats map[string]string
+	Formats map[string]string
 	// root directory for translations
 	translation_dir string
+	// name of locale
+	name string
 }
 
-var i18nProvider *i18n = nil
+var I18nProvider *I18N = nil
 
 //Read all .ini files in dir, where the filenames are BCP 47 tags
 //Use the language matcher to get the best match for the locale preference
 func InitI18n(locale, dir string) {
-	pref := language.Make(locale) // falls back to en-US on parse error
-	log.Println("using locale", pref)
-	files, err := ioutil.ReadDir(dir)
+	var err error
+	I18nProvider, err = NewI18n(locale, dir)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func NewI18n(locale, dir string) (*I18N, error) {
+	log.Println("get locale", locale)
+	pref := language.Make(locale) // falls back to en-US on parse error
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return nil, err
 	}
 
 	serverLangs := make([]language.Tag, 1)
@@ -48,39 +58,40 @@ func InitI18n(locale, dir string) {
 	fname := filepath.Join(dir, tag.String()+".ini")
 	conf, err := configparser.Read(fname)
 	if err != nil {
-		log.Fatal("cannot read translation file for", tag.String(), err)
+		return nil, err
 	}
 
 	formats, err := conf.Section("formats")
 	if err != nil {
-		log.Fatal("Cannot read formats sections in translations for", tag.String(), err)
+		return nil, err
 	}
 	translations, err := conf.Section("strings")
 	if err != nil {
-		log.Fatal("Cannot read strings sections in translations for", tag.String(), err)
+		return nil, err
 	}
 
-	i18nProvider = &i18n{
+	return &I18N{
+		name:            locale,
 		translation_dir: dir,
-		formats:         formats.Options(),
-		translations:    translations.Options(),
+		Formats:         formats.Options(),
+		Translations:    translations.Options(),
 		locale:          tag,
-	}
+	}, nil
 }
 
-func (self *i18n) Translate(key string) string {
-	return self.translations[key]
+func (self *I18N) Translate(key string) string {
+	return self.Translations[key]
 }
 
-func (self *i18n) Format(key string) string {
-	return self.formats[key]
+func (self *I18N) Format(key string) string {
+	return self.Formats[key]
 }
 
 //this signature seems to be expected by mustache
-func (self *i18n) Translations() (map[string]string, error) {
-	return self.translations, nil
-}
+//func (self *I18N) Translations() (map[string]string, error) {
+//	return self._translations, nil
+//}
 
-func (self *i18n) Formats() (map[string]string, error) {
-	return self.formats, nil
-}
+//func (self *I18N) Formats() (map[string]string, error) {
+//	return self.formats, nil
+//}

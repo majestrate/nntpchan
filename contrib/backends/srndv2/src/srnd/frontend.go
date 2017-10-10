@@ -39,4 +39,6 @@ type Frontend interface {
 
 	// regenerate on mod event
 	RegenOnModEvent(newsgroup, msgid, root string, page int)
+
+	GetCacheHandler() CacheHandler
 }
