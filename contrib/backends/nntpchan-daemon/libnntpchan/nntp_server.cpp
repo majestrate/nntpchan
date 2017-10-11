@@ -1,8 +1,8 @@
 
-#include "nntp_server.hpp"
-#include "nntp_auth.hpp"
-#include "nntp_handler.hpp"
-#include "net.hpp"
+#include <nntpchan/nntp_server.hpp>
+#include <nntpchan/nntp_auth.hpp>
+#include <nntpchan/nntp_handler.hpp>
+#include <nntpchan/net.hpp>
 #include <cassert>
 #include <iostream>
 #include <sstream>

@@ -1,4 +1,4 @@
-#include "exec_frontend.hpp"
+#include <nntpchan/exec_frontend.hpp>
 #include <cstring>
 #include <iostream>
 #include <errno.h>

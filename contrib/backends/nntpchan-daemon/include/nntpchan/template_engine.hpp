@@ -12,7 +12,7 @@ namespace nntpchan
   struct TemplateEngine
   {
     using Args_t = std::map<std::string, std::any>;
-    virtual bool WriteTemplate(const std::string & template_fname, const Args_t & args, const FileHandle_ptr & out) = 0;
+    virtual bool WriteTemplate(const fs::path & template_fpath, const Args_t & args, const FileHandle_ptr & out) = 0;
   };
 
   TemplateEngine * CreateTemplateEngine(const std::string & dialect);

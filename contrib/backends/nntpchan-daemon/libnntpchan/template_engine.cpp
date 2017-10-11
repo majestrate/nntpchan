@@ -1,5 +1,6 @@
-#include "template_engine.hpp"
-#include "sanitize.hpp"
+#include <nntpchan/template_engine.hpp>
+#include <nntpchan/sanitize.hpp>
+#include <iostream>
 
 namespace nntpchan
 {
@@ -8,19 +9,33 @@ namespace nntpchan
   {
     struct Impl
     {
-      bool RenderFile(const std::string & fname, const Args_t & args, const FileHandle_ptr & out)
+
+      bool ParseTemplate(const FileHandle_ptr & in)
       {
-        auto file = OpenFile(fname, eRead);
-        
-        
         return true;
       }
+      
+      bool RenderFile(const Args_t & args, const FileHandle_ptr & out)
+      {
+        return true;
+      }
+
     };
 
-    virtual bool WriteTemplate(const std::string & fname, const Args_t & args, const FileHandle_ptr & out)
+    virtual bool WriteTemplate(const fs::path & fpath, const Args_t & args, const FileHandle_ptr & out)
     {
+      auto templFile = OpenFile(fpath, eRead);
+      if(!templFile)
+      {
+        std::clog << "no such template at " << fpath << std::endl;
+        return false;
+      }
       auto impl = std::make_unique<Impl>();
-      return impl->RenderFile(fname, args, out);
+      if(impl->ParseTemplate(templFile))
+        return impl->RenderFile(args, out);
+
+      std::clog << "failed to parse template " << fpath << std::endl;
+      return false;
     }
   };
 

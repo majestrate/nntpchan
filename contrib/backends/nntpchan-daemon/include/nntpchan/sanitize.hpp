@@ -4,9 +4,10 @@
 
 namespace nntpchan
 {
-  std::string NNTPSanitize(const std::string & str);
+  std::string NNTPSanitizeLine(const std::string & str);
   std::string ToLower(const std::string & str);
   bool IsValidMessageID(const std::string & msgid);
+  bool IsValidNewsgroup(const std::string & group);
 }
 
 #endif

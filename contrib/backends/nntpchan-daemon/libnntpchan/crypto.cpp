@@ -1,4 +1,4 @@
-#include "crypto.hpp"
+#include <nntpchan/crypto.hpp>
 #include <sodium.h>
 #include <cassert>
 

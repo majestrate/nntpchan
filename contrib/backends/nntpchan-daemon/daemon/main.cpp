@@ -1,11 +1,11 @@
 #include "ini.hpp"
 
-#include "crypto.hpp"
-#include "storage.hpp"
-#include "nntp_server.hpp"
-#include "event.hpp"
-#include "exec_frontend.hpp"
-#include "staticfile_frontend.hpp"
+#include <nntpchan/crypto.hpp>
+#include <nntpchan/storage.hpp>
+#include <nntpchan/nntp_server.hpp>
+#include <nntpchan/event.hpp>
+#include <nntpchan/exec_frontend.hpp>
+#include <nntpchan/staticfile_frontend.hpp>
 
 #include <vector>
 #include <string>

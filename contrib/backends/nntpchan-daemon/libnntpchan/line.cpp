@@ -1,4 +1,4 @@
-#include "line.hpp"
+#include <nntpchan/line.hpp>
 
 namespace nntpchan {
 

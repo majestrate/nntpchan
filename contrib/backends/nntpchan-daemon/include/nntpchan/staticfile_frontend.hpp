@@ -19,8 +19,8 @@ namespace nntpchan
     ~StaticFileFrontend();
 
     void ProcessNewMessage(const fs::path & fpath);
-    bool AcceptsNewsgroup(const std::string & newsgroup) { (void) newsgroup; return true; }
-    bool AcceptsMessage(const std::string & msgid) { (void) msgid; return true; }
+    bool AcceptsNewsgroup(const std::string & newsgroup);
+    bool AcceptsMessage(const std::string & msgid);
 
   private:
 

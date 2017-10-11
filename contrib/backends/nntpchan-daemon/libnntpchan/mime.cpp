@@ -1,4 +1,4 @@
-#include "mime.hpp"
+#include <nntpchan/mime.hpp>
 
 namespace nntpchan
 {

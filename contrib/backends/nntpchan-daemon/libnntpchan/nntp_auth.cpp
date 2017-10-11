@@ -1,6 +1,6 @@
-#include "nntp_auth.hpp"
-#include "crypto.hpp"
-#include "base64.hpp"
+#include <nntpchan/nntp_auth.hpp>
+#include <nntpchan/crypto.hpp>
+#include <nntpchan/base64.hpp>
 #include <array>
 #include <iostream>
 #include <fstream>

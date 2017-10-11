@@ -1,4 +1,4 @@
-#include "base64.hpp"
+#include <nntpchan/base64.hpp>
 
 
 // taken from i2pd 

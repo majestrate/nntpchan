@@ -1,5 +1,5 @@
-#include "nntp_handler.hpp"
-#include "sanitize.hpp"
+#include <nntpchan/nntp_handler.hpp>
+#include <nntpchan/sanitize.hpp>
 #include <algorithm>
 #include <cctype>
 #include <cstring>

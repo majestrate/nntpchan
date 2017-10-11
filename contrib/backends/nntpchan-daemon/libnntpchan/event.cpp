@@ -1,4 +1,4 @@
-#include "event.hpp"
+#include <nntpchan/event.hpp>
 #include <cassert>
 
 namespace nntpchan

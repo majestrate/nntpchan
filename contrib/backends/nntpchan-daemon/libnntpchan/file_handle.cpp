@@ -1,4 +1,4 @@
-#include "file_handle.hpp"
+#include <nntpchan/file_handle.hpp>
 
 
 namespace nntpchan

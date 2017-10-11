@@ -1,29 +1,44 @@
 
 REPO=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-SRC_PATH = $(REPO)/libnntpchan
+NNTPCHAN_PATH = $(REPO)/libnntpchan
 
-SOURCES := $(wildcard $(SRC_PATH)/*.cpp)
-HEADERS := $(wildcard $(SRC_PATH)/*.hpp)
-OBJECTS := $(SOURCES:.cpp=.o)
+NNTPCHAN_SRC := $(wildcard $(NNTPCHAN_PATH)/*.cpp)
+NNTPCHAN_HDR := $(wildcard $(NNTPCHAN_PATH)/*.hpp)
+NNTPCHAN_OBJ := $(NNTPCHAN_SRC:.cpp=.o)
 
-TOOL_SRC_PATH := $(REPO)/tools
+MUSTACHE_PATH = $(REPO)/libmustache
 
-TOOL_SRC := $(wildcard $(TOOL_SRC_PATH)/*.cpp)
+MUSTACHE_SRC := $(wildcard $(MUSTACHE_PATH)/*.cpp)
+MUSTACHE_SRC += $(wildcard $(MUSTACHE_PATH)/*/*.cpp)
+
+MUSTACHE_HDR := $(wildcard $(MUSTACHE_PATH)/*.hpp)
+MUSTACHE_OBJ := $(MUSTACHE_SRC:.cpp=.o)
+
+HEADERS_PATH=$(REPO)/include
+
+TOOL_PATH := $(REPO)/tools
+
+TOOL_SRC := $(wildcard $(TOOL_PATH)/*.cpp)
 TOOLS := $(TOOL_SRC:.cpp=)
+
+OBJ := $(NNTPCHAN_OBJ) $(MUSTACHE_OBJ)
 
 DAEMON_SRC = $(REPO)/daemon
 
 PKGS := libuv libsodium
 
 LD_FLAGS := $(shell pkg-config --libs $(PKGS)) -lstdc++fs
-INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I$(SRC_PATH)
+INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I$(HEADERS_PATH)
 CXXFLAGS := -std=c++17 -Wall -Wextra -pedantic $(INC_FLAGS)
 
 ifeq ($(DEBUG),1)
 	CXXFLAGS += -g
 endif
 
-LIB = $(REPO)/libnntpchan.a
+NNTPCHAN_LIB = $(REPO)/libnntpchan.a
+MUSTACHE_LIB = $(REPO)/libmustache.a
+
+LIBS = $(NNTPCHAN_LIB) $(MUSTACHE_LIB)
 
 EXE = $(REPO)/nntpd
 
@@ -32,25 +47,25 @@ all: build
 
 build: $(EXE) $(TOOLS)
 
-$(LIB): $(OBJECTS)
-	$(AR) -r $(LIB) $(OBJECTS)
+$(MUSTACHE_LIB): $(MUSTACHE_OBJ)
+	$(AR) -r $(MUSTACHE_LIB) $(MUSTACHE_OBJ)
 
-$(EXE): $(LIB)
-	$(CXX) $(CXXFLAGS) $(DAEMON_SRC)/main.cpp $(LIB) $(LD_FLAGS) -o $(EXE)
+$(NNTPCHAN_LIB): $(NNTPCHAN_OBJ)
+	$(AR) -r $(NNTPCHAN_LIB) $(NNTPCHAN_OBJ)
 
-$(TOOL_SRC): $(LIB)
+$(EXE): $(LIBS)
+	$(CXX) $(CXXFLAGS) $(DAEMON_SRC)/main.cpp $(NNTPCHAN_LIB) $(LD_FLAGS) -o $(EXE)
+
+$(TOOL_SRC): $(NNTPCHAN_LIB)
 
 $(TOOLS): $(TOOL_SRC)
-	$(CXX)  $(CXXFLAGS) $< $(LIB) $(LD_FLAGS) -o $@
+	$(CXX)  $(CXXFLAGS) $< $(NNTPCHAN_LIB) $(LD_FLAGS) -o $@
 
 build-test: $(LIB)
-	$(CXX) -o $(REPO)/test $(CXXFLAGS) test.cpp $(LIB) $(LD_FLAGS)
+	$(CXX) -o $(REPO)/test $(CXXFLAGS) test.cpp $(NNTPCHAN_LIB) $(LD_FLAGS)
 
 test: build-test
 	$(REPO)/test
 
-%.o: src/%.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@
-
 clean:
-	rm -f $(OBJECTS) $(LIB) $(EXE) $(TOOLS)
+	rm -f $(OBJ) $(NNTPCHAN_LIB) $(EXE) $(TOOLS)

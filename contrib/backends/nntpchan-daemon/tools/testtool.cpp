@@ -1,5 +1,5 @@
-#include "exec_frontend.hpp"
-#include "sanitize.hpp"
+#include <nntpchan/exec_frontend.hpp>
+#include <nntpchan/sanitize.hpp>
 #include <cassert>
 #include <iostream>
 

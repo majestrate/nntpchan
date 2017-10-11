@@ -1,6 +1,6 @@
-#include "buffer.hpp"
-#include "server.hpp"
-#include "net.hpp"
+#include <nntpchan/buffer.hpp>
+#include <nntpchan/server.hpp>
+#include <nntpchan/net.hpp>
 #include <cassert>
 #include <iostream>
 

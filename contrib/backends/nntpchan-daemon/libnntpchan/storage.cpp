@@ -1,5 +1,5 @@
-#include "storage.hpp"
-#include "sanitize.hpp"
+#include <nntpchan/storage.hpp>
+#include <nntpchan/sanitize.hpp>
 #include <sstream>
 
 namespace nntpchan

@@ -1,4 +1,4 @@
-#include "net.hpp"
+#include <nntpchan/net.hpp>
 #include <uv.h>
 #include <sstream>
 #include <stdexcept>

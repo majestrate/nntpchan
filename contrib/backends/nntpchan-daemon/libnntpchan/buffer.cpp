@@ -1,4 +1,4 @@
-#include "buffer.hpp"
+#include <nntpchan/buffer.hpp>
 #include <cstring>
 
 namespace nntpchan
@@ -9,7 +9,7 @@ namespace nntpchan
     std::memcpy(buf, b, s);
     this->b = uv_buf_init(buf, s);
     w.data = this;
-  };
+  }
 
   WriteBuffer::WriteBuffer(const std::string & s) : WriteBuffer(s.c_str(), s.size()) {}
 
