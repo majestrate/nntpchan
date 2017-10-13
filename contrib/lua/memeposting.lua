@@ -25,6 +25,10 @@ function red_text(str)
   return string.format("<span class='redtext'>%s</span>", str)
 end
 
+function spoilers(str)
+  return string.format("<span class='spoiler'>%s</span>", str)
+end
+
 function pre_text(str)
 
   str = str:gsub("%(", "&#40;")
@@ -48,5 +52,6 @@ function memeposting(body, prefix)
   body = string.gsub(body, "@@(.-)@@", psy_text)
   body = string.gsub(body, "//(.-)\\\\", explode_text)
   body = string.gsub(body, "/@(.-)@\\", psy_text)
+  body = string.gsub(body, "%*%*(.-)%*%*", spoilers)
   return body
 end
