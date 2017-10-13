@@ -453,3 +453,77 @@ background-repeat: repeat;
 #captcha_img {
     background-color: white;
 }
+
+
+@keyframes ebin {
+    0% {transform: rotate(-10deg);}
+    50% {transform: rotate(10deg);}
+    100% {transform: rotate(-10deg);}
+}
+
+.wobble {
+    animation: ebin 0.25s infinite;
+    animation-timing-function: linear;
+    text-align: center;
+}
+
+@keyframes expl {
+        0% { transform: scale(1,1); }
+        50% { transform: scale(1.5,1.5); }
+        100% { transform: scale(1,1); }
+}
+
+.explode {
+    animation: expl 0.5s infinite;
+    text-align: center;
+}
+
+@keyframes flash {
+    0% { opacity: 1;}
+    49% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+.flashy {
+    animation: flash 1s infinite;
+    animation-timing-function: linear;
+}
+
+
+.tripcode {
+    color: #de04ef;
+}
+
+@keyframes psych
+{
+    0%   {background-color: red; color: blue; }
+    10%  {background-color: yellow; color: red; }
+    20%  {background-color: blue; color: green; }
+    30% {background-color: green; color: yellow; }
+    40%   {background-color: red; color: blue; }
+    50%  {background-color: yellow; color: green; }
+    60%  {background-color: blue; color: yellow; }
+    70% {background-color: green; color: blue; }
+    80%   {background-color: red; color: green; }
+    90%  {background-color: yellow; color: red; }
+    95%  {background-color: blue; color: yellow; }
+    100% {background-color: green; color: white; }
+}
+
+.psy {
+    animation: psych 2s linear infinite;
+    display: inline-block;
+}
+
+.memearrows {
+    color: #789922;
+    margin-left: none;
+}
+
+.redtext {
+    color: #AF0A0F;
+    font-size: 12pt;
+    font-weight: bold;
+    margin-left: none;
+}
