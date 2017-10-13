@@ -823,3 +823,24 @@ th > label {
   .fagarrows { 
       color: #E0727F; 
   } 
+
+      .spoiler, .spoiler a:link, .spoiler a:visited {
+        color: black;
+        background: black;
+      }
+
+      .spoiler:hover {
+        color: white;
+      }
+
+      .spoiler:hover a:link {
+        color: #FF6600;
+      }
+
+      .spoiler:hover a:visited {
+        color: #FF6600;
+      }
+
+      .spoiler:hover a:hover {
+        color: #0066FF;
+      }
