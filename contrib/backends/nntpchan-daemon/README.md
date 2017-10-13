@@ -12,6 +12,8 @@ requirements:
 
 * libuv 1.x
 
+* boost variant (for now)
+
 * GNU Make
 
 building:

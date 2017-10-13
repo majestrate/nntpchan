@@ -1,6 +1,7 @@
 #ifndef NNTPCHAN_STATICFILE_FRONTEND_HPP
 #define NNTPCHAN_STATICFILE_FRONTEND_HPP
 #include "frontend.hpp"
+#include "message.hpp"
 #include "template_engine.hpp"
 #include "model.hpp"
 #include <experimental/filesystem>
@@ -23,17 +24,7 @@ namespace nntpchan
     bool AcceptsMessage(const std::string & msgid);
 
   private:
-
-    typedef nntpchan::model::Thread Thread_t;
-
-    typedef std::vector<Thread_t> Threads_t;
-
-    typedef std::vector<Threads_t> BoardPage_t;
-    
-    BoardPage_t GetThreadsPaginated(const std::string & group, uint32_t perpage, uint32_t pages);
-    
-  private:
-    
+    MessageDB_ptr m_MessageDB;
     TemplateEngine_ptr m_TemplateEngine;
     fs::path m_TemplateDir;
     fs::path m_OutDir;

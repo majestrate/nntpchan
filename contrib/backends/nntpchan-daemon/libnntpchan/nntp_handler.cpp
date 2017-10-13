@@ -9,11 +9,11 @@
 
 namespace nntpchan
 {
-  NNTPServerHandler::NNTPServerHandler(const std::string & storage) :
+  NNTPServerHandler::NNTPServerHandler(const fs::path & storage) :
     LineReader(1024),
     m_article(nullptr),
     m_auth(nullptr),
-    m_store(storage),
+    m_store(std::make_unique<ArticleStorage>(storage)),
     m_authed(false),
     m_state(eStateReadCommand)
   {
@@ -115,22 +115,22 @@ namespace nntpchan
     } else if (cmd == "CHECK") {
       if(cmdlen >= 2) {
         const std::string & msgid = command[1];
-        if(IsValidMessageID(msgid) && m_store.Accept(msgid))
+        if(IsValidMessageID(msgid) && m_store->Accept(msgid))
         {
           QueueLine("238 "+msgid);
-          return;
         }
-        QueueLine("438 "+msgid);
+        else
+          QueueLine("438 "+msgid);
       }
       else
         QueueLine("501 syntax error");
     } else if (cmd == "TAKETHIS") {
-      if (cmdlen == 2)
+      if (cmdlen >= 2)
       {
         const std::string & msgid = command[1];
-        if(m_store.Accept(msgid))
+        if(m_store->Accept(msgid))
         {
-          m_article = m_store.OpenWrite(msgid);
+          m_article = m_store->OpenWrite(msgid);
         }
         m_articleName = msgid;
         EnterState(eStateStoreArticle);

@@ -1,17 +1,20 @@
 #ifndef NNTPCHAN_MODEL_HPP
 #define NNTPCHAN_MODEL_HPP
+#include <algorithm>
 #include <map>
 #include <set>
 #include <string>
 #include <tuple>
 #include <vector>
+#include <variant>
+#include <nntpchan/sanitize.hpp>
 
 namespace nntpchan
 {
   namespace model
   {
     // MIME Header
-    typedef std::map<std::string, std::set<std::string> > PostHeader;
+    typedef std::map<std::string, std::vector<std::string> > PostHeader;
     // text post contents
     typedef std::string PostBody;
     // single file attachment, (orig_filename, hexdigest, thumb_filename)
@@ -22,37 +25,50 @@ namespace nntpchan
     typedef std::tuple<PostHeader, PostBody, Attachments> Post;
     // a thread (many posts in post order)
     typedef std::vector<Post> Thread;
-
-
-    static inline std::string & GetFilename(PostAttachment & att)
+    // a board page is many threads in bump order
+    typedef std::vector<Thread> BoardPage;
+    
+    static inline const std::string & GetFilename(const PostAttachment & att)
     {
       return std::get<0>(att);
     }
     
-    static inline std::string & GetHexDigest(PostAttachment & att)
+    static inline const std::string & GetHexDigest(const PostAttachment & att)
     {
       return std::get<1>(att);
     }
     
-    static inline std::string & GetThumbnail(PostAttachment & att)
+    static inline const std::string & GetThumbnail(const PostAttachment & att)
     {
       return std::get<2>(att);
     }
     
-    static inline PostHeader & GetHeader(Post & post)
+    static inline const PostHeader & GetHeader(const Post & post)
     {
       return std::get<0>(post);
     }
     
-    static inline PostBody & GetBody(Post & post)
+    static inline const PostBody & GetBody(const Post & post)
     {
       return std::get<1>(post);
     }
     
-    static inline Attachments & GetAttachments(Post & post)
+    static inline const Attachments & GetAttachments(const Post & post)
     {
       return std::get<2>(post);
     }
+
+    static inline const std::string & HeaderIFind(const PostHeader & header, const std::string & val, const std::string & fallback)
+    {
+      std::string ival = ToLower(val);
+      auto itr = std::find_if(header.begin(), header.end(), [ival](const auto & item) -> bool { return ToLower(item.first) == ival; });
+      if (itr == std::end(header))
+        return fallback;
+      else
+        return itr->second[0];
+    }
+
+    using Model = std::variant<Thread, BoardPage>;
   }
 }
 

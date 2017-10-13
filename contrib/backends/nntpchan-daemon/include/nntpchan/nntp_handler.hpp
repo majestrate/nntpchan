@@ -11,7 +11,7 @@ namespace nntpchan
   class NNTPServerHandler : public LineReader, public IConnHandler
   {
   public:
-    NNTPServerHandler(const std::string & storage);
+    NNTPServerHandler(const fs::path & storage);
     ~NNTPServerHandler();
 
     virtual bool ShouldClose();
@@ -51,7 +51,7 @@ namespace nntpchan
     std::string m_articleName;
     FileHandle_ptr m_article;
     CredDB_ptr m_auth;
-    ArticleStorage m_store;
+    ArticleStorage_ptr m_store;
     std::string m_mode;
     bool m_authed;
     State m_state;

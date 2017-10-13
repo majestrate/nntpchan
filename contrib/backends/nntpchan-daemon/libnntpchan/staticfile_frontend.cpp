@@ -36,28 +36,79 @@ namespace nntpchan
 
       // read body
 
-      std::map<std::string, std::any> thread_args;
       
       auto findMsgidFunc = [](const std::pair<std::string, std::string> & item) -> bool {
         auto lower = ToLower(item.first);
         return (lower == "message-id") || (lower == "messageid");
       };
       
-      auto msgid = std::find_if(header.begin(), header.end(), findMsgidFunc);
-      
-      if(!IsValidMessageID(msgid->second))
+      auto msgid_itr = std::find_if(header.begin(), header.end(), findMsgidFunc);
+      if(msgid_itr == std::end(header))
       {
-        std::clog << "invalid message-id: " << msgid->second << std::endl;
+        std::clog << "no message id for file " << fpath << std::endl;
         return;
       }
+
+      std::string msgid = StripWhitespaces(msgid_itr->second);
+      
+      if(!IsValidMessageID(msgid))
+      {
+        std::clog << "invalid message-id: " << msgid << std::endl;
+        return;
+      }
+
+      std::string rootmsgid;
+
+      auto findReferences = [](const std::pair<std::string, std::string> & item) -> bool {
+        auto lower = ToLower(item.first);
+        return lower == "references";
+      };
+
+      auto references_itr = std::find_if(header.begin(), header.end(), findReferences);
+      if(references_itr == std::end(header) || StripWhitespaces(references_itr->second).size() == 0)
+      {
+        rootmsgid = msgid;
+      }
+      else
+      {
+        const auto & s = references_itr->second;
+        auto checkfunc = [] (unsigned char ch) -> bool { return std::isspace(ch) || std::iscntrl(ch); };
+        if(std::count_if(s.begin(), s.end(), checkfunc))
+        {
+          /** split off first element */
+          auto idx = std::find_if(s.begin(), s.end(), checkfunc);
+          rootmsgid = s.substr(0, s.find(*idx));
+        }
+        else
+        {
+          rootmsgid = references_itr->second;
+        }
+      }
+
+  
+      
+      std::string rootmsgid_hash = sha1_hex(rootmsgid);
         
-      std::string msgid_hash = sha1_hex(msgid->second);
-        
-      fs::path threadFilePath = m_OutDir / fs::path("thread-" + msgid_hash + ".html");
+      fs::path threadFilePath = m_OutDir / fs::path("thread-" + rootmsgid_hash + ".html");
+      nntpchan::model::Thread thread;
+
+      if(!m_MessageDB)
+      {
+        std::clog << "no message database" << std::endl;
+        return;
+      }
+      
+      if(!m_MessageDB->LoadThread(thread, rootmsgid))
+      {
+        std::clog << "cannot find thread with root " << rootmsgid << std::endl;
+        return;
+      }
+      TemplateEngine::Args_t thread_args;
+      thread_args["posts"] = thread;
       if(m_TemplateEngine)
       {
         FileHandle_ptr out = OpenFile(threadFilePath, eWrite);
-        if(!m_TemplateEngine->WriteTemplate("thread.mustache", thread_args, out))
+        if(!out || !m_TemplateEngine->WriteTemplate("thread.mustache", thread_args, out))
         {
           std::clog << "failed to write " << threadFilePath << std::endl;
           return;
@@ -84,23 +135,35 @@ namespace nntpchan
         if(IsValidNewsgroup(newsgroup))
           newsgroups_list.insert(newsgroup);
       }
-      
+      nntpchan::model::BoardPage page;
       for(const auto & name : newsgroups_list)
       {
-        auto board = GetThreadsPaginated(name, 10, m_Pages);
         uint32_t pageno = 0;
-        for(Threads_t threads : board)
+        while(pageno < m_Pages)
         {
-          std::map<std::string, std::any> board_args;
-          board_args["group"] = std::make_any<std::string>(name);
-          board_args["pageno"] = std::make_any<uint32_t>(pageno);
-          board_args["threads"] = std::make_any<Threads_t>(threads);
-          
-          fs::path boardPageFilename(newsgroup + "-" + std::to_string(pageno) + ".html");
+          page.clear();
+          if(!m_MessageDB->LoadBoardPage(page, name, 10, m_Pages))
+          {
+            std::clog << "cannot load board page "<< pageno << " for " << name << std::endl;
+            break;
+          }
+          TemplateEngine::Args_t page_args;
+          page_args["group"] = name;
+          page_args["threads"] = page;
+          page_args["pageno"] = std::to_string(pageno);
+          if(pageno)
+            page_args["prev_pageno"] = std::to_string(pageno-1);
+          if(pageno+1 < m_Pages)
+            page_args["next_pageno"] = std::to_string(pageno+1);
+          fs::path boardPageFilename(name + "-" + std::to_string(pageno) + ".html");
           if(m_TemplateEngine)
           {
-            FileHandle_ptr out = OpenFile(m_OutDir / boardPageFilename, eWrite);
-            m_TemplateEngine->WriteTemplate("board.mustache", board_args, out);
+            fs::path outfile = m_OutDir / boardPageFilename;
+            FileHandle_ptr out = OpenFile(outfile, eWrite);
+            if(out)
+              m_TemplateEngine->WriteTemplate("board.mustache", page_args, out);
+            else
+              std::clog << "failed to open board page " << outfile << std::endl;
           }
           
           ++pageno;
@@ -119,9 +182,5 @@ namespace nntpchan
   {
     return IsValidMessageID(msgid);
   }
-  
-  StaticFileFrontend::BoardPage_t StaticFileFrontend::GetThreadsPaginated(const std::string & group, uint32_t perpage, uint32_t pages)
-  {
-    return {};
-  }
+ 
 }

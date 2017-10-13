@@ -10,7 +10,6 @@ MUSTACHE_PATH = $(REPO)/libmustache
 
 MUSTACHE_SRC := $(wildcard $(MUSTACHE_PATH)/*.cpp)
 MUSTACHE_SRC += $(wildcard $(MUSTACHE_PATH)/*/*.cpp)
-
 MUSTACHE_HDR := $(wildcard $(MUSTACHE_PATH)/*.hpp)
 MUSTACHE_OBJ := $(MUSTACHE_SRC:.cpp=.o)
 
@@ -21,7 +20,10 @@ TOOL_PATH := $(REPO)/tools
 TOOL_SRC := $(wildcard $(TOOL_PATH)/*.cpp)
 TOOLS := $(TOOL_SRC:.cpp=)
 
-OBJ := $(NNTPCHAN_OBJ) $(MUSTACHE_OBJ)
+OBJ := $(NNTPCHAN_OBJ)
+OBJ += $(MUSTACHE_OBJ)
+
+TEST = $(REPO)/test
 
 DAEMON_SRC = $(REPO)/daemon
 
@@ -29,7 +31,9 @@ PKGS := libuv libsodium
 
 LD_FLAGS := $(shell pkg-config --libs $(PKGS)) -lstdc++fs
 INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I$(HEADERS_PATH)
-CXXFLAGS := -std=c++17 -Wall -Wextra -pedantic $(INC_FLAGS)
+CXXFLAGS := -std=c++17 -Wall -Wextra -Werror -pedantic $(INC_FLAGS)
+
+DEBUG = 1
 
 ifeq ($(DEBUG),1)
 	CXXFLAGS += -g
@@ -54,18 +58,16 @@ $(NNTPCHAN_LIB): $(NNTPCHAN_OBJ)
 	$(AR) -r $(NNTPCHAN_LIB) $(NNTPCHAN_OBJ)
 
 $(EXE): $(LIBS)
-	$(CXX) $(CXXFLAGS) $(DAEMON_SRC)/main.cpp $(NNTPCHAN_LIB) $(LD_FLAGS) -o $(EXE)
+	$(CXX) $(CXXFLAGS) $(DAEMON_SRC)/main.cpp $(LIBS) $(LD_FLAGS) -o $(EXE)
 
-$(TOOL_SRC): $(NNTPCHAN_LIB)
+$(TOOLS): $(TOOL_SRC) $(LIBS)
+	$(CXX)  $(CXXFLAGS) $< $(LIBS) $(LD_FLAGS) -o $@
 
-$(TOOLS): $(TOOL_SRC)
-	$(CXX)  $(CXXFLAGS) $< $(NNTPCHAN_LIB) $(LD_FLAGS) -o $@
-
-build-test: $(LIB)
-	$(CXX) -o $(REPO)/test $(CXXFLAGS) test.cpp $(NNTPCHAN_LIB) $(LD_FLAGS)
+build-test: $(LIBS)
+	$(CXX) -o $(TEST) $(CXXFLAGS) test.cpp $(LIBS) $(LD_FLAGS)
 
 test: build-test
-	$(REPO)/test
+	$(TEST)
 
 clean:
-	rm -f $(OBJ) $(NNTPCHAN_LIB) $(EXE) $(TOOLS)
+	$(RM) $(OBJ) $(LIBS) $(EXE) $(TOOLS) $(TEST)

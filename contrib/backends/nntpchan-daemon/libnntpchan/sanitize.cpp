@@ -36,4 +36,14 @@ namespace nntpchan
   {
     return std::regex_search(msgid, re_ValidNewsgroup) == 1;
   }
+
+  std::string StripWhitespaces(const std::string & str)
+  {
+    std::string stripped;
+    for(const auto & ch : str)
+      if(!(std::isspace(ch)||std::iscntrl(ch)))
+        stripped += ch;
+    
+    return stripped;
+  }
 }
