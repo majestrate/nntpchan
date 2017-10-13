@@ -13,6 +13,9 @@ assert-go:
 srndv2: assert-go
 	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) build -ldflags "-X srnd.GitVersion=-$(shell git rev-parse --short HEAD)" -v
 
+srndv2-lua:
+	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) build -ldflags "-X srnd.GitVersion=-$(shell git rev-parse --short HEAD)" -tags lua -v
+
 clean:
 	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) clean -v
 

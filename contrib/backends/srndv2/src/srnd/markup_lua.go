@@ -35,15 +35,16 @@ func (l *Lua) GC() {
 // close the interpreter
 // all resources are expunged and no operations can be done after this
 func (l *Lua) Close() {
+	l.mtx.Lock()
 	if l.state != nil {
 		C.lua_close(l.state)
 	}
 	l.state = nil
+	l.mtx.Unlock()
 }
 
 func (l *Lua) LoadFile(fname string) (err error) {
 	cfname := C.CString(fname)
-	//defer C.free(unsafe.Pointer(cfname))
 	res := C.luaL_loadfilex(l.state, cfname, nil)
 	if res == 0 {
 		res = C.lua_pcallk(l.state, 0, C.LUA_MULTRET, 0, 0, nil)
@@ -54,12 +55,12 @@ func (l *Lua) LoadFile(fname string) (err error) {
 		// failed to load file
 		err = errors.New("failed to load file " + fname)
 	}
+	C.free(unsafe.Pointer(cfname))
 	return
 }
 
 func (l *Lua) MEMEPosting(prefix, body string) (meme string) {
 	l.mtx.Lock()
-	defer l.mtx.Unlock()
 	cf := C.CString(luaFuncName)
 	C.lua_getglobal(l.state, cf)
 	cp := C.CString(prefix)
@@ -74,8 +75,6 @@ func (l *Lua) MEMEPosting(prefix, body string) (meme string) {
 		meme = C.GoStringN(cret, C.int(sz))
 	}
 
-	C.lua_settop(l.state, -(1)-1)
-
 	if res != C.LUA_OK {
 		// error
 		log.Println("lua error:", meme)
@@ -85,6 +84,9 @@ func (l *Lua) MEMEPosting(prefix, body string) (meme string) {
 	// free buffers
 	C.free(unsafe.Pointer(cb))
 	C.free(unsafe.Pointer(cp))
+	C.free(unsafe.Pointer(cf))
+	l.GC()
+	l.mtx.Unlock()
 	return
 }
 
@@ -107,7 +109,6 @@ func extraMemePosting(src, prefix string) string {
 	if luaInt == nil {
 		return src
 	}
-	defer luaInt.GC()
 	return luaInt.MEMEPosting(src, prefix)
 }
 

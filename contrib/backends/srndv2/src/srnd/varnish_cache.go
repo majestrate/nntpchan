@@ -101,6 +101,7 @@ func (self *VarnishCache) poll() {
 	for {
 		ent := <-self.threadsRegenChan
 		self.Regen(ent)
+		self.RegenerateBoard(ent.Newsgroup())
 	}
 }
 
