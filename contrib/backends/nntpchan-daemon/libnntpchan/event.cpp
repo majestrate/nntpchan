@@ -1,27 +1,17 @@
-#include <nntpchan/event.hpp>
 #include <cassert>
+#include <nntpchan/event.hpp>
 
 namespace nntpchan
 {
-  Mainloop::Mainloop()
-  {
-    m_loop = uv_default_loop();
-    assert(uv_loop_init(m_loop) == 0);
-  }
+Mainloop::Mainloop()
+{
+  m_loop = uv_default_loop();
+  assert(uv_loop_init(m_loop) == 0);
+}
 
-  Mainloop::~Mainloop()
-  {
-    uv_loop_close(m_loop);
-  }
+Mainloop::~Mainloop() { uv_loop_close(m_loop); }
 
-  void Mainloop::Stop()
-  {
-    uv_stop(m_loop);
-  }
+void Mainloop::Stop() { uv_stop(m_loop); }
 
-  void Mainloop::Run(uv_run_mode mode)
-  {
-    assert(uv_run(m_loop, mode) == 0);
-  }
-
+void Mainloop::Run(uv_run_mode mode) { assert(uv_run(m_loop, mode) == 0); }
 }

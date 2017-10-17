@@ -10,15 +10,15 @@
 namespace nntpchan
 {
 
-  struct TemplateEngine
-  {
-    typedef std::map<std::string, std::variant<nntpchan::model::Model, std::string>> Args_t;
-    virtual bool WriteTemplate(const fs::path & template_fpath, const Args_t & args, const FileHandle_ptr & out) = 0;
-  };
+struct TemplateEngine
+{
+  typedef std::map<std::string, std::variant<nntpchan::model::Model, std::string>> Args_t;
+  virtual bool WriteTemplate(const fs::path &template_fpath, const Args_t &args, const FileHandle_ptr &out) = 0;
+};
 
-  TemplateEngine * CreateTemplateEngine(const std::string & dialect);
+TemplateEngine *CreateTemplateEngine(const std::string &dialect);
 
-  typedef std::unique_ptr<TemplateEngine> TemplateEngine_ptr;
+typedef std::unique_ptr<TemplateEngine> TemplateEngine_ptr;
 }
 
 #endif

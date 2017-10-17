@@ -1,0 +1,14 @@
+TabWidth: 2
+UseTab: Never
+ColumnLimit: 120
+IndentWidth: 2
+Language: Cpp
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  BeforeElse: true

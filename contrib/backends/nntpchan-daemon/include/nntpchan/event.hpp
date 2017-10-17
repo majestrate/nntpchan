@@ -4,23 +4,20 @@
 
 namespace nntpchan
 {
-  class Mainloop
-  {
-  public:
+class Mainloop
+{
+public:
+  Mainloop();
+  ~Mainloop();
 
-    Mainloop();
-    ~Mainloop();
+  operator uv_loop_t *() const { return m_loop; }
 
-    operator uv_loop_t * () const { return m_loop; }
+  void Run(uv_run_mode mode = UV_RUN_DEFAULT);
+  void Stop();
 
-    void Run(uv_run_mode mode = UV_RUN_DEFAULT);
-    void Stop();
-    
-  private:
-
-    uv_loop_t * m_loop;
-    
-  };
+private:
+  uv_loop_t *m_loop;
+};
 }
 
 #endif

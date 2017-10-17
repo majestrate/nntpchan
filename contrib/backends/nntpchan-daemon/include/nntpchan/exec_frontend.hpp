@@ -5,26 +5,23 @@
 
 namespace nntpchan
 {
-  class ExecFrontend : public Frontend
-  {
-  public:
+class ExecFrontend : public Frontend
+{
+public:
+  ExecFrontend(const std::string &exe);
 
-    ExecFrontend(const std::string & exe);
-    
-    ~ExecFrontend();
+  ~ExecFrontend();
 
-    void ProcessNewMessage(const fs::path & fpath);
-    bool AcceptsNewsgroup(const std::string & newsgroup);
-    bool AcceptsMessage(const std::string & msgid);
+  void ProcessNewMessage(const fs::path &fpath);
+  bool AcceptsNewsgroup(const std::string &newsgroup);
+  bool AcceptsMessage(const std::string &msgid);
 
-  private:
+private:
+  int Exec(std::deque<std::string> args);
 
-    int Exec(std::deque<std::string> args);
-    
-  private:
-    std::string m_exec;
-    
-  };
+private:
+  std::string m_exec;
+};
 }
 
 #endif

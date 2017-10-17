@@ -1,219 +1,234 @@
-#include <nntpchan/nntp_handler.hpp>
-#include <nntpchan/sanitize.hpp>
 #include <algorithm>
 #include <cctype>
 #include <cstring>
-#include <string>
-#include <sstream>
 #include <iostream>
+#include <nntpchan/nntp_handler.hpp>
+#include <nntpchan/sanitize.hpp>
+#include <sstream>
+#include <string>
 
 namespace nntpchan
 {
-  NNTPServerHandler::NNTPServerHandler(const fs::path & storage) :
-    LineReader(1024),
-    m_article(nullptr),
-    m_auth(nullptr),
-    m_store(std::make_unique<ArticleStorage>(storage)),
-    m_authed(false),
-    m_state(eStateReadCommand)
-  {
-  }
+NNTPServerHandler::NNTPServerHandler(const fs::path &storage)
+    : LineReader(1024), m_article(nullptr), m_auth(nullptr), m_store(std::make_unique<ArticleStorage>(storage)),
+      m_authed(false), m_state(eStateReadCommand)
+{
+}
 
-  NNTPServerHandler::~NNTPServerHandler()
-  {
-  }
+NNTPServerHandler::~NNTPServerHandler() {}
 
-  void NNTPServerHandler::HandleLine(const std::string &line)
+void NNTPServerHandler::HandleLine(const std::string &line)
+{
+  if (m_state == eStateReadCommand)
   {
-    if(m_state == eStateReadCommand)
+    std::deque<std::string> command;
+    std::istringstream s;
+    s.str(line);
+    for (std::string part; std::getline(s, part, ' ');)
     {
-      std::deque<std::string> command;
-      std::istringstream s;
-      s.str(line);
-      for (std::string part; std::getline(s, part, ' '); ) {
-          if(part.size()) command.push_back(part);
-      }
-      if(command.size())
-        HandleCommand(command);
-      else
-        QueueLine("501 Syntax error");
+      if (part.size())
+        command.push_back(part);
     }
-    else if(m_state == eStateStoreArticle)
-    {
-      std::string l = line + "\r\n";
-      OnData(l.c_str(), l.size());
-    }
+    if (command.size())
+      HandleCommand(command);
     else
-    {
-      std::cerr << "invalid state" << std::endl;
-    }
+      QueueLine("501 Syntax error");
   }
-
-  void NNTPServerHandler::OnData(const char * data, ssize_t l)
+  else if (m_state == eStateStoreArticle)
   {
-    if(l <= 0 ) return;
-    if(m_state == eStateStoreArticle)
+    std::string l = line + "\r\n";
+    OnData(l.c_str(), l.size());
+  }
+  else
+  {
+    std::cerr << "invalid state" << std::endl;
+  }
+}
+
+void NNTPServerHandler::OnData(const char *data, ssize_t l)
+{
+  if (l <= 0)
+    return;
+  if (m_state == eStateStoreArticle)
+  {
+    const char *end = strstr(data, "\r\n.\r\n");
+    if (end)
     {
-      const char * end = strstr(data, "\r\n.\r\n");
-      if(end)
+      std::size_t diff = end - data;
+      if (m_article)
       {
-        std::size_t diff = end - data ;
-        if(m_article)
-        {
-          m_article->write(data, diff+2);
-          m_article->flush();
-        }
-        ArticleObtained();
-        diff += 5;
-        Data(end+5, l-diff);
-        return;
-      }
-      if(m_article)
-      {
-        m_article->write(data, l);
+        m_article->write(data, diff + 2);
         m_article->flush();
       }
-    }
-    else
-      Data(data, l);
-  }
-
-  void NNTPServerHandler::HandleCommand(const std::deque<std::string> & command)
-  {
-    auto cmd = command[0];
-    std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
-    std::size_t cmdlen = command.size();
-    for(const auto & part : command)
-      std::cerr << " " << part;
-    std::cerr << std::endl;
-    if (cmd == "QUIT") {
-      Quit();
+      ArticleObtained();
+      diff += 5;
+      Data(end + 5, l - diff);
       return;
     }
-    else if (cmd[0] == '5')
+    if (m_article)
     {
-        return;
+      m_article->write(data, l);
+      m_article->flush();
     }
-    else if (cmd == "MODE" ) {
-      if(cmdlen == 2) {
-        // set mode
-        SwitchMode(command[1]);
-      } else if(cmdlen) {
-        // too many arguments
-        QueueLine("500 too many arguments");
-      } else {
-        // get mode
-        QueueLine("500 wrong arguments");
-      }
-    } else if(cmd == "CAPABILITIES") {
-      QueueLine("101 I support the following:");
-      QueueLine("READER");
-      QueueLine("IMPLEMENTATION nntpchan-daemon");
-      QueueLine("VERSION 2");
-      QueueLine("STREAMING");
-      QueueLine(".");
-    } else if (cmd == "CHECK") {
-      if(cmdlen >= 2) {
-        const std::string & msgid = command[1];
-        if(IsValidMessageID(msgid) && m_store->Accept(msgid))
-        {
-          QueueLine("238 "+msgid);
-        }
-        else
-          QueueLine("438 "+msgid);
+  }
+  else
+    Data(data, l);
+}
+
+void NNTPServerHandler::HandleCommand(const std::deque<std::string> &command)
+{
+  auto cmd = command[0];
+  std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
+  std::size_t cmdlen = command.size();
+  for (const auto &part : command)
+    std::cerr << " " << part;
+  std::cerr << std::endl;
+  if (cmd == "QUIT")
+  {
+    Quit();
+    return;
+  }
+  else if (cmd[0] == '5')
+  {
+    return;
+  }
+  else if (cmd == "MODE")
+  {
+    if (cmdlen == 2)
+    {
+      // set mode
+      SwitchMode(command[1]);
+    }
+    else if (cmdlen)
+    {
+      // too many arguments
+      QueueLine("500 too many arguments");
+    }
+    else
+    {
+      // get mode
+      QueueLine("500 wrong arguments");
+    }
+  }
+  else if (cmd == "CAPABILITIES")
+  {
+    QueueLine("101 I support the following:");
+    QueueLine("READER");
+    QueueLine("IMPLEMENTATION nntpchan-daemon");
+    QueueLine("VERSION 2");
+    QueueLine("STREAMING");
+    QueueLine(".");
+  }
+  else if (cmd == "CHECK")
+  {
+    if (cmdlen >= 2)
+    {
+      const std::string &msgid = command[1];
+      if (IsValidMessageID(msgid) && m_store->Accept(msgid))
+      {
+        QueueLine("238 " + msgid);
       }
       else
-        QueueLine("501 syntax error");
-    } else if (cmd == "TAKETHIS") {
-      if (cmdlen >= 2)
-      {
-        const std::string & msgid = command[1];
-        if(m_store->Accept(msgid))
-        {
-          m_article = m_store->OpenWrite(msgid);
-        }
-        m_articleName = msgid;
-        EnterState(eStateStoreArticle);
-        return;
-      }
-      QueueLine("501 invalid syntax");
-    } else {
-      // unknown command
-      QueueLine("500 Unknown Command");
+        QueueLine("438 " + msgid);
     }
+    else
+      QueueLine("501 syntax error");
   }
-
-  void NNTPServerHandler::ArticleObtained()
+  else if (cmd == "TAKETHIS")
   {
-    if(m_article)
+    if (cmdlen >= 2)
     {
-      m_article->close();
-      m_article = nullptr;
-      QueueLine("239 "+m_articleName);
-      std::cerr << "stored " << m_articleName << std::endl;
+      const std::string &msgid = command[1];
+      if (m_store->Accept(msgid))
+      {
+        m_article = m_store->OpenWrite(msgid);
+      }
+      m_articleName = msgid;
+      EnterState(eStateStoreArticle);
+      return;
+    }
+    QueueLine("501 invalid syntax");
+  }
+  else
+  {
+    // unknown command
+    QueueLine("500 Unknown Command");
+  }
+}
+
+void NNTPServerHandler::ArticleObtained()
+{
+  if (m_article)
+  {
+    m_article->close();
+    m_article = nullptr;
+    QueueLine("239 " + m_articleName);
+    std::cerr << "stored " << m_articleName << std::endl;
+  }
+  else
+    QueueLine("439 " + m_articleName);
+  m_articleName = "";
+  EnterState(eStateReadCommand);
+}
+
+void NNTPServerHandler::SwitchMode(const std::string &mode)
+{
+  std::string m = mode;
+  std::transform(m.begin(), m.end(), m.begin(), ::toupper);
+  if (m == "READER")
+  {
+    m_mode = m;
+    if (PostingAllowed())
+    {
+      QueueLine("200 Posting is permitted yo");
     }
     else
-      QueueLine("439 "+m_articleName);
-    m_articleName = "";
-    EnterState(eStateReadCommand);
-  }
-
-  void NNTPServerHandler::SwitchMode(const std::string & mode)
-  {
-    std::string m = mode;
-    std::transform(m.begin(), m.end(), m.begin(), ::toupper);
-    if (m == "READER") {
-      m_mode = m;
-      if(PostingAllowed()) {
-        QueueLine("200 Posting is permitted yo");
-      } else {
-        QueueLine("201 Posting is not permitted yo");
-      }
-    } else if (m == "STREAM") {
-      m_mode = m;
-      if (PostingAllowed()) {
-        QueueLine("203 Streaming enabled");
-      } else {
-        QueueLine("483 Streaming Denied");
-      }
-    } else {
-      // unknown mode
-      QueueLine("500 Unknown mode");
+    {
+      QueueLine("201 Posting is not permitted yo");
     }
   }
-
-  void NNTPServerHandler::EnterState(State st)
+  else if (m == "STREAM")
   {
-    std::cerr << "enter state " << st << std::endl;
-    m_state = st;
-  }
-
-  void NNTPServerHandler::Quit()
-  {
-    EnterState(eStateQuit);
-    QueueLine("205 quitting");
-  }
-
-  bool NNTPServerHandler::ShouldClose()
-  {
-    return m_state == eStateQuit;
-  }
-
-  bool NNTPServerHandler::PostingAllowed()
-  {
-    return m_authed || m_auth == nullptr;
-  }
-
-  void NNTPServerHandler::Greet()
-  {
-    if(PostingAllowed())
-      QueueLine("200 Posting allowed");
+    m_mode = m;
+    if (PostingAllowed())
+    {
+      QueueLine("203 Streaming enabled");
+    }
     else
-      QueueLine("201 Posting not allowed");
+    {
+      QueueLine("483 Streaming Denied");
+    }
   }
-
-  void NNTPServerHandler::SetAuth(CredDB_ptr creds)
+  else
   {
-    m_auth = creds;
+    // unknown mode
+    QueueLine("500 Unknown mode");
   }
+}
+
+void NNTPServerHandler::EnterState(State st)
+{
+  std::cerr << "enter state " << st << std::endl;
+  m_state = st;
+}
+
+void NNTPServerHandler::Quit()
+{
+  EnterState(eStateQuit);
+  QueueLine("205 quitting");
+}
+
+bool NNTPServerHandler::ShouldClose() { return m_state == eStateQuit; }
+
+bool NNTPServerHandler::PostingAllowed() { return m_authed || m_auth == nullptr; }
+
+void NNTPServerHandler::Greet()
+{
+  if (PostingAllowed())
+    QueueLine("200 Posting allowed");
+  else
+    QueueLine("201 Posting not allowed");
+}
+
+void NNTPServerHandler::SetAuth(CredDB_ptr creds) { m_auth = creds; }
 }

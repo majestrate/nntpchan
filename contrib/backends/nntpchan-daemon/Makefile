@@ -31,13 +31,15 @@ PKGS := libuv libsodium
 
 LD_FLAGS := $(shell pkg-config --libs $(PKGS)) -lstdc++fs
 INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I$(HEADERS_PATH)
-CXXFLAGS := -std=c++17 -Wall -Wextra -Werror -pedantic $(INC_FLAGS)
+REQUIRED_CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -pedantic $(INC_FLAGS)
 
 DEBUG = 1
 
 ifeq ($(DEBUG),1)
-	CXXFLAGS += -g
+	REQUIRED_CXXFLAGS += -g
 endif
+
+CXXFLAGS += $(REQUIRED_CXXFLAGS)
 
 NNTPCHAN_LIB = $(REPO)/libnntpchan.a
 MUSTACHE_LIB = $(REPO)/libmustache.a
@@ -61,7 +63,7 @@ $(EXE): $(LIBS)
 	$(CXX) $(CXXFLAGS) $(DAEMON_SRC)/main.cpp $(LIBS) $(LD_FLAGS) -o $(EXE)
 
 $(TOOLS): $(TOOL_SRC) $(LIBS)
-	$(CXX)  $(CXXFLAGS) $< $(LIBS) $(LD_FLAGS) -o $@
+	$(CXX) $(CXXFLAGS) $< $(LIBS) $(LD_FLAGS) -o $@
 
 build-test: $(LIBS)
 	$(CXX) -o $(TEST) $(CXXFLAGS) test.cpp $(LIBS) $(LD_FLAGS)

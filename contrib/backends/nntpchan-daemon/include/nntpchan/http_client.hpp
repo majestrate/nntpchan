@@ -1,5 +1,4 @@
 #ifndef NNTPCHAN_HTTP_CLIENT_HPP
 #define NNTPCHAN_HTTP_CLIENT_HPP
 
-
 #endif

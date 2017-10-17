@@ -5,7 +5,7 @@
 
 namespace nntpchan
 {
-  std::string sha1_hex(const std::string & data);
+std::string sha1_hex(const std::string &data);
 }
 
 #endif
