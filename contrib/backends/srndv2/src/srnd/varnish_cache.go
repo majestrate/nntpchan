@@ -17,15 +17,27 @@ type VarnishCache struct {
 }
 
 func (self *VarnishCache) invalidate(r string) {
-	u, _ := url.Parse(r)
-	resp, err := self.client.Do(&http.Request{
-		Method: "PURGE",
-		URL:    u,
+	var langs []string
+	langs = append(langs, "")
+	self.handler.ForEachI18N(func(lang string) {
+		langs = append(langs, lang)
 	})
-	if err == nil {
-		resp.Body.Close()
-	} else {
-		log.Println("varnish cache error", err)
+	for _, lang := range langs {
+		u, _ := url.Parse(r)
+		if lang != "" {
+			q := u.Query()
+			q.Add("lang", lang)
+			u.RawQuery = q.Encode()
+		}
+		resp, err := self.client.Do(&http.Request{
+			Method: "PURGE",
+			URL:    u,
+		})
+		if err == nil {
+			resp.Body.Close()
+		} else {
+			log.Println("varnish cache error", err)
+		}
 	}
 }
 

@@ -26,6 +26,14 @@ type nullHandler struct {
 	access         sync.Mutex
 }
 
+func (self *nullHandler) ForEachI18N(v func(string)) {
+	self.access.Lock()
+	for lang := range self.i18n {
+		v(lang)
+	}
+	self.access.Unlock()
+}
+
 func (self *nullHandler) GetI18N(r *http.Request) *I18N {
 	lang := r.URL.Query().Get("lang")
 	if lang == "" {
