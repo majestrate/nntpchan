@@ -8,9 +8,7 @@
   - frontend ( the name of the frontend )
   - prefix ( the site's prefix )
 }}
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-          "http://www.w3.org/TR/html4/strict.dtd">
+<!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{{i18n.Name}}" xml:lang="{{i18n.Name}}" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
   <head>
       <meta lang="{{i18n.Name}}" />
@@ -28,7 +26,7 @@
   </head>
   <body>
       <center>
-          <a href="{{prefix}}o/"><img id="logo" src="{{prefix}}static/changolia-logo.png" /><h1>Enter</h1></a>
+          <a href="{{prefix}}o/?lang={{i18n.Name}}"><img id="logo" src="{{prefix}}static/changolia-logo.png" /><h1>Enter</h1></a>
           <a href="{{prefix}}boards.html"><h2>Board List</h2></a>
           <a href="{{prefix}}static/faq.html">FAQ</a>
       </center>
