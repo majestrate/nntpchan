@@ -410,6 +410,11 @@ func renderPostForm(prefix, board, op_msg_id string, files, captcha bool, i18n *
 	button := "New Thread"
 	if op_msg_id != "" {
 		button = "Reply"
+		if i18n != nil {
+			button = i18n.Translate("postbutton-reply")
+		}
+	} else if i18n != nil {
+		button = i18n.Translate("postbutton-thread")
 	}
 	return template.renderTemplate("postform.mustache", map[string]interface{}{"post_url": url, "reference": op_msg_id, "button": button, "files": files, "prefix": prefix, "DisableCaptcha": !captcha}, i18n)
 }
