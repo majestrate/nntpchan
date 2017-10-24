@@ -7,10 +7,7 @@ all: build
 
 build: srndv2
 
-assert-go:
-	test $(VERSION) = go1.9
-
-srndv2: assert-go
+srndv2:
 	GOPATH=$(REPO) GOROOT=$(GOROOT) $(GO) build -ldflags "-X srnd.GitVersion=-$(shell git rev-parse --short HEAD)" -v
 
 srndv2-lua:
