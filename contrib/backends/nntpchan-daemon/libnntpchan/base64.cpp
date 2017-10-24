@@ -5,6 +5,14 @@ namespace i2p
 {
 namespace data
 {
+
+static const char T32[32] = {
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '2', '3', '4', '5', '6', '7',
+};
+
+const char *GetBase32SubstitutionTable() { return T32; }
+
 static void iT64Build(void);
 
 /*
@@ -18,7 +26,9 @@ static void iT64Build(void);
 static const char T64[64] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
                              'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
                              'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-                             'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
+                             'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '~'};
+
+const char *GetBase64SubstitutionTable() { return T64; }
 
 /*
 * Reverse Substitution Table (built in run time)
@@ -41,7 +51,8 @@ static char P64 = '=';
 * Converts binary encoded data to BASE64 format.
 *
 */
-static size_t                                   /* Number of bytes in the encoded buffer */
+
+size_t                                          /* Number of bytes in the encoded buffer */
     ByteStreamToBase64(const uint8_t *InBuffer, /* Input buffer, binary data */
                        size_t InCount,          /* Number of bytes in the input buffer */
                        char *OutBuffer,         /* output buffer */
@@ -122,7 +133,8 @@ static size_t                                   /* Number of bytes in the encode
 * not properly padded, buffer of negative length is returned
 *
 */
-static ssize_t                               /* Number of output bytes */
+
+size_t                                       /* Number of output bytes */
     Base64ToByteStream(const char *InBuffer, /* BASE64 encoded buffer */
                        size_t InCount,       /* Number of input bytes */
                        uint8_t *OutBuffer,   /* output buffer length */
@@ -184,7 +196,7 @@ static ssize_t                               /* Number of output bytes */
   return outCount;
 }
 
-static size_t Base64EncodingBufferSize(const size_t input_size)
+size_t Base64EncodingBufferSize(const size_t input_size)
 {
   auto d = div(input_size, 3);
   if (d.rem)
@@ -192,6 +204,13 @@ static size_t Base64EncodingBufferSize(const size_t input_size)
   return 4 * d.quot;
 }
 
+size_t Base32EncodingBufferSize(const size_t input_size)
+{
+  auto d = div(input_size, 5);
+  if (d.rem)
+    d.quot++;
+  return 8 * d.quot;
+}
 /*
 *
 * iT64
@@ -211,6 +230,65 @@ static void iT64Build()
     iT64[(int)T64[i]] = i;
   iT64[(int)P64] = 0;
 }
+
+size_t Base32ToByteStream(const char *inBuf, size_t len, uint8_t *outBuf, size_t outLen)
+{
+  int tmp = 0, bits = 0;
+  size_t ret = 0;
+  for (size_t i = 0; i < len; i++)
+  {
+    char ch = inBuf[i];
+    if (ch >= '2' && ch <= '7') // digit
+      ch = (ch - '2') + 26;     // 26 means a-z
+    else if (ch >= 'a' && ch <= 'z')
+      ch = ch - 'a'; // a = 0
+    else
+      return 0; // unexpected character
+
+    tmp |= ch;
+    bits += 5;
+    if (bits >= 8)
+    {
+      if (ret >= outLen)
+        return ret;
+      outBuf[ret] = tmp >> (bits - 8);
+      bits -= 8;
+      ret++;
+    }
+    tmp <<= 5;
+  }
+  return ret;
+}
+
+size_t ByteStreamToBase32(const uint8_t *inBuf, size_t len, char *outBuf, size_t outLen)
+{
+  size_t ret = 0, pos = 1;
+  int bits = 8, tmp = inBuf[0];
+  while (ret < outLen && (bits > 0 || pos < len))
+  {
+    if (bits < 5)
+    {
+      if (pos < len)
+      {
+        tmp <<= 8;
+        tmp |= inBuf[pos] & 0xFF;
+        pos++;
+        bits += 8;
+      }
+      else // last byte
+      {
+        tmp <<= (5 - bits);
+        bits = 5;
+      }
+    }
+
+    bits -= 5;
+    int ind = (tmp >> bits) & 0x1F;
+    outBuf[ret] = (ind < 26) ? (ind + 'a') : ((ind - 26) + '2');
+    ret++;
+  }
+  return ret;
+}
 }
 }
 
@@ -227,9 +305,30 @@ std::string B64Encode(const uint8_t *data, const std::size_t l)
 bool B64Decode(const std::string &data, std::vector<uint8_t> &out)
 {
   out.resize(data.size());
-  if (i2p::data::Base64ToByteStream(data.c_str(), data.size(), &out[0], out.size()) == -1)
-    return false;
-  out.shrink_to_fit();
-  return true;
+  if (i2p::data::Base64ToByteStream(data.c_str(), data.size(), &out[0], out.size()))
+  {
+    out.shrink_to_fit();
+    return true;
+  }
+  return false;
+}
+
+std::string B32Encode(const uint8_t *data, const std::size_t l)
+{
+  std::string out;
+  out.resize(i2p::data::Base32EncodingBufferSize(l));
+  i2p::data::ByteStreamToBase32(data, l, &out[0], out.size());
+  return out;
+}
+
+bool B32Decode(const std::string &data, std::vector<uint8_t> &out)
+{
+  out.resize(data.size());
+  if (i2p::data::Base32ToByteStream(data.c_str(), data.size(), &out[0], out.size()))
+  {
+    out.shrink_to_fit();
+    return true;
+  }
+  return false;
 }
 }

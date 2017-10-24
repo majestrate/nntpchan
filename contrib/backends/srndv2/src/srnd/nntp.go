@@ -1108,6 +1108,50 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 				} else {
 					conn.PrintfLine("500 invalid daemon state, got STAT with group set but we don't have that group now?")
 				}
+			} else if cmd == "XPAT" {
+				var hdr string
+				var msgid string
+				var lo, hi int64
+				var pats []string
+				if len(parts) >= 3 {
+					hdr = parts[1]
+					if ValidMessageID(parts[2]) {
+						msgid = parts[2]
+					} else {
+						lo, hi = parseRange(parts[2])
+						if !ValidNewsgroup(self.group) {
+							conn.PrintfLine("430 no such article")
+							return
+						}
+					}
+					pats = parts[3:]
+					var hdrs ArticleHeaders
+
+					if len(msgid) > 0 {
+						hdrs, err = daemon.database.GetHeadersForMessage(msgid)
+					} else {
+						hdrs, err = daemon.database.FindHeaders(self.group, hdr, lo, hi)
+					}
+					if err == nil {
+						hdrs = headerFindPats(hdr, hdrs, pats)
+						if hdrs.Len() > 0 {
+							conn.PrintfLine("221 Header follows")
+							for _, vals := range hdrs {
+								for idx := range vals {
+									conn.PrintfLine("%s: %s", hdr, vals[idx])
+								}
+							}
+							conn.PrintfLine(".")
+						} else {
+							conn.PrintfLine("430 no such article")
+						}
+					} else {
+						conn.PrintfLine("502 %s", err.Error())
+					}
+					return
+				}
+				conn.PrintfLine("430 no such article")
+				return
 			} else if cmd == "XHDR" {
 				if len(self.group) > 0 {
 					var msgid string
@@ -1606,6 +1650,8 @@ func (self *nntpConnection) runConnection(daemon *NNTPDaemon, inbound, stream, r
 						log.Println(self.name, "TLS initiated", self.authenticated)
 					} else {
 						log.Println("STARTTLS failed:", err)
+						nconn.Close()
+						return
 					}
 				} else if cmd == "CAPABILITIES" {
 					// write capabilities

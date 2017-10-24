@@ -682,3 +682,52 @@ func msgidFrontendSign(sk []byte, msgid string) string {
 	h := sha512.Sum512([]byte(msgid))
 	return cryptoSignFucky(h[:], sk)
 }
+
+func patMatch(v, pat string) (found bool) {
+	parts := strings.Split(pat, ",")
+	for _, part := range parts {
+		var invert bool
+		if part[0] == '!' {
+			invert = true
+			if len(parts) == 0 {
+				return
+			}
+			part = part[1:]
+		}
+		found, _ = regexp.MatchString(v, part)
+		log.Println(v, part, found)
+		if invert {
+			found = !found
+		}
+		if found {
+			return
+		}
+	}
+	return
+}
+
+func headerFindPats(header string, hdr ArticleHeaders, patterns []string) (found ArticleHeaders) {
+	found = make(ArticleHeaders)
+	if hdr.Has(header) && len(patterns) > 0 {
+		for _, v := range hdr[header] {
+			for _, pat := range patterns {
+				if patMatch(v, pat) {
+					found.Add(header, v)
+				}
+			}
+		}
+	}
+	return
+}
+
+func parseRange(str string) (lo, hi int64) {
+	parts := strings.Split(str, "-")
+	if len(parts) == 1 {
+		i, _ := strconv.ParseInt(parts[0], 10, 64)
+		lo, hi = i, i
+	} else if len(parts) == 2 {
+		lo, _ = strconv.ParseInt(parts[0], 10, 64)
+		hi, _ = strconv.ParseInt(parts[1], 10, 64)
+	}
+	return
+}

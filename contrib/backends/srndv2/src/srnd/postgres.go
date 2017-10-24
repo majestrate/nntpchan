@@ -1953,3 +1953,21 @@ func (self *PostgresDatabase) FindCitesInText(text string) (msgids []string, err
 	}
 	return
 }
+
+func (self *PostgresDatabase) FindHeaders(group, headername string, lo, hi int64) (hdr ArticleHeaders, err error) {
+	hdr = make(ArticleHeaders)
+	q := "SELECT header_value FROM nntpheaders WHERE header_name = $1 AND header_article_message_id IN ( SELECT message_id FROM articleposts WHERE newsgroup = $2 )"
+	var rows *sql.Rows
+	rows, err = self.conn.Query(q, strings.ToLower(headername), group)
+	if err == nil {
+		for rows.Next() {
+			var str string
+			rows.Scan(&str)
+			hdr.Add(headername, str)
+		}
+		rows.Close()
+	} else if err == sql.ErrNoRows {
+		err = nil
+	}
+	return
+}

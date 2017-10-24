@@ -333,6 +333,9 @@ type Database interface {
 
 	// find cites in text
 	FindCitesInText(msg string) ([]string, error)
+
+	// find headers in group with lo/hi watermark and list of patterns
+	FindHeaders(group, headername string, lo, hi int64) (ArticleHeaders, error)
 }
 
 func NewDatabase(db_type, schema, host, port, user, password string) Database {

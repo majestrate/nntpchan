@@ -40,6 +40,7 @@ private:
   bool init_skiplist(const std::string &subdir) const;
 
   fs::path skiplist_root(const std::string &name) const;
+  fs::path skiplist_dir(const fs::path & root, const std::string & name) const;
 
   fs::path basedir;
 };

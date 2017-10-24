@@ -37,6 +37,13 @@ func (self ArticleHeaders) Add(key, val string) {
 	}
 }
 
+func (self ArticleHeaders) Len() (l int) {
+	for k := range self {
+		l += len(self[k])
+	}
+	return
+}
+
 func (self ArticleHeaders) Get(key, fallback string) string {
 	val, ok := self[key]
 	if ok {
