@@ -254,6 +254,10 @@ a:hover , a:visited:hover, .navbar-link > label:hover {
     color: #ff0000;
 }
 
+.navbar-link > label:hover {
+    cursor: pointer;
+}
+
 a, a:visited, .navbar-link > label {
     color: #34345C;
 }
