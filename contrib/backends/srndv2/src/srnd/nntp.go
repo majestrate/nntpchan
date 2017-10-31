@@ -1546,8 +1546,8 @@ func (self *nntpConnection) requestArticle(daemon *NNTPDaemon, conn *textproto.C
 
 func (self *nntpConnection) startReader(daemon *NNTPDaemon, conn *textproto.Conn) {
 	log.Println(self.name, "run reader mode")
-	for {
-		var err error
+	var err error
+	for err == nil {
 		select {
 		case chnl := <-self.die:
 			// we were asked to die
@@ -1563,7 +1563,6 @@ func (self *nntpConnection) startReader(daemon *NNTPDaemon, conn *textproto.Conn
 			self.messageSetProcessed(msgid)
 			if err != nil {
 				log.Println(self.name, "error while in reader mode:", err)
-				break
 			}
 		}
 	}
