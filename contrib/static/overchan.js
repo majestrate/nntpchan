@@ -63,8 +63,7 @@ var reloadThreadJSON = function(ourPost) {
           if(!e) {
             e = document.createElement("div");
             e.innerHTML = posts[idx].PostMarkup;
-            rootelem.appendChild(e.childNodes[0]);
-            e.remove();
+            rootelem.appendChild(e);
             if(ourPost && posts[idx].Message_id == ourPost) {
               // focus on our post
               window.location.hash = id;
