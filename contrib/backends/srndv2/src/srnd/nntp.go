@@ -1537,7 +1537,8 @@ func (self *nntpConnection) requestArticle(daemon *NNTPDaemon, conn *textproto.C
 		// invalid response
 		log.Println(self.name, "invald response to ARTICLE:", code, line)
 	}
-	if err == io.EOF {
+	if err != nil {
+		log.Println(self.name, err.Error())
 		conn.Close()
 	}
 	return
