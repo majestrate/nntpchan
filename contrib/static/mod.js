@@ -48,7 +48,7 @@ function get_board_target() {
 }
 
 function get_mod_board_target() {
-  var e = document.getElementById("nntpchan_mod_board_target");
+  var e = document.getElementById("nntpchan_mod_group_target");
   return e.value || null;
 }
 
