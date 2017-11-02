@@ -68,7 +68,7 @@ func (self *catalogModel) Navbar() string {
 	})
 	param["prefix"] = self.prefix
 	param["links"] = links
-	return template.renderTemplate("navbar.mustache", param, self._i18n)
+	return template.renderTemplate("navbar", param, self._i18n)
 }
 
 func (self *catalogModel) MarshalJSON() (b []byte, err error) {
@@ -162,7 +162,7 @@ func (self *boardModel) Navbar() string {
 	param["frontend"] = self.frontend
 	param["prefix"] = self.prefix
 	param["links"] = self.PageList()
-	return template.renderTemplate("navbar.mustache", param, self._i18n)
+	return template.renderTemplate("navbar", param, self._i18n)
 }
 
 func (self *boardModel) Board() string {
@@ -517,7 +517,7 @@ func (self *post) SetIndex(idx int) {
 func (self *post) RenderPost() string {
 	param := make(map[string]interface{})
 	param["post"] = self
-	return template.renderTemplate("post.mustache", param, self._i18n)
+	return template.renderTemplate("post", param, self._i18n)
 }
 
 func (self *post) RenderTruncatedPost() string {
@@ -623,7 +623,7 @@ func (self *thread) Navbar() string {
 	param["frontend"] = self.Board()
 	param["links"] = self.links
 	param["prefix"] = self.prefix
-	return template.renderTemplate("navbar.mustache", param, self._i18n)
+	return template.renderTemplate("navbar", param, self._i18n)
 }
 
 func (self *thread) Board() string {
@@ -647,11 +647,6 @@ func (self *thread) ImageCount() (count int) {
 		count += p.NumAttachments()
 	}
 	return
-}
-
-// get our default template dir
-func defaultTemplateDir() string {
-	return filepath.Join("contrib", "templates", "default")
 }
 
 func createThreadModel(posts ...PostModel) ThreadModel {
