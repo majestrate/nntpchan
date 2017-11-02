@@ -47,21 +47,35 @@ function get_board_target() {
   return e.value;
 }
 
+function get_mod_board_target() {
+  var e = document.getElementById("nntpchan_mod_board_target");
+  return e.value || null;
+}
+
 function get_key_target() {
   var e = document.getElementById("nntpchan_key_target");
   return e.value;
 }
 
 function nntpchan_key_del() {
-  nntpchan_admin("pubkey.del", {
+  var args = {
     pubkey: get_key_target()
-  });
+  };
+  if(board) {
+    args.newsgroup = board;
+  }
+  nntpchan_admin("pubkey.del", args);
 }
 
 function nntpchan_key_add() {
-  nntpchan_admin("pubkey.add", {
+  var args = {
     pubkey: get_key_target()
-  });
+  };
+  var board = get_mod_board_target();
+  if(board) {
+    args.newsgroup = board;
+  }
+  nntpchan_admin("pubkey.add", args);
 }
 
 function get_nntp_username() {
@@ -71,7 +85,7 @@ function get_nntp_username() {
 
 function get_nntp_passwd() {
   var e = document.getElementById("nntpchan_nntp_passwd");
-  return e.value;  
+  return e.value;
 }
 
 function nntpchan_admin_nntp(method) {
