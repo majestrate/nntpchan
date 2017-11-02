@@ -71,7 +71,7 @@ function update_nntpchan_feed_ticker(elem, result_elem) {
         result.sort(function(a, b) {
           if(a && b) {
             var aname = a.State.Config.Name;
-            var bname = b.state.Config.Name;
+            var bname = b.State.Config.Name;
             if(aname > bname) return 1;
             else if (aname < bname) return -1;
             else return 0;
