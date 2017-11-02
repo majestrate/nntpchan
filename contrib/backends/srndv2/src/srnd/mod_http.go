@@ -699,13 +699,13 @@ func (self httpModUI) HandleLogin(wr http.ResponseWriter, r *http.Request) {
 			msg += "invalid key"
 		}
 	}
-	self.writeTemplateParam(wr, r, "modlogin_result.mustache", map[string]interface{}{"message": msg, csrf.TemplateTag: csrf.TemplateField(r)})
+	self.writeTemplateParam(wr, r, "modlogin_result", map[string]interface{}{"message": msg, csrf.TemplateTag: csrf.TemplateField(r)})
 }
 
 func (self httpModUI) HandleKeyGen(wr http.ResponseWriter, r *http.Request) {
 	pk, sk := newNaclSignKeypair()
 	tripcode := makeTripcode(pk)
-	self.writeTemplateParam(wr, r, "keygen.mustache", map[string]interface{}{"public": pk, "secret": sk, "tripcode": tripcode})
+	self.writeTemplateParam(wr, r, "keygen", map[string]interface{}{"public": pk, "secret": sk, "tripcode": tripcode})
 }
 
 func (self httpModUI) ServeModPage(wr http.ResponseWriter, r *http.Request) {
@@ -715,15 +715,15 @@ func (self httpModUI) ServeModPage(wr http.ResponseWriter, r *http.Request) {
 		url := r.URL.String()
 		if strings.HasSuffix(url, "/mod/feeds") {
 			// serve feeds page
-			self.writeTemplate(wr, r, "modfeed.mustache")
+			self.writeTemplate(wr, r, "modfeed")
 		} else {
 			// serve mod page
-			self.writeTemplate(wr, r, "modpage.mustache")
+			self.writeTemplate(wr, r, "modpage")
 		}
 	} else {
 		// we are not logged in
 		// serve login page
-		self.writeTemplate(wr, r, "modlogin.mustache")
+		self.writeTemplate(wr, r, "modlogin")
 	}
 	if r.Body != nil {
 		r.Body.Close()
