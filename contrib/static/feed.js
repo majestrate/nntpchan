@@ -69,11 +69,13 @@ function update_nntpchan_feed_ticker(elem, result_elem) {
         }        
         var result = j.result;
         result.sort(function(a, b) {
-          var aname = a.State.Config.Name;
-          var bname = a.state.Config.Name;
-          if(aname > bname) return 1;
-          else if (aname < bname) return -1;
-          else return 0;
+          if(a && b) {
+            var aname = a.State.Config.Name;
+            var bname = b.state.Config.Name;
+            if(aname > bname) return 1;
+            else if (aname < bname) return -1;
+            else return 0;
+          } else return -1;
         });
         for (var idx = 0; idx < result.length; idx++) {
           var item = result[idx];
