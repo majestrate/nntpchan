@@ -50,8 +50,16 @@ function inject_nntp_feed_element(feed, elem) {
   var conns = document.createElement("div");
   conns.setAttribute("class", "connections");
   if (feed.Conns) {
-    for ( var idx = 0 ; idx < feed.Conns.length; idx ++ ) {
-      conns.appendChild(createConnectionElement(feed.Conns[idx]));
+    var conns = feed.Conns;
+    conns.sort(function(a, b) {
+      if(a && b) {
+        if (a.name > b.name) return 1;
+        else if (a.name < b.name) return -1;
+        else return 0;
+      } else return -1;
+    });
+    for ( var idx = 0 ; idx < conns.length; idx ++ ) {
+      conns.appendChild(createConnectionElement(conns[idx]));
     }
   }
   elem.appendChild(conns);
