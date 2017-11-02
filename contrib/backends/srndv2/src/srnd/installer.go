@@ -368,7 +368,7 @@ func initInstallerTree() *dialogNode {
 		children:     make(map[string]*dialogNode),
 		post:         handleDBTypePost,
 		model:        prepareDefaultModel,
-		templateName: "inst_db.mustache",
+		templateName: "inst_db",
 	}
 
 	postgresDB := &dialogNode{
@@ -376,7 +376,7 @@ func initInstallerTree() *dialogNode {
 		children:     make(map[string]*dialogNode),
 		post:         handlePostgresDBPost,
 		model:        preparePostgresDBModel,
-		templateName: "inst_postgres_db.mustache",
+		templateName: "inst_postgres_db",
 	}
 	root.children["postgres"] = postgresDB
 
@@ -385,7 +385,7 @@ func initInstallerTree() *dialogNode {
 		children:     make(map[string]*dialogNode),
 		post:         handleNNTPPost,
 		model:        prepareNNTPModel,
-		templateName: "inst_nntp.mustache",
+		templateName: "inst_nntp",
 	}
 	postgresDB.children["next"] = nntp
 
@@ -394,7 +394,7 @@ func initInstallerTree() *dialogNode {
 		children:     make(map[string]*dialogNode),
 		post:         handleCryptoPost,
 		model:        prepareCryptoModel,
-		templateName: "inst_crypto.mustache",
+		templateName: "inst_crypto",
 	}
 	nntp.children["next"] = crypto
 
@@ -403,7 +403,7 @@ func initInstallerTree() *dialogNode {
 		children:     make(map[string]*dialogNode),
 		post:         handleBinPost,
 		model:        prepareBinModel,
-		templateName: "inst_bins.mustache",
+		templateName: "inst_bins",
 	}
 	crypto.children["next"] = bins
 
@@ -412,7 +412,7 @@ func initInstallerTree() *dialogNode {
 		children:     make(map[string]*dialogNode),
 		post:         handleCacheTypePost,
 		model:        prepareDefaultModel,
-		templateName: "inst_cache.mustache",
+		templateName: "inst_cache",
 	}
 	bins.children["next"] = cache
 
@@ -421,7 +421,7 @@ func initInstallerTree() *dialogNode {
 		children:     make(map[string]*dialogNode),
 		post:         handleFrontendPost,
 		model:        prepareFrontendModel,
-		templateName: "inst_frontend.mustache",
+		templateName: "inst_frontend",
 	}
 	cache.children["next"] = frontend
 
@@ -430,7 +430,7 @@ func initInstallerTree() *dialogNode {
 		children:     make(map[string]*dialogNode),
 		post:         handleAPIPost,
 		model:        prepareAPIModel,
-		templateName: "inst_api.mustache",
+		templateName: "inst_api",
 	}
 	frontend.children["json"] = api
 
@@ -439,7 +439,7 @@ func initInstallerTree() *dialogNode {
 		children:     make(map[string]*dialogNode),
 		post:         handleKeyPost,
 		model:        prepareKeyModel,
-		templateName: "inst_key.mustache",
+		templateName: "inst_key",
 	}
 	frontend.children["next"] = key
 	api.children["next"] = key
