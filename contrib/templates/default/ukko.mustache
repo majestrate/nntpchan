@@ -27,17 +27,17 @@
       <div id="ukko_paginator">
         {{#prev}}
           <span id="ukko_prev">
-            <a href="{{prefix}}o/{{no}}/">previous</a>
+            <a href="{{prefix}}o/{{no}}/?lang={{i18n.Name}}">previous</a>
           </span>
         {{/prev}}
         {{#next}}
           <span id="ukko_next">
-            <a href="{{prefix}}o/{{no}}/">next</a>
+            <a href="{{prefix}}o/{{no}}/?lang={{i18n.Name}}">next</a>
           </span>
         {{/next}}
       </div>
       <div id="ukko_threads">
-        <pre><a href="{{prefix}}livechan/">livechan</a></pre>
+        <pre><a href="{{prefix}}livechan/?lang={{i18n.Name}}">livechan</a></pre>
       {{#threads}}
         <div class="thread" id="thread_{{OP.PostHash}}">
 	        <div class="truncated_post">
@@ -78,12 +78,12 @@
       <div id="ukko_paginator">
           {{#prev}}
               <span id="ukko_prev">
-                  <a href="{{prefix}}o/{{no}}/">previous</a>
+                  <a href="{{prefix}}o/{{no}}/?lang={{i18n.Name}}">previous</a>
               </span>
           {{/prev}}
           {{#next}}
               <span id="ukko_next">
-                  <a href="{{prefix}}o/{{no}}/">next</a>
+                  <a href="{{prefix}}o/{{no}}/?lang={{i18n.Name}}">next</a>
               </span>
           {{/next}}
       </div>
