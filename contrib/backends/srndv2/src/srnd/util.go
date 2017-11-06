@@ -549,19 +549,14 @@ func getGroupForCatalog(file string) (group string) {
 
 // get a message id from a mime header
 // checks many values
-func getMessageID(h map[string][]string) (msgid string) {
-	hdr := textproto.MIMEHeader(h)
-	msgid = hdr.Get("Message-Id")
-	if msgid == "" {
-		msgid = hdr.Get("Message-ID")
+func getMessageID(h map[string][]string) string {
+	for k := range h {
+		kl := strings.ToLower(k)
+		if kl == "message-id" || kl == "messageid" {
+			return h[k][0]
+		}
 	}
-	if msgid == "" {
-		msgid = hdr.Get("message-id")
-	}
-	if msgid == "" {
-		msgid = hdr.Get("MESSAGE-ID")
-	}
-	return
+	return ""
 }
 
 func getMessageIDFromArticleHeaders(hdr ArticleHeaders) (msgid string) {
