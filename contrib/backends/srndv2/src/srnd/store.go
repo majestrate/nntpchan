@@ -541,7 +541,7 @@ func read_message_body(body io.Reader, hdr map[string][]string, store ArticleSto
 		partReader := multipart.NewReader(body, boundary)
 		for {
 			part, err := partReader.NextPart()
-			if err == io.EOF {
+			if err == io.EOF || err == io.ErrUnexpectedEOF {
 				callback(nntp)
 				return nil
 			} else if err == nil {
