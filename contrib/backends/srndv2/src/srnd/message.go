@@ -361,7 +361,11 @@ func (self *nntpArticle) Headers() ArticleHeaders {
 }
 
 func (self *nntpArticle) MIMEHeader() textproto.MIMEHeader {
-	return textproto.MIMEHeader(self.headers)
+	h := make(textproto.MIMEHeader)
+	for k, v := range self.headers {
+		h[k] = v
+	}
+	return h
 }
 
 func (self *nntpArticle) AppendPath(part string) NNTPMessage {

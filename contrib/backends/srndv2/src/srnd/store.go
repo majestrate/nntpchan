@@ -453,7 +453,7 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 		pr_in.Close()
 	}()
 	go func() {
-		var buff [65636]byte
+		var buff [65536]byte
 		_, e := io.CopyBuffer(pw_in, msg, buff[:])
 		if e != nil {
 			log.Println("failed to read entire message", e)
