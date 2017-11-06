@@ -916,6 +916,8 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		// clean up
 		self.daemon.expire.ExpirePost(nntp.MessageID())
 		e(err)
+	} else {
+		s(nntp)
 	}
 }
 
