@@ -128,6 +128,8 @@ type NNTPDaemon struct {
 	pump_ticker       *time.Ticker
 	expiration_ticker *time.Ticker
 	article_lifetime  time.Duration
+
+	spamFilter SpamFilter
 }
 
 // return true if text passes all checks and is okay for posting
@@ -498,7 +500,7 @@ func (self *NNTPDaemon) ExpireAll() {
 
 // run daemon
 func (self *NNTPDaemon) Run() {
-
+	self.spamFilter.Configure(self.conf.spamconf)
 	self.bind_addr = self.conf.daemon["bind"]
 
 	listener, err := net.Listen("tcp", self.bind_addr)
@@ -1080,7 +1082,7 @@ func (self *NNTPDaemon) Setup() {
 
 	// set up store
 	log.Println("set up article store...")
-	self.store = createArticleStore(self.conf.store, self.database)
+	self.store = createArticleStore(self.conf.store, self.database, &self.spamFilter)
 
 	// do we enable the frontend?
 	if self.conf.frontend["enable"] == "1" {

@@ -5,6 +5,7 @@ package srnd
 
 import (
 	"bufio"
+	"bytes"
 	"crypto/sha512"
 	"encoding/base64"
 	"errors"
@@ -14,6 +15,7 @@ import (
 	"log"
 	"mime"
 	"mime/multipart"
+	"net/textproto"
 	"strings"
 	"time"
 )
@@ -89,6 +91,7 @@ type NNTPMessage interface {
 	Attachments() []NNTPAttachment
 	// all headers
 	Headers() ArticleHeaders
+	MIMEHeader() textproto.MIMEHeader
 	// write out everything
 	WriteTo(wr io.Writer, limit int64) error
 	// write out body
@@ -105,6 +108,8 @@ type NNTPMessage interface {
 	Addr() string
 	// reset contents
 	Reset()
+	// get body as reader
+	BodyReader() io.Reader
 }
 
 type nntpArticle struct {
@@ -201,7 +206,21 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 	return
 }
 
-func (self *nntpArticle) WriteTo(wr io.Writer, limit int64) (err error) {
+func (self *nntpArticle) BodyReader() io.Reader {
+	if self.Pubkey() == "" {
+		buff := new(bytes.Buffer)
+		self.WriteBody(buff, 80)
+		return buff
+	} else {
+		return self.signedPart.body
+	}
+}
+
+func (self *nntpArticle) WriteTo(wr io.Writer, limit int64) error {
+	return self.writeTo(wr, limit, false)
+}
+
+func (self *nntpArticle) writeTo(wr io.Writer, limit int64, ignoreLimit bool) (err error) {
 	// write headers
 	var n int
 	hdrs := self.headers
@@ -229,9 +248,8 @@ func (self *nntpArticle) WriteTo(wr io.Writer, limit int64) (err error) {
 		return
 	}
 
-	if limit > 0 {
-		// write body
-		err = self.WriteBody(wr, limit)
+	if limit > 0 || ignoreLimit {
+		err = self.WriteBody(wr, 80)
 	} else {
 		err = ErrOversizedMessage
 	}
@@ -342,6 +360,10 @@ func (self *nntpArticle) Headers() ArticleHeaders {
 	return self.headers
 }
 
+func (self *nntpArticle) MIMEHeader() textproto.MIMEHeader {
+	return textproto.MIMEHeader(self.headers)
+}
+
 func (self *nntpArticle) AppendPath(part string) NNTPMessage {
 	if self.headers.Has("Path") {
 		self.headers.Set("Path", part+"!"+self.Path())
@@ -374,13 +396,8 @@ func (self *nntpArticle) Attach(att NNTPAttachment) {
 
 func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 	// this is a signed message, don't treat it special
-	var n int
 	if self.signedPart != nil {
-		n, err = wr.Write(self.signedPart.Bytes())
-		limit -= int64(n)
-		if limit <= 0 {
-			err = ErrOversizedMessage
-		}
+		_, err = wr.Write(self.signedPart.Bytes())
 		return
 	}
 	self.Pack()
@@ -430,9 +447,6 @@ func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 		}
 		err = w.Close()
 		w = nil
-		if nlw.Left <= 0 {
-			err = ErrOversizedMessage
-		}
 	} else {
 		nlw := NewLineWriter(wr, limit)
 		// write out message
@@ -444,7 +458,7 @@ func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 // verify a signed message's body
 // innerHandler must close reader when done
 // returns error if one happens while verifying article
-func verifyMessageSHA512(pk, sig string, body *io.LimitedReader, innerHandler func(map[string][]string, io.Reader)) (err error) {
+func verifyMessageSHA512(pk, sig string, body io.Reader, innerHandler func(map[string][]string, io.Reader)) (err error) {
 	log.Println("unwrapping signed message from", pk)
 	pk_bytes := unhex(pk)
 	sig_bytes := unhex(sig)
@@ -460,10 +474,7 @@ func verifyMessageSHA512(pk, sig string, body *io.LimitedReader, innerHandler fu
 		}
 		hdr_reader.Close()
 	}(pr)
-	body = &io.LimitedReader{
-		R: io.TeeReader(body, pw),
-		N: body.N,
-	}
+	body = io.TeeReader(body, pw)
 	// copy body 128 bytes at a time
 	var buff [128]byte
 	_, err = io.CopyBuffer(h, body, buff[:])
@@ -482,7 +493,7 @@ func verifyMessageSHA512(pk, sig string, body *io.LimitedReader, innerHandler fu
 	return
 }
 
-func verifyMessageBLAKE2B(pk, sig string, body *io.LimitedReader, innerHandler func(map[string][]string, io.Reader)) (err error) {
+func verifyMessageBLAKE2B(pk, sig string, body io.Reader, innerHandler func(map[string][]string, io.Reader)) (err error) {
 	log.Println("unwrapping signed message from", pk)
 	pk_bytes := unhex(pk)
 	sig_bytes := unhex(sig)
@@ -498,10 +509,7 @@ func verifyMessageBLAKE2B(pk, sig string, body *io.LimitedReader, innerHandler f
 		}
 		hdr_reader.Close()
 	}(pr)
-	body = &io.LimitedReader{
-		R: io.TeeReader(body, pw),
-		N: body.N,
-	}
+	body = io.TeeReader(body, pw)
 	// copy body 128 bytes at a time
 	var buff [128]byte
 	_, err = io.CopyBuffer(h, body, buff[:])

@@ -411,6 +411,14 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 	server_pubkey := hdr.Get("X-Frontend-Pubkey")
 	server_sig := hdr.Get("X-Frontend-Signature")
 
+	is_spam := strings.HasPrefix(hdr.Get("X-Spam-Status"), "Yes,")
+
+	if is_spam {
+		reason = "message marked as spam by SpamAssassin"
+		ban = true
+		return
+	}
+
 	if serverPubkeyIsValid(server_pubkey) {
 		b, _ := daemon.database.PubkeyIsBanned(server_pubkey)
 		if b {
@@ -536,65 +544,6 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 			reason = "attachments of any kind not allowed"
 			ban = true
 		}
-	}
-	return
-}
-
-// store message, unpack attachments, register with daemon, send to daemon for federation
-// in that order
-func (self *nntpConnection) storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body *io.LimitedReader) (err error) {
-	var f io.WriteCloser
-	msgid := getMessageID(hdr)
-	if msgid == "" {
-		// drop, invalid header
-		log.Println(self.name, "dropping message with invalid mime header, no message-id")
-		_, err = io.Copy(Discard, body)
-		return
-	} else if ValidMessageID(msgid) {
-		f = daemon.store.CreateFile(msgid)
-	} else {
-		// invalid message-id
-		log.Println(self.name, "dropping message with invalid message-id", msgid)
-		_, err = io.Copy(Discard, body)
-		return
-	}
-	if f == nil {
-		// could not open file, probably already storing it from another connection
-		log.Println(self.name, "discarding duplicate message")
-		_, err = io.Copy(Discard, body)
-		return
-	}
-
-	// ask for replies
-	replyTos := strings.Split(hdr.Get("Reply-To"), " ")
-	for _, reply := range replyTos {
-		if ValidMessageID(reply) {
-			if !daemon.store.HasArticle(reply) {
-				go daemon.askForArticle(reply)
-			}
-		}
-	}
-
-	path := hdr.Get("Path")
-	hdr.Set("Path", daemon.instance_name+"!"+path)
-	// now store attachments and article
-	err = writeMIMEHeader(f, hdr)
-	if err == nil {
-		err = daemon.store.ProcessMessageBody(f, hdr, body, daemon.CheckText)
-		if err == nil {
-			// tell daemon
-			daemon.loadFromInfeed(msgid)
-		} else {
-			log.Println("error processing message body", err)
-		}
-	}
-	f.Close()
-	if err != nil {
-		// clean up
-		if ValidMessageID(msgid) {
-			DelFile(daemon.store.GetFilename(msgid))
-		}
-		log.Println("error processing message", err)
 	}
 	return
 }
@@ -753,17 +702,11 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					} else if err == nil {
 						// check if we don't have the rootpost
 						reference := hdr.Get("References")
-						newsgroup := hdr.Get("Newsgroups")
 						if reference != "" && ValidMessageID(reference) && !daemon.store.HasArticle(reference) && !daemon.database.IsExpired(reference) {
 							log.Println(self.name, "got reply to", reference, "but we don't have it")
 							go daemon.askForArticle(reference)
 						}
-						// store message
-						r := &io.LimitedReader{
-							R: msg.Body,
-							N: daemon.messageSizeLimitFor(newsgroup),
-						}
-						err = self.storeMessage(daemon, hdr, r)
+						err = storeMessage(daemon, hdr, msg.Body)
 						if err == nil {
 							code = 239
 							reason = "gotten"
@@ -853,7 +796,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 									R: r,
 									N: daemon.messageSizeLimitFor(newsgroup),
 								}
-								err = self.storeMessage(daemon, hdr, body)
+								err = storeMessage(daemon, hdr, body)
 								if err == nil {
 									conn.PrintfLine("235 We got it")
 								} else {
@@ -1261,7 +1204,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 									R: msg.Body,
 									N: daemon.messageSizeLimitFor(newsgroup),
 								}
-								err = self.storeMessage(daemon, hdr, body)
+								err = storeMessage(daemon, hdr, body)
 							}
 						}
 					}
@@ -1517,7 +1460,7 @@ func (self *nntpConnection) requestArticle(daemon *NNTPDaemon, conn *textproto.C
 						R: msg.Body,
 						N: daemon.messageSizeLimitFor(hdr.Get("Newsgroups")),
 					}
-					err = self.storeMessage(daemon, hdr, body)
+					err = storeMessage(daemon, hdr, body)
 					if err != nil {
 						log.Println(self.name, "failed to obtain article", err)
 						daemon.database.BanArticle(msgid, err.Error())

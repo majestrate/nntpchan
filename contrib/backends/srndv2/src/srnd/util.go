@@ -549,7 +549,8 @@ func getGroupForCatalog(file string) (group string) {
 
 // get a message id from a mime header
 // checks many values
-func getMessageID(hdr textproto.MIMEHeader) (msgid string) {
+func getMessageID(h map[string][]string) (msgid string) {
+	hdr := textproto.MIMEHeader(h)
 	msgid = hdr.Get("Message-Id")
 	if msgid == "" {
 		msgid = hdr.Get("Message-ID")
@@ -728,6 +729,70 @@ func parseRange(str string) (lo, hi int64) {
 	} else if len(parts) == 2 {
 		lo, _ = strconv.ParseInt(parts[0], 10, 64)
 		hi, _ = strconv.ParseInt(parts[1], 10, 64)
+	}
+	return
+}
+
+// store message, unpack attachments, register with daemon, send to daemon for federation
+// in that order
+func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) (err error) {
+	var f io.WriteCloser
+	msgid := getMessageID(hdr)
+	if msgid == "" {
+		// drop, invalid header
+		log.Println("dropping message with invalid mime header, no message-id")
+		_, err = io.Copy(Discard, body)
+		return
+	} else if ValidMessageID(msgid) {
+		f = daemon.store.CreateFile(msgid)
+	} else {
+		// invalid message-id
+		log.Println("dropping message with invalid message-id", msgid)
+		_, err = io.Copy(Discard, body)
+		return
+	}
+	if f == nil {
+		// could not open file, probably already storing it from another connection
+		log.Println("discarding duplicate message")
+		_, err = io.Copy(Discard, body)
+		return
+	}
+
+	// ask for replies
+	replyTos := strings.Split(hdr.Get("Reply-To"), " ")
+	for _, reply := range replyTos {
+		if ValidMessageID(reply) {
+			if !daemon.store.HasArticle(reply) {
+				go daemon.askForArticle(reply)
+			}
+		}
+	}
+
+	path := hdr.Get("Path")
+	hdr.Set("Path", daemon.instance_name+"!"+path)
+	// do the magick
+	pr, pw := io.Pipe()
+	go func() {
+		var buff [65536]byte
+		writeMIMEHeader(pw, hdr)
+		io.CopyBuffer(pw, body, buff[:])
+		pw.Close()
+	}()
+	err = daemon.store.ProcessMessage(f, pr, daemon.CheckText)
+	pr.Close()
+	if err == nil {
+		// tell daemon
+		daemon.loadFromInfeed(msgid)
+	} else {
+		log.Println("error processing message body", err)
+	}
+	f.Close()
+	if err != nil {
+		// clean up
+		if ValidMessageID(msgid) {
+			DelFile(daemon.store.GetFilename(msgid))
+		}
+		log.Println("error processing message", err)
 	}
 	return
 }

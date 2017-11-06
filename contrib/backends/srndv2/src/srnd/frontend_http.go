@@ -6,7 +6,6 @@
 package srnd
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -20,8 +19,6 @@ import (
 	"log"
 	"mime"
 	"net/http"
-	"net/mail"
-	"net/textproto"
 	"strings"
 	"time"
 )
@@ -374,38 +371,11 @@ func (self *httpFrontend) poll() {
 	for {
 		select {
 		case nntp := <-modChnl:
-			f := self.daemon.store.CreateFile(nntp.MessageID())
-			if f != nil {
-				b := new(bytes.Buffer)
-				err := nntp.WriteTo(b, self.daemon.messageSizeLimitFor(nntp.Newsgroup()))
-				if err == nil {
-					r := bufio.NewReader(b)
-					var msg *mail.Message
-					msg, err = readMIMEHeader(r)
-					if err == nil {
-						err = writeMIMEHeader(f, msg.Header)
-						if err == nil {
-							body := &io.LimitedReader{
-								R: msg.Body,
-								N: self.daemon.messageSizeLimitFor(nntp.Newsgroup()),
-							}
-							err = self.daemon.store.ProcessMessageBody(f, textproto.MIMEHeader(msg.Header), body, self.daemon.CheckText)
-						}
-					}
-				}
-				f.Close()
-				if err == nil {
-					self.daemon.loadFromInfeed(nntp.MessageID())
-				} else {
-					log.Println("error storing mod message", err)
-					DelFile(self.daemon.store.GetFilename(nntp.MessageID()))
-				}
-			} else {
-				log.Println("failed to register mod message, file was not opened")
-			}
+			storeMessage(self.daemon, nntp.MIMEHeader(), nntp.BodyReader())
 		}
 	}
 }
+
 func (self *httpFrontend) HandleNewPost(nntp frontendPost) {
 	msgid := nntp.MessageID()
 	group := nntp.Newsgroup()
@@ -924,7 +894,6 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		pk, _ := naclSeedToKeyPair(tripcode_privkey)
 		nntp.headers.Set("X-PubKey-Ed25519", hexify(pk))
 		nntp.Pack()
-		err = self.daemon.store.RegisterPost(nntp)
 		if err != nil {
 			e(err)
 			return
@@ -935,32 +904,15 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 			e(err)
 			return
 		}
-		if err == nil {
-			err = self.daemon.store.RegisterSigned(nntp.MessageID(), nntp.Pubkey())
-		}
 	} else {
 		nntp.Pack()
-		err = self.daemon.store.RegisterPost(nntp)
-	}
-	if err != nil {
-		e(err)
-		return
 	}
 	// have daemon sign message-id
 	self.daemon.WrapSign(nntp)
-	// save it
-	f := self.daemon.store.CreateFile(nntp.MessageID())
-	if f == nil {
-		e(errors.New("failed to store article"))
-		return
-	} else {
-		err = nntp.WriteTo(f, self.daemon.messageSizeLimitFor(nntp.Newsgroup()))
-		f.Close()
-		if err == nil {
-			go self.daemon.loadFromInfeed(nntp.MessageID())
-			s(nntp)
-			return
-		}
+
+	err = storeMessage(self.daemon, nntp.MIMEHeader(), nntp.BodyReader())
+
+	if err != nil {
 		// clean up
 		self.daemon.expire.ExpirePost(nntp.MessageID())
 		e(err)

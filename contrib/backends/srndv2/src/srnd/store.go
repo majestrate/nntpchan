@@ -62,10 +62,10 @@ type ArticleStore interface {
 	ThumbnailMessage(msgid string) []ThumbInfo
 	// did we enable compression?
 	Compression() bool
-	// process body of nntp message, register attachments and the article
-	// write the body into writer as we go through the body
-	// does NOT write mime header
-	ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body *io.LimitedReader, spamfilter func(string) bool) error
+	// process nntp message, register attachments and the article
+	// write the body into writer as we go through the message
+	// writes mime body and does any spam rewrite
+	ProcessMessage(wr io.Writer, msg io.Reader, filter func(string) bool) error
 	// register this post with the daemon
 	RegisterPost(nntp NNTPMessage) error
 	// register signed message
@@ -95,9 +95,10 @@ type articleStore struct {
 	placeholder   string
 	compression   bool
 	compWriter    *gzip.Writer
+	spamd         *SpamFilter
 }
 
-func createArticleStore(config map[string]string, database Database) ArticleStore {
+func createArticleStore(config map[string]string, database Database, spamd *SpamFilter) ArticleStore {
 	store := &articleStore{
 		directory:     config["store_dir"],
 		temp:          config["incoming_dir"],
@@ -110,6 +111,7 @@ func createArticleStore(config map[string]string, database Database) ArticleStor
 		placeholder:   config["placeholder_thumbnail"],
 		database:      database,
 		compression:   config["compression"] == "1",
+		spamd:         spamd,
 	}
 	store.Init()
 	return store
@@ -439,18 +441,43 @@ func (self *articleStore) getMIMEHeader(messageID string) (hdr textproto.MIMEHea
 	return hdr
 }
 
-func (self *articleStore) ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHeader, body *io.LimitedReader, spamfilter func(string) bool) (err error) {
-	err = read_message_body(body, hdr, self, wr, false, func(nntp NNTPMessage) {
+func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter func(string) bool) error {
+	pr_in, pw_in := io.Pipe()
+	pr_out, pw_out := io.Pipe()
+	go func() {
+		e := self.spamd.Rewrite(pr_in, pw_out)
+		if e != nil {
+			log.Println("failed to check spam", e)
+		}
+		pw_out.Close()
+		pr_in.Close()
+	}()
+	go func() {
+		var buff [65636]byte
+		_, e := io.CopyBuffer(pw_in, msg, buff[:])
+		if e != nil {
+			log.Println("failed to read entire message", e)
+		}
+		pw_in.Close()
+	}()
+	r := bufio.NewReader(pr_out)
+	m, err := readMIMEHeader(r)
+	defer pr_out.Close()
+	if err != nil {
+		return err
+	}
+	writeMIMEHeader(wr, m.Header)
+	err = read_message_body(m.Body, m.Header, self, wr, false, func(nntp NNTPMessage) {
 		if !spamfilter(nntp.Message()) {
 			err = errors.New("spam message")
 			return
 		}
 		err = self.RegisterPost(nntp)
 		if err == nil {
-			pk := hdr.Get("X-PubKey-Ed25519")
+			pk := m.Header.Get("X-PubKey-Ed25519")
 			if len(pk) > 0 {
 				// signed and valid
-				err = self.RegisterSigned(getMessageID(hdr), pk)
+				err = self.RegisterSigned(getMessageID(m.Header), pk)
 				if err != nil {
 					log.Println("register signed failed", err)
 				}
@@ -459,7 +486,7 @@ func (self *articleStore) ProcessMessageBody(wr io.Writer, hdr textproto.MIMEHea
 			log.Println("error procesing message body", err)
 		}
 	})
-	return
+	return err
 }
 
 func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
@@ -471,11 +498,7 @@ func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
 		if err == nil {
 			chnl := make(chan NNTPMessage)
 			hdr := textproto.MIMEHeader(msg.Header)
-			body := &io.LimitedReader{
-				R: msg.Body,
-				N: MaxMessageSize,
-			}
-			err = read_message_body(body, hdr, nil, nil, true, func(n NNTPMessage) {
+			err = read_message_body(msg.Body, hdr, nil, nil, true, func(n NNTPMessage) {
 				c := chnl
 				// inject pubkey for mod
 				n.Headers().Set("X-PubKey-Ed25519", hdr.Get("X-PubKey-Ed25519"))
@@ -500,7 +523,7 @@ func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
 // if writer is nil and discardAttachmentBody is true the body is discarded entirely
 // if writer is nil and discardAttachmentBody is false the body is loaded into the nntp message
 // if the body contains a signed message it unrwarps 1 layer of signing
-func read_message_body(body *io.LimitedReader, hdr map[string][]string, store ArticleStore, wr io.Writer, discardAttachmentBody bool, callback func(NNTPMessage)) error {
+func read_message_body(body io.Reader, hdr map[string][]string, store ArticleStore, wr io.Writer, discardAttachmentBody bool, callback func(NNTPMessage)) error {
 	nntp := new(nntpArticle)
 	nntp.headers = ArticleHeaders(hdr)
 	content_type := nntp.ContentType()
@@ -511,10 +534,7 @@ func read_message_body(body *io.LimitedReader, hdr map[string][]string, store Ar
 		return err
 	}
 	if wr != nil && !discardAttachmentBody {
-		body = &io.LimitedReader{
-			R: io.TeeReader(body, wr),
-			N: body.N,
-		}
+		body = io.TeeReader(body, wr)
 	}
 	boundary, ok := params["boundary"]
 	if ok || content_type == "multipart/mixed" {
@@ -522,14 +542,7 @@ func read_message_body(body *io.LimitedReader, hdr map[string][]string, store Ar
 		for {
 			part, err := partReader.NextPart()
 			if err == io.EOF {
-				if body.N >= 0 {
-					log.Println("got", body.N, "bytes remaining")
-					callback(nntp)
-				} else {
-					log.Println("dropping oversized message")
-					nntp.Reset()
-					return ErrOversizedMessage
-				}
+				callback(nntp)
 				return nil
 			} else if err == nil {
 				hdr := part.Header
@@ -590,11 +603,7 @@ func read_message_body(body *io.LimitedReader, hdr map[string][]string, store Ar
 		// verify message
 		f := func(h map[string][]string, innerBody io.Reader) {
 			// handle inner message
-			ir := &io.LimitedReader{
-				R: innerBody,
-				N: body.N,
-			}
-			e := read_message_body(ir, h, store, nil, true, callback)
+			e := read_message_body(innerBody, h, store, nil, true, callback)
 			if e != nil {
 				log.Println("error reading inner signed message", e)
 			}

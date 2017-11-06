@@ -60,6 +60,11 @@ type FeedConfig struct {
 	disable          bool
 }
 
+type SpamConfig struct {
+	enabled bool
+	addr    string
+}
+
 type APIConfig struct {
 	srndAddr     string
 	frontendAddr string
@@ -98,6 +103,7 @@ type SRNdConfig struct {
 	hooks         []*HookConfig
 	inboundPolicy *FeedPolicy
 	filter        FilterConfig
+	spamconf      SpamConfig
 }
 
 // check for config files
@@ -181,6 +187,11 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect.Add("archive", "0")
 	sect.Add("article_lifetime", "0")
 	sect.Add("filters_file", "filters.txt")
+
+	// spamd settings
+	sect = conf.NewSection("spamd")
+	sect.Add("enable", "0")
+	sect.Add("addr", "127.0.0.1:783")
 
 	// profiling settings
 	sect = conf.NewSection("pprof")
@@ -425,6 +436,16 @@ func ReadConfig() *SRNdConfig {
 			log.Println("frontend enabled in srnd.ini")
 		} else {
 			log.Println("frontend not enabled in srnd.ini, disabling frontend")
+		}
+	}
+
+	s, err = conf.Section("spamd")
+	if err == nil {
+		log.Println("spamd section found")
+		sconf.spamconf.enabled = s.ValueOf("enable") == "1"
+		if sconf.spamconf.enabled {
+			sconf.spamconf.addr = s.ValueOf("addr")
+			log.Println("spamd enabled")
 		}
 	}
 

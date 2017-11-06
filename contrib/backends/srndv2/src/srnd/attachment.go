@@ -23,7 +23,6 @@ import (
 type NNTPAttachment interface {
 	io.WriterTo
 	io.Writer
-
 	// the name of the file
 	Filename() string
 	// the filepath to the saved file
