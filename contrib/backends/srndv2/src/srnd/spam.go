@@ -3,8 +3,10 @@ package srnd
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"net"
+	"os/user"
 )
 
 var ErrSpamFilterNotEnabled = errors.New("spam filter access attempted when disabled")
@@ -36,7 +38,11 @@ func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser) error {
 	if err != nil {
 		return err
 	}
-	io.WriteString(c, "PROCESS SPAMC/1.5\r\nUser: nntpchan\r\n\r\n")
+	u, err := user.Current()
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(c, "PROCESS SPAMC/1.5\r\nUser: %s\r\n\r\n", u.Username)
 	io.CopyBuffer(c, msg, buff[:])
 	c.CloseWrite()
 	r := bufio.NewReader(c)
