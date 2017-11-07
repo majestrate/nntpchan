@@ -10,6 +10,7 @@ import (
 )
 
 var ErrSpamFilterNotEnabled = errors.New("spam filter access attempted when disabled")
+var ErrSpamFilterFailed = errors.New("spam filter failed")
 
 type SpamFilter struct {
 	addr    string
@@ -53,11 +54,11 @@ func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser) error {
 		}
 		if l == "\n" {
 			r.ReadString(10)
-			break
+			_, err = io.CopyBuffer(out, r, buff[:])
+			c.Close()
+			out.Close()
+			return err
 		}
 	}
-	_, err = io.CopyBuffer(out, r, buff[:])
-	c.Close()
-	out.Close()
-	return err
+	return ErrSpamFilterFailed
 }
