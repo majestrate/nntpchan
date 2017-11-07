@@ -414,7 +414,7 @@ func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 
 	boundary, ok := params["boundary"]
 	if ok {
-		nlw := NewLineWriter(wr, limit)
+		nlw := NewLineWriter(wr, 80)
 		w := multipart.NewWriter(nlw)
 
 		err = w.SetBoundary(boundary)
@@ -426,7 +426,7 @@ func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 					continue
 				}
 				hdr := att.Header()
-				hdr.Add("Content-Transfer-Encoding", "base64")
+				hdr.Set("Content-Transfer-Encoding", "base64")
 				part, err := w.CreatePart(hdr)
 				if err != nil {
 					log.Println("failed to create part?", err)
@@ -452,7 +452,7 @@ func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 		err = w.Close()
 		w = nil
 	} else {
-		nlw := NewLineWriter(wr, limit)
+		nlw := NewLineWriter(wr, 80)
 		// write out message
 		_, err = io.WriteString(nlw, self.message)
 	}
