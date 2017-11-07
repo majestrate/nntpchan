@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"os/user"
+	"strings"
 )
 
 var ErrSpamFilterNotEnabled = errors.New("spam filter access attempted when disabled")
@@ -53,8 +54,9 @@ func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser) error {
 		if err != nil {
 			return err
 		}
+		l = strings.TrimSpace(l)
 		log.Println("SpamFilter:", l)
-		if l == "\n" {
+		if l == "" {
 			_, err = io.CopyBuffer(out, r, buff[:])
 			c.Close()
 			out.Close()
