@@ -465,11 +465,9 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 	if self.spamd.Enabled() {
 		pr_in, pw_in := io.Pipe()
 		pr_out, pw_out := io.Pipe()
+		ec := make(chan error)
 		go func() {
-			e := self.spamd.Rewrite(pr_in, pw_out)
-			if e != nil {
-				log.Println("failed to check spam", e)
-			}
+			ec <- self.spamd.Rewrite(pr_in, pw_out)
 		}()
 		go func() {
 			var buff [65536]byte
@@ -491,6 +489,10 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 		}
 		writeMIMEHeader(wr, m.Header)
 		read_message_body(m.Body, m.Header, self, wr, false, process)
+		er := <-ec
+		if er != nil {
+			return er
+		}
 	} else {
 		r := bufio.NewReader(msg)
 		m, e := readMIMEHeader(r)
