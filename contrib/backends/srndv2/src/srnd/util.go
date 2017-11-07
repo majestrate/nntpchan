@@ -728,6 +728,7 @@ func parseRange(str string) (lo, hi int64) {
 func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) (err error) {
 	var f io.WriteCloser
 	msgid := getMessageID(hdr)
+	log.Println("store", msgid)
 	if msgid == "" {
 		// drop, invalid header
 		log.Println("dropping message with invalid mime header, no message-id")
