@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net"
 	"os/user"
 )
@@ -52,8 +53,8 @@ func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser) error {
 		if err != nil {
 			return err
 		}
+		log.Println("SpamFilter:", l)
 		if l == "\n" {
-			r.ReadString(10)
 			_, err = io.CopyBuffer(out, r, buff[:])
 			c.Close()
 			out.Close()
