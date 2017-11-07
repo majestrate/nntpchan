@@ -441,43 +441,19 @@ func (self *articleStore) getMIMEHeader(messageID string) (hdr textproto.MIMEHea
 	return hdr
 }
 
-func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter func(string) bool) error {
-	pr_in, pw_in := io.Pipe()
-	pr_out, pw_out := io.Pipe()
-	go func() {
-		e := self.spamd.Rewrite(pr_in, pw_out)
-		if e != nil {
-			log.Println("failed to check spam", e)
-		}
-		pw_out.Close()
-		pr_in.Close()
-	}()
-	go func() {
-		var buff [65536]byte
-		_, e := io.CopyBuffer(pw_in, msg, buff[:])
-		if e != nil {
-			log.Println("failed to read entire message", e)
-		}
-		pw_in.Close()
-	}()
-	r := bufio.NewReader(pr_out)
-	m, err := readMIMEHeader(r)
-	defer pr_out.Close()
-	if err != nil {
-		return err
-	}
-	writeMIMEHeader(wr, m.Header)
-	err = read_message_body(m.Body, m.Header, self, wr, false, func(nntp NNTPMessage) {
+func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter func(string) bool) (err error) {
+	process := func(nntp NNTPMessage) {
 		if !spamfilter(nntp.Message()) {
 			err = errors.New("spam message")
 			return
 		}
+		hdr := nntp.MIMEHeader()
 		err = self.RegisterPost(nntp)
 		if err == nil {
-			pk := m.Header.Get("X-PubKey-Ed25519")
+			pk := hdr.Get("X-PubKey-Ed25519")
 			if len(pk) > 0 {
 				// signed and valid
-				err = self.RegisterSigned(getMessageID(m.Header), pk)
+				err = self.RegisterSigned(getMessageID(hdr), pk)
 				if err != nil {
 					log.Println("register signed failed", err)
 				}
@@ -485,8 +461,47 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 		} else {
 			log.Println("error procesing message body", err)
 		}
-	})
-	return err
+	}
+	if self.spamd.Enabled() {
+		pr_in, pw_in := io.Pipe()
+		pr_out, pw_out := io.Pipe()
+		go func() {
+			e := self.spamd.Rewrite(pr_in, pw_out)
+			if e != nil {
+				log.Println("failed to check spam", e)
+			}
+		}()
+		go func() {
+			var buff [65536]byte
+			_, e := io.CopyBuffer(pw_in, msg, buff[:])
+			if e != nil {
+				log.Println("failed to read entire message", e)
+			}
+			pw_in.Close()
+			pr_in.Close()
+		}()
+		r := bufio.NewReader(pr_out)
+		m, e := readMIMEHeader(r)
+		err = e
+		defer func() {
+			pr_out.Close()
+		}()
+		if err != nil {
+			return
+		}
+		writeMIMEHeader(wr, m.Header)
+		read_message_body(m.Body, m.Header, self, wr, false, process)
+	} else {
+		r := bufio.NewReader(msg)
+		m, e := readMIMEHeader(r)
+		err = e
+		if err != nil {
+			return
+		}
+		writeMIMEHeader(wr, m.Header)
+		read_message_body(m.Body, m.Header, self, wr, false, process)
+	}
+	return
 }
 
 func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
@@ -541,7 +556,7 @@ func read_message_body(body io.Reader, hdr map[string][]string, store ArticleSto
 		partReader := multipart.NewReader(body, boundary)
 		for {
 			part, err := partReader.NextPart()
-			if part == nil {
+			if part == nil && err == io.EOF {
 				callback(nntp)
 				return nil
 			} else if err == nil {

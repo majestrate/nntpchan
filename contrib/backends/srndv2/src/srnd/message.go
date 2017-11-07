@@ -209,18 +209,14 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 func (self *nntpArticle) BodyReader() io.Reader {
 	if self.Pubkey() == "" {
 		buff := new(bytes.Buffer)
-		self.WriteBody(buff, 80)
+		self.WriteBody(buff, MaxMessageSize)
 		return buff
 	} else {
 		return self.signedPart.body
 	}
 }
 
-func (self *nntpArticle) WriteTo(wr io.Writer, limit int64) error {
-	return self.writeTo(wr, limit, false)
-}
-
-func (self *nntpArticle) writeTo(wr io.Writer, limit int64, ignoreLimit bool) (err error) {
+func (self *nntpArticle) WriteTo(wr io.Writer, limit int64) (err error) {
 	// write headers
 	var n int
 	hdrs := self.headers
@@ -248,8 +244,8 @@ func (self *nntpArticle) writeTo(wr io.Writer, limit int64, ignoreLimit bool) (e
 		return
 	}
 
-	if limit > 0 || ignoreLimit {
-		err = self.WriteBody(wr, 80)
+	if limit > 0 {
+		err = self.WriteBody(wr, limit)
 	} else {
 		err = ErrOversizedMessage
 	}
@@ -414,7 +410,7 @@ func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 
 	boundary, ok := params["boundary"]
 	if ok {
-		nlw := NewLineWriter(wr, 80)
+		nlw := NewLineWriter(wr, limit)
 		w := multipart.NewWriter(nlw)
 
 		err = w.SetBoundary(boundary)
@@ -452,7 +448,7 @@ func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 		err = w.Close()
 		w = nil
 	} else {
-		nlw := NewLineWriter(wr, 80)
+		nlw := NewLineWriter(wr, limit)
 		// write out message
 		_, err = io.WriteString(nlw, self.message)
 	}

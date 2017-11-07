@@ -7,10 +7,10 @@ import (
 
 type LineWriter struct {
 	w     io.Writer
-	limit int
+	limit int64
 }
 
-func NewLineWriter(w io.Writer, limit int) *LineWriter {
+func NewLineWriter(w io.Writer, limit int64) *LineWriter {
 	return &LineWriter{
 		w:     w,
 		limit: limit,
@@ -18,23 +18,12 @@ func NewLineWriter(w io.Writer, limit int) *LineWriter {
 }
 
 func (l *LineWriter) Write(data []byte) (n int, err error) {
-	dl := len(data)
+	n = len(data)
 	data = bytes.Replace(data, []byte{13, 10}, []byte{10}, -1)
-	parts := bytes.Split(data, []byte{10})
-	for _, part := range parts {
-		for len(part) > l.limit {
-			d := make([]byte, l.limit)
-			copy(d, part[:l.limit])
-			d = append(d, 10)
-			_, err = l.w.Write(d)
-			part = part[l.limit:]
-			if err != nil {
-				return
-			}
-		}
-		part = append(part, 10)
-		_, err = l.w.Write(part)
+	_, err = l.w.Write(data)
+	l.limit -= int64(n)
+	if l.limit <= 0 {
+		err = ErrOversizedMessage
 	}
-	n = dl
 	return
 }
