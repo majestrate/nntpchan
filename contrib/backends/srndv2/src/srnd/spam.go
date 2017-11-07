@@ -51,7 +51,8 @@ func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser) error {
 		if err != nil {
 			return err
 		}
-		if len(l) == 1 {
+		if l == "\n" {
+			r.ReadString(10)
 			break
 		}
 	}
