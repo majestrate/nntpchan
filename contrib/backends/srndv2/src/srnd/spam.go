@@ -25,13 +25,13 @@ func (sp *SpamFilter) Configure(c SpamConfig) {
 	sp.addr = c.addr
 }
 
-func (sp *SpamFilter) Enabled() bool {
-	return sp.enabled
+func (sp *SpamFilter) Enabled(newsgroup string) bool {
+	return sp.enabled && newsgroup != "ctl"
 }
 
-func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser) error {
+func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser, group string) error {
 	var buff [65636]byte
-	if !sp.Enabled() {
+	if !sp.Enabled(group) {
 		return ErrSpamFilterNotEnabled
 	}
 	addr, err := net.ResolveTCPAddr("tcp", sp.addr)

@@ -65,7 +65,7 @@ type ArticleStore interface {
 	// process nntp message, register attachments and the article
 	// write the body into writer as we go through the message
 	// writes mime body and does any spam rewrite
-	ProcessMessage(wr io.Writer, msg io.Reader, filter func(string) bool) error
+	ProcessMessage(wr io.Writer, msg io.Reader, filter func(string) bool, group string) error
 	// register this post with the daemon
 	RegisterPost(nntp NNTPMessage) error
 	// register signed message
@@ -441,7 +441,7 @@ func (self *articleStore) getMIMEHeader(messageID string) (hdr textproto.MIMEHea
 	return hdr
 }
 
-func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter func(string) bool) (err error) {
+func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter func(string) bool, group string) (err error) {
 	process := func(nntp NNTPMessage) {
 		if !spamfilter(nntp.Message()) {
 			err = errors.New("spam message")
@@ -462,12 +462,12 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 			log.Println("error procesing message body", err)
 		}
 	}
-	if self.spamd.Enabled() {
+	if self.spamd.Enabled(group) {
 		pr_in, pw_in := io.Pipe()
 		pr_out, pw_out := io.Pipe()
 		ec := make(chan error)
 		go func() {
-			e := self.spamd.Rewrite(pr_in, pw_out)
+			e := self.spamd.Rewrite(pr_in, pw_out, group)
 			ec <- e
 		}()
 		go func() {

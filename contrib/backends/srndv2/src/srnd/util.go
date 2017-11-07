@@ -769,7 +769,7 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 		io.CopyBuffer(pw, body, buff[:])
 		pw.Close()
 	}()
-	err = daemon.store.ProcessMessage(f, pr, daemon.CheckText)
+	err = daemon.store.ProcessMessage(f, pr, daemon.CheckText, hdr.Get("Newsgroups"))
 	pr.Close()
 	if err == nil {
 		// tell daemon
