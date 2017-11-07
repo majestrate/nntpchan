@@ -553,15 +553,10 @@ func getMessageID(h map[string][]string) string {
 	for k := range h {
 		kl := strings.ToLower(k)
 		if kl == "message-id" || kl == "messageid" {
-			return h[k][0]
+			return strings.TrimSpace(h[k][0])
 		}
 	}
 	return ""
-}
-
-func getMessageIDFromArticleHeaders(hdr ArticleHeaders) (msgid string) {
-	msgid = hdr.Get("Message-Id", hdr.Get("Message-ID", hdr.Get("message-id", hdr.Get("MESSAGE-ID", ""))))
-	return
 }
 
 func readMIMEHeader(r *bufio.Reader) (msg *mail.Message, err error) {

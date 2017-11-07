@@ -851,7 +851,7 @@ func (self *NNTPDaemon) poll(worker int) {
 			if hdr == nil {
 				log.Println("worker", worker, "failed to load", msgid)
 			} else {
-				msgid := getMessageIDFromArticleHeaders(hdr)
+				msgid := getMessageID(hdr)
 				log.Println("worker", worker, "got", msgid)
 				rollover := 100
 				group := hdr.Get("Newsgroups", "")
