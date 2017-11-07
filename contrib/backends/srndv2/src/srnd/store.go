@@ -467,7 +467,8 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 		pr_out, pw_out := io.Pipe()
 		ec := make(chan error)
 		go func() {
-			ec <- self.spamd.Rewrite(pr_in, pw_out)
+			e := self.spamd.Rewrite(pr_in, pw_out)
+			ec <- e
 		}()
 		go func() {
 			var buff [65536]byte
