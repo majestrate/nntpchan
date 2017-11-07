@@ -1,6 +1,7 @@
 package srnd
 
 import (
+	"bufio"
 	"errors"
 	"io"
 	"net"
@@ -35,10 +36,12 @@ func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser) error {
 	if err != nil {
 		return err
 	}
-	io.WriteString(c, "PROCESS SPAMC/1.5\r\n\r\n")
+	io.WriteString(c, "PROCESS SPAMC/1.5\r\nUser: nntpchan\r\n\r\n")
 	io.CopyBuffer(c, msg, buff[:])
 	c.CloseWrite()
-	_, err = io.CopyBuffer(out, c, buff[:])
+	r := bufio.NewReader(c)
+	r.ReadString(10)
+	_, err = io.CopyBuffer(out, r, buff[:])
 	c.Close()
 	out.Close()
 	return err
