@@ -46,7 +46,15 @@ func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser) error {
 	io.CopyBuffer(c, msg, buff[:])
 	c.CloseWrite()
 	r := bufio.NewReader(c)
-	r.ReadString(10)
+	for {
+		l, err := r.ReadString(10)
+		if err != nil {
+			return err
+		}
+		if len(l) == 1 {
+			break
+		}
+	}
 	_, err = io.CopyBuffer(out, r, buff[:])
 	c.Close()
 	out.Close()
