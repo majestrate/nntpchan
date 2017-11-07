@@ -851,10 +851,10 @@ func (self *NNTPDaemon) poll(worker int) {
 			if hdr == nil {
 				log.Println("worker", worker, "failed to load", msgid)
 			} else {
-				log.Println("worker", worker, "got", msgid)
 				rollover := 100
 				group := hdr.Get("Newsgroups", "")
 				ref := hdr.Get("References", "")
+				log.Println("worker", worker, "got", msgid, "in", group, "references", ref != "")
 				tpp, err := self.database.GetThreadsPerPage(group)
 				ppb, err := self.database.GetPagesPerBoard(group)
 				if err == nil {
