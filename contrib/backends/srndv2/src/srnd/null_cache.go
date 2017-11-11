@@ -99,6 +99,9 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				goto notfound
 			}
 		}
+		if group == "" {
+			goto notfound
+		}
 		hasgroup := self.database.HasNewsgroup(group)
 		if !hasgroup {
 			goto notfound
