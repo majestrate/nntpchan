@@ -815,9 +815,7 @@ func (self *NNTPDaemon) pollfeeds() {
 func (self *NNTPDaemon) informHooks(group, msgid, ref string) {
 	if ValidMessageID(msgid) && ValidMessageID(ref) && ValidNewsgroup(group) {
 		for _, conf := range self.conf.hooks {
-			if conf.enable {
-				ExecHook(conf, group, msgid, ref)
-			}
+			conf.Exec(group, msgid, ref)
 		}
 	}
 }
@@ -1081,7 +1079,7 @@ func (self *NNTPDaemon) Setup() {
 
 	// set up store
 	log.Println("set up article store...")
-	self.store = createArticleStore(self.conf.store, self.database, &self.spamFilter)
+	self.store = createArticleStore(self.conf.store, self.conf.thumbnails, self.database, &self.spamFilter)
 
 	// do we enable the frontend?
 	if self.conf.frontend["enable"] == "1" {

@@ -29,43 +29,54 @@ func (sp *SpamFilter) Enabled(newsgroup string) bool {
 	return sp.enabled && newsgroup != "ctl"
 }
 
-func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser, group string) error {
+type SpamResult struct {
+	Err    error
+	IsSpam bool
+}
+
+func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser, group string) (result SpamResult) {
 	var buff [65636]byte
 	if !sp.Enabled(group) {
-		return ErrSpamFilterNotEnabled
+		result.Err = ErrSpamFilterNotEnabled
+		return
 	}
-	addr, err := net.ResolveTCPAddr("tcp", sp.addr)
-	if err != nil {
-		return err
+	var addr *net.TCPAddr
+	var c *net.TCPConn
+	var u *user.User
+	addr, result.Err = net.ResolveTCPAddr("tcp", sp.addr)
+	if result.Err != nil {
+		return
 	}
-	c, err := net.DialTCP("tcp", nil, addr)
-	if err != nil {
-		return err
+	c, result.Err = net.DialTCP("tcp", nil, addr)
+	if result.Err != nil {
+		return
 	}
-	u, err := user.Current()
-	if err != nil {
-		return err
+	u, result.Err = user.Current()
+	if result.Err != nil {
+		return
 	}
 	fmt.Fprintf(c, "PROCESS SPAMC/1.5\r\nUser: %s\r\n\r\n", u.Username)
 	io.CopyBuffer(c, msg, buff[:])
 	c.CloseWrite()
 	r := bufio.NewReader(c)
 	for {
-		l, err := r.ReadString(10)
-		if err != nil {
-			return err
+		var l string
+		l, result.Err = r.ReadString(10)
+		if result.Err != nil {
+			return
 		}
 		l = strings.TrimSpace(l)
 		if strings.HasPrefix(l, "Spam: True ") {
-			return ErrMessageIsSpam
+			result.IsSpam = true
 		}
 		log.Println("SpamFilter:", l)
 		if l == "" {
-			_, err = io.CopyBuffer(out, r, buff[:])
+			_, result.Err = io.CopyBuffer(out, r, buff[:])
 			c.Close()
 			out.Close()
-			return err
+			return
 		}
 	}
-	return ErrSpamFilterFailed
+	result.Err = ErrSpamFilterFailed
+	return
 }

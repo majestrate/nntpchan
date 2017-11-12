@@ -77,15 +77,14 @@ type CryptoConfig struct {
 	cert_dir     string
 }
 
+type ThumbnailConfig struct {
+	rules       []ThumbnailRule
+	placeholder string
+}
+
 // pprof settings
 type ProfilingConfig struct {
 	bind   string
-	enable bool
-}
-
-type HookConfig struct {
-	name   string
-	exec   string
 	enable bool
 }
 
@@ -104,6 +103,7 @@ type SRNdConfig struct {
 	inboundPolicy *FeedPolicy
 	filter        FilterConfig
 	spamconf      SpamConfig
+	thumbnails    *ThumbnailConfig
 }
 
 // check for config files
@@ -227,6 +227,14 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect.Add("placeholder_thumbnail", "contrib/static/placeholder.png")
 	sect.Add("compression", "0")
 
+	// thumbnailing section
+	sect = conf.NewSection("thumbnails")
+	sect.Add("image/*", "{{convert}} -thumbnail 200 {{infile}} {{outfile}}")
+	sect.Add("image/gif", "{{convert}} -thumbnail 200 {{infile}}[0] {{outfile}}")
+	sect.Add("audio/*", "{{ffmpeg}} -i {{infile}} -an -vcodec copy {{outfile}}")
+	sect.Add("video/*", "{{ffmpeg}} -i {{infile}} -vf scale=300:200 -vframes 1 {{outfile}}")
+	sect.Add("*", "cp {{placeholder}} {{outfile}}")
+
 	// database backend config
 	sect = conf.NewSection("database")
 
@@ -251,6 +259,7 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect.Add("allow_files", "1")
 	sect.Add("regen_on_start", "0")
 	sect.Add("regen_threads", "2")
+	sect.Add("board_creation", "1")
 	sect.Add("bind", "[::]:18000")
 	sect.Add("name", "web.srndv2.test")
 	sect.Add("webroot", "webroot")
@@ -447,6 +456,14 @@ func ReadConfig() *SRNdConfig {
 			sconf.spamconf.addr = s.ValueOf("addr")
 			log.Println("spamd enabled")
 		}
+	}
+
+	s, err = conf.Section("thumbnails")
+	if err == nil {
+		log.Println("thumbnails section found")
+		sconf.thumbnails = new(ThumbnailConfig)
+		sconf.thumbnails.Load(s.Options())
+		sconf.thumbnails.placeholder = sconf.store["placeholder_thumbnail"]
 	}
 
 	// begin load feeds.ini

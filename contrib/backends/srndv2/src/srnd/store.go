@@ -10,6 +10,7 @@ import (
 	"compress/gzip"
 	"errors"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime"
 	"mime/multipart"
@@ -81,6 +82,21 @@ type ArticleStore interface {
 
 	// delete message by message-id
 	Remove(msgid string) error
+
+	// move message to spam dir
+	MarkSpam(msgid string) error
+
+	// move message out of spam dir
+	UnmarkSpam(msgid string) error
+
+	// get filepath for spam file via msgid
+	SpamFile(msgid string) string
+
+	// iterate over all spam messages
+	IterSpam(func(string) error) error
+
+	// iterate over all spam message headers
+	IterSpamHeaders(func(map[string][]string) error) error
 }
 type articleStore struct {
 	directory     string
@@ -93,12 +109,14 @@ type articleStore struct {
 	sox_path      string
 	identify_path string
 	placeholder   string
+	spamdir       string
 	compression   bool
 	compWriter    *gzip.Writer
 	spamd         *SpamFilter
+	thumbnails    *ThumbnailConfig
 }
 
-func createArticleStore(config map[string]string, database Database, spamd *SpamFilter) ArticleStore {
+func createArticleStore(config map[string]string, thumbConfig *ThumbnailConfig, database Database, spamd *SpamFilter) ArticleStore {
 	store := &articleStore{
 		directory:     config["store_dir"],
 		temp:          config["incoming_dir"],
@@ -112,6 +130,8 @@ func createArticleStore(config map[string]string, database Database, spamd *Spam
 		database:      database,
 		compression:   config["compression"] == "1",
 		spamd:         spamd,
+		spamdir:       filepath.Join(config["store_dir"], "spam"),
+		thumbnails:    thumbConfig,
 	}
 	store.Init()
 	return store
@@ -135,6 +155,7 @@ func (self *articleStore) Init() {
 	EnsureDir(self.temp)
 	EnsureDir(self.attachments)
 	EnsureDir(self.thumbs)
+	EnsureDir(self.spamdir)
 	if !CheckFile(self.convert_path) {
 		log.Fatal("cannot find executable for convert: ", self.convert_path, " not found")
 	}
@@ -213,7 +234,6 @@ func (self *articleStore) isVideo(fname string) bool {
 
 func (self *articleStore) ThumbInfo(fpath string) (ThumbInfo, error) {
 	var info ThumbInfo
-	log.Println("made thumbnail for", fpath)
 	cmd := exec.Command(self.identify_path, "-format", "%[fx:w] %[fx:h]", fpath)
 	output, err := cmd.Output()
 	if err == nil {
@@ -225,12 +245,38 @@ func (self *articleStore) ThumbInfo(fpath string) (ThumbInfo, error) {
 			}
 		}
 	} else {
-		log.Println("failed to determine size of thumbnail")
+		log.Println("failed to determine size of thumbnail", err)
 	}
 	return info, err
 }
 
 func (self *articleStore) GenerateThumbnail(fname string) (info ThumbInfo, err error) {
+	outfname := self.ThumbnailFilepath(fname)
+	if self.thumbnails == nil {
+		err = self.generateThumbnailFallback(fname)
+		if err == nil {
+			info, err = self.ThumbInfo(outfname)
+		}
+		return
+	}
+	infname := self.AttachmentFilepath(fname)
+	err = self.thumbnails.GenerateThumbnail(infname, outfname, map[string]string{
+		"ffmpeg":   self.ffmpeg_path,
+		"convert":  self.convert_path,
+		"sox":      self.sox_path,
+		"identify": self.identify_path,
+	})
+	if err != nil {
+		log.Println(err.Error(), "so we'll use fallback thumbnailing")
+		err = self.generateThumbnailFallback(fname)
+	}
+	if err == nil {
+		info, err = self.ThumbInfo(outfname)
+	}
+	return
+}
+
+func (self *articleStore) generateThumbnailFallback(fname string) (err error) {
 	outfname := self.ThumbnailFilepath(fname)
 	infname := self.AttachmentFilepath(fname)
 	tmpfname := ""
@@ -270,7 +316,7 @@ func (self *articleStore) GenerateThumbnail(fname string) (info ThumbInfo, err e
 	if len(tmpfname) > 0 {
 		DelFile(tmpfname)
 	}
-	return info, err
+	return
 }
 
 func (self *articleStore) GetAllAttachments() (names []string, err error) {
@@ -391,7 +437,7 @@ func (self *articleStore) CreateFile(messageID string) io.WriteCloser {
 
 // return true if we have an article
 func (self *articleStore) HasArticle(messageID string) bool {
-	return CheckFile(self.GetFilename(messageID))
+	return CheckFile(self.GetFilename(messageID)) || CheckFile(self.SpamFile(messageID))
 }
 
 // get the filename for this article
@@ -420,25 +466,28 @@ func (self *articleStore) GetMIMEHeader(messageID string) textproto.MIMEHeader {
 	return self.getMIMEHeader(messageID)
 }
 
-// get article with headers only
-func (self *articleStore) getMIMEHeader(messageID string) (hdr textproto.MIMEHeader) {
-	if ValidMessageID(messageID) {
-		fname := self.GetFilename(messageID)
-		f, err := os.Open(fname)
-		if f != nil {
-			r := bufio.NewReader(f)
-			var msg *mail.Message
-			msg, err = readMIMEHeader(r)
-			f.Close()
-			if msg != nil {
-				hdr = textproto.MIMEHeader(msg.Header)
-			}
-		}
-		if err != nil {
-			log.Println("failed to load article headers for", messageID, err)
+func (self *articleStore) getMIMEHeader(msgid string) (hdr textproto.MIMEHeader) {
+	if ValidMessageID(msgid) {
+		hdr = self.getMIMEHeaderByFile(self.GetFilename(msgid))
+	}
+	return
+}
+
+func (self *articleStore) getMIMEHeaderByFile(fname string) (hdr map[string][]string) {
+	f, err := os.Open(fname)
+	if f != nil {
+		r := bufio.NewReader(f)
+		var msg *mail.Message
+		msg, err = readMIMEHeader(r)
+		f.Close()
+		if msg != nil {
+			hdr = msg.Header
 		}
 	}
-	return hdr
+	if err != nil {
+		log.Println("failed to load article headers from", fname, err)
+	}
+	return
 }
 
 func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter func(string) bool, group string) (err error) {
@@ -465,10 +514,10 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 	if self.spamd.Enabled(group) {
 		pr_in, pw_in := io.Pipe()
 		pr_out, pw_out := io.Pipe()
-		ec := make(chan error)
+		resc := make(chan SpamResult)
 		go func() {
-			e := self.spamd.Rewrite(pr_in, pw_out, group)
-			ec <- e
+			res := self.spamd.Rewrite(pr_in, pw_out, group)
+			resc <- res
 		}()
 		go func() {
 			var buff [65536]byte
@@ -488,12 +537,18 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 		if err != nil {
 			return
 		}
+		msgid := getMessageID(m.Header)
 		writeMIMEHeader(wr, m.Header)
-		read_message_body(m.Body, m.Header, self, wr, false, process)
-		er := <-ec
-		if er != nil {
-			return er
+		err = read_message_body(m.Body, m.Header, self, wr, false, process)
+		spamRes := <-resc
+		if spamRes.Err != nil {
+			return spamRes.Err
 		}
+
+		if spamRes.IsSpam {
+			err = self.MarkSpam(msgid)
+		}
+
 	} else {
 		r := bufio.NewReader(msg)
 		m, e := readMIMEHeader(r)
@@ -644,4 +699,55 @@ func read_message_body(body io.Reader, hdr map[string][]string, store ArticleSto
 		}
 	}
 	return err
+}
+
+func (self *articleStore) SpamFile(msgid string) string {
+	return filepath.Join(self.spamdir, msgid)
+}
+
+func (self *articleStore) MarkSpam(msgid string) (err error) {
+	if ValidMessageID(msgid) {
+		err = os.Rename(self.GetFilename(msgid), self.SpamFile(msgid))
+	}
+	return
+}
+
+func (self *articleStore) UnmarkSpam(msgid string) (err error) {
+	if ValidMessageID(msgid) {
+		err = os.Rename(self.SpamFile(msgid), self.GetFilename(msgid))
+	}
+	return
+}
+
+func (self *articleStore) iterSpamFiles(v func(os.FileInfo) error) error {
+	infos, err := ioutil.ReadDir(self.spamdir)
+	if err == nil {
+		for idx := range infos {
+			err = v(infos[idx])
+			if err != nil {
+				break
+			}
+		}
+	}
+	return err
+}
+
+func (self *articleStore) IterSpam(v func(string) error) error {
+	return self.iterSpamFiles(func(i os.FileInfo) error {
+		fname := i.Name()
+		if ValidMessageID(fname) {
+			return v(fname)
+		}
+		return nil
+	})
+}
+
+func (self *articleStore) IterSpamHeaders(v func(map[string][]string) error) error {
+	return self.IterSpam(func(msgid string) error {
+		hdr := self.getMIMEHeaderByFile(self.SpamFile(msgid))
+		if hdr != nil {
+			return v(hdr)
+		}
+		return nil
+	})
 }

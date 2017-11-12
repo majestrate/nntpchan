@@ -35,7 +35,7 @@ func ThumbnailTool(threads int, missing bool) {
 		log.Println("cannot load config, ReadConfig() returned nil")
 		return
 	}
-	store := createArticleStore(conf.store, nil, &SpamFilter{})
+	store := createArticleStore(conf.store, conf.thumbnails, nil, &SpamFilter{})
 	reThumbnail(threads, store, missing)
 }
 
