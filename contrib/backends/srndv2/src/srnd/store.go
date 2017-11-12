@@ -123,7 +123,7 @@ func createArticleStore(config map[string]string, thumbConfig *ThumbnailConfig, 
 		attachments:   config["attachments_dir"],
 		thumbs:        config["thumbs_dir"],
 		convert_path:  config["convert_bin"],
-		identify_path: config["identify_path"],
+		identify_path: config["identify_bin"],
 		ffmpeg_path:   config["ffmpegthumbnailer_bin"],
 		sox_path:      config["sox_bin"],
 		placeholder:   config["placeholder_thumbnail"],
@@ -165,6 +165,10 @@ func (self *articleStore) Init() {
 	if !CheckFile(self.sox_path) {
 		log.Fatal("connt find executable for sox: ", self.sox_path, " not found")
 	}
+	if !CheckFile(self.identify_path) {
+		log.Fatal("cannot find executable for identify: ", self.identify_path, "not found")
+	}
+
 	if !CheckFile(self.placeholder) {
 		log.Println("falling back to use default placeholder image")
 		self.placeholder = "contrib/static/placeholder.png"
@@ -245,7 +249,7 @@ func (self *articleStore) ThumbInfo(fpath string) (ThumbInfo, error) {
 			}
 		}
 	} else {
-		log.Println("failed to determine size of thumbnail", err)
+		log.Println("failed to determine size of thumbnail", err, string(output))
 	}
 	return info, err
 }
@@ -261,10 +265,11 @@ func (self *articleStore) GenerateThumbnail(fname string) (info ThumbInfo, err e
 	}
 	infname := self.AttachmentFilepath(fname)
 	err = self.thumbnails.GenerateThumbnail(infname, outfname, map[string]string{
-		"ffmpeg":   self.ffmpeg_path,
-		"convert":  self.convert_path,
-		"sox":      self.sox_path,
-		"identify": self.identify_path,
+		"ffmpeg":      self.ffmpeg_path,
+		"convert":     self.convert_path,
+		"sox":         self.sox_path,
+		"identify":    self.identify_path,
+		"placeholder": self.placeholder,
 	})
 	if err != nil {
 		log.Println(err.Error(), "so we'll use fallback thumbnailing")

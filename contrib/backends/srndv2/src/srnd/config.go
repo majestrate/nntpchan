@@ -224,16 +224,17 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect.Add("convert_bin", "/usr/bin/convert")
 	sect.Add("ffmpegthumbnailer_bin", "/usr/bin/ffmpeg")
 	sect.Add("sox_bin", "/usr/bin/sox")
+	sect.Add("identify_bin", "/usr/bin/identify")
 	sect.Add("placeholder_thumbnail", "contrib/static/placeholder.png")
 	sect.Add("compression", "0")
 
 	// thumbnailing section
 	sect = conf.NewSection("thumbnails")
-	sect.Add("image/*", "{{convert}} -thumbnail 200 {{infile}} {{outfile}}")
-	sect.Add("image/gif", "{{convert}} -thumbnail 200 {{infile}}[0] {{outfile}}")
-	sect.Add("audio/*", "{{ffmpeg}} -i {{infile}} -an -vcodec copy {{outfile}}")
-	sect.Add("video/*", "{{ffmpeg}} -i {{infile}} -vf scale=300:200 -vframes 1 {{outfile}}")
-	sect.Add("*", "cp {{placeholder}} {{outfile}}")
+	sect.Add("image/*", "{{.convert}} -thumbnail 200 {{.infile}} {{.outfile}}")
+	sect.Add("image/gif", "{{.convert}} -thumbnail 200 {{.infile}}[0] {{.outfile}}")
+	sect.Add("audio/*", "{{.ffmpeg}} -i {{.infile}} -an -vcodec copy {{.outfile}}")
+	sect.Add("video/*", "{{.ffmpeg}} -i {{.infile}} -vf scale=300:200 -vframes 1 {{.outfile}}")
+	sect.Add("*", "cp {{.placeholder}} {{.outfile}}")
 
 	// database backend config
 	sect = conf.NewSection("database")

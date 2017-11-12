@@ -38,7 +38,7 @@ func (th *ThumbnailRule) GenerateThumbnail(infname, outfname string, env map[str
 }
 
 func (th *ThumbnailRule) Accepts(mimetype string) bool {
-	return regexp.MustCompile(th.AcceptsMimeType).MatchString(mimetype)
+	return th.AcceptsMimeType == "*" || regexp.MustCompilePOSIX(th.AcceptsMimeType).MatchString(mimetype)
 }
 
 func (th *ThumbnailConfig) Load(opts map[string]string) {
@@ -60,7 +60,7 @@ func (th *ThumbnailConfig) Swap(i, j int) {
 }
 
 func (th *ThumbnailConfig) Less(i, j int) bool {
-	return th.rules[i].AcceptsMimeType < th.rules[j].AcceptsMimeType
+	return th.rules[i].AcceptsMimeType >= th.rules[j].AcceptsMimeType
 }
 
 func (th *ThumbnailConfig) FindRulesFor(mimetype string) (rules []ThumbnailRule) {
@@ -78,6 +78,7 @@ func (th *ThumbnailConfig) GenerateThumbnail(infname, outfname string, env map[s
 	for _, rule := range rules {
 		err = rule.GenerateThumbnail(infname, outfname, env)
 		if err == nil {
+			log.Println("made thumbnail for", infname)
 			return
 		}
 	}
