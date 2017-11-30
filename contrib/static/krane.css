@@ -65,6 +65,7 @@
       .image {
         border-radius: 0px;
         border: 1px solid #363636;
+        max-width: 250px;
       }
       .thread {
         padding-top: 5px;
