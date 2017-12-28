@@ -109,8 +109,6 @@ type NNTPDaemon struct {
 	register_connection   chan *nntpConnection
 	deregister_connection chan *nntpConnection
 
-	// channel to load messages to infeed given their message id
-	infeed_load chan string
 	// channel for broadcasting a message to all feeds given their newsgroup, message_id
 	send_all_feeds chan ArticleEntry
 	// channel for broadcasting an ARTICLE command to all feeds in reader mode
@@ -536,7 +534,6 @@ func (self *NNTPDaemon) Run() {
 
 	self.register_connection = make(chan *nntpConnection)
 	self.deregister_connection = make(chan *nntpConnection)
-	self.infeed_load = make(chan string, 128)
 	self.send_all_feeds = make(chan ArticleEntry)
 	self.activeConnections = make(map[string]*nntpConnection)
 	self.loadedFeeds = make(map[string]*feedState)
@@ -674,8 +671,7 @@ func (self *NNTPDaemon) syncAllMessages() {
 
 // load a message from the infeed directory
 func (self *NNTPDaemon) loadFromInfeed(msgid string) {
-	log.Println("load from infeed", msgid)
-	self.infeed_load <- msgid
+	self.processMessage(msgid)
 }
 
 // reload all configs etc
@@ -840,43 +836,46 @@ func (self *NNTPDaemon) pump_article_requests() {
 	articles = nil
 }
 
+func (self *NNTPDaemon) processMessage(msgid string) {
+	log.Println("load", msgid)
+	hdr := self.store.GetHeaders(msgid)
+	if hdr == nil {
+		log.Println("failed to load", msgid)
+	} else {
+		rollover := 100
+		group := hdr.Get("Newsgroups", "")
+		ref := hdr.Get("References", "")
+		log.Println("got", msgid, "in", group, "references", ref != "")
+		tpp, err := self.database.GetThreadsPerPage(group)
+		ppb, err := self.database.GetPagesPerBoard(group)
+		if err == nil {
+			rollover = tpp * ppb
+		}
+		if self.expire != nil {
+			// expire posts
+			self.expire.ExpireGroup(group, rollover)
+		}
+		// send to mod panel
+		if group == "ctl" {
+			self.mod.HandleMessage(msgid)
+		}
+		// inform callback hooks
+		self.informHooks(group, msgid, ref)
+		// federate
+		self.sendAllFeeds(ArticleEntry{msgid, group})
+		// send to frontend
+		if self.frontend != nil {
+			if self.frontend.AllowNewsgroup(group) {
+				self.frontend.HandleNewPost(frontendPost{msgid, ref, group})
+			}
+		}
+	}
+
+}
+
 func (self *NNTPDaemon) poll(worker int) {
 	for {
 		select {
-		case msgid := <-self.infeed_load:
-			log.Println("load", msgid)
-			hdr := self.store.GetHeaders(msgid)
-			if hdr == nil {
-				log.Println("worker", worker, "failed to load", msgid)
-			} else {
-				rollover := 100
-				group := hdr.Get("Newsgroups", "")
-				ref := hdr.Get("References", "")
-				log.Println("worker", worker, "got", msgid, "in", group, "references", ref != "")
-				tpp, err := self.database.GetThreadsPerPage(group)
-				ppb, err := self.database.GetPagesPerBoard(group)
-				if err == nil {
-					rollover = tpp * ppb
-				}
-				if self.expire != nil {
-					// expire posts
-					self.expire.ExpireGroup(group, rollover)
-				}
-				// send to mod panel
-				if group == "ctl" {
-					self.mod.HandleMessage(msgid)
-				}
-				// inform callback hooks
-				self.informHooks(group, msgid, ref)
-				// federate
-				self.sendAllFeeds(ArticleEntry{msgid, group})
-				// send to frontend
-				if self.frontend != nil {
-					if self.frontend.AllowNewsgroup(group) {
-						self.frontend.HandleNewPost(frontendPost{msgid, ref, group})
-					}
-				}
-			}
 		case nntp := <-self.send_all_feeds:
 			group := nntp.Newsgroup()
 			if self.Federate() {
