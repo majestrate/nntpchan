@@ -1518,6 +1518,8 @@ func (self *nntpConnection) startReader(daemon *NNTPDaemon, conn *textproto.Conn
 				if err != nil {
 					log.Println(self.name, "error while in reader mode:", err)
 				}
+			} else {
+				time.Sleep(time.Second)
 			}
 		}
 	}
