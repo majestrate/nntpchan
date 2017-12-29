@@ -4,7 +4,6 @@
 package srnd
 
 import (
-	"bufio"
 	"crypto/tls"
 	"errors"
 	"fmt"
@@ -291,26 +290,34 @@ func (self *NNTPDaemon) dialOut(proxy_type, proxy_addr, remote_addr string) (con
 		log.Println("dial out via http proxy", proxy_addr)
 		conn, err = net.Dial("tcp", proxy_addr)
 		if err == nil {
-			var ok bool
 			_, err = fmt.Fprintf(conn, "CONNECT %s HTTP/1.1\r\n\r\n", remote_addr)
 			if err == nil {
-				r := bufio.NewReader(conn)
-				var line, firstline string
-				firstline, err = r.ReadString(10)
-				if strings.HasPrefix(firstline, "HTTP/1.1 200") {
-					ok = true
-					log.Println("http proxy connect accepted")
-				}
-				for err == nil {
-					line, err = r.ReadString(10)
-					if line == "\r" || line == "" {
-						break
+				readLine := func(c net.Conn) (line string, e error) {
+					var buff [1]byte
+					var n int
+					for e == nil {
+						n, e = c.Read(buff[:])
+						if n > 0 {
+							line += string(buff[:])
+							if buff[0] == 10 {
+								return
+							}
+						}
 					}
+					return
 				}
-				if ok {
-					log.Println("http proxy connect okay")
+				var line string
+				line, err = readLine(conn)
+				if strings.HasPrefix(line, "HTTP/1.1 200") || strings.HasPrefix(line, "HTTP/1.0 200") {
+					log.Println("http proxy connect accepted")
+					for err == nil {
+						line, err = readLine(conn)
+						if line == "\r\n" {
+							break
+						}
+					}
 				} else {
-					err = errors.New("proxy request rejected: " + strings.Trim(firstline, "\r"))
+					err = errors.New("proxy request rejected: " + strings.Trim(line, "\r"))
 					log.Println(err)
 					conn.Close()
 					conn = nil
