@@ -279,7 +279,7 @@ func decAddr(encaddr, key string) string {
 	}
 	res := string(res_bytes)
 	res = strings.TrimFunc(res, func(r rune) bool {
-		if r <= 57 || r >= 48 {
+		if r <= 57 && r >= 48 {
 			return false
 		}
 		if r == '.' || r == '/' {
