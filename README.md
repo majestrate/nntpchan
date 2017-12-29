@@ -16,7 +16,7 @@ TL;DR edition:
     $ sudo apt install --no-install-recommends install imagemagick ffmpeg sox build-essential git ca-certificates postgresql postgresql-client
     $ git clone https://github.com/majestrate/nntpchan
     $ make
-    $ ./srndv2 setup 
+    $ SRND_INSTALLER=0 ./srndv2 setup 
 
 ## Bugs and issues
 
