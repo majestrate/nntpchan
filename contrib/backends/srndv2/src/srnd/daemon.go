@@ -671,7 +671,7 @@ func (self *NNTPDaemon) syncAllMessages() {
 
 // load a message from the infeed directory
 func (self *NNTPDaemon) loadFromInfeed(msgid string) {
-	self.processMessage(msgid)
+	go self.processMessage(msgid)
 }
 
 // reload all configs etc
@@ -853,14 +853,16 @@ func (self *NNTPDaemon) processMessage(msgid string) {
 		}
 		if self.expire != nil {
 			// expire posts
+			log.Println("expire", group, "for", rollover, "threads")
 			self.expire.ExpireGroup(group, rollover)
 		}
 		// send to mod panel
 		if group == "ctl" {
+			log.Println("process mod message", msgid)
 			self.mod.HandleMessage(msgid)
 		}
 		// inform callback hooks
-		self.informHooks(group, msgid, ref)
+		go self.informHooks(group, msgid, ref)
 		// federate
 		self.sendAllFeeds(ArticleEntry{msgid, group})
 		// send to frontend

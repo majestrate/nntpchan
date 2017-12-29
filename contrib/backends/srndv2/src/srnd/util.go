@@ -771,17 +771,23 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 	}()
 	err = daemon.store.ProcessMessage(f, pr, daemon.CheckText, hdr.Get("Newsgroups"))
 	pr.Close()
+	f.Close()
 	if err == nil {
+		// move temp article to articles dir
+		err = daemon.store.AcceptTempArticle(msgid)
 		// tell daemon
-		daemon.loadFromInfeed(msgid)
+		if err == nil {
+			daemon.loadFromInfeed(msgid)
+		}
 	} else {
 		log.Println("error processing message body", err)
 	}
-	f.Close()
 	if err != nil {
 		// clean up
 		if ValidMessageID(msgid) {
-			DelFile(daemon.store.GetFilename(msgid))
+			fname := daemon.store.GetFilenameTemp(msgid)
+			log.Println("clean up", fname)
+			DelFile(fname)
 		}
 		log.Println("error processing message", err)
 	}

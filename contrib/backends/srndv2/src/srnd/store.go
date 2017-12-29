@@ -55,6 +55,8 @@ type ArticleStore interface {
 	GetMIMEHeader(msgid string) textproto.MIMEHeader
 	// get our temp directory for articles
 	TempDir() string
+	// get temp filename for article
+	GetFilenameTemp(msgid string) string
 	// get a list of all the attachments we have
 	GetAllAttachments() ([]string, error)
 	// generate a thumbnail
@@ -97,6 +99,9 @@ type ArticleStore interface {
 
 	// iterate over all spam message headers
 	IterSpamHeaders(func(map[string][]string) error) error
+
+	// move temp article to article store
+	AcceptTempArticle(msgid string) error
 }
 type articleStore struct {
 	directory     string
@@ -424,9 +429,16 @@ func (self *articleStore) ThumbnailFilepath(fname string) string {
 	return filepath.Join(self.thumbs, fname+".jpg")
 }
 
+func (self *articleStore) GetFilenameTemp(msgid string) (fpath string) {
+	if ValidMessageID(msgid) {
+		fpath = filepath.Join(self.TempDir(), msgid)
+	}
+	return
+}
+
 // create a file for this article
 func (self *articleStore) CreateFile(messageID string) io.WriteCloser {
-	fname := self.GetFilename(messageID)
+	fname := self.GetFilenameTemp(messageID)
 	if CheckFile(fname) {
 		// already exists
 		log.Println("article with message-id", messageID, "already exists, not saving")
@@ -526,6 +538,7 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 		}()
 		go func() {
 			var buff [65536]byte
+
 			_, e := io.CopyBuffer(pw_in, msg, buff[:])
 			if e != nil {
 				log.Println("failed to read entire message", e)
@@ -755,4 +768,20 @@ func (self *articleStore) IterSpamHeaders(v func(map[string][]string) error) err
 		}
 		return nil
 	})
+}
+
+func (self *articleStore) AcceptTempArticle(msgid string) (err error) {
+	if ValidMessageID(msgid) {
+		temp := self.GetFilenameTemp(msgid)
+		store := self.GetFilename(msgid)
+		if CheckFile(temp) {
+			if CheckFile(store) {
+				// already in store
+				err = os.Remove(temp)
+			} else {
+				err = os.Rename(temp, store)
+			}
+		}
+	}
+	return
 }

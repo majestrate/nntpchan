@@ -218,7 +218,7 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect = conf.NewSection("articles")
 
 	sect.Add("store_dir", "articles")
-	sect.Add("incoming_dir", "/tmp/articles")
+	sect.Add("incoming_dir", "articles/tmp")
 	sect.Add("attachments_dir", "webroot/img")
 	sect.Add("thumbs_dir", "webroot/thm")
 	sect.Add("convert_bin", "/usr/bin/convert")

@@ -65,8 +65,10 @@ type nntpConnection struct {
 	// lock help when expecting non pipelined activity
 	access sync.Mutex
 
-	// ARTICLE <message-id>
-	article chan string
+	// pending articles to request
+	articles []string
+	// lock for accessing articles to request
+	articles_access sync.Mutex
 	// map of message-id -> stream state
 	pending map[string]*syncEvent
 	// lock for accessing self.pending map
@@ -121,7 +123,6 @@ func createNNTPConnection(addr string) *nntpConnection {
 	}
 	return &nntpConnection{
 		hostname: host,
-		article:  make(chan string, 1024),
 		pending:  make(map[string]*syncEvent),
 	}
 }
@@ -475,7 +476,7 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 		return
 	} else if daemon.database.HasArticle(msgid) {
 		// this article is too old
-		reason = "we have this article already"
+		reason = "article already seen"
 		// don't ban
 		return
 	} else if is_ctl {
@@ -1339,9 +1340,11 @@ func (self *nntpConnection) askForArticle(msgid string) {
 	if self.messageIsQueued(msgid) {
 		// already queued
 	} else {
+		self.articles_access.Lock()
 		log.Println(self.name, "asking for", msgid)
 		self.messageSetPendingState(msgid, "queued", 0)
-		self.article <- msgid
+		self.articles = append(self.articles, msgid)
+		self.articles_access.Unlock()
 	}
 }
 
@@ -1498,14 +1501,23 @@ func (self *nntpConnection) startReader(daemon *NNTPDaemon, conn *textproto.Conn
 			conn.PrintfLine("QUIT")
 			chnl <- true
 			break
-		case msgid := <-self.article:
-			// next article to ask for
-			log.Println(self.name, "obtaining", msgid)
-			self.messageSetPendingState(msgid, "article", 0)
-			err = self.requestArticle(daemon, conn, msgid)
-			self.messageSetProcessed(msgid)
-			if err != nil {
-				log.Println(self.name, "error while in reader mode:", err)
+		default:
+			var msgid string
+			self.articles_access.Lock()
+			if len(self.articles) > 0 {
+				msgid = self.articles[0]
+				self.articles = self.articles[1:]
+			}
+			self.articles_access.Unlock()
+			if len(msgid) > 0 {
+				// next article to ask for
+				log.Println(self.name, "obtaining", msgid)
+				self.messageSetPendingState(msgid, "article", 0)
+				err = self.requestArticle(daemon, conn, msgid)
+				self.messageSetProcessed(msgid)
+				if err != nil {
+					log.Println(self.name, "error while in reader mode:", err)
+				}
 			}
 		}
 	}
