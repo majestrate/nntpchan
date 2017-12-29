@@ -1,5 +1,3 @@
-[NNTPChan](https://nntpchan.info)
-=================================
 
 ![le ebin logo](nntpchan.png "ebin logo")
 
