@@ -454,7 +454,7 @@ func (self *articleStore) CreateFile(messageID string) io.WriteCloser {
 
 // return true if we have an article
 func (self *articleStore) HasArticle(messageID string) bool {
-	return CheckFile(self.GetFilename(messageID)) || CheckFile(self.SpamFile(messageID))
+	return CheckFile(self.GetFilename(messageID)) || CheckFile(self.SpamFile(messageID)) || CheckFile(self.GetFilenameTemp(messageID))
 }
 
 // get the filename for this article
