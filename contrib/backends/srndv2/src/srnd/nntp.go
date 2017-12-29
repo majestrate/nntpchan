@@ -1433,6 +1433,10 @@ func (self *nntpConnection) scrapeServer(daemon *NNTPDaemon, conn *textproto.Con
 // ask for an article from the remote server
 // feed it to the daemon if we get it
 func (self *nntpConnection) requestArticle(daemon *NNTPDaemon, conn *textproto.Conn, msgid string) (err error) {
+	if daemon.store.HasArticle(msgid) {
+		log.Println("already have", msgid, "so not requesting it")
+		return
+	}
 	// send command
 	err = conn.PrintfLine("ARTICLE %s", msgid)
 	// read response
