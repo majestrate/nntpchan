@@ -279,7 +279,13 @@ func decAddr(encaddr, key string) string {
 	}
 	res := string(res_bytes)
 	res = strings.TrimFunc(res, func(r rune) bool {
-		return r > 57 || r < 48 || r != '.' || r != '/'
+		if r <= 57 || r >= 48 {
+			return false
+		}
+		if r == '.' || r == '/' {
+			return false
+		}
+		return true
 	})
 	if strings.Index(res, "/") == -1 {
 		// TODO: ipv6
