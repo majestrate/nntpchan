@@ -278,7 +278,9 @@ func decAddr(encaddr, key string) string {
 		res_bytes[idx] = encaddr_bytes[idx] ^ b
 	}
 	res := string(res_bytes)
-	res = strings.Trim(res, " ")
+	res = strings.TrimFunc(res, func(r rune) bool {
+		return r > 57 || r < 48 || r != '.' || r != '/'
+	})
 	if strings.Index(res, "/") == -1 {
 		// TODO: ipv6
 		res += "/32"
