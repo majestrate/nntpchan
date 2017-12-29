@@ -4,6 +4,7 @@
 package srnd
 
 import (
+	"bufio"
 	"crypto/tls"
 	"errors"
 	"fmt"
@@ -285,6 +286,36 @@ func (self *NNTPDaemon) dialOut(proxy_type, proxy_addr, remote_addr string) (con
 			conn = nil
 			err = errors.New("failed to connect via proxy")
 			return
+		}
+	} else if proxy_type == "http" {
+		log.Println("dial out via http proxy", proxy_addr)
+		conn, err = net.Dial("tcp", proxy_addr)
+		if err == nil {
+			var ok bool
+			_, err = fmt.Fprintf(conn, "CONNECT %s HTTP/1.1\r\n\r\n", remote_addr)
+			if err == nil {
+				r := bufio.NewReader(conn)
+				var line, firstline string
+				firstline, err = r.ReadString(10)
+				if strings.HasPrefix(firstline, "HTTP/1.1 200") {
+					ok = true
+					log.Println("http proxy connect accepted")
+				}
+				for err == nil {
+					line, err = r.ReadString(10)
+					if line == "\r" || line == "" {
+						break
+					}
+				}
+				if ok {
+					log.Println("http proxy connect okay")
+				} else {
+					err = errors.New("proxy request rejected: " + strings.Trim(firstline, "\r"))
+					log.Println(err)
+					conn.Close()
+					conn = nil
+				}
+			}
 		}
 	} else {
 		err = errors.New("invalid proxy type: " + proxy_type)
