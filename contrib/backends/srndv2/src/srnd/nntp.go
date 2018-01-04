@@ -863,7 +863,9 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					// XXX: heavy as shit
 					//lo, hi, err := daemon.database.GetLastAndFirstForGroup(group)
 					//if err == nil {
-					_, _ = io.WriteString(dw, fmt.Sprintf("%s 0 0 y\n", group))
+					if len(group) > 0 {
+						_, _ = io.WriteString(dw, fmt.Sprintf("%s 0 0 y\n", group))
+					}
 					//} else {
 					//	log.Println(self.name, "could not get low/high water mark for", group, err)
 					//}
