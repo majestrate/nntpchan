@@ -864,7 +864,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					//lo, hi, err := daemon.database.GetLastAndFirstForGroup(group)
 					//if err == nil {
 					if ValidNewsgroup(group) {
-						_, _ = io.WriteString(dw, fmt.Sprintf("%s 0 0 y\n", group))
+						fmt.Fprintf(dw, "%s 0 0 y\n", group)
 					}
 					//} else {
 					//	log.Println(self.name, "could not get low/high water mark for", group, err)
@@ -996,7 +996,9 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					conn.PrintfLine("215 list of newsgroups follows")
 					dw := conn.DotWriter()
 					for _, entry := range list {
-						io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[1], entry[2]))
+						if ValidNewsgroup(entry[0]) {
+							io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[1], entry[2]))
+						}
 					}
 					dw.Close()
 				} else {
@@ -1148,7 +1150,9 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					conn.PrintfLine("215 list of newsgroups follows")
 					dw := conn.DotWriter()
 					for _, entry := range list {
-						io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[1], entry[2]))
+						if ValidNewsgroup(entry[0]) {
+							io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[1], entry[2]))
+						}
 					}
 					dw.Close()
 				} else {
