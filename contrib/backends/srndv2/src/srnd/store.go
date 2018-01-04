@@ -591,16 +591,16 @@ func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
 			hdr := textproto.MIMEHeader(msg.Header)
 			err = read_message_body(msg.Body, hdr, nil, nil, true, func(n NNTPMessage) {
 				c := chnl
-				// inject pubkey for mod
-				n.Headers().Set("X-PubKey-Ed25519", hdr.Get("X-PubKey-Ed25519"))
-				c <- n
-				close(c)
+				if n != nil {
+					// inject pubkey for mod
+					n.Headers().Set("X-PubKey-Ed25519", hdr.Get("X-PubKey-Ed25519"))
+					c <- n
+				}
 			})
 			if err == nil {
 				nntp = <-chnl
 			} else {
 				log.Println("GetMessage() failed to load", msgid, err)
-				close(chnl)
 			}
 		}
 	}
