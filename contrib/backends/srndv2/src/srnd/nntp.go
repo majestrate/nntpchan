@@ -863,7 +863,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					// XXX: heavy as shit
 					//lo, hi, err := daemon.database.GetLastAndFirstForGroup(group)
 					//if err == nil {
-					if len(group) > 0 {
+					if ValidNewsgroup(group) {
 						_, _ = io.WriteString(dw, fmt.Sprintf("%s 0 0 y\n", group))
 					}
 					//} else {
