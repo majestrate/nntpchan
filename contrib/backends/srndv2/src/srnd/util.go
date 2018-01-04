@@ -297,7 +297,7 @@ func decAddr(encaddr, key string) string {
 var exp_valid_newsgroup = regexp.MustCompilePOSIX(`^[a-zA-Z0-9.]{1,128}$`)
 
 func newsgroupValidFormat(newsgroup string) bool {
-	return exp_valid_newsgroup.MatchString(newsgroup)
+	return exp_valid_newsgroup.MatchString(newsgroup) && len(newsgroup) > 0
 }
 
 func ValidNewsgroup(newsgroup string) bool {
