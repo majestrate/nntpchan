@@ -670,6 +670,7 @@ func (self *NNTPDaemon) Run() {
 			names, err := f.Readdirnames(0)
 			if err == nil {
 				for _, name := range names {
+					self.store.AcceptTempArticle(name)
 					self.loadFromInfeed(name)
 				}
 			}
