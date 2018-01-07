@@ -784,12 +784,8 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 	pr.Close()
 	f.Close()
 	if err == nil {
-		// move temp article to articles dir
-		err = daemon.store.AcceptTempArticle(msgid)
 		// tell daemon
-		if err == nil {
-			daemon.loadFromInfeed(msgid)
-		}
+		daemon.loadFromInfeed(msgid)
 	} else {
 		log.Println("error processing message body", err)
 	}

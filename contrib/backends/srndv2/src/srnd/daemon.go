@@ -670,7 +670,6 @@ func (self *NNTPDaemon) Run() {
 			names, err := f.Readdirnames(0)
 			if err == nil {
 				for _, name := range names {
-					self.store.AcceptTempArticle(name)
 					self.loadFromInfeed(name)
 				}
 			}
@@ -710,6 +709,7 @@ func (self *NNTPDaemon) syncAllMessages() {
 
 // load a message from the infeed directory
 func (self *NNTPDaemon) loadFromInfeed(msgid string) {
+	self.store.AcceptTempArticle(msgid)
 	go self.processMessage(msgid)
 }
 
