@@ -1536,6 +1536,73 @@ func (self *nntpConnection) startReader(daemon *NNTPDaemon, conn *textproto.Conn
 	conn.Close()
 }
 
+func (self *nntpConnection) listNewsgroups(conn *textproto.Conn) (groups []string, err error) {
+	err = conn.PrintfLine("LIST NEWSGROUPS")
+	if err == nil {
+		var code int
+		code, _, err = conn.ReadCodeLine(0)
+		if code == 231 || code == 215 {
+			dr := conn.DotReader()
+			// read lines
+			sc := bufio.NewScanner(dr)
+			for sc.Scan() {
+				line := sc.Text()
+				idx := strings.Index(line, " ")
+				if idx > 0 {
+					group := line[:idx]
+					if ValidNewsgroup(group) {
+						groups = append(groups, group)
+					}
+				}
+			}
+		}
+	}
+	return
+}
+
+func (self *nntpConnection) getNewsgroupArticles(group string, conn *textproto.Conn) (msgids []string, err error) {
+	err = conn.PrintfLine("GROUP %s", group)
+	if err == nil {
+		// read reply to GROUP command
+		code := 0
+		code, _, err = conn.ReadCodeLine(211)
+		// check code
+		if code == 211 {
+			// success
+			// send XOVER command, dummy parameter for now
+			err = conn.PrintfLine("XOVER 0")
+			if err == nil {
+				// no error sending command, read first line
+				code, _, err = conn.ReadCodeLine(224)
+				if code == 224 {
+					// maps message-id -> references
+					articles := make(map[string]string)
+					// successful response, read multiline
+					dr := conn.DotReader()
+					sc := bufio.NewScanner(dr)
+					for sc.Scan() {
+						line := sc.Text()
+						parts := strings.Split(line, "\t")
+						if len(parts) > 5 {
+							// probably valid line
+							msgid := parts[4]
+							// msgid -> reference
+							articles[msgid] = parts[5]
+						} else {
+							// probably not valid line
+							// ignore
+						}
+					}
+					for msgid := range articles {
+						msgids = append(msgids, msgid)
+					}
+				}
+			}
+		}
+	}
+	return
+}
+
 // run the mainloop for this connection
 // stream if true means they support streaming mode
 // reader if true means they support reader mode
@@ -1561,13 +1628,50 @@ func (self *nntpConnection) runConnection(daemon *NNTPDaemon, inbound, stream, r
 	}
 	if !inbound {
 		if preferMode == "stream" {
-			// try outbound streaming
 			if stream {
+				// get list of everything
+				msgids := make(map[string]bool)
+				success, err = self.modeSwitch("READER", conn)
+				if err == nil && success {
+					var groups []string
+					groups, err = self.listNewsgroups(conn)
+					if err == nil {
+						// get all posts in each newsgroup
+						for _, group := range groups {
+							if conf.policy.AllowsNewsgroup(group) {
+								var msgsLocal, msgsRemote []string
+								msgsLocal, err = daemon.database.GetMessagesInGroup(group)
+								if err == nil {
+									msgsRemote, err = self.getNewsgroupArticles(group, conn)
+									if err == nil {
+										for _, mLocal := range msgsLocal {
+											msgids[mLocal] = true
+										}
+										for _, mRemote := range msgsRemote {
+											msgids[mRemote] = false
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				// try outbound streaming
 				success, err = self.modeSwitch("STREAM", conn)
 				if success {
 					self.mode = "STREAM"
 					// start outbound streaming in background
 					go self.startStreaming(daemon, reader, conn)
+					// for ever missing message they don't have
+					for msgid, wants := range msgids {
+						// queue for send
+						if wants {
+							sz, e := daemon.store.GetMessageSize(msgid)
+							if e == nil {
+								self.offerStream(msgid, sz)
+							}
+						}
+					}
 				}
 			}
 		} else if reader {
