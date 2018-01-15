@@ -256,8 +256,6 @@ type Database interface {
 	// ordered from oldest to newest
 	GetPostsInGroup(group string) ([]PostModel, error)
 
-	GetMessagesInGroup(group string) ([]string, error)
-
 	// get the numerical id of the last , first article for a given group
 	GetLastAndFirstForGroup(group string) (int64, int64, error)
 
