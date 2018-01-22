@@ -1328,6 +1328,9 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 						// something bad went down when reading multiline
 						log.Println(self.name, "failed to read multiline for", group, "XOVER command")
 					}
+				} else if code >= 420 || code <= 429 {
+					// group doesn't have articles in one way or another. not really error
+					err = nil
 				}
 			}
 		} else if err == nil {
@@ -1379,12 +1382,16 @@ func (self *nntpConnection) scrapeServer(daemon *NNTPDaemon, conn *textproto.Con
 				sc := bufio.NewScanner(dr)
 				for sc.Scan() {
 					line := sc.Text()
-					idx := strings.Index(line, " ")
+					idx := strings.IndexAny(line, " \t")
 					if idx > 0 {
+						//log.Println(self.name, "got newsgroup", line[:idx])
 						groups = append(groups, line[:idx])
+					} else if idx < 0 {
+						//log.Println(self.name, "got newsgroup", line)
+						groups = append(groups, line)
 					} else {
-						// invalid line? wtf.
-						log.Println(self.name, "invalid line in newsgroups multiline response:", line)
+						// can't have it starting with WS
+						log.Printf("%s invalid line in newsgroups multiline response [%s]\n", self.name, line)
 					}
 				}
 				err = sc.Err()
@@ -1402,8 +1409,8 @@ func (self *nntpConnection) scrapeServer(daemon *NNTPDaemon, conn *textproto.Con
 								// scrape the group
 								err = self.scrapeGroup(daemon, conn, group)
 								if err != nil {
-									log.Println(self.name, "did not scrape", group, err)
-									break
+									log.Println(self.name, "failure scraping group", group, "error:", err)
+									// do not break here, continue with other groups
 								}
 							}
 						} else {
