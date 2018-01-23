@@ -382,18 +382,19 @@ func (self *nntpConnection) handleStreaming(daemon *NNTPDaemon, conn *textproto.
 	return
 }
 
-// check if we want the article given its mime header
+// check if we want the article given its auth status and mime header
 // returns empty string if it's okay otherwise an error message
-func (self *nntpConnection) checkMIMEHeader(daemon *NNTPDaemon, h map[string][]string) (reason string, allow bool, err error) {
+func (self *nntpConnection) checkMIMEHeader(daemon *NNTPDaemon, hdr textproto.MIMEHeader) (reason string, allow bool, err error) {
 	if !self.authenticated {
 		reason = "not authenticated"
 		return
 	}
-	hdr := textproto.MIMEHeader(h)
 	reason, allow, err = self.checkMIMEHeaderNoAuth(daemon, hdr)
 	return
 }
 
+// check if we want the article given its mime header without checking auth status
+// returns empty string if it's okay otherwise an error message
 func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textproto.MIMEHeader) (reason string, ban bool, err error) {
 	newsgroup := hdr.Get("Newsgroups")
 	reference := hdr.Get("References")
@@ -664,9 +665,9 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 			} else if cmd == "CHECK" {
 				// handle check command
 				msgid := parts[1]
-				if self.mode != "STREAM" {
-					// we can't we are not in streaming mode
-					conn.PrintfLine("431 %s", msgid)
+				if !self.authenticated {
+					// if client cannot TAKETHIS it shouldn't be able to CHECK either
+					conn.PrintfLine("480 You have not authenticated")
 					return
 				}
 				// have we seen this article?
@@ -682,55 +683,73 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 				}
 			} else if cmd == "TAKETHIS" {
 				// handle takethis command
+				r := bufio.NewReader(conn.DotReader())
+				if !self.authenticated {
+					// early reject without parsing incase client not allowed to post
+					// send response first to allow client to stop sending
+					// XXX what happens if our send queue is full and this blocks?
+					// other side will probably fill up sending article to us
+					// async receive processing would help there
+					// but this situation has low likehood to happen
+					// operating system/transport buffering will compensate
+					// so leave it this way
+					conn.PrintfLine("480 You have not authenticated")
+					// discard whole article without looking at insides
+					// it should be dot-terminated either way
+					_, err = io.Copy(ioutil.Discard, r)
+					return
+				}
+				// client is allowed to post
 				var msg *mail.Message
 				var reason string
 				var ban bool
 				// read the article header
-				r := bufio.NewReader(conn.DotReader())
 				msg, err = readMIMEHeader(r)
-				if err == nil {
-					hdr := textproto.MIMEHeader(msg.Header)
-					// check the header
-					reason, ban, err = self.checkMIMEHeader(daemon, hdr)
-					if len(reason) > 0 {
-						// discard, we do not want
-						code = 439
-						log.Println(self.name, "rejected", msgid, reason)
-						_, err = io.Copy(ioutil.Discard, msg.Body)
-						if ban {
-							err = daemon.database.BanArticle(msgid, reason)
-						}
-					} else if err == nil {
-						// check if we don't have the rootpost
-						reference := hdr.Get("References")
-						if reference != "" && ValidMessageID(reference) && !daemon.store.HasArticle(reference) && !daemon.database.IsExpired(reference) {
-							log.Println(self.name, "got reply to", reference, "but we don't have it")
-							go daemon.askForArticle(reference)
-						}
-						err = storeMessage(daemon, hdr, msg.Body)
-						if err == nil {
-							code = 239
-							reason = "gotten"
-						} else {
-							code = 439
-							reason = err.Error()
-						}
-					} else {
-						// error?
-						// discard, we do not want
-						code = 439
-						log.Println(self.name, "rejected", msgid, reason)
-						_, err = io.Copy(ioutil.Discard, msg.Body)
-						if ban {
-							err = daemon.database.BanArticle(msgid, reason)
-						}
-					}
-				} else {
+				if err != nil {
 					log.Println(self.name, "error reading mime header:", err)
-					code = 439
-					reason = "error reading mime header"
+					conn.PrintfLine("439 %s error reading mime header", msgid)
+					// if reading header error'd, msg.Body wont be set
+					_, err = io.Copy(ioutil.Discard, r)
+					return
 				}
-				conn.PrintfLine("%d %s %s", code, msgid, reason)
+				hdr := textproto.MIMEHeader(msg.Header)
+				// check the header
+				reason, ban, err = self.checkMIMEHeaderNoAuth(daemon, hdr)
+				if len(reason) > 0 {
+					// discard, we do not want
+					log.Println(self.name, "rejected", msgid, reason)
+					conn.PrintfLine("439 %s %s", code, msgid, reason)
+					_, err = io.Copy(ioutil.Discard, msg.Body)
+					if ban {
+						err = daemon.database.BanArticle(msgid, reason)
+					}
+				} else if err == nil {
+					// looks good to accept
+					// check if we don't have the rootpost
+					reference := hdr.Get("References")
+					if reference != "" && ValidMessageID(reference) && !daemon.store.HasArticle(reference) && !daemon.database.IsExpired(reference) {
+						log.Println(self.name, "got reply to", reference, "but we don't have it")
+						go daemon.askForArticle(reference)
+					}
+					err = storeMessage(daemon, hdr, msg.Body)
+					if err == nil {
+						code = 239
+						reason = "gotten"
+					} else {
+						code = 439
+						reason = err.Error()
+					}
+					conn.PrintfLine("%d %s %s", code, msgid, reason)
+				} else {
+					// error?
+					// discard, we do not want
+					log.Println(self.name, "rejected", msgid, "unexpected error", err)
+					conn.PrintfLine("439 %s unexpected error", msgid)
+					_, err = io.Copy(ioutil.Discard, msg.Body)
+					if ban {
+						err = daemon.database.BanArticle(msgid, reason)
+					}
+				}
 			} else if cmd == "ARTICLE" {
 				if !ValidMessageID(msgid) {
 					if len(self.group) > 0 {
@@ -759,7 +778,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 				}
 			} else if cmd == "IHAVE" {
 				if !self.authenticated {
-					conn.PrintfLine("483 You have not authenticated")
+					conn.PrintfLine("480 You have not authenticated")
 				} else {
 					// handle IHAVE command
 					msgid := parts[1]
@@ -1656,7 +1675,6 @@ func (self *nntpConnection) runConnection(daemon *NNTPDaemon, inbound, stream, r
 								conn.PrintfLine("203 Stream it brah")
 								self.mode = "STREAM"
 								log.Println(self.name, "streaming enabled")
-								go self.startStreaming(daemon, reader, conn)
 							}
 						}
 					}
