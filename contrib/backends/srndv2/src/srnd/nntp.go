@@ -1265,6 +1265,48 @@ func (self *nntpConnection) startStreaming(daemon *NNTPDaemon, reader bool, conn
 	}
 }
 
+// interprets result string from response code 211 of GROUP message
+// for parts it fails, returns zeros
+func interpretGroupResult(line string) (es, lo, hi uint64, group string) {
+	// this code is braindead but I was lazy to search stdlib
+	startes := 0
+	for startes < len(line) && (line[startes] == ' ' || line[startes] == '\t') {
+		startes++
+	}
+	endes := startes
+	for endes < len(line) && line[endes] != ' ' && line[endes] != '\t' {
+		endes++
+	}
+	startlo := endes
+	for startlo < len(line) && (line[startlo] == ' ' || line[startlo] == '\t') {
+		startlo++
+	}
+	endlo := startlo
+	for endlo < len(line) && line[endlo] != ' ' && line[endlo] != '\t' {
+		endlo++
+	}
+	starthi := endlo
+	for starthi < len(line) && (line[starthi] == ' ' || line[starthi] == '\t') {
+		starthi++
+	}
+	endhi := starthi
+	for endhi < len(line) && line[endhi] != ' ' && line[endhi] != '\t' {
+		endhi++
+	}
+	startgroup := endhi
+	for startgroup < len(line) && (line[startgroup] == ' ' || line[startgroup] == '\t') {
+		startgroup++
+	}
+	// will return 0 if failed to parse. which is OK for us
+	es, _ = strconv.ParseUint(line[startes:endes], 10, 64)
+	lo, _ = strconv.ParseUint(line[startlo:endlo], 10, 64)
+	hi, _ = strconv.ParseUint(line[starthi:endhi], 10, 64)
+	group = line[startgroup:]
+	return
+}
+
+const maxXOVERRange = 800
+
 // scrape all posts in a newsgroup
 // download ones we do not have
 func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn, group string) (err error) {
@@ -1274,14 +1316,46 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 	err = conn.PrintfLine("GROUP %s", group)
 	if err == nil {
 		// read reply to GROUP command
-		code := 0
-		code, _, err = conn.ReadCodeLine(211)
+		var code int
+		var ret string
+		code, ret, err = conn.ReadCodeLine(211)
 		// check code
 		if code == 211 {
 			// success
-			// send XOVER command, dummy parameter for now
-			err = conn.PrintfLine("XOVER 0")
-			if err == nil {
+			es, lo, hi, _ := interpretGroupResult(ret)
+			for {
+				if lo < hi {
+					// server indicated empty group
+					// or
+					// we finished pulling stuff
+					break
+				}
+				if lo-hi+1 <= maxXOVERRange {
+					// not too much for us to pull
+					if es == 0 && lo == 0 && hi == 0 {
+						// empty group
+						break
+					}
+					if lo != hi {
+						// usual normal case
+						err = conn.PrintfLine("XOVER %d-%d", lo, hi)
+					} else if lo == 0 {
+						// probably something went wrong. try pulling more
+						err = conn.PrintfLine("XOVER 0-")
+					} else {
+						// normal case with one article
+						err = conn.PrintfLine("XOVER %d", lo)
+					}
+					lo = hi + 1
+				} else {
+					// too much to pull in one shot
+					err = conn.PrintfLine("XOVER %d-%d", lo, lo+maxXOVERRange-1)
+					lo += maxXOVERRange
+				}
+				if err != nil {
+					// something went very wrong
+					return
+				}
 				// no error sending command, read first line
 				code, _, err = conn.ReadCodeLine(224)
 				if code == 224 {
@@ -1321,7 +1395,8 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 									if err != nil {
 										// something bad happened
 										log.Println(self.name, "failed to obtain root post", refid, err)
-										return
+										// trying with another article isn't bad idea
+										err = nil
 									}
 								}
 							}
@@ -1338,7 +1413,8 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 									if err != nil {
 										// something bad happened
 										log.Println(self.name, "failed to obtain article", msgid, err)
-										return
+										// trying with another article isn't bad idea
+										err = nil
 									}
 								}
 							}
