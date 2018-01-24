@@ -1330,7 +1330,7 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 					// we finished pulling stuff
 					break
 				}
-				if lo-hi+1 <= maxXOVERRange {
+				if hi-lo+1 <= maxXOVERRange {
 					// not too much for us to pull
 					if es == 0 && lo == 0 && hi == 0 {
 						// empty group
