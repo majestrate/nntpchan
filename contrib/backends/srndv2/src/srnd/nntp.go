@@ -1324,7 +1324,7 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 			// success
 			es, lo, hi, _ := interpretGroupResult(ret)
 			for {
-				if lo < hi {
+				if lo > hi {
 					// server indicated empty group
 					// or
 					// we finished pulling stuff
