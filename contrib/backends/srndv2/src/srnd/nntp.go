@@ -1395,8 +1395,8 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 									if err != nil {
 										// something bad happened
 										log.Println(self.name, "failed to obtain root post", refid, err)
-										// trying with another article isn't bad idea
-										err = nil
+										// it fails only when REALLY bad stuff happens
+										return
 									}
 								}
 							}
@@ -1413,8 +1413,8 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 									if err != nil {
 										// something bad happened
 										log.Println(self.name, "failed to obtain article", msgid, err)
-										// trying with another article isn't bad idea
-										err = nil
+										// it fails only when REALLY bad stuff happens
+										return
 									}
 								}
 							}
