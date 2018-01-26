@@ -1372,6 +1372,11 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 							msgid := parts[4]
 							// msgid -> reference
 							articles[msgid] = parts[5]
+							// incase server returned more articles than we requested
+							if num, nerr := strconv.ParseUint(parts[0], 10, 64); nerr == nil && num >= lo {
+								// fix lo so that we wont request them again
+								lo = num + 1
+							}
 						} else {
 							// probably not valid line
 							// ignore
