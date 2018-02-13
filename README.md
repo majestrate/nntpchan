@@ -1,6 +1,12 @@
 
 ![le ebin logo](nntpchan.png "ebin logo")
 
+
+![Downloads](https://img.shields.io/github/downloads/majestrate/nntpchan/total.svg)
+
+![Logo is ebin](https://img.shields.io/badge/logo-ebin-brightgreen.svg)
+
+
 **NNTPChan** (previously known as overchan) is a decentralized imageboard that uses the [NNTP protocol](https://en.wikipedia.org/wiki/Network_News_Transfer_Protocol) (network-news transfer protocol) to synchronize content between many different servers. It utilizes cryptographically signed posts to perform optional/opt-in decentralized moderation.
 
 ## Getting started
