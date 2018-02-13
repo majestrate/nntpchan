@@ -1,9 +1,6 @@
 
 ![le ebin logo](nntpchan.png "ebin logo")
 
-
-![Downloads](https://img.shields.io/github/downloads/majestrate/nntpchan/total.svg)
-
 ![Logo is ebin](https://img.shields.io/badge/logo-ebin-brightgreen.svg)
 
 
