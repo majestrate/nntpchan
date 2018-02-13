@@ -1324,13 +1324,13 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 			// success
 			es, lo, hi, _ := interpretGroupResult(ret)
 			for {
-				if lo < hi {
+				if lo > hi {
 					// server indicated empty group
 					// or
 					// we finished pulling stuff
 					break
 				}
-				if lo-hi+1 <= maxXOVERRange {
+				if hi-lo+1 <= maxXOVERRange {
 					// not too much for us to pull
 					if es == 0 && lo == 0 && hi == 0 {
 						// empty group
@@ -1372,6 +1372,11 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 							msgid := parts[4]
 							// msgid -> reference
 							articles[msgid] = parts[5]
+							// incase server returned more articles than we requested
+							if num, nerr := strconv.ParseUint(parts[0], 10, 64); nerr == nil && num >= lo {
+								// fix lo so that we wont request them again
+								lo = num + 1
+							}
 						} else {
 							// probably not valid line
 							// ignore
@@ -1395,8 +1400,8 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 									if err != nil {
 										// something bad happened
 										log.Println(self.name, "failed to obtain root post", refid, err)
-										// trying with another article isn't bad idea
-										err = nil
+										// it fails only when REALLY bad stuff happens
+										return
 									}
 								}
 							}
@@ -1413,8 +1418,8 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 									if err != nil {
 										// something bad happened
 										log.Println(self.name, "failed to obtain article", msgid, err)
-										// trying with another article isn't bad idea
-										err = nil
+										// it fails only when REALLY bad stuff happens
+										return
 									}
 								}
 							}
