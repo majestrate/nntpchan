@@ -1,9 +1,7 @@
 REPO=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 REPO_GOPATH=$(REPO)/go
 MINIFY=$(REPO_GOPATH)/bin/minify
-STATIC_DIR=$(REPO)/contrib/static
-JS=$(STATIC_DIR)/nntpchan.js
-MINER_JS=$(STATIC_DIR)/miner-js.js
+JS=$(REPO)/contrib/static/nntpchan.js
 CONTRIB_JS=$(REPO)/contrib/js/contrib
 LOCAL_JS=$(REPO)/contrib/js/nntpchan
 VENDOR_JS=$(REPO)/contrib/js/vendor
@@ -17,12 +15,15 @@ NNTPD=$(REPO)/nntpd
 GOROOT=$(shell go env GOROOT)
 GO=$(GOROOT)/bin/go
 
+<<<<<<< HEAD
 GOPHERJS_GOROOT ?= $(GOROOT)
 GOPHERJS_GO = $(GOPHERJS_GOROOT)/bin/go
 
 GOPHERJS_GOPATH=$(REPO)/gopherjs_go
 GOPHERJS=$(GOPHERJS_GOPATH)/bin/gopherjs
 
+=======
+>>>>>>> parent of c342687... re add pow captcha (initial)
 all: clean build
 
 build: js srnd
@@ -31,11 +32,12 @@ full: clean full-build
 
 full-build: srnd beta native
 
-js: $(JS) $(MINER_JS)
+js: $(JS)
 
 srnd: $(SRND)
 
 $(MINIFY):
+<<<<<<< HEAD
 	GOPATH=$(REPO_GOPATH) $(GO) get -v github.com/tdewolff/minify/cmd/minify
 
 $(GOPHERJS):
@@ -48,6 +50,11 @@ $(MINER_JS): $(GOPHERJS) $(MINIFY)
 	GOROOT=$(GOPHERJS_GOROOT) GOPATH=$(GOPHERJS_GOPATH) $(GOPHERJS) -m -v build github.com/ZiRo-/cuckgo/miner_js
 	$(MINIFY) --mime=text/javascript > $(STATIC_DIR)/miner-js.js < miner_js.js
 	rm -f miner_js.js.map miner_js.js
+=======
+	GOPATH=$(REPO_GOPATH) go get -v github.com/tdewolff/minify/cmd/minify
+
+js-deps: $(MINIFY)
+>>>>>>> parent of c342687... re add pow captcha (initial)
 
 $(JS): js-deps
 	rm -f $(JS)
@@ -87,16 +94,16 @@ test-native:
 	GOROOT=$(GOROOT) $(MAKE) -C $(NNTPCHAN_DAEMON_DIR) test
 
 
-clean: clean-srnd clean-js
+clean: clean-js clean-srnd
 
-clean-full: clean clean-beta clean-native clean-js
+clean-full: clean clean-beta clean-native
 
 clean-srnd:
 	rm -f $(SRND)
 	GOROOT=$(GOROOT) $(MAKE) -C $(SRND_DIR) clean
 
 clean-js:
-	rm -f $(JS) $(MINER_JS)
+	rm -f $(JS)
 
 clean-beta:
 	rm -f $(NNTPCHAND)
