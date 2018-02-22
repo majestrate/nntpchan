@@ -1,6 +1,7 @@
 
 ![le ebin logo](nntpchan.png "ebin logo")
 
+![MIT License](https://img.shields.io/github/license/majestrate/nntpchan.svg)
 ![Logo is ebin](https://img.shields.io/badge/logo-ebin-brightgreen.svg)
 
 
