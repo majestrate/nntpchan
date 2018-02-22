@@ -19,6 +19,7 @@ webroot
 
 # built binaries
 go
+gopherjs_go
 ./srndv2
 
 # private key
@@ -35,6 +36,7 @@ rebuild.sh
 contrib/static/nntpchan.js
 contrib/static/js/nntpchan.js
 contrib/static/miner-js.js
+
 
 #docs trash
 doc/.trash
