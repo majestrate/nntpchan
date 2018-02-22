@@ -20,7 +20,8 @@ GO=$(GOROOT)/bin/go
 GOPHERJS_GOROOT ?= $(GOROOT)
 GOPHERJS_GO = $(GOPHERJS_GOROOT)/bin/go
 
-GOPHERJS=$(REPO_GOPATH)/bin/gopherjs
+GOPHERJS_GOPATH=$(REPO)/gopherjs_go
+GOPHERJS=$(GOPHERJS_GOPATH)/bin/gopherjs
 
 all: clean build
 
@@ -38,13 +39,13 @@ $(MINIFY):
 	GOPATH=$(REPO_GOPATH) $(GO) get -v github.com/tdewolff/minify/cmd/minify
 
 $(GOPHERJS):
-	GOPATH=$(REPO_GOPATH) $(GOPHERJS_GO) get -v github.com/gopherjs/gopherjs
+	GOROOT=$(GOPHERJS_GOROOT) GOPATH=$(GOPHERJS_GOPATH) $(GOPHERJS_GO) get -v github.com/gopherjs/gopherjs
 
 js-deps: $(MINIFY) $(MINER_JS)
 
 $(MINER_JS): $(GOPHERJS) $(MINIFY)
-	cp -rf $(SRND_DIR)/src/github.com $(REPO_GOPATH)/src/
-	GOROOT=$(GOPHERJS_GOROOT) GOPATH=$(REPO_GOPATH) $(GOPHERJS) -m -v build github.com/ZiRo-/cuckgo/miner_js
+	cp -rf $(SRND_DIR)/src/github.com $(GOPHERJS_GOPATH)/src/
+	GOROOT=$(GOPHERJS_GOROOT) GOPATH=$(GOPHERJS_GOPATH) $(GOPHERJS) -m -v build github.com/ZiRo-/cuckgo/miner_js
 	$(MINIFY) --mime=text/javascript > $(STATIC_DIR)/miner-js.js < miner_js.js
 	rm -f miner_js.js.map miner_js.js
 
