@@ -1,0 +1,11 @@
+*.pyc
+*~
+*.ini
+*.db
+build.dir
+\#*
+.\#*
+_obj
+*.log
+*.la
+*.txt
