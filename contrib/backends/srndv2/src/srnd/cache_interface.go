@@ -3,6 +3,7 @@ package srnd
 import (
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type CacheHandler interface {
@@ -45,7 +46,11 @@ func NewCache(cache_type, host, port, user, password string, cache_config, confi
 	if cache_type == "varnish" {
 		url := cache_config["url"]
 		bind_addr := cache_config["bind"]
-		return NewVarnishCache(url, bind_addr, prefix, webroot, name, translations, attachments, db, store)
+		workers, _ := strconv.Atoi(cache_config["workers"])
+		if workers <= 0 {
+			workers = 4
+		}
+		return NewVarnishCache(url, bind_addr, prefix, webroot, name, translations, workers, attachments, db, store)
 	}
 
 	log.Fatalf("invalid cache type: %s", cache_type)

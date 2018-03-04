@@ -13,7 +13,9 @@ type VarnishCache struct {
 	prefix           string
 	handler          *nullHandler
 	client           *http.Client
+	workers          int
 	threadsRegenChan chan ArticleEntry
+	invalidateChan   chan *url.URL
 }
 
 func (self *VarnishCache) invalidate(r string) {
@@ -29,15 +31,22 @@ func (self *VarnishCache) invalidate(r string) {
 			q.Add("lang", lang)
 			u.RawQuery = q.Encode()
 		}
-		resp, err := self.client.Do(&http.Request{
-			Method: "PURGE",
-			URL:    u,
-		})
-		if err == nil {
-			resp.Body.Close()
-		} else {
-			log.Println("varnish cache error", err)
-		}
+		self.invalidateChan <- u
+	}
+}
+
+func (self *VarnishCache) doRequest(u *url.URL) {
+	if u == nil {
+		return
+	}
+	resp, err := self.client.Do(&http.Request{
+		Method: "PURGE",
+		URL:    u,
+	})
+	if err == nil {
+		resp.Body.Close()
+	} else {
+		log.Println("varnish cache error", err)
 	}
 }
 
@@ -119,6 +128,20 @@ func (self *VarnishCache) poll() {
 
 func (self *VarnishCache) Start() {
 	go self.poll()
+	workers := self.workers
+	if workers <= 0 {
+		workers = 1
+	}
+	for workers > 0 {
+		go self.doWorker()
+		workers--
+	}
+}
+
+func (self *VarnishCache) doWorker() {
+	for {
+		self.doRequest(<-self.invalidateChan)
+	}
 }
 
 func (self *VarnishCache) Regen(msg ArticleEntry) {
@@ -137,9 +160,11 @@ func (self *VarnishCache) SetRequireCaptcha(required bool) {
 	self.handler.requireCaptcha = required
 }
 
-func NewVarnishCache(varnish_url, bind_addr, prefix, webroot, name, translations string, attachments bool, db Database, store ArticleStore) CacheInterface {
+func NewVarnishCache(varnish_url, bind_addr, prefix, webroot, name, translations string, workers int, attachments bool, db Database, store ArticleStore) CacheInterface {
 	cache := new(VarnishCache)
+	cache.invalidateChan = make(chan *url.URL)
 	cache.threadsRegenChan = make(chan ArticleEntry)
+	cache.workers = workers
 	local_addr, err := net.ResolveTCPAddr("tcp", bind_addr)
 	if err != nil {
 		log.Fatalf("failed to resolve %s for varnish cache: %s", bind_addr, err)
