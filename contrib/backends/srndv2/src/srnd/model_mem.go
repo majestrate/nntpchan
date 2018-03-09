@@ -732,6 +732,9 @@ func (self *thread) HasOmittedImages() bool {
 }
 
 func (self *thread) BumpLock() bool {
+	if self.Posts == nil {
+		return false
+	}
 	return len(self.Posts) >= BumpLimit
 }
 

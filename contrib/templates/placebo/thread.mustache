@@ -40,7 +40,8 @@
         <br />
         {{{form}}}
             {{#thread.BumpLock}}
-            <div class="thread bumplock" id="thread_{{thread.OP.PostHash}}"> 
+            <div class="thread bumplock" id="thread_{{thread.OP.PostHash}}">
+            {{/thread.BumpLock}}    
             {{^thread.BumpLock}}
             <div class="thread" id="thread_{{thread.OP.PostHash}}">
             {{/thread.BumpLock}}
