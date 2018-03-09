@@ -274,7 +274,13 @@ func (self *templateEngine) genUkko(prefix, frontend string, wr io.Writer, datab
 
 func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writer, database Database, pages, page int, json bool, i18n *I18N, invertPagination bool) {
 	var threads []ThreadModel
-	for _, article := range database.GetLastBumpedThreadsPaginated("", 10, page*10) {
+	var articles []ArticleEntry
+	if invertPagination {
+		articles = database.GetLastBumpedThreadsPaginated("", 10, (pages-page)*10)
+	} else {
+		articles = database.GetLastBumpedThreadsPaginated("", 10, page*10)
+	}
+	for _, article := range articles {
 		root := article[0]
 		thread, err := database.GetThreadModel(prefix, root)
 		if err == nil {
