@@ -14,10 +14,11 @@ import (
 
 // standard overchan imageboard middleware
 type overchanMiddleware struct {
-	templ   *template.Template
-	captcha *CaptchaServer
-	store   *sessions.CookieStore
-	db      database.Database
+	templ     *template.Template
+	captcha   *CaptchaServer
+	store     *sessions.CookieStore
+	db        database.Database
+	staticDir string
 }
 
 func (m *overchanMiddleware) SetupRoutes(mux *mux.Router) {
@@ -34,6 +35,8 @@ func (m *overchanMiddleware) SetupRoutes(mux *mux.Router) {
 	m.captcha = NewCaptchaServer(200, 400, captchaPrefix, m.store)
 	// setup captcha endpoint
 	m.captcha.SetupRoutes(mux.PathPrefix(captchaPrefix).Subrouter())
+	mux.Path("/static/").Handler(http.FileServer(http.Dir(m.staticDir)))
+
 }
 
 // reload middleware
@@ -57,9 +60,9 @@ func (m *overchanMiddleware) ServeBoardPage(w http.ResponseWriter, r *http.Reque
 		var obj interface{}
 		obj, err = m.db.BoardPage(board, pageno, 10)
 		if err == nil {
-			m.serveTemplate(w, r, "board.html.tmpl", obj)
+			m.serveTemplate(w, r, "board.html", obj)
 		} else {
-			m.serveTemplate(w, r, "error.html.tmpl", err)
+			m.serveTemplate(w, r, "error.html", err)
 		}
 	} else {
 		// 404
@@ -72,15 +75,15 @@ func (m *overchanMiddleware) ServeThread(w http.ResponseWriter, r *http.Request)
 	param := mux.Vars(r)
 	obj, err := m.db.ThreadByHash(param["id"])
 	if err == nil {
-		m.serveTemplate(w, r, "thread.html.tmpl", obj)
+		m.serveTemplate(w, r, "thread.html", obj)
 	} else {
-		m.serveTemplate(w, r, "error.html.tmpl", err)
+		m.serveTemplate(w, r, "error.html", err)
 	}
 }
 
 // serve index page
 func (m *overchanMiddleware) ServeIndex(w http.ResponseWriter, r *http.Request) {
-	m.serveTemplate(w, r, "index.html.tmpl", nil)
+	m.serveTemplate(w, r, "index.html", nil)
 }
 
 // serve a template

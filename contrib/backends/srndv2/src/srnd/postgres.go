@@ -157,10 +157,10 @@ func (self *PostgresDatabase) prepareStatements() {
 		NewsgroupBanned:                 "SELECT 1 FROM BannedGroups WHERE newsgroup = $1",
 		ArticleBanned:                   "SELECT 1 FROM BannedArticles WHERE message_id = $1",
 		GetAllNewsgroups:                "SELECT name FROM Newsgroups WHERE name NOT IN ( SELECT newsgroup FROM BannedGroups )",
-		GetPostsInGroup:                 "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr FROM ArticlePosts WHERE newsgroup = $1 ORDER BY time_posted",
-		GetPostModel:                    "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr FROM ArticlePosts WHERE message_id = $1 LIMIT 1",
+		GetPostsInGroup:                 "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr, frontendpubkey FROM ArticlePosts WHERE newsgroup = $1 ORDER BY time_posted",
+		GetPostModel:                    "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr, frontendpubkey FROM ArticlePosts WHERE message_id = $1 LIMIT 1",
 		GetArticlePubkey:                "SELECT pubkey FROM ArticleKeys WHERE message_id = $1",
-		GetThreadModel:                  "SELECT ArticlePosts.newsgroup, ArticlePosts.message_id, ArticlePosts.name, ArticlePosts.subject, ArticlePosts.time_posted, ArticlePosts.message, ArticlePosts.addr FROM ArticlePosts WHERE ArticlePosts.message_id = $1 OR ArticlePosts.ref_id = $1 ORDER BY ArticlePosts.time_posted",
+		GetThreadModel:                  "SELECT ArticlePosts.newsgroup, ArticlePosts.message_id, ArticlePosts.name, ArticlePosts.subject, ArticlePosts.time_posted, ArticlePosts.message, ArticlePosts.addr, ArticlePosts.frontendpubkey FROM ArticlePosts WHERE ArticlePosts.message_id = $1 OR ArticlePosts.ref_id = $1 ORDER BY ArticlePosts.time_posted",
 		GetThreadModelPubkeys:           "SELECT pubkey, message_id from ArticleKeys WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 OR message_id = $1 )",
 		GetThreadModelAttachments:       "SELECT filename, filepath, message_id from ArticleAttachments WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 OR message_id = $1 )",
 		DeleteArticle_1:                 "DELETE FROM NNTPHeaders WHERE header_article_message_id = $1",
@@ -171,8 +171,8 @@ func (self *PostgresDatabase) prepareStatements() {
 		DeleteThread:                    "DELETE FROM ArticleThreads WHERE root_message_id = $1",
 		DeleteArticleV8:                 "DELETE FROM ArticlePosts WHERE message_id = $1",
 		DeleteThreadV8:                  "DELETE FROM ArticlePosts WHERE ref_id = $1 OR message_id = $1",
-		GetThreadReplyPostModels_1:      "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr FROM ArticlePosts WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 ORDER BY time_posted DESC LIMIT $2 ) ORDER BY time_posted ASC",
-		GetThreadReplyPostModels_2:      "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr FROM ArticlePosts WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 ) ORDER BY time_posted ASC",
+		GetThreadReplyPostModels_1:      "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr, frontendpubkey FROM ArticlePosts WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 ORDER BY time_posted DESC LIMIT $2 ) ORDER BY time_posted ASC",
+		GetThreadReplyPostModels_2:      "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr, frontendpubkey FROM ArticlePosts WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 ) ORDER BY time_posted ASC",
 		GetThreadReplies_1:              "SELECT message_id FROM ArticlePosts WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 ORDER BY time_posted DESC LIMIT $2 ) ORDER BY time_posted ASC",
 		GetThreadReplies_2:              "SELECT message_id FROM ArticlePosts WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 ) ORDER BY time_posted ASC",
 		GetGroupThreads:                 "SELECT message_id FROM ArticlePosts WHERE newsgroup = $1 AND ref_id = '' ",
@@ -1132,7 +1132,7 @@ func (self *PostgresDatabase) GetPostsInGroup(newsgroup string) (models []PostMo
 	if err == nil {
 		for rows.Next() {
 			model := new(post)
-			rows.Scan(&model.board, &model.Message_id, &model.Parent, &model.PostName, &model.PostSubject, &model.MessagePath, &model.Posted, &model.PostMessage, &model.addr)
+			rows.Scan(&model.board, &model.Message_id, &model.Parent, &model.PostName, &model.PostSubject, &model.MessagePath, &model.Posted, &model.PostMessage, &model.addr, &model.FrontendPublicKey)
 			models = append(models, model)
 		}
 		rows.Close()
@@ -1142,7 +1142,7 @@ func (self *PostgresDatabase) GetPostsInGroup(newsgroup string) (models []PostMo
 
 func (self *PostgresDatabase) GetPostModel(prefix, messageID string) PostModel {
 	model := new(post)
-	err := self.conn.QueryRow(self.stmt[GetPostModel], messageID).Scan(&model.board, &model.Message_id, &model.Parent, &model.PostName, &model.PostSubject, &model.MessagePath, &model.Posted, &model.PostMessage, &model.addr)
+	err := self.conn.QueryRow(self.stmt[GetPostModel], messageID).Scan(&model.board, &model.Message_id, &model.Parent, &model.PostName, &model.PostSubject, &model.MessagePath, &model.Posted, &model.PostMessage, &model.addr, &model.FrontendPublicKey)
 	if err == nil {
 		model.op = len(model.Parent) == 0
 		if len(model.Parent) == 0 {
@@ -1188,7 +1188,7 @@ func (self *PostgresDatabase) GetThreadModel(prefix, msgid string) (th ThreadMod
 	for err == nil && rows.Next() {
 		p := new(post)
 		p.Parent = msgid
-		err = rows.Scan(&p.board, &p.Message_id, &p.PostName, &p.PostSubject, &p.Posted, &p.PostMessage, &p.addr)
+		err = rows.Scan(&p.board, &p.Message_id, &p.PostName, &p.PostSubject, &p.Posted, &p.PostMessage, &p.addr, &p.FrontendPublicKey)
 		pmap[p.Message_id] = p
 		posts = append(posts, p)
 	}
@@ -1259,7 +1259,7 @@ func (self *PostgresDatabase) GetThreadReplyPostModels(prefix, rootpost string, 
 			}
 			model := new(post)
 			model.prefix = prefix
-			rows.Scan(&model.board, &model.Message_id, &model.Parent, &model.PostName, &model.PostSubject, &model.MessagePath, &model.Posted, &model.PostMessage, &model.addr)
+			rows.Scan(&model.board, &model.Message_id, &model.Parent, &model.PostName, &model.PostSubject, &model.MessagePath, &model.Posted, &model.PostMessage, &model.addr, &model.FrontendPublicKey)
 			model.op = len(model.Parent) == 0
 			if len(model.Parent) == 0 {
 				model.Parent = model.Message_id
