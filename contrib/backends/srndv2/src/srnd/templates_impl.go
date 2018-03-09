@@ -264,6 +264,7 @@ func (self *templateEngine) genUkko(prefix, frontend string, wr io.Writer, datab
 	var err error
 	if invertPagination {
 		page, err = database.GetUkkoPageCount()
+		page /= 10
 	}
 	if err == nil {
 		self.genUkkoPaginated(prefix, frontend, wr, database, int(page), json, i18n, invertPagination)
