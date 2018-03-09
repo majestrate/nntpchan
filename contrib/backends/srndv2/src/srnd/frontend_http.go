@@ -228,7 +228,8 @@ func (self *httpFrontend) RegenerateBoard(board string) {
 }
 
 func (self *httpFrontend) RegenFrontPage() {
-	self.cache.RegenFrontPage()
+	pages, _ := self.daemon.database.GetUkkoPageCount(10)
+	self.cache.RegenFrontPage(int(pages))
 }
 
 func (self httpFrontend) regenAll() {
@@ -367,7 +368,7 @@ func (self *httpFrontend) poll_liveui() {
 func (self *httpFrontend) poll() {
 
 	// regenerate front page
-	self.cache.RegenFrontPage()
+	self.RegenFrontPage()
 
 	// trigger regen
 	if self.regen_on_start {

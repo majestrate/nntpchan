@@ -246,7 +246,7 @@ func (self *NullCache) DeleteThreadMarkup(root_post_id string) {
 func (self *NullCache) RegenAll() {
 }
 
-func (self *NullCache) RegenFrontPage() {
+func (self *NullCache) RegenFrontPage(pagestart int) {
 }
 
 func (self *NullCache) SetRequireCaptcha(required bool) {

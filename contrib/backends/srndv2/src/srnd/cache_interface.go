@@ -13,7 +13,7 @@ type CacheHandler interface {
 
 type CacheInterface interface {
 	RegenAll()
-	RegenFrontPage()
+	RegenFrontPage(pagesstart int)
 	RegenOnModEvent(newsgroup, msgid, root string, page int)
 	RegenerateBoard(group string)
 	Regen(msg ArticleEntry)

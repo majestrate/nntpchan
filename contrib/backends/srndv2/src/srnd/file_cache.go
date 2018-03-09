@@ -145,7 +145,7 @@ func (self *FileCache) pollRegen() {
 			// regen ukko
 		case _ = <-self.ukkoTicker.C:
 			self.regenUkko()
-			self.RegenFrontPage()
+			self.RegenFrontPage(0)
 		case _ = <-self.regenThreadTicker.C:
 			self.regenThreadLock.Lock()
 			for _, entry := range self.regenThreadMap {
@@ -228,7 +228,7 @@ func (self *FileCache) regenerateCatalog(board string) {
 }
 
 // regenerate the front page
-func (self *FileCache) RegenFrontPage() {
+func (self *FileCache) RegenFrontPage(_ int) {
 	indexwr, err1 := os.Create(filepath.Join(self.webroot_dir, "index.html"))
 	defer indexwr.Close()
 	if err1 != nil {

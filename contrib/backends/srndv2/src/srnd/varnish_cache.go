@@ -82,20 +82,25 @@ func (self *VarnishCache) RegenAll() {
 	}
 }
 
-func (self *VarnishCache) RegenFrontPage() {
+func (self *VarnishCache) RegenFrontPage(pagestart int) {
 	self.invalidate(fmt.Sprintf("%s%s", self.varnish_url, self.prefix))
 	// TODO: this is also lazy af
 	self.invalidate(fmt.Sprintf("%s%shistory.html", self.varnish_url, self.prefix))
-	self.invalidateUkko(10)
+	if self.handler.invertPagination {
+		self.invalidateUkko(50, pagestart-50)
+	} else {
+		self.invalidateUkko(pagestart, 0)
+	}
 }
 
-func (self *VarnishCache) invalidateUkko(pages int) {
+func (self *VarnishCache) invalidateUkko(pages, start int) {
 	self.invalidate(fmt.Sprintf("%s%sukko.html", self.varnish_url, self.prefix))
 	self.invalidate(fmt.Sprintf("%s%so/", self.varnish_url, self.prefix))
 	self.invalidate(fmt.Sprintf("%s%sukko.json", self.varnish_url, self.prefix))
 	self.invalidate(fmt.Sprintf("%s%so/json", self.varnish_url, self.prefix))
-	n := 0
-	for n < pages {
+	n := start
+	end := start + pages
+	for n < end {
 		self.invalidate(fmt.Sprintf("%s%so/%d/json", self.varnish_url, self.prefix, n))
 		self.invalidate(fmt.Sprintf("%s%so/%d/", self.varnish_url, self.prefix, n))
 		n++
