@@ -342,6 +342,7 @@
       .thread {
           margin-left: 5em;
           display: inline-block;
+          width: 90%;
       }
 
       footer {
@@ -374,10 +375,6 @@
           background-position: right top;
           background-attachment: fixed;
           background-size: 128px;
-      }
-
-      .thread {
-          display: table-cell;
       }
 
       .message {
