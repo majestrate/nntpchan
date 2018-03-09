@@ -532,5 +532,5 @@ background-repeat: repeat;
 }
 
 .post {
-    width: 85%;
+    max-width: 85%;
 }
