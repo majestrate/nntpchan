@@ -531,5 +531,5 @@ background-repeat: repeat;
 
 .bumplock {
     background: red;
-    filter: saturate(0.5);
+    filter: saturate(0.15);
 }
