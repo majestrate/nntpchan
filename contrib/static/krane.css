@@ -530,6 +530,6 @@ background-repeat: repeat;
 }
 
 .bumplock {
-    background: red;
+    background-image: url('/static/sage.png');
     filter: saturate(0.15);
 }
