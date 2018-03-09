@@ -39,8 +39,11 @@
         <center><b><a href="{{thread.BoardURL}}">{{thread.Board}}</a></b></center>
         <br />
         {{{form}}}
-
+            {{#thread.BumpLock}}
+            <div class="thread bumplock" id="thread_{{thread.OP.PostHash}}"> 
+            {{^thread.BumpLock}}
             <div class="thread" id="thread_{{thread.OP.PostHash}}">
+            {{/thread.BumpLock}}
                 {{{thread.OP.RenderPost}}}
                 {{#thread.Replies}}
                     {{{RenderPost}}}

@@ -41,8 +41,12 @@
         <br />
         {{{form}}}
         {{#board.Threads}}
-            {{#Truncate}}
+            {{#BumpLock}}
+            <div class="thread bumplock" id="thread_{{OP.PostHash}}"> 
+            {{^BumpLock}}
             <div class="thread" id="thread_{{OP.PostHash}}">
+            {{/BumpLock}}
+            {{#Truncate}}
                 {{{OP.RenderPost}}}
                 <div class="excluded">{{MissingPostCount}} posts excluded</div>
                 {{#Replies}}

@@ -731,6 +731,10 @@ func (self *thread) HasOmittedImages() bool {
 	return self.truncatedImageCount > 0
 }
 
+func (self *thread) BumpLock() bool {
+	return len(self.Posts) >= BumpLimit
+}
+
 func (self *thread) Update(db Database) {
 	root := self.Posts[0].MessageID()
 	self.Posts = append([]PostModel{self.Posts[0]}, db.GetThreadReplyPostModels(self.prefix, root, 0, 0)...)

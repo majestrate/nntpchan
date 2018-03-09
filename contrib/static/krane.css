@@ -528,3 +528,8 @@ background-repeat: repeat;
     font-weight: bold;
     margin-left: none;
 }
+
+.bumplock {
+    background: red;
+    filter: saturate(0.5);
+}

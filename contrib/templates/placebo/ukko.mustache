@@ -45,8 +45,12 @@
             {{/next}}
         </div>
         {{#threads}}
-            {{#Truncate}}
+            {{#BumpLock}}
+            <div class="thread bumplock" id="thread_{{OP.PostHash}}"> 
+            {{^BumpLock}}
             <div class="thread" id="thread_{{OP.PostHash}}">
+            {{/BumpLock}}
+            {{#Truncate}}
                 Posted on <a href="{{BoardURL}}">{{Board}}</a>
                 <br />
                 {{{OP.RenderTruncatedPost}}}
