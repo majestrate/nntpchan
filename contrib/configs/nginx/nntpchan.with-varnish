@@ -71,7 +71,7 @@ server {
                 alias $nntpchan/webroot/img/$1.$2;
         }
 
-        location  ~ /thm/(.+)\.jpg$ {
+        location  ~ /thm/(.+)$ {
                 # http subdomain rewrite for sfw 
                 if ( $http_host ~ fbi ) {
                         rewrite ^/(.+).jpg /static/placeholder.jpg break;
@@ -79,7 +79,7 @@ server {
                 if ( $http_host ~ sfw ) {
                         rewrite ^/(.+).jpg /static/placeholder.jpg break;
                 }
-                alias $nntpchan/webroot/thm/;
+                alias $nntpchan/webroot/thm/$1;
         }
 }
 

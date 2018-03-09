@@ -41,10 +41,6 @@ sub vcl_recv {
 	if (req.url ~ "\#") {
 		set req.url = regsub(req.url, "\#.*$", "");
 	}
-	# Strip a trailing ? if it exists
-	if (req.url ~ "\?$") {
-		set req.url = regsub(req.url, "\?$", "");
-	}
 	return (hash);
 }
 
@@ -66,7 +62,15 @@ sub vcl_backend_response {
 	if (beresp.status == 500 || beresp.status == 502 || beresp.status == 503 || beresp.status == 504) {
 		return (abandon);
 	}
-	set beresp.ttl = 10s;
+	if (bereq.url == "/boards.html" ) {
+		set beresp.ttl = 60s;
+	}
+	if (bereq.url == "/index.html" ) {
+		set beresp.ttl = 60s;
+	}
+	if (bereq.url == "/" ) {
+		set beresp.ttl = 60s;
+	}
 	set beresp.grace = 1h;
 	return (deliver);
 }
