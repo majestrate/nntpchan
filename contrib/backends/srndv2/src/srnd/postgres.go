@@ -97,7 +97,9 @@ const DeleteArticle_2 = "DeleteArticle_2"
 const DeleteArticle_3 = "DeleteArticle_3"
 const DeleteArticle_4 = "DeleteArticle_4"
 const DeleteArticle_5 = "DeleteArticle_5"
+const DeleteArticleV8 = "DeleteArticleV8"
 const DeleteThread = "DeleteThread"
+const DeleteThreadV8 = "DeleteThreadV8"
 const GetThreadReplyPostModels_1 = "GetThreadReplyPostModels_1"
 const GetThreadReplyPostModels_2 = "GetThreadReplyPostModels_2"
 const GetThreadReplies_1 = "GetThreadReplies_1"
@@ -109,6 +111,7 @@ const HasNewsgroup = "HasNewsgroup"
 const HasArticle = "HasArticle"
 const HasArticleLocal = "HasArticleLocal"
 const GetPostAttachments = "GetPostAttachments"
+const GetThreadAttachments = "GetThreadAttachments"
 const GetPostAttachmentModels = "GetPostAttachmentModels"
 const RegisterArticle_1 = "RegisterArticle_1"
 const RegisterArticle_2 = "RegisterArticle_2"
@@ -165,6 +168,8 @@ func (self *PostgresDatabase) prepareStatements() {
 		DeleteArticle_4:                 "DELETE FROM ArticleKeys WHERE message_id = $1",
 		DeleteArticle_5:                 "DELETE FROM ArticleAttachments WHERE message_id = $1",
 		DeleteThread:                    "DELETE FROM ArticleThreads WHERE root_message_id = $1",
+		DeleteArticleV8:                 "DELETE FROM ArticlePosts WHERE message_id = $1",
+		DeleteThreadV8:                  "DELETE FROM ArticlePosts WHERE root_message_id = $1 OR message_id = $1",
 		GetThreadReplyPostModels_1:      "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr FROM ArticlePosts WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 ORDER BY time_posted DESC LIMIT $2 ) ORDER BY time_posted ASC",
 		GetThreadReplyPostModels_2:      "SELECT newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr FROM ArticlePosts WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 ) ORDER BY time_posted ASC",
 		GetThreadReplies_1:              "SELECT message_id FROM ArticlePosts WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 ORDER BY time_posted DESC LIMIT $2 ) ORDER BY time_posted ASC",
@@ -176,6 +181,7 @@ func (self *PostgresDatabase) prepareStatements() {
 		HasArticle:                      "SELECT 1 FROM Articles WHERE message_id = $1",
 		HasArticleLocal:                 "SELECT 1 FROM ArticlePosts WHERE message_id = $1",
 		GetPostAttachments:              "SELECT filepath FROM ArticleAttachments WHERE message_id = $1",
+		GetThreadAttachments:            "SELECT filepath FROM ArticleAttachments WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE root_message_id = $1 OR message_id = $1)",
 		GetPostAttachmentModels:         "SELECT filepath, filename FROM ArticleAttachments WHERE message_id = $1",
 		RegisterArticle_1:               "INSERT INTO Articles (message_id, message_id_hash, message_newsgroup, time_obtained, message_ref_id) VALUES($1, $2, $3, $4, $5)",
 		RegisterArticle_2:               "UPDATE Newsgroups SET last_post = $1 WHERE name = $2",
@@ -247,6 +253,8 @@ func (self *PostgresDatabase) CreateTables() {
 			// upgrade to version 7
 			self.upgrade6to7()
 		} else if version == 7 {
+			self.upgrade7to8()
+		} else if version == 8 {
 			// we are up to date
 			log.Println("we are up to date at version", version)
 			break
@@ -587,6 +595,24 @@ func (self *PostgresDatabase) upgrade6to7() {
 		log.Println("insertion done")
 	*/
 	self.setDBVersion(7)
+}
+
+func (self *PostgresDatabase) upgrade7to8() {
+	log.Println("migrating 7 -> 8")
+	cmds := []string{
+		"ALTER TABLE ArticleNumbers DROP CONSTRAINT FOREIGN KEY (message_id) REFERENCES ArticlePosts(message_id)",
+		"ALTER TABLE ArticleNumbers ADD CONSTRAINT FOREIGN KEY (message_id) REFERENCES ArticlePosts(message_id) ON DELETE CASCADE",
+		"ALTER TABLE NNTPHeaders DROP CONSTRAINT FOREIGN KEY (header_article_message_id) REFERENCES ArticlePosts(message_id)",
+		"ALTER TABLE NNTPHeaders ADD CONSTRAINT FOREIGN KEY (header_article_message_id) REFERENCES ArticlePosts(message_id) ON DELETE CASCADE",
+	}
+	for _, cmd := range cmds {
+		log.Println("exec", cmd)
+		_, err := self.conn.Exec(cmd)
+		if err != nil {
+			log.Fatalf("%s: %s", cmd, err.Error())
+		}
+	}
+	self.setDBVersion(8)
 }
 
 // create all tables for database version 0
@@ -1182,17 +1208,20 @@ func (self *PostgresDatabase) GetThreadModel(prefix, msgid string) (th ThreadMod
 }
 
 func (self *PostgresDatabase) DeleteThread(msgid string) (err error) {
-	_, err = self.conn.Exec(self.stmt[DeleteThread], msgid)
+	_, err = self.conn.Exec(self.stmt[DeleteThreadV8], msgid)
 	return
 }
 
 func (self *PostgresDatabase) DeleteArticle(msgid string) (err error) {
-	for _, q := range []string{DeleteArticle_1, DeleteArticle_2, DeleteArticle_3, DeleteArticle_4, DeleteArticle_5} {
-		_, err = self.conn.Exec(self.stmt[q], msgid)
-		if err != nil {
-			break
+	/*
+		for _, q := range []string{DeleteArticle_1, DeleteArticle_2, DeleteArticle_3, DeleteArticle_4, DeleteArticle_5} {
+			_, err = self.conn.Exec(self.stmt[q], msgid)
+			if err != nil {
+				break
+			}
 		}
-	}
+	*/
+	_, err = self.conn.Exec(self.stmt[DeleteArticleV8], msgid)
 	return
 }
 
@@ -1365,6 +1394,22 @@ func (self *PostgresDatabase) RegisterNewsgroup(group string) {
 	if err != nil {
 		log.Println("failed to register newsgroup", group, err)
 	}
+}
+
+func (self *PostgresDatabase) GetThreadAttachments(rootmsgid string) (atts []string, err error) {
+	var rows *sql.Rows
+	rows, err = self.conn.Query(self.stmt[GetThreadAttachments], rootmsgid)
+	if err == nil {
+		for rows.Next() {
+			var msgid string
+			rows.Scan(&msgid)
+			atts = append(atts, msgid)
+		}
+		rows.Close()
+	} else if err == sql.ErrNoRows {
+		err = nil
+	}
+	return
 }
 
 func (self *PostgresDatabase) GetPostAttachments(messageID string) (atts []string) {

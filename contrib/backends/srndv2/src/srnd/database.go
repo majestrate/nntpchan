@@ -135,6 +135,9 @@ type Database interface {
 	// get all attachments for this message
 	GetPostAttachments(message_id string) []string
 
+	// get all attachments in a thread
+	GetThreadAttachments(rootmsgid string) ([]string, error)
+
 	// get all attachments for this message
 	GetPostAttachmentModels(prefix, message_id string) []AttachmentModel
 

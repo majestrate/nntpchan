@@ -46,9 +46,8 @@ type expire struct {
 }
 
 func (self expire) ExpirePost(messageID string) {
-	self.handleEvent(deleteEvent(self.store.GetFilename(messageID)))
-	// get article headers
 	headers := self.store.GetHeaders(messageID)
+	// get article headers
 	if headers != nil {
 		group := headers.Get("Newsgroups", "")
 		// is this a root post ?
@@ -57,6 +56,7 @@ func (self expire) ExpirePost(messageID string) {
 			// ya, expire the entire thread
 			self.ExpireThread(group, messageID)
 		} else {
+			self.handleEvent(deleteEvent(self.store.GetFilename(messageID)))
 			self.expireCache(group, messageID, ref)
 		}
 	}
@@ -70,14 +70,26 @@ func (self expire) ExpireGroup(newsgroup string, keep int) {
 }
 
 func (self expire) ExpireThread(group, rootMsgid string) {
-	replies, err := self.database.GetMessageIDByHeader("References", rootMsgid)
+	files, err := self.database.GetThreadAttachments(rootMsgid)
 	if err == nil {
-		for _, reply := range replies {
-			self.handleEvent(deleteEvent(self.store.GetFilename(reply)))
+		for _, file := range files {
+			img := self.store.AttachmentFilepath(file)
+			os.Remove(img)
+			thm := self.store.ThumbnailFilepath(file)
+			os.Remove(thm)
 		}
+	} else {
+		log.Println("expirethread::GetThreadAttachments:", err)
 	}
+
+	replies := self.database.GetThreadReplies(rootMsgid, 0, 0)
+
+	for _, msgid := range replies {
+		self.store.Remove(msgid)
+	}
+
+	self.store.Remove(rootMsgid)
 	self.database.DeleteThread(rootMsgid)
-	self.database.DeleteArticle(rootMsgid)
 	self.expireCache(group, rootMsgid, rootMsgid)
 }
 
@@ -137,11 +149,14 @@ func (self expire) handleEvent(ev deleteEvent) {
 			os.Remove(thm)
 		}
 	}
-	err := self.database.BanArticle(ev.MessageID(), "expired")
-	if err != nil {
-		log.Println("failed to ban for expiration", err)
+	banned := self.database.ArticleBanned(ev.MessageID())
+	if !banned {
+		err := self.database.BanArticle(ev.MessageID(), "expired")
+		if err != nil {
+			log.Println("failed to ban for expiration", err)
+		}
 	}
-	err = self.database.DeleteArticle(ev.MessageID())
+	err := self.database.DeleteArticle(ev.MessageID())
 	if err != nil {
 		log.Println("failed to delete article", err)
 	}
