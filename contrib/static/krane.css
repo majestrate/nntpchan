@@ -530,3 +530,7 @@ background-repeat: repeat;
     background-image: url('/static/sage.png');
     filter: saturate(0.15);
 }
+
+.post {
+    width: 85%;
+}
