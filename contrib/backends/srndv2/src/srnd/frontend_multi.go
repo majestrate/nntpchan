@@ -15,6 +15,12 @@ func (self multiFrontend) GetCacheHandler() CacheHandler {
 	return nil
 }
 
+func (self multiFrontend) ArchiveMode() {
+	for _, f := range self.frontends {
+		f.ArchiveMode()
+	}
+}
+
 func (self multiFrontend) AllowNewsgroup(newsgroup string) bool {
 	return true
 }

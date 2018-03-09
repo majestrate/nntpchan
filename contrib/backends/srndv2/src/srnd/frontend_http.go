@@ -209,6 +209,9 @@ type httpFrontend struct {
 
 	// this is a very important thing by the way
 	requireCaptcha bool
+
+	// are we in archive mode?
+	archive bool
 }
 
 // do we allow this newsgroup?
@@ -238,6 +241,10 @@ func (self httpFrontend) deleteThreadMarkup(root_post_id string) {
 
 func (self httpFrontend) deleteBoardMarkup(group string) {
 	self.cache.DeleteBoardMarkup(group)
+}
+
+func (self *httpFrontend) ArchiveMode() {
+	self.archive = true
 }
 
 // load post model and inform live ui
@@ -387,8 +394,10 @@ func (self *httpFrontend) HandleNewPost(nntp frontendPost) {
 	entry := ArticleEntry{msgid, group}
 	// regnerate thread
 	self.Regen(entry)
-	// regenerate all board pages
-	self.RegenerateBoard(group)
+	// regenerate all board pages if not archiving
+	if !self.archive {
+		self.RegenerateBoard(group)
+	}
 	// regen front page
 	self.RegenFrontPage()
 }
@@ -1438,6 +1447,10 @@ func (self *httpFrontend) Mainloop() {
 
 	// run daemon's mod engine with our frontend
 	// go RunModEngine(self.daemon.mod, self.cache.RegenOnModEvent)
+
+	if self.archive {
+		self.cache.InvertPagination()
+	}
 
 	// start cache
 	self.cache.Start()

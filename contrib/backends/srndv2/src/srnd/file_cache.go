@@ -157,8 +157,9 @@ func (self *FileCache) pollRegen() {
 		case _ = <-self.regenBoardTicker.C:
 			self.regenBoardLock.Lock()
 			for _, v := range self.regenBoardMap {
-				self.regenerateBoardPage(v.group, v.page, false)
-				self.regenerateBoardPage(v.group, v.page, true)
+				pages := self.database.GetGroupPageCount(v.group)
+				self.regenerateBoardPage(v.group, int(pages), v.page, false)
+				self.regenerateBoardPage(v.group, int(pages), v.page, true)
 			}
 			self.regenBoardMap = make(map[string]groupRegenRequest)
 			self.regenBoardLock.Unlock()
@@ -173,12 +174,15 @@ func (self *FileCache) pollRegen() {
 	}
 }
 
+func (self *FileCache) InvertPagination() {
+}
+
 // regen every page of the board
 func (self *FileCache) RegenerateBoard(group string) {
 	pages, _ := self.database.GetPagesPerBoard(group)
 	for page := 0; page < pages; page++ {
-		self.regenerateBoardPage(group, page, false)
-		self.regenerateBoardPage(group, page, true)
+		self.regenerateBoardPage(group, int(pages), page, false)
+		self.regenerateBoardPage(group, int(pages), page, true)
 	}
 }
 
@@ -200,7 +204,7 @@ func (self *FileCache) regenerateThread(root ArticleEntry, json bool) {
 }
 
 // regenerate just a page on a board
-func (self *FileCache) regenerateBoardPage(board string, page int, json bool) {
+func (self *FileCache) regenerateBoardPage(board string, pages, page int, json bool) {
 	fname := self.getFilenameForBoardPage(board, page, json)
 	wr, err := os.Create(fname)
 	defer wr.Close()
@@ -208,7 +212,7 @@ func (self *FileCache) regenerateBoardPage(board string, page int, json bool) {
 		log.Println("error generating board page", page, "for", board, err)
 		return
 	}
-	template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, board, page, wr, self.database, json, nil)
+	template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, board, pages, page, wr, self.database, json, nil, false)
 }
 
 // regenerate the catalog for a board
@@ -260,7 +264,7 @@ func (self *FileCache) regenUkko() {
 		log.Println("error generating ukko markup", err)
 		return
 	}
-	template.genUkko(self.prefix, self.name, wr, self.database, false, nil)
+	template.genUkko(self.prefix, self.name, wr, self.database, false, nil, false)
 
 	// json
 	fname = filepath.Join(self.webroot_dir, "ukko.json")
@@ -270,7 +274,7 @@ func (self *FileCache) regenUkko() {
 		log.Println("error generating ukko json", err)
 		return
 	}
-	template.genUkko(self.prefix, self.name, wr, self.database, true, nil)
+	template.genUkko(self.prefix, self.name, wr, self.database, true, nil, false)
 	i := 0
 	for i < 10 {
 		fname := fmt.Sprintf("ukko-%d.html", i)
@@ -281,14 +285,14 @@ func (self *FileCache) regenUkko() {
 			return
 		}
 		defer f.Close()
-		template.genUkkoPaginated(self.prefix, self.name, f, self.database, i, false, nil)
+		template.genUkkoPaginated(self.prefix, self.name, f, self.database, i, false, nil, false)
 		j, err := os.Create(jname)
 		if err != nil {
 			log.Printf("failed to create json ukko", i, err)
 			return
 		}
 		defer j.Close()
-		template.genUkkoPaginated(self.prefix, self.name, j, self.database, i, true, nil)
+		template.genUkkoPaginated(self.prefix, self.name, j, self.database, i, true, nil, false)
 	}
 }
 

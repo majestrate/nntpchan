@@ -26,6 +26,7 @@ type CacheInterface interface {
 	GetHandler() CacheHandler
 
 	SetRequireCaptcha(required bool)
+	InvertPagination()
 }
 
 //TODO only pass needed config

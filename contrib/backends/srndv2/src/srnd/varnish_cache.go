@@ -18,6 +18,10 @@ type VarnishCache struct {
 	invalidateChan   chan *url.URL
 }
 
+func (self *VarnishCache) InvertPagination() {
+	self.handler.invertPagination = true
+}
+
 func (self *VarnishCache) invalidate(r string) {
 	var langs []string
 	langs = append(langs, "")

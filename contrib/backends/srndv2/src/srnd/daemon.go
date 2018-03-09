@@ -586,6 +586,7 @@ func (self *NNTPDaemon) Run() {
 	if self.conf.daemon["archive"] == "1" {
 		log.Println("running in archive mode")
 		self.expire = nil
+		self.frontend.ArchiveMode()
 	} else {
 		self.expire = createExpirationCore(self.database, self.store, self.informHooks)
 	}

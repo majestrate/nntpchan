@@ -339,6 +339,9 @@ type Database interface {
 
 	// find headers in group with lo/hi watermark and list of patterns
 	FindHeaders(group, headername string, lo, hi int64) (ArticleHeaders, error)
+
+	// count ukko pages
+	GetUkkoPageCount() (int64, error)
 }
 
 func NewDatabase(db_type, schema, host, port, user, password string) Database {

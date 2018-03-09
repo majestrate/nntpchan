@@ -150,6 +150,7 @@ const GetNNTPPostsInGroup = "GetNNTPPostsInGroup"
 const GetCitesByPostHashLike = "GetCitesByPostHashLike"
 const GetYearlyPostHistory = "GetYearlyPostHistory"
 const GetNewsgroupList = "GetNewsgroupList"
+const CountUkko = "CountUkko"
 
 func (self *PostgresDatabase) prepareStatements() {
 	self.stmt = map[string]string{
@@ -220,6 +221,7 @@ func (self *PostgresDatabase) prepareStatements() {
 		GetNNTPPostsInGroup:             "SELECT message_no, ArticlePosts.message_id, subject, time_posted, ref_id, name, path FROM ArticleNumbers INNER JOIN ArticlePosts ON ArticleNumbers.message_id = ArticlePosts.message_id WHERE ArticlePosts.newsgroup = $1 ORDER BY message_no",
 		GetCitesByPostHashLike:          "SELECT message_id, message_ref_id FROM Articles WHERE message_id_hash LIKE $1",
 		GetYearlyPostHistory:            "WITH times(endtime, begintime) AS ( SELECT CAST(EXTRACT(epoch from i) AS BIGINT) AS endtime, CAST(EXTRACT(epoch from i - interval '1 month') AS BIGINT) AS begintime FROM generate_series(now() - interval '10 year', now(), '1 month'::interval) i ) SELECT begintime, endtime, ( SELECT count(*) FROM ArticlePosts WHERE time_posted > begintime AND time_posted < endtime) FROM times",
+		CountUkko:                       "SELECT COUNT(message_id) FROM ArticlePosts WHERE newsgroup != 'ctl' AND ref_id = '' OR ref_id = message_id",
 	}
 
 }
@@ -1996,6 +1998,11 @@ func (self *PostgresDatabase) FindCitesInText(text string) (msgids []string, err
 			}
 		}
 	}
+	return
+}
+
+func (self *PostgresDatabase) GetUkkoPageCount() (count int64, err error) {
+	err = self.conn.QueryRow(self.stmt[CountUkko]).Scan(&count)
 	return
 }
 

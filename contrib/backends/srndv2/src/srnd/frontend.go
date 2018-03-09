@@ -41,4 +41,7 @@ type Frontend interface {
 	RegenOnModEvent(newsgroup, msgid, root string, page int)
 
 	GetCacheHandler() CacheHandler
+
+	// set archive mode
+	ArchiveMode()
 }

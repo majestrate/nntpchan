@@ -15,15 +15,20 @@ type NullCache struct {
 	handler *nullHandler
 }
 
+func (self *NullCache) InvertPagination() {
+	self.handler.invertPagination = true
+}
+
 type nullHandler struct {
-	database       Database
-	attachments    bool
-	requireCaptcha bool
-	name           string
-	prefix         string
-	translations   string
-	i18n           map[string]*I18N
-	access         sync.Mutex
+	database         Database
+	attachments      bool
+	requireCaptcha   bool
+	name             string
+	prefix           string
+	translations     string
+	i18n             map[string]*I18N
+	access           sync.Mutex
+	invertPagination bool
 }
 
 func (self *nullHandler) ForEachI18N(v func(string)) {
@@ -83,7 +88,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	if strings.Trim(path, "/") == "overboard" {
 		// generate ukko aka overboard
-		template.genUkko(self.prefix, self.name, w, self.database, isjson, i18n)
+		template.genUkko(self.prefix, self.name, w, self.database, isjson, i18n, self.invertPagination)
 		return
 	}
 
@@ -116,7 +121,8 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if page >= int(pages) {
 			goto notfound
 		}
-		template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, group, page, w, self.database, isjson, i18n)
+
+		template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, group, int(pages), page, w, self.database, isjson, i18n, self.invertPagination)
 		return
 	}
 
@@ -130,7 +136,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				goto notfound
 			}
 		}
-		template.genUkkoPaginated(self.prefix, self.name, w, self.database, page, isjson, i18n)
+		template.genUkkoPaginated(self.prefix, self.name, w, self.database, page, isjson, i18n, self.invertPagination)
 		return
 	}
 
@@ -159,17 +165,17 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if strings.HasPrefix(file, "ukko.html") {
-		template.genUkko(self.prefix, self.name, w, self.database, false, i18n)
+		template.genUkko(self.prefix, self.name, w, self.database, false, i18n, self.invertPagination)
 		return
 	}
 	if strings.HasPrefix(file, "ukko.json") {
-		template.genUkko(self.prefix, self.name, w, self.database, true, i18n)
+		template.genUkko(self.prefix, self.name, w, self.database, true, i18n, self.invertPagination)
 		return
 	}
 
 	if strings.HasPrefix(file, "ukko-") {
 		page := getUkkoPage(file)
-		template.genUkkoPaginated(self.prefix, self.name, w, self.database, page, isjson, i18n)
+		template.genUkkoPaginated(self.prefix, self.name, w, self.database, page, isjson, i18n, self.invertPagination)
 		return
 	}
 	if strings.HasPrefix(file, "thread-") {
@@ -214,7 +220,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if page >= int(pages) {
 			goto notfound
 		}
-		template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, group, page, w, self.database, isjson, i18n)
+		template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, group, int(pages), page, w, self.database, isjson, i18n, self.invertPagination)
 		return
 	}
 
