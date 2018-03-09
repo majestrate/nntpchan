@@ -341,7 +341,7 @@ type Database interface {
 	FindHeaders(group, headername string, lo, hi int64) (ArticleHeaders, error)
 
 	// count ukko pages
-	GetUkkoPageCount() (int64, error)
+	GetUkkoPageCount(perpage int) (int64, error)
 }
 
 func NewDatabase(db_type, schema, host, port, user, password string) Database {

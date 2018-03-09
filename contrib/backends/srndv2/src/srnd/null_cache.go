@@ -137,10 +137,12 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if page == 0 {
-			template.genUkko(self.prefix, self.name, w, self.database, isjson, i18n, self.invertPagination)
-		} else {
-			template.genUkkoPaginated(self.prefix, self.name, w, self.database, page, isjson, i18n, self.invertPagination)
+			if self.invertPagination {
+				pages, _ := self.database.GetUkkoPageCount(10)
+				page = int(pages)
+			}
 		}
+		template.genUkkoPaginated(self.prefix, self.name, w, self.database, page, isjson, i18n, self.invertPagination)
 		return
 	}
 

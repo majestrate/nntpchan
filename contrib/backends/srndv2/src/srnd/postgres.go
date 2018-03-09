@@ -2001,8 +2001,9 @@ func (self *PostgresDatabase) FindCitesInText(text string) (msgids []string, err
 	return
 }
 
-func (self *PostgresDatabase) GetUkkoPageCount() (count int64, err error) {
+func (self *PostgresDatabase) GetUkkoPageCount(perpage int) (count int64, err error) {
 	err = self.conn.QueryRow(self.stmt[CountUkko]).Scan(&count)
+	count /= int64(perpage)
 	return
 }
 
