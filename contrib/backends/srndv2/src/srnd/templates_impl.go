@@ -261,18 +261,18 @@ func (self *templateEngine) genBoardPage(allowFiles, requireCaptcha bool, prefix
 
 func (self *templateEngine) genUkko(prefix, frontend string, wr io.Writer, database Database, json bool, i18n *I18N, invertPagination bool) {
 	var page int64
-	var err error
+	pages, err := database.GetUkkoPageCount(10)
 	if invertPagination {
-		page, err = database.GetUkkoPageCount(10)
+		page = pages
 	}
 	if err == nil {
-		self.genUkkoPaginated(prefix, frontend, wr, database, int(page), json, i18n, invertPagination)
+		self.genUkkoPaginated(prefix, frontend, wr, database, int(pages), int(page), json, i18n, invertPagination)
 	} else {
 		log.Println("genUkko()", err.Error())
 	}
 }
 
-func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writer, database Database, page int, json bool, i18n *I18N, invertPagination bool) {
+func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writer, database Database, pages, page int, json bool, i18n *I18N, invertPagination bool) {
 	var threads []ThreadModel
 	for _, article := range database.GetLastBumpedThreadsPaginated("", 10, page*10) {
 		root := article[0]
@@ -283,7 +283,7 @@ func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writ
 		}
 	}
 	obj := map[string]interface{}{"prefix": prefix, "threads": threads, "page": page}
-	if invertPagination {
+	if invertPagination && page < pages {
 		obj["prev"] = map[string]interface{}{"no": page + 1}
 	} else if page > 0 {
 		obj["prev"] = map[string]interface{}{"no": page - 1}

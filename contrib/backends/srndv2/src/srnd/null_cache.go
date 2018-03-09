@@ -136,13 +136,13 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				goto notfound
 			}
 		}
-		if page == 0 {
+		pages, _ := self.database.GetUkkoPageCount(10)
+		if path == "/o/" {
 			if self.invertPagination {
-				pages, _ := self.database.GetUkkoPageCount(10)
 				page = int(pages)
 			}
 		}
-		template.genUkkoPaginated(self.prefix, self.name, w, self.database, page, isjson, i18n, self.invertPagination)
+		template.genUkkoPaginated(self.prefix, self.name, w, self.database, int(pages), page, isjson, i18n, self.invertPagination)
 		return
 	}
 
@@ -181,7 +181,8 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if strings.HasPrefix(file, "ukko-") {
 		page := getUkkoPage(file)
-		template.genUkkoPaginated(self.prefix, self.name, w, self.database, page, isjson, i18n, self.invertPagination)
+		pages, _ := self.database.GetUkkoPageCount(10)
+		template.genUkkoPaginated(self.prefix, self.name, w, self.database, int(pages), page, isjson, i18n, self.invertPagination)
 		return
 	}
 	if strings.HasPrefix(file, "thread-") {

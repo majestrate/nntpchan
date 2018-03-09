@@ -285,14 +285,14 @@ func (self *FileCache) regenUkko() {
 			return
 		}
 		defer f.Close()
-		template.genUkkoPaginated(self.prefix, self.name, f, self.database, i, false, nil, false)
+		template.genUkkoPaginated(self.prefix, self.name, f, self.database, 10, i, false, nil, false)
 		j, err := os.Create(jname)
 		if err != nil {
 			log.Printf("failed to create json ukko", i, err)
 			return
 		}
 		defer j.Close()
-		template.genUkkoPaginated(self.prefix, self.name, j, self.database, i, true, nil, false)
+		template.genUkkoPaginated(self.prefix, self.name, j, self.database, 10, i, true, nil, false)
 	}
 }
 
