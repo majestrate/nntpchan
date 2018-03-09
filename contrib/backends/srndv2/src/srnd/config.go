@@ -267,7 +267,7 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect.Add("minimize_html", "0")
 	sect.Add("prefix", "/")
 	sect.Add("static_files", "contrib")
-	sect.Add("templates", "contrib/templates/default")
+	sect.Add("templates", "contrib/templates/placebo")
 	sect.Add("translations", "contrib/translations")
 	sect.Add("markup_script", "contrib/lua/memeposting.lua")
 	sect.Add("locale", "en")
