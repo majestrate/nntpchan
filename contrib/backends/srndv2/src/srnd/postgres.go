@@ -600,10 +600,10 @@ func (self *PostgresDatabase) upgrade6to7() {
 func (self *PostgresDatabase) upgrade7to8() {
 	log.Println("migrating 7 -> 8")
 	cmds := []string{
-		"ALTER TABLE ArticleNumbers DROP CONSTRAINT articlenumbers_message_id_fkey",
-		"ALTER TABLE ArticleNumbers ADD CONSTRAINT FOREIGN KEY (message_id) REFERENCES ArticlePosts(message_id) ON DELETE CASCADE",
-		"ALTER TABLE NNTPHeaders DROP CONSTRAINT nntpheaders_header_article_message_id_fkey",
-		"ALTER TABLE NNTPHeaders ADD CONSTRAINT FOREIGN KEY (header_article_message_id) REFERENCES ArticlePosts(message_id) ON DELETE CASCADE",
+		"ALTER TABLE ArticleNumbers DROP CONSTRAINT IF EXISTS articlenumbers_message_id_fkey",
+		"ALTER TABLE ArticleNumbers ADD CONSTRAINT msgid_depends FOREIGN KEY (message_id) REFERENCES ArticlePosts(message_id) ON DELETE CASCADE",
+		"ALTER TABLE NNTPHeaders DROP CONSTRAINT IF EXISTS nntpheaders_header_article_message_id_fkey",
+		"ALTER TABLE NNTPHeaders ADD CONSTRAINT msgid_depends FOREIGN KEY (header_article_message_id) REFERENCES ArticlePosts(message_id) ON DELETE CASCADE",
 	}
 	for _, cmd := range cmds {
 		log.Println("exec", cmd)
