@@ -137,6 +137,8 @@ type ThreadModel interface {
 	IsDirty() bool
 	// mark thread as dirty
 	MarkDirty()
+	// is the threa bumplocked?
+	BumpLock() bool
 }
 
 // board interface
