@@ -244,7 +244,7 @@ func (self *templateEngine) genBoardPage(allowFiles, requireCaptcha bool, prefix
 	perpage, _ := db.GetThreadsPerPage(newsgroup)
 	var boardPage BoardModel
 	if invertPagination {
-		boardPage = db.GetGroupForPage(prefix, frontend, newsgroup, int(pages)-page, int(perpage))
+		boardPage = db.GetGroupForPage(prefix, frontend, newsgroup, int(pages-1)-page, int(perpage))
 	} else {
 		boardPage = db.GetGroupForPage(prefix, frontend, newsgroup, page, int(perpage))
 	}
@@ -283,15 +283,13 @@ func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writ
 		}
 	}
 	obj := map[string]interface{}{"prefix": prefix, "threads": threads, "page": page}
-	if invertPagination && page < pages {
-		obj["prev"] = map[string]interface{}{"no": page + 1}
+	if invertPagination {
+		obj["prev"] = map[string]interface{}{"no": page - 1}
 	} else if page > 0 {
 		obj["prev"] = map[string]interface{}{"no": page - 1}
 	}
 	if invertPagination {
-		if page > 0 {
-			obj["next"] = map[string]interface{}{"no": page - 1}
-		}
+		obj["next"] = map[string]interface{}{"no": page + 1}
 	} else {
 		if page < 10 {
 			obj["next"] = map[string]interface{}{"no": page + 1}
