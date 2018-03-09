@@ -25,6 +25,7 @@
      {{#post.IsClearnet}}
      data-origin="clearnet"
      {{/post.IsClearnet}}
+     data-frontendpubkey="{{post.FrontendPubkey}}"
      data-posturl="{{post.PostURL}}">
     {{#post.Attachments}}
     <a href="{{Source}}" class="image_link" target="_blank" title="{{Filename}}"><img src="{{Thumbnail}}" class="image" /></a>
