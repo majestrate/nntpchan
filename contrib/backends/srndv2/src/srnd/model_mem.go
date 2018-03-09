@@ -238,34 +238,35 @@ func (self *boardModel) Update(db Database) {
 }
 
 type post struct {
-	_i18n            *I18N
-	truncated        bool
-	prefix           string
-	board            string
-	PostName         string
-	PostSubject      string
-	PostMessage      string
-	message_rendered string
-	Message_id       string
-	MessagePath      string
-	addr             string
-	Newsgroup        string
-	op               bool
-	Posted           int64
-	Parent           string
-	sage             bool
-	Key              string
-	Files            []AttachmentModel
-	HashLong         string
-	HashShort        string
-	URL              string
-	Tripcode         string
-	BodyMarkup       string
-	PostMarkup       string
-	PostPrefix       string
-	index            int
-	Type             string
-	nntp_id          int
+	_i18n             *I18N
+	truncated         bool
+	prefix            string
+	board             string
+	PostName          string
+	PostSubject       string
+	PostMessage       string
+	message_rendered  string
+	Message_id        string
+	MessagePath       string
+	addr              string
+	Newsgroup         string
+	op                bool
+	Posted            int64
+	Parent            string
+	sage              bool
+	Key               string
+	Files             []AttachmentModel
+	HashLong          string
+	HashShort         string
+	URL               string
+	Tripcode          string
+	BodyMarkup        string
+	PostMarkup        string
+	PostPrefix        string
+	index             int
+	Type              string
+	nntp_id           int
+	FrontendPublicKey string
 }
 
 func (self *post) NNTPID() int {
@@ -378,6 +379,7 @@ func PostModelFromMessage(parent, prefix string, nntp NNTPMessage) PostModel {
 	p.addr = nntp.Addr()
 	p.sage = nntp.Sage()
 	p.Key = nntp.Pubkey()
+	p.FrontendPublicKey = nntp.FrontendPubkey()
 	for _, att := range nntp.Attachments() {
 		p.Files = append(p.Files, att.ToModel(prefix))
 	}
@@ -409,6 +411,10 @@ func (self *post) ShortHash() string {
 
 func (self *post) PubkeyHex() string {
 	return self.Key
+}
+
+func (self *post) FrontendPubkey() string {
+	return self.FrontendPublicKey
 }
 
 func (self *post) Pubkey() string {
@@ -559,7 +565,8 @@ func (self *post) Truncate() PostModel {
 		sage:        self.sage,
 		Key:         self.Key,
 		// TODO: copy?
-		Files: self.Files,
+		Files:             self.Files,
+		FrontendPublicKey: self.FrontendPublicKey,
 	}
 }
 

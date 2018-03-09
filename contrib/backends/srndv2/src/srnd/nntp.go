@@ -422,7 +422,7 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 	}
 
 	if serverPubkeyIsValid(server_pubkey) {
-		b, _ := daemon.database.PubkeyIsBanned(server_pubkey)
+		b, _ := daemon.database.PubkeyRejected(server_pubkey)
 		if b {
 			reason = "server's pubkey is banned"
 			ban = true
@@ -448,7 +448,7 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 		reason = "newsgroup banned"
 		ban = true
 		return
-	} else if banned, _ = daemon.database.PubkeyIsBanned(pubkey); banned {
+	} else if banned, _ = daemon.database.PubkeyRejected(pubkey); banned {
 		// check for banned pubkey
 		reason = "poster's pubkey is banned"
 		ban = true

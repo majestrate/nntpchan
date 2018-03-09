@@ -305,10 +305,12 @@ type Database interface {
 	GetMessageIDByEncryptedIP(encaddr string) ([]string, error)
 
 	// check if this public key is banned from posting
-	PubkeyIsBanned(pubkey string) (bool, error)
+	PubkeyRejected(pubkey string) (bool, error)
 
 	// ban a public key from posting
-	BanPubkey(pubkey string) error
+	BlacklistPubkey(pubkey string) error
+	WhitelistPubkey(pubkey string) error
+	DeletePubkey(pubkey string) error
 
 	// get all message-id posted before a time
 	GetPostsBefore(t time.Time) ([]string, error)

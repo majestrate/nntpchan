@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/base32"
+	"encoding/hex"
 	"fmt"
 	"github.com/majestrate/configparser"
 	"io/ioutil"
@@ -187,6 +188,7 @@ func GenSRNdConfig() *configparser.Configuration {
 	sect.Add("archive", "0")
 	sect.Add("article_lifetime", "0")
 	sect.Add("filters_file", "filters.txt")
+	sect.Add("secretkey", hex.EncodeToString(randbytes(32)))
 
 	// spamd settings
 	sect = conf.NewSection("spamd")

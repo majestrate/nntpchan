@@ -128,11 +128,27 @@ func main() {
 							} else {
 								fmt.Fprintf(os.Stdout, "Usage: %s tool nntp add-login username password\n", os.Args[0])
 							}
+						} else if action == "whitelist" {
+							daemon.Setup()
+							err := daemon.GetDatabase().WhitelistPubkey(os.Args[4])
+							if err == nil {
+								fmt.Println("OK")
+							} else {
+								fmt.Println(err)
+							}
+						} else if action == "blacklist" {
+							daemon.Setup()
+							err := daemon.GetDatabase().BlacklistPubkey(os.Args[4])
+							if err == nil {
+								fmt.Println("OK")
+							} else {
+								fmt.Println(err)
+							}
 						} else {
-							fmt.Fprintf(os.Stdout, "Usage: %s tool nntp [add-login|del-login]\n", os.Args[0])
+							fmt.Fprintf(os.Stdout, "Usage: %s tool nntp [add-login|del-login|whitelist|blacklist]\n", os.Args[0])
 						}
 					} else {
-						fmt.Fprintf(os.Stdout, "Usage: %s tool nntp [add-login|del-login]\n", os.Args[0])
+						fmt.Fprintf(os.Stdout, "Usage: %s tool nntp [add-login|del-login|whitelist|blacklist]\n", os.Args[0])
 					}
 				} else {
 					fmt.Fprintf(os.Stdout, "Usage: %s tool [rethumb|keygen|nntp|mod|expire]\n", os.Args[0])

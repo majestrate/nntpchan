@@ -45,7 +45,7 @@ type PostModel interface {
 	BaseModel
 
 	CSSClass() string
-
+	FrontendPubkey() string
 	MessageID() string
 	PostHash() string
 	ShortHash() string

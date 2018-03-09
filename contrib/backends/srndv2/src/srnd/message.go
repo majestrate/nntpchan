@@ -89,6 +89,7 @@ type NNTPMessage interface {
 	OP() bool
 	// all attachments
 	Attachments() []NNTPAttachment
+	FrontendPubkey() string
 	// all headers
 	Headers() ArticleHeaders
 	MIMEHeader() textproto.MIMEHeader
@@ -110,6 +111,10 @@ type NNTPMessage interface {
 	Reset()
 	// get body as reader
 	BodyReader() io.Reader
+}
+
+func (self *nntpArticle) FrontendPubkey() string {
+	return self.headers.Get("X-Frontend-Pubkey", "")
 }
 
 type nntpArticle struct {

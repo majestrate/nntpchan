@@ -186,7 +186,7 @@ func (self *PostgresDatabase) prepareStatements() {
 		GetPostAttachmentModels:         "SELECT filepath, filename FROM ArticleAttachments WHERE message_id = $1",
 		RegisterArticle_1:               "INSERT INTO Articles (message_id, message_id_hash, message_newsgroup, time_obtained, message_ref_id) VALUES($1, $2, $3, $4, $5)",
 		RegisterArticle_2:               "UPDATE Newsgroups SET last_post = $1 WHERE name = $2",
-		RegisterArticle_3:               "INSERT INTO ArticlePosts(newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+		RegisterArticle_3:               "INSERT INTO ArticlePosts(newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr, frontendpubkey) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
 		RegisterArticle_4:               "INSERT INTO ArticleThreads(root_message_id, last_bump, last_post, newsgroup) VALUES($1, $2, $2, $3)",
 		RegisterArticle_5:               "SELECT COUNT(*) FROM ArticlePosts WHERE ref_id = $1",
 		RegisterArticle_6:               "UPDATE ArticleThreads SET last_bump = $2 WHERE root_message_id = $1",
@@ -257,6 +257,8 @@ func (self *PostgresDatabase) CreateTables() {
 		} else if version == 7 {
 			self.upgrade7to8()
 		} else if version == 8 {
+			self.upgrade8to9()
+		} else if version == 9 {
 			// we are up to date
 			log.Println("we are up to date at version", version)
 			break
@@ -615,6 +617,18 @@ func (self *PostgresDatabase) upgrade7to8() {
 		}
 	}
 	self.setDBVersion(8)
+}
+
+func (self *PostgresDatabase) upgrade8to9() {
+	_, err := self.conn.Exec("ALTER TABLE ArticlePosts ADD COLUMN IF NOT EXISTS frontendpubkey TEXT NOT NULL DEFAULT ''")
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	_, err = self.conn.Exec("CREATE TABLE IF NOT EXISTS nntpchan_pubkeys(status VARCHAR(16) NOT NULL, pubkey VARCHAR(64) PRIMARY KEY)")
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	self.setDBVersion(9)
 }
 
 // create all tables for database version 0
@@ -1474,7 +1488,7 @@ func (self *PostgresDatabase) RegisterArticle(message NNTPMessage) (err error) {
 		return
 	}
 	// insert article post
-	_, err = self.conn.Exec(self.stmt[RegisterArticle_3], group, msgid, message.Reference(), message.Name(), message.Subject(), message.Path(), message.Posted(), message.Message(), message.Addr())
+	_, err = self.conn.Exec(self.stmt[RegisterArticle_3], group, msgid, message.Reference(), message.Name(), message.Subject(), message.Path(), message.Posted(), message.Message(), message.Addr(), message.FrontendPubkey())
 	if err != nil {
 		log.Println("cannot insert article post", err)
 		return
@@ -1877,7 +1891,6 @@ func (self *PostgresDatabase) GetMessageIDByEncryptedIP(encaddr string) (msgids 
 		if err == nil {
 			msgids = append(msgids, msgid)
 		}
-
 	}
 	if rows != nil {
 		rows.Close()
@@ -1885,15 +1898,32 @@ func (self *PostgresDatabase) GetMessageIDByEncryptedIP(encaddr string) (msgids 
 	return
 }
 
-func (self *PostgresDatabase) BanPubkey(pubkey string) (err error) {
-	// TODO: implement
-	err = errors.New("ban pubkey not implemented")
+func (self *PostgresDatabase) WhitelistPubkey(pubkey string) (err error) {
+	_, err = self.conn.Exec("INSERT INTO nntpchan_pubkeys VALUES ('whitelist', $1)", pubkey)
 	return
 }
 
-func (self *PostgresDatabase) PubkeyIsBanned(pubkey string) (bool, error) {
-	// TODO: implement
-	return false, nil
+func (self *PostgresDatabase) DeletePubkey(pubkey string) (err error) {
+	_, err = self.conn.Exec("DELETE FROM nntpchan_pubkeys WHERE pubkey = $1", pubkey)
+	return
+}
+
+func (self *PostgresDatabase) BlacklistPubkey(pubkey string) (err error) {
+	_, err = self.conn.Exec("INSERT INTO nntpchan_pubkeys VALUES ('blacklist', $1)", pubkey)
+	return
+}
+
+// return true if we should drop this message with this frontend pubkey
+func (self *PostgresDatabase) PubkeyRejected(pubkey string) (bool, error) {
+	var num int64
+	var drop bool
+	var err error
+	err = self.conn.QueryRow("SELECT COUNT(pubkey) FROM nntpchan_pubkeys WHERE pubkey = $1 AND status = 'whitelist'", pubkey).Scan(&num)
+	if err == nil && num == 0 {
+		err = self.conn.QueryRow("SELECT COUNT(pubkey) FROM nntpchan_pubkeys WHERE pubkey = $1 and status = 'blacklist'", pubkey).Scan(&num)
+		drop = num > 0
+	}
+	return drop, err
 }
 
 func (self *PostgresDatabase) GetPostsBefore(t time.Time) (msgids []string, err error) {
