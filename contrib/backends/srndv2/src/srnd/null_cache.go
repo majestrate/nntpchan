@@ -95,8 +95,12 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(path, "/b/") {
 		// board handler
 		parts := strings.Split(path[3:], "/")
-		page := 0
 		group := parts[0]
+		page := 0
+		pages := self.database.GetGroupPageCount(group)
+		if self.invertPagination {
+			page = int(pages) - 1
+		}
 		if len(parts) > 1 && parts[1] != "" && parts[1] != "json" {
 			var err error
 			page, err = strconv.Atoi(parts[1])
@@ -116,8 +120,6 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if banned {
 			goto notfound
 		}
-
-		pages := self.database.GetGroupPageCount(group)
 		if page >= int(pages) {
 			goto notfound
 		}

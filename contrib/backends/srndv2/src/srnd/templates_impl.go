@@ -283,17 +283,13 @@ func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writ
 		}
 	}
 	obj := map[string]interface{}{"prefix": prefix, "threads": threads, "page": page}
-	if invertPagination {
-		obj["prev"] = map[string]interface{}{"no": page - 1}
-	} else if page > 0 {
+	if page > 0 {
 		obj["prev"] = map[string]interface{}{"no": page - 1}
 	}
 	if invertPagination {
 		obj["next"] = map[string]interface{}{"no": page + 1}
-	} else {
-		if page < 10 {
-			obj["next"] = map[string]interface{}{"no": page + 1}
-		}
+	} else if page < 10 {
+		obj["next"] = map[string]interface{}{"no": page + 1}
 	}
 	if json {
 		self.renderJSON(wr, obj)
