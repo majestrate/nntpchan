@@ -109,3 +109,4 @@ clean-native:
 
 distclean: clean
 	rm -rf $(REPO_GOPATH)
+	rm -rf $(GOPHERJS_GOPATH)
