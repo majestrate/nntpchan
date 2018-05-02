@@ -49,13 +49,14 @@
                 <td>
                     <table cellspacing="0" cellpadding="0" width="100%">
                         <tr>
+                            {{#files}}
                             <td><input type="file" name="attachment_uploaded" class="postfile" multiple /></td>
+                            {{/files}}
                             <td align="right"><input type="submit" value="{{button}}" class="postbutton"/></td>
                         </tr>
                     </table>
                 </td>
             </tr>
-            {{/files}}
         </table>
     </form>
 </div>
