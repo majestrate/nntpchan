@@ -20,6 +20,7 @@ void ArticleStorage::SetPath(const fs::path &fpath)
   fs::create_directories(basedir);
   assert(init_skiplist(posts_skiplist_dir));
   assert(init_skiplist(threads_skiplist_dir));
+  errno = 0;
 }
 
 
@@ -41,7 +42,9 @@ bool ArticleStorage::Accept(const std::string &msgid) const
   if (!IsValidMessageID(msgid))
     return false;
   auto p = MessagePath(msgid);
-  return !fs::exists(p);
+  bool ret = !fs::exists(p);
+  errno = 0;
+  return ret;
 }
 
 fs::path ArticleStorage::MessagePath(const std::string &msgid) const { return basedir / msgid; }

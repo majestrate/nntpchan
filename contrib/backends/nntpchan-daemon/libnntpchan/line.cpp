@@ -9,37 +9,20 @@ void LineReader::Data(const char *data, ssize_t l)
 {
   if (l <= 0)
     return;
-  // process leftovers
-  std::size_t idx = 0;
-  std::size_t pos = 0;
-  while (l-- > 0)
+  m_line << m_leftover;
+  m_leftover = "";
+  m_line << std::string(data, l);
+
+  for(std::string line; std::getline(m_line, line); )
   {
-    char c = data[idx++];
-    if (c == '\n')
-    {
-      OnLine(data, pos);
-      pos = 0;
-      data += idx;
-    }
-    else if (c == '\r' && data[idx] == '\n')
-    {
-      OnLine(data, pos);
-      data += idx + 1;
-      pos = 0;
-    }
-    else
-    {
-      pos++;
-    }
+    line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+    HandleLine(line);
   }
+  if(m_line)
+    m_leftover = m_line.str();
+  m_line.clear();
 }
 
-void LineReader::OnLine(const char *d, const size_t l)
-{
-  std::string line;
-  line += std::string(d, l);
-  HandleLine(line);
-}
 
 bool LineReader::ShouldClose() { return m_close; }
 }

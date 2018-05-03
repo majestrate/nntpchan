@@ -9,15 +9,15 @@
 
 namespace nntpchan
 {
-NNTPServerHandler::NNTPServerHandler(const fs::path &storage)
-    : LineReader(1024), m_article(nullptr), m_auth(nullptr), m_store(std::make_unique<ArticleStorage>(storage)),
+NNTPServerHandler::NNTPServerHandler(fs::path storage)
+    : LineReader(1024), m_article(nullptr), m_auth(nullptr), m_store(storage),
       m_authed(false), m_state(eStateReadCommand)
 {
 }
 
 NNTPServerHandler::~NNTPServerHandler() {}
 
-void NNTPServerHandler::HandleLine(const std::string &line)
+void NNTPServerHandler::HandleLine(const std::string line)
 {
   if (m_state == eStateReadCommand)
   {
@@ -51,6 +51,12 @@ void NNTPServerHandler::OnData(const char *data, ssize_t l)
     return;
   if (m_state == eStateStoreArticle)
   {
+    std::cerr << "storing " << l << " bytes" << std::endl;
+    if(strncmp(data, ".\r\n", l) == 0)
+    {
+      ArticleObtained();
+      return;
+    }
     const char *end = strstr(data, "\r\n.\r\n");
     if (end)
     {
@@ -124,7 +130,7 @@ void NNTPServerHandler::HandleCommand(const std::deque<std::string> &command)
     if (cmdlen >= 2)
     {
       const std::string &msgid = command[1];
-      if (IsValidMessageID(msgid) && m_store->Accept(msgid))
+      if (IsValidMessageID(msgid) && m_store.Accept(msgid))
       {
         QueueLine("238 " + msgid);
       }
@@ -139,9 +145,9 @@ void NNTPServerHandler::HandleCommand(const std::deque<std::string> &command)
     if (cmdlen >= 2)
     {
       const std::string &msgid = command[1];
-      if (m_store->Accept(msgid))
+      if (m_store.Accept(msgid))
       {
-        m_article = m_store->OpenWrite(msgid);
+        m_article = m_store.OpenWrite(msgid);
       }
       m_articleName = msgid;
       EnterState(eStateStoreArticle);

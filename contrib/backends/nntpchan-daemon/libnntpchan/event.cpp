@@ -107,6 +107,7 @@ void Mainloop::Run()
     idx = 0;
     while(idx < res)
     {
+      errno = 0;
       ev = &evs[idx++];
       if(ev->data.fd == sfd)
       {

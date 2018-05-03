@@ -55,7 +55,7 @@ bool HashedCredDB::ProcessLine(const std::string &line)
   return Hash(m_passwd, salt) == cred;
 }
 
-void HashedCredDB::HandleLine(const std::string &line)
+void HashedCredDB::HandleLine(const std::string line)
 {
   if (m_found)
     return;

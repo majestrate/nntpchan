@@ -2,6 +2,8 @@
 #define NNTPCHAN_LINE_HPP
 #include "server.hpp"
 #include <stdint.h>
+#include <sstream>
+
 namespace nntpchan
 {
 
@@ -19,11 +21,12 @@ public:
 
 protected:
   /** @brief handle a line from the client */
-  virtual void HandleLine(const std::string &line) = 0;
+  virtual void HandleLine(const std::string line) = 0;
 
 private:
-  void OnLine(const char *d, const size_t l);
-  std::string m_leftovers;
+  
+  std::stringstream m_line;
+  std::string m_leftover;
   bool m_close;
   const size_t lineLimit;
 };

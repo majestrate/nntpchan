@@ -35,7 +35,7 @@ protected:
   void SetStream(std::istream *i);
 
   std::string Hash(const std::string &data, const std::string &salt);
-  void HandleLine(const std::string &line);
+  void HandleLine(const std::string line);
 
 private:
   bool ProcessLine(const std::string &line);
