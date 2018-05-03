@@ -68,7 +68,8 @@ void NNTPServerHandler::OnData(const char *data, ssize_t l)
       }
       ArticleObtained();
       diff += 5;
-      Data(end + 5, l - diff);
+      if(l - diff)
+        Data(end + 5, l - diff);
       return;
     }
     if (m_article)

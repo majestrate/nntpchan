@@ -47,7 +47,7 @@ public:
 private:
   size_t conns;
   int epollfd;
-  char readbuf[2048];
+  char readbuf[128];
 };
 }
 

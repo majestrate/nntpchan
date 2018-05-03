@@ -151,23 +151,30 @@ void Mainloop::Run()
       }
       if(ev->events & EPOLLIN && handler->readable())
       {
-        int readed = handler->read(readbuf, sizeof(readbuf));
-        if(readed == -1)
+        bool errored = false;
+        while(true)
         {
-          if(errno != EAGAIN)
+          int readed = handler->read(readbuf, sizeof(readbuf));
+          if(readed == -1)
           {
-            perror("read()");
+            if(errno != EAGAIN)
+            {
+              perror("read()");
+              handler->close();
+              delete handler;
+              errored = true;
+            }
+            break;
+          }
+          else if (readed == 0)
+          {
             handler->close();
             delete handler;
-            continue;
+            errored = true;
+            break;
           }
         }
-        else if (readed == 0)
-        {
-          handler->close();
-          delete handler;
-          continue;
-        }
+        if(errored) continue;
       }
       if(ev->events & EPOLLOUT && handler->writeable())
       {
