@@ -11,7 +11,7 @@ std::string NetAddr::to_string()
   std::string str("invalid");
   const size_t s = 128;
   char *buff = new char[s];
-  if (uv_ip6_name(&addr, buff, s) == 0)
+  if (inet_ntop(AF_INET6, &addr, buff, sizeof(sockaddr_in6)))
   {
     str = std::string(buff);
     delete[] buff;
@@ -38,7 +38,9 @@ NetAddr ParseAddr(const std::string &addr)
   auto p = addr.substr(n + 2);
   int port = std::atoi(p.c_str());
   auto a = addr.substr(0, n);
-  uv_ip6_addr(a.c_str(), port, &saddr.addr);
+  saddr.addr.sin6_port = htons(port);
+  saddr.addr.sin6_family = AF_INET6;
+  inet_pton(AF_INET6, a.c_str(), &saddr.addr);
   return saddr;
 }
 }

@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+
 int main(int argc, char *argv[])
 {
   if (argc != 2)
@@ -22,7 +23,7 @@ int main(int argc, char *argv[])
 
   nntpchan::Mainloop loop;
 
-  nntpchan::NNTPServer nntp(loop);
+  nntpchan::NNTPServer * nntp =  new nntpchan::NNTPServer(loop);
 
   std::string fname(argv[1]);
 
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
       return 1;
     }
 
-    nntp.SetStoragePath(storeconf["store_path"]);
+    nntp->SetStoragePath(storeconf["store_path"]);
 
     auto &nntpconf = level.sections["nntp"].values;
 
@@ -70,11 +71,11 @@ int main(int argc, char *argv[])
       return 1;
     }
 
-    nntp.SetInstanceName(nntpconf["instance_name"]);
+    nntp->SetInstanceName(nntpconf["instance_name"]);
 
     if (nntpconf.find("authdb") != nntpconf.end())
     {
-      nntp.SetLoginDB(nntpconf["authdb"]);
+      nntp->SetLoginDB(nntpconf["authdb"]);
     }
 
     if (level.sections.find("frontend") != level.sections.end())
@@ -86,7 +87,7 @@ int main(int argc, char *argv[])
         std::cerr << "frontend section provided but 'type' value not provided" << std::endl;
         return 1;
       }
-      auto ftype = frontconf["type"];
+      auto &ftype = frontconf["type"];
       if (ftype == "exec")
       {
         if (frontconf.find("exec") == frontconf.end())
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
           std::cerr << "exec frontend specified but no 'exec' value provided" << std::endl;
           return 1;
         }
-        nntp.SetFrontend(new nntpchan::ExecFrontend(frontconf["exec"]));
+        nntp->SetFrontend(new nntpchan::ExecFrontend(frontconf["exec"]));
       }
       else if (ftype == "staticfile")
       {
@@ -113,7 +114,7 @@ int main(int argc, char *argv[])
           std::cerr << "max_pages invalid value '" << frontconf["max_pages"] << "'" << std::endl;
           return 1;
         }
-        nntp.SetFrontend(new nntpchan::StaticFileFrontend(nntpchan::CreateTemplateEngine(frontconf["template_dialect"]),
+        nntp->SetFrontend(new nntpchan::StaticFileFrontend(nntpchan::CreateTemplateEngine(frontconf["template_dialect"]),
                                                           frontconf["template_dir"], frontconf["out_dir"], maxPages));
       }
       else
@@ -127,16 +128,23 @@ int main(int argc, char *argv[])
 
     try
     {
-      nntp.Bind(a);
+      if(nntp->Bind(a))
+      {
+        std::cerr << "nntpd for " << nntp->InstanceName() << " bound to " << a << std::endl;
+      }
+      else 
+      {
+        std::cerr << "nntpd for " << nntp->InstanceName() << "failed to bind to " << a << ": "<< strerror(errno) << std::endl;
+        return 1;
+      }
     } catch (std::exception &ex)
     {
       std::cerr << "failed to bind: " << ex.what() << std::endl;
       return 1;
     }
 
-    std::cerr << "nntpd for " << nntp.InstanceName() << " bound to " << a << std::endl;
-
     loop.Run();
+    std::cerr << "Exiting" << std::endl;
   }
   else
   {

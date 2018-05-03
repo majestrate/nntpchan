@@ -27,7 +27,7 @@ TEST = $(REPO)/test
 
 DAEMON_SRC = $(REPO)/daemon
 
-PKGS := libuv libsodium
+PKGS := libsodium
 
 LD_FLAGS := $(shell pkg-config --libs $(PKGS)) -lstdc++fs
 INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I$(HEADERS_PATH)

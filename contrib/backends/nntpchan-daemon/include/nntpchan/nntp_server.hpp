@@ -4,7 +4,6 @@
 #include "server.hpp"
 #include <deque>
 #include <string>
-#include <uv.h>
 
 namespace nntpchan
 {
@@ -12,7 +11,7 @@ namespace nntpchan
 class NNTPServer : public Server
 {
 public:
-  NNTPServer(uv_loop_t *loop);
+  NNTPServer(Mainloop & loop);
 
   virtual ~NNTPServer();
 
@@ -24,9 +23,7 @@ public:
 
   std::string InstanceName() const;
 
-  void Close();
-
-  virtual IServerConn *CreateConn(uv_stream_t *s);
+  virtual IServerConn *CreateConn(int fd);
 
   virtual void OnAcceptError(int status);
 
@@ -43,12 +40,9 @@ private:
 class NNTPServerConn : public IServerConn
 {
 public:
-  NNTPServerConn(uv_loop_t *l, uv_stream_t *s, Server *parent, IConnHandler *h) : IServerConn(l, s, parent, h) {}
+  NNTPServerConn(int fd, Server *parent, IConnHandler *h) : IServerConn(fd, parent, h) {}
 
   virtual bool IsTimedOut() { return false; };
-
-  /** @brief send next queued reply */
-  virtual void SendNextReply();
 
   virtual void Greet();
 };

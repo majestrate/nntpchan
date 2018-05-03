@@ -3,7 +3,7 @@
 #include <deque>
 #include <functional>
 #include <string>
-#include <uv.h>
+#include <nntpchan/event.hpp>
 
 namespace nntpchan
 {
@@ -37,38 +37,45 @@ private:
 };
 
 /** server connection handler interface */
-struct IServerConn
+struct IServerConn : public ev::io
 {
-  IServerConn(uv_loop_t *l, uv_stream_t *s, Server *parent, IConnHandler *h);
+  IServerConn(int fd, Server *parent, IConnHandler *h);
   virtual ~IServerConn();
-  virtual void Close();
+  virtual int read(char * buf, size_t sz);
+  virtual int write();
+  virtual void close();
   virtual void Greet() = 0;
-  virtual void SendNextReply() = 0;
   virtual bool IsTimedOut() = 0;
-  void SendString(const std::string &str);
+  virtual bool keepalive() ;
   Server *Parent() { return m_parent; };
   IConnHandler *GetHandler() { return m_handler; };
-  uv_loop_t *GetLoop() { return m_loop; };
 
 private:
-  uv_tcp_t m_conn;
-  uv_loop_t *m_loop;
   Server *m_parent;
   IConnHandler *m_handler;
+  std::string m_writeLeftover;
 };
 
-class Server
+class Server : public ev::io
 {
 public:
-  Server(uv_loop_t *loop);
-  /** called after socket close, NEVER call directly */
-  virtual ~Server() {}
+  Server(Mainloop & loop);
+  virtual ~Server() {};
+
+  virtual bool acceptable() const { return true; };
+  virtual void close();
+  virtual bool readable() const { return false; };
+  virtual int read(char *,size_t) { return -1; };
+  virtual bool writeable() const { return false; };
+  virtual int write() {return -1; };
+  virtual int accept();
+  virtual bool keepalive() { return true; };
+
+
   /** create connection handler from open stream */
-  virtual IServerConn *CreateConn(uv_stream_t *s) = 0;
-  /** close all sockets and stop */
-  void Close();
+  virtual IServerConn *CreateConn(int fd) = 0;
   /** bind to address */
-  void Bind(const std::string &addr);
+  bool Bind(const std::string &addr);
 
   typedef std::function<void(IServerConn *)> ConnVisitor;
 
@@ -79,18 +86,13 @@ public:
   void RemoveConn(IServerConn *conn);
 
 protected:
-  uv_loop_t *GetLoop() { return m_loop; }
   virtual void OnAcceptError(int status) = 0;
 
 private:
-  operator uv_handle_t *() { return (uv_handle_t *)&m_server; }
-  operator uv_tcp_t *() { return &m_server; }
-  operator uv_stream_t *() { return (uv_stream_t *)&m_server; }
 
-  void OnAccept(uv_stream_t *s, int status);
+  void OnAccept(int fd, int status);
+  Mainloop & m_Loop;
   std::deque<IServerConn *> m_conns;
-  uv_tcp_t m_server;
-  uv_loop_t *m_loop;
 };
 }
 

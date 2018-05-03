@@ -6,46 +6,56 @@
 
 namespace nntpchan
 {
-Server::Server(uv_loop_t *loop)
+
+Server::Server(Mainloop & loop) : ev::io(-1), m_Loop(loop)
 {
-  m_loop = loop;
-  uv_tcp_init(m_loop, &m_server);
-  m_server.data = this;
 }
 
-void Server::Close()
+void Server::close()
 {
-  std::cout << "Close server" << std::endl;
-  uv_close((uv_handle_t *)&m_server, [](uv_handle_t *s) {
-    Server *self = (Server *)s->data;
-    if (self)
-      delete self;
-    s->data = nullptr;
-  });
+  auto itr = m_conns.begin();
+  while(itr != m_conns.end())
+  {
+    itr = m_conns.erase(itr);
+  }
+  m_Loop.UntrackConn(this);
+  ev::io::close();
 }
-
-void Server::Bind(const std::string &addr)
+bool Server::Bind(const std::string &addr)
 {
   auto saddr = ParseAddr(addr);
-  assert(uv_tcp_bind(*this, saddr, 0) == 0);
-  auto cb = [](uv_stream_t *s, int status) {
-    Server *self = (Server *)s->data;
-    self->OnAccept(s, status);
-  };
-  assert(uv_listen(*this, 5, cb) == 0);
+  return m_Loop.BindTCP(saddr, this);
 }
 
-void Server::OnAccept(uv_stream_t *s, int status)
+void Server::OnAccept(int f, int status)
 {
-  if (status < 0)
+  if (status)
   {
     OnAcceptError(status);
     return;
   }
-  IServerConn *conn = CreateConn(s);
-  assert(conn);
-  m_conns.push_back(conn);
-  conn->Greet();
+  IServerConn *conn = CreateConn(f);
+  
+  if(m_Loop.TrackConn(conn))
+  { 
+    m_conns.push_back(conn);  
+    conn->Greet();
+    conn->write();
+  }
+  else 
+  {
+    std::cout << "accept track conn failed" << std::endl;
+    conn->close();
+    delete conn;
+  }
+}
+
+int Server::accept()
+{
+  int res = ::accept4(fd, nullptr, nullptr, SOCK_NONBLOCK);
+  if(res == -1) return res;
+  OnAccept(res, errno);
+  return res;
 }
 
 void Server::RemoveConn(IServerConn *conn)
@@ -58,9 +68,10 @@ void Server::RemoveConn(IServerConn *conn)
     else
       ++itr;
   }
+  m_Loop.UntrackConn(conn);
 }
 
-void IConnHandler::QueueLine(const std::string &line) { m_sendlines.push_back(line); }
+void IConnHandler::QueueLine(const std::string &line) { m_sendlines.push_back(line+"\r\n"); }
 
 bool IConnHandler::HasNextLine() { return m_sendlines.size() > 0; }
 
@@ -71,72 +82,73 @@ std::string IConnHandler::GetNextLine()
   return line;
 }
 
-IServerConn::IServerConn(uv_loop_t *l, uv_stream_t *st, Server *parent, IConnHandler *h)
+IServerConn::IServerConn(int fd, Server *parent, IConnHandler *h) : ev::io(fd), m_parent(parent), m_handler(h)
 {
-  m_loop = l;
-  m_parent = parent;
-  m_handler = h;
-  uv_tcp_init(l, &m_conn);
-  m_conn.data = this;
-  uv_accept(st, (uv_stream_t *)&m_conn);
-  uv_read_start((uv_stream_t *)&m_conn,
-                [](uv_handle_t *h, size_t s, uv_buf_t *b) {
-                  IServerConn *self = (IServerConn *)h->data;
-                  if (self == nullptr)
-                    return;
-                  b->base = new char[s];
-                },
-                [](uv_stream_t *s, ssize_t nread, const uv_buf_t *b) {
-                  IServerConn *self = (IServerConn *)s->data;
-                  if (self == nullptr)
-                  {
-                    if (b->base)
-                      delete[] b->base;
-                    return;
-                  }
-                  if (nread > 0)
-                  {
-                    self->m_handler->OnData(b->base, nread);
-                    self->SendNextReply();
-                    if (self->m_handler->ShouldClose())
-                      self->Close();
-                    delete[] b->base;
-                  }
-                  else
-                  {
-                    if (nread != UV_EOF)
-                    {
-                      std::cerr << "error in nntp server conn alloc: ";
-                      std::cerr << uv_strerror(nread);
-                      std::cerr << std::endl;
-                    }
-                    // got eof or error
-                    self->Close();
-                  }
-                });
 }
 
 IServerConn::~IServerConn() { delete m_handler; }
 
-void IServerConn::SendString(const std::string &str)
+int IServerConn::read(char * buf, size_t sz)
 {
-  WriteBuffer *b = new WriteBuffer(str);
-  uv_write(&b->w, (uv_stream_t *)&m_conn, &b->b, 1, [](uv_write_t *w, int status) {
-    (void)status;
-    WriteBuffer *wb = (WriteBuffer *)w->data;
-    if (wb)
-      delete wb;
-  });
+  ssize_t readsz = ::read(fd, buf, sz);
+  if(readsz > 0)
+  {
+    m_handler->OnData(buf, readsz);
+  }
+  return readsz;
 }
 
-void IServerConn::Close()
+bool IServerConn::keepalive()
+{
+  return !m_handler->ShouldClose();
+}
+
+int IServerConn::write()
+{
+  auto leftovers = m_writeLeftover.size();
+  ssize_t written;
+  if(leftovers)
+  {
+    if(leftovers > 1024)
+    {
+      leftovers = 1024;
+    }
+    written = ::write(fd, m_writeLeftover.c_str(), leftovers);
+    if(written > 0)
+    {
+      m_writeLeftover = m_writeLeftover.substr(written);
+    }
+    else 
+    {
+      // too much leftovers
+      return -1;
+    }
+  }
+  do
+  {
+    if(!m_handler->HasNextLine())
+    {
+      return 0;
+    }
+    auto line = m_handler->GetNextLine();  
+    written = ::write(fd, line.c_str(), line.size());
+    if(written > 0)
+    {
+      m_writeLeftover = line.substr(written);
+    }
+    else
+    {
+      m_writeLeftover = line;
+      return -1;
+    }
+  }
+  while(written > 0);
+  return 0;
+}
+
+void IServerConn::close()
 {
   m_parent->RemoveConn(this);
-  uv_close((uv_handle_t *)&m_conn, [](uv_handle_t *s) {
-    IServerConn *self = (IServerConn *)s->data;
-    if (self)
-      delete self;
-    s->data = nullptr;
-  });
+  ev::io::close();
 }
 }

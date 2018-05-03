@@ -1,5 +1,6 @@
 
 #include <cassert>
+#include <cstring>
 #include <iostream>
 #include <nntpchan/net.hpp>
 #include <nntpchan/nntp_auth.hpp>
@@ -10,11 +11,11 @@
 namespace nntpchan
 {
 
-NNTPServer::NNTPServer(uv_loop_t *loop) : Server(loop), m_frontend(nullptr) {}
+NNTPServer::NNTPServer(Mainloop & loop) : Server(loop), m_frontend(nullptr) {}
 
 NNTPServer::~NNTPServer() {}
 
-IServerConn *NNTPServer::CreateConn(uv_stream_t *s)
+IServerConn *NNTPServer::CreateConn(int f)
 {
   CredDB_ptr creds;
 
@@ -27,8 +28,7 @@ IServerConn *NNTPServer::CreateConn(uv_stream_t *s)
   if (creds)
     handler->SetAuth(creds);
 
-  NNTPServerConn *conn = new NNTPServerConn(GetLoop(), s, this, handler);
-  return conn;
+  return new NNTPServerConn(f, this, handler);
 }
 
 void NNTPServer::SetLoginDB(const std::string path) { m_logindbpath = path; }
@@ -41,22 +41,12 @@ void NNTPServer::SetFrontend(Frontend *f) { m_frontend.reset(f); }
 
 std::string NNTPServer::InstanceName() const { return m_servername; }
 
-void NNTPServer::OnAcceptError(int status) { std::cerr << "nntpserver::accept() " << uv_strerror(status) << std::endl; }
+void NNTPServer::OnAcceptError(int status) { std::cerr << "nntpserver::accept() " << strerror(status) << std::endl; }
 
-void NNTPServerConn::SendNextReply()
-{
-  IConnHandler *handler = GetHandler();
-  while (handler->HasNextLine())
-  {
-    auto line = handler->GetNextLine();
-    SendString(line + "\r\n");
-  }
-}
 
 void NNTPServerConn::Greet()
 {
   IConnHandler *handler = GetHandler();
   handler->Greet();
-  SendNextReply();
 }
 }
