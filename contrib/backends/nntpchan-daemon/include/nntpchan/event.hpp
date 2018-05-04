@@ -37,10 +37,11 @@ namespace ev
   public:
     virtual ~Loop() {};
 
-    virtual bool BindTCP(const sockaddr * addr, ev::io * handler) = 0;
+    bool BindTCP(const sockaddr * addr, ev::io * handler);
     virtual bool TrackConn(ev::io * handler) = 0;
     virtual void UntrackConn(ev::io * handler) = 0;
     virtual void Run() = 0;
+    bool SetNonBlocking(ev::io *handler);
   };
 }
 

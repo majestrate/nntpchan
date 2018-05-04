@@ -85,12 +85,9 @@ public:
   /** remove connection from server, called after proper close */
   void RemoveConn(IServerConn *conn);
 
-protected:
-  virtual void OnAcceptError(int status) = 0;
-
 private:
 
-  void OnAccept(int fd, int status);
+  void OnAccept(int fd);
   ev::Loop * m_Loop;
   std::deque<IServerConn *> m_conns;
 };

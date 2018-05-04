@@ -22,44 +22,13 @@ namespace ev
     EpollLoop() : conns(0), epollfd(epoll_create1(EPOLL_CLOEXEC))
     {
     }
-    ~EpollLoop()
+    
+    virtual ~EpollLoop()
     {
         ::close(epollfd);
     }
 
-    virtual bool BindTCP(const sockaddr * addr, ev::io * handler)
-    {
-      assert(handler->acceptable());
-      socklen_t slen;
-      switch(addr->sa_family)
-      {
-        case AF_INET:
-        slen = sizeof(sockaddr_in);
-        break;
-        case AF_INET6:
-        slen = sizeof(sockaddr_in6);
-        break;
-        case AF_UNIX:
-        slen = sizeof(sockaddr_un);
-        break;
-        default:
-        return false;
-      }
-      int fd = socket(addr->sa_family, SOCK_STREAM | SOCK_NONBLOCK, 0);
-      if(fd == -1)
-      { 
-        return false;
-      }
-      handler->fd = fd;
-   
-      if(bind(fd, addr, slen) == -1)
-        return false;
-  
-      if (listen(fd, 5) == -1)
-        return false;
-
-      return TrackConn(handler);
-    }
+    
 
     virtual bool TrackConn(ev::io * handler)
     {
@@ -80,7 +49,7 @@ namespace ev
         }
         ++conns;
         return true;
-        }
+    }
 
     virtual void UntrackConn(ev::io * handler)
     {

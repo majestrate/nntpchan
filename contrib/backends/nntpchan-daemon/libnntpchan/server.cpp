@@ -27,16 +27,15 @@ bool Server::Bind(const std::string &addr)
   return m_Loop->BindTCP(saddr, this);
 }
 
-void Server::OnAccept(int f, int status)
+void Server::OnAccept(int f)
 {
-  if (status)
-  {
-    OnAcceptError(status);
-    return;
-  }
   IServerConn *conn = CreateConn(f);
-  
-  if(m_Loop->TrackConn(conn))
+  if(!m_Loop->SetNonBlocking(conn))
+  {
+    conn->close();
+    delete conn;
+  }
+  else if(m_Loop->TrackConn(conn))
   { 
     m_conns.push_back(conn);  
     conn->Greet();
@@ -44,7 +43,6 @@ void Server::OnAccept(int f, int status)
   }
   else 
   {
-    std::cout << "accept track conn failed" << std::endl;
     conn->close();
     delete conn;
   }
@@ -52,9 +50,9 @@ void Server::OnAccept(int f, int status)
 
 int Server::accept()
 {
-  int res = ::accept4(fd, nullptr, nullptr, SOCK_NONBLOCK);
+  int res = ::accept(fd, nullptr, nullptr);
   if(res == -1) return res;
-  OnAccept(res, errno);
+  OnAccept(res);
   return res;
 }
 
