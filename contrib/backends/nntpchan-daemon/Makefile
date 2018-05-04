@@ -51,7 +51,7 @@ EXE = $(REPO)/nntpd
 
 all: build
 
-build: $(EXE) $(TOOLS)
+build: $(EXE) tools
 
 $(MUSTACHE_LIB): $(MUSTACHE_OBJ)
 	$(AR) -r $(MUSTACHE_LIB) $(MUSTACHE_OBJ)
@@ -62,8 +62,10 @@ $(NNTPCHAN_LIB): $(NNTPCHAN_OBJ)
 $(EXE): $(LIBS)
 	$(CXX) $(CXXFLAGS) $(DAEMON_SRC)/main.cpp $(LIBS) $(LD_FLAGS) -o $(EXE)
 
-$(TOOLS): $(TOOL_SRC) $(LIBS)
-	$(CXX) $(CXXFLAGS) $< $(LIBS) $(LD_FLAGS) -o $@
+tools: $(TOOLS)
+
+$(TOOLS): $(LIBS)
+	$(CXX) $(CXXFLAGS) $@.cpp $(LIBS) $(LD_FLAGS) -o $@
 
 build-test: $(LIBS)
 	$(CXX) -o $(TEST) $(CXXFLAGS) test.cpp $(LIBS) $(LD_FLAGS)

@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 
   nntpchan::Crypto crypto;
 
-  nntpchan::ev::Loop * loop = nntpchan::NewMainLoop();
+  std::unique_ptr<nntpchan::ev::Loop> loop(nntpchan::NewMainLoop());
 
-  nntpchan::NNTPServer * nntp =  new nntpchan::NNTPServer(loop);
+  std::unique_ptr<nntpchan::NNTPServer> nntp = std::make_unique<nntpchan::NNTPServer>(loop.get());
 
   std::string fname(argv[1]);
 
@@ -114,14 +114,24 @@ int main(int argc, char *argv[])
           std::cerr << "max_pages invalid value '" << frontconf["max_pages"] << "'" << std::endl;
           return 1;
         }
-        nntp->SetFrontend(new nntpchan::StaticFileFrontend(nntpchan::CreateTemplateEngine(frontconf["template_dialect"]),
-                                                          frontconf["template_dir"], frontconf["out_dir"], maxPages));
+        auto & dialect = frontconf["template_dialect"];
+        auto templateEngine = nntpchan::CreateTemplateEngine(dialect);
+        if(templateEngine == nullptr)
+        {
+          std::cerr << "invalid template dialect '" << dialect << "'" << std::endl;
+          return 1;
+        }
+        nntp->SetFrontend(new nntpchan::StaticFileFrontend(templateEngine, frontconf["template_dir"], frontconf["out_dir"], maxPages));
       }
       else
       {
         std::cerr << "unknown frontend type '" << ftype << "'" << std::endl;
         return 1;
       }
+    }
+    else 
+    {
+      std::cerr << "no frontend configured, running without generating markup" << std::endl;
     }
 
     auto &a = nntpconf["bind"];
@@ -145,7 +155,6 @@ int main(int argc, char *argv[])
 
     loop->Run();
     std::cerr << "Exiting" << std::endl;
-    delete loop;
   }
   else
   {

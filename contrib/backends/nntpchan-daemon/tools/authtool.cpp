@@ -1,5 +1,5 @@
-#include "base64.hpp"
-#include "crypto.hpp"
+#include <nntpchan/base64.hpp>
+#include <nntpchan/crypto.hpp>
 
 #include <cassert>
 #include <cstring>
@@ -11,8 +11,6 @@ static void print_help(const std::string &exename)
 {
   std::cout << "usage: " << exename << " [help|gen|check]" << std::endl;
 }
-
-static void print_long_help() {}
 
 static void gen_passwd(const std::string &username, const std::string &passwd)
 {
@@ -52,12 +50,12 @@ int main(int argc, char *argv[])
   if (argc == 1)
   {
     print_help(argv[0]);
-    return 1;
+    return 0;
   }
   std::string cmd(argv[1]);
   if (cmd == "help")
   {
-    print_long_help();
+    print_help(argv[0]);
     return 0;
   }
   if (cmd == "gen")
@@ -70,7 +68,7 @@ int main(int argc, char *argv[])
     else
     {
       std::cout << "usage: " << argv[0] << " gen username password" << std::endl;
-      return 1;
+      return 0;
     }
   }
   if (cmd == "check")
@@ -79,12 +77,14 @@ int main(int argc, char *argv[])
     std::cout << "credential: ";
     if (!std::getline(std::cin, cred))
     {
+      std::cout << "read error" << std::endl;
       return 1;
     }
     std::string passwd;
     std::cout << "password: ";
     if (!std::getline(std::cin, passwd))
     {
+      std::cout << "read error" << std::endl;
       return 1;
     }
     if (check_cred(cred, passwd))
@@ -95,7 +95,6 @@ int main(int argc, char *argv[])
     std::cout << "bad login" << std::endl;
     return 1;
   }
-
   print_help(argv[0]);
   return 1;
 }
