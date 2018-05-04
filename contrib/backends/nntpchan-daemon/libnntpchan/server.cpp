@@ -39,7 +39,7 @@ void Server::OnAccept(int f)
   { 
     m_conns.push_back(conn);  
     conn->Greet();
-    conn->write();
+    conn->write(1024);
   }
   else 
   {
@@ -101,19 +101,20 @@ bool IServerConn::keepalive()
   return !m_handler->ShouldClose();
 }
 
-int IServerConn::write()
+int IServerConn::write(size_t avail)
 {
   auto leftovers = m_writeLeftover.size();
   ssize_t written;
   if(leftovers)
   {
-    if(leftovers > 1024)
+    if(leftovers > avail)
     {
-      leftovers = 1024;
+      leftovers = avail;
     }
     written = ::write(fd, m_writeLeftover.c_str(), leftovers);
     if(written > 0)
     {
+      avail -= written;
       m_writeLeftover = m_writeLeftover.substr(written);
     }
     else 
@@ -126,13 +127,23 @@ int IServerConn::write()
   {
     if(!m_handler->HasNextLine())
     {
-      return 0;
+      return written;
     }
-    auto line = m_handler->GetNextLine();  
-    written = ::write(fd, line.c_str(), line.size());
-    if(written > 0)
+    auto line = m_handler->GetNextLine();
+    int wrote;
+    if(line.size() <= avail)
     {
-      m_writeLeftover = line.substr(written);
+      wrote = ::write(fd, line.c_str(), line.size());
+    }
+    else
+    {
+      auto subline = line.substr(0, avail);
+      wrote = ::write(fd, subline.c_str(), subline.size());
+    }
+    if(wrote > 0)
+    {
+      written += wrote;
+      m_writeLeftover = line.substr(wrote);
     }
     else
     {
@@ -140,8 +151,8 @@ int IServerConn::write()
       return -1;
     }
   }
-  while(written > 0);
-  return 0;
+  while(avail > 0);
+  return written;
 }
 
 void IServerConn::close()

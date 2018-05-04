@@ -19,7 +19,7 @@ namespace ev
     virtual bool readable() const { return true; };
     virtual int read(char * buf, size_t sz) = 0;
     virtual bool writeable() const { return true; };
-    virtual int write() = 0;
+    virtual int write(size_t avail) = 0;
     virtual bool keepalive() = 0;
     virtual void close() 
     { 

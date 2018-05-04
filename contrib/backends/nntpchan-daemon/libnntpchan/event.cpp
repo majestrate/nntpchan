@@ -7,7 +7,11 @@ typedef nntpchan::ev::EpollLoop LoopImpl;
 #include "kqueue.hpp"
 typedef nntpchan::ev::KqueueLoop LoopImpl;
 #else
+#ifdef __netbsd__
+typedef nntpchan::ev::KqueueLoop LoopImpl;
+#else
 #error "unsupported platform"
+#endif
 #endif
 #endif
 
@@ -38,14 +42,20 @@ namespace nntpchan
       { 
         return false;
       }
-      handler->fd = fd;
    
       if(bind(fd, addr, slen) == -1)
+      {
+        ::close(fd);
         return false;
-  
-      if (listen(fd, 5) == -1)
-        return false;
+      }
 
+      if (listen(fd, 5) == -1)
+      {
+        ::close(fd);
+        return false;
+      }
+
+      handler->fd = fd;
       return TrackConn(handler);
     }
 

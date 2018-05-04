@@ -42,7 +42,7 @@ struct IServerConn : public ev::io
   IServerConn(int fd, Server *parent, IConnHandler *h);
   virtual ~IServerConn();
   virtual int read(char * buf, size_t sz);
-  virtual int write();
+  virtual int write(size_t avail);
   virtual void close();
   virtual void Greet() = 0;
   virtual bool IsTimedOut() = 0;
@@ -67,7 +67,7 @@ public:
   virtual bool readable() const { return false; };
   virtual int read(char *,size_t) { return -1; };
   virtual bool writeable() const { return false; };
-  virtual int write() {return -1; };
+  virtual int write(size_t) {return -1; };
   virtual int accept();
   virtual bool keepalive() { return true; };
 

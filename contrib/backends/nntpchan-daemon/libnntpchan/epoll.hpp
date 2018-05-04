@@ -82,97 +82,97 @@ namespace ev
             idx = 0;
             while(idx < res)
             {
-            errno = 0;
-            ev = &evs[idx++];
-            if(ev->data.fd == sfd)
-            {
-                read(sfd, readbuf, sizeof(readbuf));
-                continue;
-            }
-            
-            handler = static_cast<ev::io *>(ev->data.ptr);
+                errno = 0;
+                ev = &evs[idx++];
+                if(ev->data.fd == sfd)
+                {
+                    read(sfd, readbuf, sizeof(readbuf));
+                    continue;
+                }
+                
+                handler = static_cast<ev::io *>(ev->data.ptr);
 
-            if(ev->events & EPOLLERR || ev->events & EPOLLHUP)
-            {
-                handler->close();
-                delete handler;
-                continue;
-            }
+                if(ev->events & EPOLLERR || ev->events & EPOLLHUP)
+                {
+                    handler->close();
+                    delete handler;
+                    continue;
+                }
 
-            if (handler->acceptable())
-            {
-                int acceptfd;
-                bool errored = false;
-                while(true)
+                if (handler->acceptable())
                 {
-                acceptfd = handler->accept();
-                if(acceptfd == -1)
-                {
-                    if (errno == EAGAIN || errno == EWOULDBLOCK)
+                    int acceptfd;
+                    bool errored = false;
+                    while(true)
                     {
-                    break;
-                    }
-                    perror("accept()");
-                    errored = true;
-                    break;
-                }
-                }
-                if(errored)
-                {
-                handler->close();
-                delete handler;
-                continue;
-                }
-            }
-            if(ev->events & EPOLLIN && handler->readable())
-            {
-                bool errored = false;
-                while(true)
-                {
-                int readed = handler->read(readbuf, sizeof(readbuf));
-                if(readed == -1)
-                {
-                    if(errno != EAGAIN)
+                    acceptfd = handler->accept();
+                    if(acceptfd == -1)
                     {
-                    perror("read()");
-                    handler->close();
-                    delete handler;
-                    errored = true;
+                        if (errno == EAGAIN || errno == EWOULDBLOCK)
+                        {
+                        break;
+                        }
+                        perror("accept()");
+                        errored = true;
+                        break;
                     }
-                    break;
+                    }
+                    if(errored)
+                    {
+                    handler->close();
+                    delete handler;
+                    continue;
+                    }
                 }
-                else if (readed == 0)
+                if(ev->events & EPOLLIN && handler->readable())
+                {
+                    bool errored = false;
+                    while(true)
+                    {
+                    int readed = handler->read(readbuf, sizeof(readbuf));
+                    if(readed == -1)
+                    {
+                        if(errno != EAGAIN)
+                        {
+                        perror("read()");
+                        handler->close();
+                        delete handler;
+                        errored = true;
+                        }
+                        break;
+                    }
+                    else if (readed == 0)
+                    {
+                        handler->close();
+                        delete handler;
+                        errored = true;
+                        break;
+                    }
+                    }
+                    if(errored) continue;
+                }
+                if(ev->events & EPOLLOUT && handler->writeable())
+                {
+                    int written = handler->write(1024);
+                    if(written < 0)
+                    {
+                        if (errno == EAGAIN || errno == EWOULDBLOCK)
+                        {
+                            // blocking
+                        }
+                        else
+                        {
+                            perror("write()");
+                            handler->close();
+                            delete handler;
+                        }
+                    }
+                }
+                if (!handler->keepalive())
                 {
                     handler->close();
                     delete handler;
-                    errored = true;
-                    break;
                 }
-                }
-                if(errored) continue;
-            }
-            if(ev->events & EPOLLOUT && handler->writeable())
-            {
-                int written = handler->write();
-                if(written < 0)
-                {
-                if (errno == EAGAIN || errno == EWOULDBLOCK)
-                {
-                    // blocking
-                }
-                else
-                {
-                    perror("write()");
-                    handler->close();
-                    delete handler;
-                }
-                }
-            }
-            if (!handler->keepalive())
-            {
-                handler->close();
-                delete handler;
-            }
             }
         }
         while(res != -1 && conns);

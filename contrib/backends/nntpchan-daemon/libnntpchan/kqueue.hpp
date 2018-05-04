@@ -22,11 +22,6 @@ namespace ev
             ::close(kfd);
         }
 
-        virtual bool BindTCP(const sockaddr * addr, ev::io * handler)
-        {
-
-        }
-
         virtual bool TrackConn(ev::io * handler)
         {
             kevent event;
@@ -133,7 +128,17 @@ namespace ev
                         }
                         if(ev->filter & EVFILT_WRITE && handler->writable())
                         {
+                            int writespace = ev->data;
+                            int written = handler->write(writespace);
+                            if(written > 0)
+                            {
 
+                            }
+                        }
+                        if(!handler->keepalive())
+                        {
+                            handler->close();
+                            delete handler;
                         }
                     }
                 }
