@@ -59,7 +59,7 @@ private:
 class Server : public ev::io
 {
 public:
-  Server(Mainloop & loop);
+  Server(ev::Loop * loop);
   virtual ~Server() {};
 
   virtual bool acceptable() const { return true; };
@@ -91,7 +91,7 @@ protected:
 private:
 
   void OnAccept(int fd, int status);
-  Mainloop & m_Loop;
+  ev::Loop * m_Loop;
   std::deque<IServerConn *> m_conns;
 };
 }

@@ -11,7 +11,7 @@ namespace nntpchan
 class NNTPServer : public Server
 {
 public:
-  NNTPServer(Mainloop & loop);
+  NNTPServer(ev::Loop * loop);
 
   virtual ~NNTPServer();
 

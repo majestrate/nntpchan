@@ -31,24 +31,21 @@ namespace ev
     virtual bool acceptable() const { return false; };
     virtual int accept() { return -1; };
   };
+
+  struct Loop
+  {
+  public:
+    virtual ~Loop() {};
+
+    virtual bool BindTCP(const sockaddr * addr, ev::io * handler) = 0;
+    virtual bool TrackConn(ev::io * handler) = 0;
+    virtual void UntrackConn(ev::io * handler) = 0;
+    virtual void Run() = 0;
+  };
 }
 
-class Mainloop
-{
-public:
-  Mainloop();
-  ~Mainloop();
+ev::Loop * NewMainLoop();
 
-  bool BindTCP(const sockaddr * addr, ev::io * handler);
-  bool TrackConn(ev::io * handler);
-  void UntrackConn(ev::io * handler);
-  void Run();
-
-private:
-  size_t conns;
-  int epollfd;
-  char readbuf[128];
-};
 }
 
 #endif

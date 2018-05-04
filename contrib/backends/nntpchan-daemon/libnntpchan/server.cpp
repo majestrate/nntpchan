@@ -7,7 +7,7 @@
 namespace nntpchan
 {
 
-Server::Server(Mainloop & loop) : ev::io(-1), m_Loop(loop)
+Server::Server(ev::Loop * loop) : ev::io(-1), m_Loop(loop)
 {
 }
 
@@ -18,13 +18,13 @@ void Server::close()
   {
     itr = m_conns.erase(itr);
   }
-  m_Loop.UntrackConn(this);
+  m_Loop->UntrackConn(this);
   ev::io::close();
 }
 bool Server::Bind(const std::string &addr)
 {
   auto saddr = ParseAddr(addr);
-  return m_Loop.BindTCP(saddr, this);
+  return m_Loop->BindTCP(saddr, this);
 }
 
 void Server::OnAccept(int f, int status)
@@ -36,7 +36,7 @@ void Server::OnAccept(int f, int status)
   }
   IServerConn *conn = CreateConn(f);
   
-  if(m_Loop.TrackConn(conn))
+  if(m_Loop->TrackConn(conn))
   { 
     m_conns.push_back(conn);  
     conn->Greet();
@@ -68,7 +68,7 @@ void Server::RemoveConn(IServerConn *conn)
     else
       ++itr;
   }
-  m_Loop.UntrackConn(conn);
+  m_Loop->UntrackConn(conn);
 }
 
 void IConnHandler::QueueLine(const std::string &line) { m_sendlines.push_back(line+"\r\n"); }

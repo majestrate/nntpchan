@@ -11,7 +11,7 @@
 namespace nntpchan
 {
 
-NNTPServer::NNTPServer(Mainloop & loop) : Server(loop), m_frontend(nullptr) {}
+NNTPServer::NNTPServer(ev::Loop * loop) : Server(loop), m_frontend(nullptr) {}
 
 NNTPServer::~NNTPServer() {}
 

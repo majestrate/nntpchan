@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
   nntpchan::Crypto crypto;
 
-  nntpchan::Mainloop loop;
+  nntpchan::ev::Loop * loop = nntpchan::NewMainLoop();
 
   nntpchan::NNTPServer * nntp =  new nntpchan::NNTPServer(loop);
 
@@ -143,8 +143,9 @@ int main(int argc, char *argv[])
       return 1;
     }
 
-    loop.Run();
+    loop->Run();
     std::cerr << "Exiting" << std::endl;
+    delete loop;
   }
   else
   {
