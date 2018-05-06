@@ -65,12 +65,9 @@ namespace ev
             EV_SET(&event, handler->fd, filter, EV_DELETE, 0, 0, handler);
             int ret = kevent(kfd, &event, 1, nullptr, 0, nullptr);
             if(ret == -1 || event.flags & EV_ERROR) 
-            {
                 std::cerr << "KqueueLoop::UntrackConn() kevent failed: " << strerror(event.data) << std::endl;
-                return false;
-            }
-            --conns;
-            return true;
+            else
+                --conns;
         }
 
         virtual void Run()
