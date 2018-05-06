@@ -3,6 +3,7 @@
 #include <cassert>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 
 constexpr std::size_t ev_buffsz = 512;
 

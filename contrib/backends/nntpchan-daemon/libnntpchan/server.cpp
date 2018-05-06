@@ -1,6 +1,5 @@
 #include <cassert>
 #include <iostream>
-#include <nntpchan/buffer.hpp>
 #include <nntpchan/net.hpp>
 #include <nntpchan/server.hpp>
 
