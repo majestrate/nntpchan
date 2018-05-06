@@ -4,6 +4,7 @@
 #include <netinet/in.h>
 #include <string>
 #include <sys/types.h>
+#include <sys/socket.h>
 
 namespace nntpchan
 {

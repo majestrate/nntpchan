@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <arpa/inet.h>
 
+
 namespace nntpchan
 {
 std::string NetAddr::to_string()
