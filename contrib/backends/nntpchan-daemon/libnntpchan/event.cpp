@@ -6,7 +6,7 @@ constexpr size_t ev_buffsz = 512;
 #include "epoll.hpp"
 typedef nntpchan::ev::EpollLoop<ev_buffsz> LoopImpl;
 #else
-#ifdef __freebsd__
+#ifdef __FreeBSD__
 #include "kqueue.hpp"
 typedef nntpchan::ev::KqueueLoop<ev_buffsz> LoopImpl;
 #else
