@@ -6,11 +6,12 @@ namespace nntpchan
 {
 namespace ev 
 {
+    template<size_t bufsz>
     struct KqueueLoop : public Loop
     {
         int kfd;
         size_t conns;
-        char readbuf[1024];
+        char readbuf[bufsz];
 
 
         KqueueLoop() : kfd(kqueue()), conns(0)

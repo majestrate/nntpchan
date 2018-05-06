@@ -14,11 +14,12 @@ namespace nntpchan
 {
 namespace ev
 {
+  template<size_t bufsz>
   struct EpollLoop : public Loop
   {
     size_t conns;
     int epollfd;
-    char readbuf[128];
+    char readbuf[bufsz];
     EpollLoop() : conns(0), epollfd(epoll_create1(EPOLL_CLOEXEC))
     {
     }

@@ -1,14 +1,17 @@
 #include <fcntl.h>
+
+constexpr size_t ev_buffsz = 512;
+
 #ifdef __linux__
 #include "epoll.hpp"
-typedef nntpchan::ev::EpollLoop LoopImpl;
+typedef nntpchan::ev::EpollLoop<ev_buffsz> LoopImpl;
 #else
 #ifdef __freebsd__
 #include "kqueue.hpp"
-typedef nntpchan::ev::KqueueLoop LoopImpl;
+typedef nntpchan::ev::KqueueLoop<ev_buffsz> LoopImpl;
 #else
 #ifdef __netbsd__
-typedef nntpchan::ev::KqueueLoop LoopImpl;
+typedef nntpchan::ev::KqueueLoop<ev_buffsz> LoopImpl;
 #else
 #error "unsupported platform"
 #endif
