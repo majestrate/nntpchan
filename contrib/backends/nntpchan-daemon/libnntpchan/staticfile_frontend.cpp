@@ -17,6 +17,8 @@ StaticFileFrontend::StaticFileFrontend(TemplateEngine *tmpl, const std::string &
 {
 }
 
+StaticFileFrontend::~StaticFileFrontend() {}
+
 void StaticFileFrontend::ProcessNewMessage(const fs::path &fpath)
 {
   std::clog << "process message " << fpath << std::endl;

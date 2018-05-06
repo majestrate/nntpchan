@@ -11,6 +11,7 @@ namespace fs = std::experimental::filesystem;
 class Frontend
 {
 public:
+  virtual ~Frontend() {};
   /** @brief process an inbound message stored at fpath that we have accepted. */
   virtual void ProcessNewMessage(const fs::path &fpath) = 0;
 

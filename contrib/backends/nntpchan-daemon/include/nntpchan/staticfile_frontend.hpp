@@ -16,11 +16,11 @@ class StaticFileFrontend : public Frontend
 public:
   StaticFileFrontend(TemplateEngine *tmpl, const std::string &templateDir, const std::string &outDir, uint32_t pages);
 
-  ~StaticFileFrontend();
+  virtual ~StaticFileFrontend();
 
-  void ProcessNewMessage(const fs::path &fpath);
-  bool AcceptsNewsgroup(const std::string &newsgroup);
-  bool AcceptsMessage(const std::string &msgid);
+  virtual void ProcessNewMessage(const fs::path &fpath);
+  virtual bool AcceptsNewsgroup(const std::string &newsgroup);
+  virtual bool AcceptsMessage(const std::string &msgid);
 
 private:
   MessageDB_ptr m_MessageDB;
