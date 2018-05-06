@@ -37,7 +37,7 @@ int ExecFrontend::Exec(std::deque<std::string> args)
   }
   else
   {
-    int r = execvpe(m_exec.c_str(), (char *const *)cargs, m_Environ);
+    int r = execve(m_exec.c_str(), (char *const *)cargs, m_Environ);
     if (r == -1)
     {
       std::cout << strerror(errno) << std::endl;
