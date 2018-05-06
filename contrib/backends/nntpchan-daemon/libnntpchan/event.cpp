@@ -1,7 +1,7 @@
 #include <fcntl.h>
 #include <cstdint>
 
-constexpr size_t ev_buffsz = 512;
+constexpr std::size_t ev_buffsz = 512;
 
 #ifdef __linux__
 #include "epoll.hpp"
