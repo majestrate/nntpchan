@@ -11,7 +11,7 @@
 #include <vector>
 
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[], char * argenv[])
 {
   if (argc != 2)
   {
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
           std::cerr << "exec frontend specified but no 'exec' value provided" << std::endl;
           return 1;
         }
-        nntp->SetFrontend(new nntpchan::ExecFrontend(frontconf["exec"]));
+        nntp->SetFrontend(new nntpchan::ExecFrontend(frontconf["exec"], argenv));
       }
       else if (ftype == "staticfile")
       {

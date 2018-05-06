@@ -7,7 +7,7 @@
 
 namespace nntpchan
 {
-ExecFrontend::ExecFrontend(const std::string &fname) : m_exec(fname) {}
+ExecFrontend::ExecFrontend(const std::string &fname, char * const* env) : m_Environ(env), m_exec(fname) {}
 
 ExecFrontend::~ExecFrontend() {}
 
@@ -37,7 +37,7 @@ int ExecFrontend::Exec(std::deque<std::string> args)
   }
   else
   {
-    int r = execvpe(m_exec.c_str(), (char *const *)cargs, environ);
+    int r = execvpe(m_exec.c_str(), (char *const *)cargs, m_Environ);
     if (r == -1)
     {
       std::cout << strerror(errno) << std::endl;

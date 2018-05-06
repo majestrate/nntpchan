@@ -8,7 +8,7 @@ namespace nntpchan
 class ExecFrontend : public Frontend
 {
 public:
-  ExecFrontend(const std::string &exe);
+  ExecFrontend(const std::string &exe, char * const* env);
 
   ~ExecFrontend();
 
@@ -20,6 +20,7 @@ private:
   int Exec(std::deque<std::string> args);
 
 private:
+  char * const* m_Environ;
   std::string m_exec;
 };
 }

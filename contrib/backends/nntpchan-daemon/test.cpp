@@ -3,9 +3,9 @@
 #include <nntpchan/exec_frontend.hpp>
 #include <nntpchan/sanitize.hpp>
 
-int main(int, char *[])
+int main(int, char *[], char * argenv[])
 {
-  nntpchan::Frontend_ptr f(new nntpchan::ExecFrontend("./contrib/nntpchan.sh"));
+  nntpchan::Frontend_ptr f(new nntpchan::ExecFrontend("./contrib/nntpchan.sh", argenv));
   assert(f->AcceptsMessage("<test@server>"));
   assert(f->AcceptsNewsgroup("overchan.test"));
   assert(nntpchan::IsValidMessageID("<test@test>"));
