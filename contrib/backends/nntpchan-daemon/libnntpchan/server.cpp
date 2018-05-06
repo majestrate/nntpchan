@@ -97,7 +97,7 @@ bool IServerConn::keepalive() { return !m_handler->ShouldClose(); }
 int IServerConn::write(size_t avail)
 {
   auto leftovers = m_writeLeftover.size();
-  ssize_t written;
+  int written = 0;
   if (leftovers)
   {
     if (leftovers > avail)
@@ -136,6 +136,7 @@ int IServerConn::write(size_t avail)
     if (wrote > 0)
     {
       written += wrote;
+      avail -= wrote;
       m_writeLeftover = line.substr(wrote);
     }
     else
