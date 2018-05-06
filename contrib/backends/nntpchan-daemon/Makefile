@@ -25,7 +25,7 @@ LD_FLAGS ?=
 
 INC_FLAGS = -I$(HEADERS_PATH)
 
-ifeq ($(shell uname -s),"FreeBSD")
+ifeq ($(shell uname -s),FreeBSD)
 	LD_FLAGS += -lc++fs
 	INC_FLAGS += /usr/local/include
 	LD_FLAGS += /usr/local/lib/libsodium.a
