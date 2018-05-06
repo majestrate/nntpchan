@@ -4,13 +4,11 @@ C++ rewrite
 
 requirements:
 
-* g++ 7.2.0 >= or clang 5.x >=
+* C++17 compiler
 
 * pkg-config
 
 * libsodium 1.x
-
-* libuv 1.x
 
 * boost variant (for now)
 
