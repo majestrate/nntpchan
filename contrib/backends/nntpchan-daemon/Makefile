@@ -21,16 +21,20 @@ TEST = $(REPO)/test
 
 DAEMON_SRC = $(REPO)/daemon
 
+LD_FLAGS ?= 
+
+INC_FLAGS = -I$(HEADERS_PATH)
+
 ifeq ($(shell uname -s),"FreeBSD")
-	SODIUM_INC = /usr/local/include
-	SODIUM_LIB = /usr/local/lib/libsodium.a
+	LD_FLAGS += -lc++fs
+	INC_FLAGS += /usr/local/include
+	LD_FLAGS += /usr/local/lib/libsodium.a
 else 
-	SODIUM_INC = $(shell pkg-config --cflags libsodium)
-	SODIUM_LIB = $(shell pkg-config --libs --static libsodium)	
+	LD_FLAGS += -lstdc++fs
+	INC_FLAGS += $(shell pkg-config --cflags libsodium)
+	LD_FLAGS += $(shell pkg-config --libs --static libsodium)
 endif
 
-LD_FLAGS :=  -lstdc++fs $(SODIUM_LIB)
-INC_FLAGS := -I$(HEADERS_PATH) $(SODIUM_INC)
 REQUIRED_CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -pedantic $(INC_FLAGS)
 
 DEBUG = 1
