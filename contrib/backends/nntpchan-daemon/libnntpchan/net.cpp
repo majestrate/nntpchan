@@ -2,7 +2,6 @@
 #include <nntpchan/net.hpp>
 #include <sstream>
 #include <stdexcept>
-#include <uv.h>
 
 namespace nntpchan
 {
