@@ -26,7 +26,7 @@ LD_FLAGS ?=
 INC_FLAGS = -I$(HEADERS_PATH)
 
 ifeq ($(shell uname -s),FreeBSD)
-	LD_FLAGS += $(shell dirname $(CXX))../lib/c++experimental.a
+	LD_FLAGS += $(shell dirname $(CXX))/../lib/c++experimental.a
 	INC_FLAGS += -I/usr/local/include
 	LD_FLAGS += /usr/local/lib/libsodium.a
 else 
