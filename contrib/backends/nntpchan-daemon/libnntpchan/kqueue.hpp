@@ -2,6 +2,8 @@
 #include <sys/types.h>
 #include <sys/event.h>
 
+#include <iostream>
+
 namespace nntpchan 
 {
 namespace ev 
@@ -56,7 +58,7 @@ namespace ev
             {   
                 filter |= EVFILT_READ;
             }
-            if(handler->writable())
+            if(handler->writeable())
             {
                 filter |= EVFILT_WRITE;
             }
