@@ -105,7 +105,7 @@ namespace ev
                         if(event->filter & EVFILT_READ && handler->readable())
                         {
                             int readed = 0;
-                            int readnum = event->data;
+                            size_t readnum = event->data;
                             while(readnum > sizeof(readbuf))
                             {
                                 int r = handler->read(readbuf, sizeof(readbuf));
