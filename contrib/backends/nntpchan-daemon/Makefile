@@ -20,6 +20,8 @@ TOOL_PATH := $(REPO)/tools
 TOOL_SRC := $(wildcard $(TOOL_PATH)/*.cpp)
 TOOLS := $(TOOL_SRC:.cpp=)
 
+SRCS = $(NNTPCHAN_SRC) $(MUSTACHE_SRC) $(TOOL_SRC)
+
 OBJ := $(NNTPCHAN_OBJ)
 OBJ += $(MUSTACHE_OBJ)
 
@@ -50,6 +52,9 @@ EXE = $(REPO)/nntpd
 
 
 all: build
+
+format:
+	clang-format -i $(SRCS)
 
 build: $(EXE) tools
 
