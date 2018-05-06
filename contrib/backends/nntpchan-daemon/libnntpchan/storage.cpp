@@ -7,9 +7,9 @@
 namespace nntpchan
 {
 
-  const fs::path posts_skiplist_dir = "posts";
-  const fs::path threads_skiplist_dir = "threads";
-  
+const fs::path posts_skiplist_dir = "posts";
+const fs::path threads_skiplist_dir = "threads";
+
 ArticleStorage::ArticleStorage(const fs::path &fpath) { SetPath(fpath); }
 
 ArticleStorage::~ArticleStorage() {}
@@ -23,15 +23,13 @@ void ArticleStorage::SetPath(const fs::path &fpath)
   errno = 0;
 }
 
-
 bool ArticleStorage::init_skiplist(const std::string &subdir) const
 {
   fs::path skiplist = skiplist_root(subdir);
-  const auto subdirs = {		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-		'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-		'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-		'y', 'z', '2', '3', '4', '5', '6', '7',
-};
+  const auto subdirs = {
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+      'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '2', '3', '4', '5', '6', '7',
+  };
   for (const auto &s : subdirs)
     fs::create_directories(skiplist / std::string(&s, 1));
   return true;
@@ -85,13 +83,9 @@ void ArticleStorage::EnsureSymlinks(const std::string &msgid) const
   skiplist_dir(posts_skiplist_dir, msgidhash);
 }
 
-
-  fs::path ArticleStorage::skiplist_root(const std::string & name ) const
-  {
-    return basedir / name;
-  }
-  fs::path ArticleStorage::skiplist_dir(const fs::path & root, const std::string & name ) const
-  {
-    return root / name.substr(0, 1) ;
-  }
+fs::path ArticleStorage::skiplist_root(const std::string &name) const { return basedir / name; }
+fs::path ArticleStorage::skiplist_dir(const fs::path &root, const std::string &name) const
+{
+  return root / name.substr(0, 1);
+}
 }

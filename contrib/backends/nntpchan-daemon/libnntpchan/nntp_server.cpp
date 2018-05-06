@@ -11,7 +11,7 @@
 namespace nntpchan
 {
 
-NNTPServer::NNTPServer(ev::Loop * loop) : Server(loop), m_frontend(nullptr) {}
+NNTPServer::NNTPServer(ev::Loop *loop) : Server(loop), m_frontend(nullptr) {}
 
 NNTPServer::~NNTPServer() {}
 
@@ -42,7 +42,6 @@ void NNTPServer::SetFrontend(Frontend *f) { m_frontend.reset(f); }
 std::string NNTPServer::InstanceName() const { return m_servername; }
 
 void NNTPServer::OnAcceptError(int status) { std::cerr << "nntpserver::accept() " << strerror(status) << std::endl; }
-
 
 void NNTPServerConn::Greet()
 {

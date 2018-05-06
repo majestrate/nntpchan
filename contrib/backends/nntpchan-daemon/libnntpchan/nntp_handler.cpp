@@ -10,8 +10,8 @@
 namespace nntpchan
 {
 NNTPServerHandler::NNTPServerHandler(fs::path storage)
-    : LineReader(1024), m_article(nullptr), m_auth(nullptr), m_store(storage),
-      m_authed(false), m_state(eStateReadCommand)
+    : LineReader(1024), m_article(nullptr), m_auth(nullptr), m_store(storage), m_authed(false),
+      m_state(eStateReadCommand)
 {
 }
 
@@ -52,7 +52,7 @@ void NNTPServerHandler::OnData(const char *data, ssize_t l)
   if (m_state == eStateStoreArticle)
   {
     std::cerr << "storing " << l << " bytes" << std::endl;
-    if(strncmp(data, ".\r\n", l) == 0)
+    if (strncmp(data, ".\r\n", l) == 0)
     {
       ArticleObtained();
       return;
@@ -68,7 +68,7 @@ void NNTPServerHandler::OnData(const char *data, ssize_t l)
       }
       ArticleObtained();
       diff += 5;
-      if(l - diff)
+      if (l - diff)
         Data(end + 5, l - diff);
       return;
     }
