@@ -79,7 +79,7 @@ namespace ev
             do
             {
                 idx = 0;
-                ret = kevent(kfd, nullptr, 0, &events, 512, nullptr);
+                ret = kevent(kfd, nullptr, 0, events, 512, nullptr);
                 if(ret > 0)
                 {
                     while(idx < ret)
