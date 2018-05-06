@@ -80,7 +80,10 @@ bool ArticleStorage::LoadThread(Thread &thread, const std::string &rootmsgid) co
 void ArticleStorage::EnsureSymlinks(const std::string &msgid) const
 {
   std::string msgidhash = Blake2B_base32(msgid);
-  skiplist_dir(posts_skiplist_dir, msgidhash);
+  auto skip = skiplist_dir(skiplist_root(posts_skiplist_dir), msgidhash) / msgidhash;
+  auto path = fs::path("..") / fs::path("..") / fs::path("..") / MessagePath(msgid);
+  fs::create_symlink(path, skip);
+  errno = 0;
 }
 
 fs::path ArticleStorage::skiplist_root(const std::string &name) const { return basedir / name; }

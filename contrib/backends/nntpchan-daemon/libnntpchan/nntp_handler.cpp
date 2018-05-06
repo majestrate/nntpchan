@@ -169,6 +169,7 @@ void NNTPServerHandler::ArticleObtained()
   {
     m_article->close();
     m_article = nullptr;
+    m_store.EnsureSymlinks(m_articleName);
     QueueLine("239 " + m_articleName);
     std::cerr << "stored " << m_articleName << std::endl;
   }
