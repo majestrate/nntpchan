@@ -1,4 +1,5 @@
 #include <nntpchan/event.hpp>
+#include <sys/types.h>
 #include <sys/event.h>
 
 namespace nntpchan 
@@ -24,7 +25,7 @@ namespace ev
 
         virtual bool TrackConn(ev::io * handler)
         {
-            kevent event;
+            struct kevent event;
             short filter = 0;
             if(handler->readable() || handler->acceptable())
             {   
@@ -48,7 +49,7 @@ namespace ev
 
         virtual void UntrackConn(ev::io * handler)
         {
-            kevent event;
+            struct kevent event;
             short filter = 0;
             if(handler->readable() || handler->acceptable())
             {   
@@ -60,8 +61,7 @@ namespace ev
             }
             EV_SET(&event, handler->fd, filter, EV_DELETE, 0, 0, handler);
             int ret = kevent(kfd, &event, 1, nullptr, 0, nullptr);
-            if(ret == -1) return false;
-            if(event.flags & EV_ERROR) 
+            if(ret == -1 || event.flags & EV_ERROR) 
             {
                 std::cerr << "KqueueLoop::UntrackConn() kevent failed: " << strerror(event.data) << std::endl;
                 return false;
@@ -72,8 +72,8 @@ namespace ev
 
         virtual void Run()
         {
-            kevent events[512];
-            kevent * ev;
+            struct kevent events[512];
+            struct kevent * event;
             io * handler;
             int ret, idx;
             do
@@ -84,17 +84,17 @@ namespace ev
                 {
                     while(idx < ret)
                     {
-                        ev = &events[idx++];
+                        event = &events[idx++];
                         handler = static_cast<io *>(ev->udata);
-                        if(ev->flags & EV_EOF)
+                        if(event->flags & EV_EOF)
                         {
                             handler->close();
                             delete handler;
                             continue;
                         }
-                        if(ev->filter & EVFILT_READ && handler->acceptable())
+                        if(event->filter & EVFILT_READ && handler->acceptable())
                         {
-                            int backlog = ev->data;
+                            int backlog = event->data;
                             while(backlog)
                             {
                                 handler->accept();
@@ -102,10 +102,10 @@ namespace ev
                             }
                         }
 
-                        if(ev->filter & EVFILT_READ && handler->readable())
+                        if(event->filter & EVFILT_READ && handler->readable())
                         {
                             int readed = 0;
-                            int readnum = ev->data;
+                            int readnum = event->data;
                             while(readnum > sizeof(readbuf))
                             {
                                 int r = handler->read(readbuf, sizeof(readbuf));
@@ -126,9 +126,9 @@ namespace ev
                                  readed = r;
                             }
                         }
-                        if(ev->filter & EVFILT_WRITE && handler->writable())
+                        if(event->filter & EVFILT_WRITE && handler->writeable())
                         {
-                            int writespace = ev->data;
+                            int writespace = event->data;
                             int written = handler->write(writespace);
                             if(written > 0)
                             {
