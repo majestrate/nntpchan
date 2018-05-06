@@ -3,8 +3,6 @@
 namespace nntpchan
 {
 
-LineReader::LineReader(size_t limit) : m_close(false), lineLimit(limit) {}
-
 void LineReader::Data(const char *data, ssize_t l)
 {
   if (l <= 0)
@@ -23,5 +21,4 @@ void LineReader::Data(const char *data, ssize_t l)
   m_line.clear();
 }
 
-bool LineReader::ShouldClose() { return m_close; }
 }

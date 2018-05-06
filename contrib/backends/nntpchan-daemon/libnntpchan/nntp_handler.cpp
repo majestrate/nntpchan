@@ -10,7 +10,7 @@
 namespace nntpchan
 {
 NNTPServerHandler::NNTPServerHandler(fs::path storage)
-    : LineReader(1024), m_article(nullptr), m_auth(nullptr), m_store(storage), m_authed(false),
+    : LineReader(), m_article(nullptr), m_auth(nullptr), m_store(storage), m_authed(false),
       m_state(eStateReadCommand)
 {
 }

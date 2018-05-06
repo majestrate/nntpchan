@@ -7,7 +7,7 @@
 
 namespace nntpchan
 {
-HashedCredDB::HashedCredDB() : LineReader(1024) {}
+HashedCredDB::HashedCredDB() : LineReader() {}
 
 bool HashedCredDB::CheckLogin(const std::string &user, const std::string &passwd)
 {
