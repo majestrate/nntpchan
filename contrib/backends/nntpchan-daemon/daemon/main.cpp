@@ -144,7 +144,7 @@ int main(int argc, char *argv[], char * argenv[])
       }
       else 
       {
-        std::cerr << "nntpd for " << nntp->InstanceName() << "failed to bind to " << a << ": "<< strerror(errno) << std::endl;
+        std::cerr << "nntpd for " << nntp->InstanceName() << " failed to bind to " << a << ": "<< strerror(errno) << std::endl;
         return 1;
       }
     } catch (std::exception &ex)
