@@ -85,7 +85,7 @@ namespace ev
                     while(idx < ret)
                     {
                         event = &events[idx++];
-                        handler = static_cast<io *>(ev->udata);
+                        handler = static_cast<io *>(event->udata);
                         if(event->flags & EV_EOF)
                         {
                             handler->close();

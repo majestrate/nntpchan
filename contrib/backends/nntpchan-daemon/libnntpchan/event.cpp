@@ -1,5 +1,8 @@
 #include <fcntl.h>
 #include <cstdlib>
+#include <cassert>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 constexpr std::size_t ev_buffsz = 512;
 
