@@ -2,6 +2,7 @@
 #include <nntpchan/net.hpp>
 #include <sstream>
 #include <stdexcept>
+#include <arpa/inet.h>
 
 namespace nntpchan
 {
