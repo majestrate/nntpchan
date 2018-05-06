@@ -32,7 +32,7 @@ namespace ev
             {   
                 filter |= EVFILT_READ;
             }
-            if(handler->writable())
+            if(handler->writeable())
             {
                 filter |= EVFILT_WRITE;
             }
