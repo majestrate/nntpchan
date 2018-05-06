@@ -2,7 +2,7 @@
 #include <sys/types.h>
 #include <sys/event.h>
 
-#include <iostream>
+#include <cstring>
 
 namespace nntpchan 
 {
@@ -130,7 +130,20 @@ namespace ev
                         {
                             int writespace = 1024;
                             int written = handler->write(writespace);
-                            std::cerr << "writen " << written << " of " << writespace << std::endl;
+                            if(written == -1)
+                            {
+                                if (errno == EAGAIN || errno == EWOULDBLOCK)
+                                {
+                                    // blocking
+                                }
+                                else 
+                                {
+                                    perror("write()");
+                                    handler->close();
+                                    delete handler;
+                                    continue;
+                                }
+                            }
                         }
                         if(!handler->keepalive())
                         {
