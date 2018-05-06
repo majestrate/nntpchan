@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <cstdint>
 
 constexpr size_t ev_buffsz = 512;
 
