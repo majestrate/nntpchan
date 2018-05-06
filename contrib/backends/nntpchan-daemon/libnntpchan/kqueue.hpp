@@ -130,7 +130,7 @@ namespace ev
                         {
                             int writespace = event->data;
                             int written = handler->write(writespace);
-                            std::cerr << "writen " << written << " of " >> writespace << std::endl;
+                            std::cerr << "writen " << written << " of " << writespace << std::endl;
                         }
                         if(!handler->keepalive())
                         {
