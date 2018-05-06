@@ -21,7 +21,7 @@ TEST = $(REPO)/test
 
 DAEMON_SRC = $(REPO)/daemon
 
-ifeq ($(shell uname -s) "FreeBSD")
+ifeq ($(shell uname -s),"FreeBSD")
 	SODIUM_INC = /usr/local/include
 	SODIUM_LIB = /usr/local/lib/libsodium.a
 else 
