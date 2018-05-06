@@ -128,7 +128,7 @@ namespace ev
                         }
                         if(event->filter & EVFILT_WRITE && handler->writeable())
                         {
-                            int writespace = event->data;
+                            int writespace = 1024;
                             int written = handler->write(writespace);
                             std::cerr << "writen " << written << " of " << writespace << std::endl;
                         }
