@@ -6,14 +6,14 @@ requirements:
 
 * C++17 compiler
 
-* pkg-config
-
 * libsodium 1.x
-
-* boost variant (for now)
 
 * GNU Make
 
-building:
+building on freebsd:
+
+    $ gmake
+
+building on Linux:
 
     $ make

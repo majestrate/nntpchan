@@ -6,13 +6,6 @@ NNTPCHAN_SRC := $(wildcard $(NNTPCHAN_PATH)/*.cpp)
 NNTPCHAN_HDR := $(wildcard $(NNTPCHAN_PATH)/*.hpp)
 NNTPCHAN_OBJ := $(NNTPCHAN_SRC:.cpp=.o)
 
-MUSTACHE_PATH = $(REPO)/libmustache
-
-MUSTACHE_SRC := $(wildcard $(MUSTACHE_PATH)/*.cpp)
-MUSTACHE_SRC += $(wildcard $(MUSTACHE_PATH)/*/*.cpp)
-MUSTACHE_HDR := $(wildcard $(MUSTACHE_PATH)/*.hpp)
-MUSTACHE_OBJ := $(MUSTACHE_SRC:.cpp=.o)
-
 HEADERS_PATH=$(REPO)/include
 
 TOOL_PATH := $(REPO)/tools
@@ -20,19 +13,24 @@ TOOL_PATH := $(REPO)/tools
 TOOL_SRC := $(wildcard $(TOOL_PATH)/*.cpp)
 TOOLS := $(TOOL_SRC:.cpp=)
 
-SRCS = $(NNTPCHAN_SRC) $(MUSTACHE_SRC) $(TOOL_SRC)
+SRCS = $(NNTPCHAN_SRC) $(TOOL_SRC)
 
 OBJ := $(NNTPCHAN_OBJ)
-OBJ += $(MUSTACHE_OBJ)
 
 TEST = $(REPO)/test
 
 DAEMON_SRC = $(REPO)/daemon
 
-PKGS := libsodium
+ifeq ($(shell uname -s) "FreeBSD")
+	SODIUM_INC = /usr/local/include
+	SODIUM_LIB = /usr/local/lib/libsodium.a
+else 
+	SODIUM_INC = $(shell pkg-config --cflags libsodium)
+	SODIUM_LIB = $(shell pkg-config --libs --static libsodium)	
+endif
 
-LD_FLAGS := $(shell pkg-config --libs $(PKGS)) -lstdc++fs
-INC_FLAGS := $(shell pkg-config --cflags $(PKGS)) -I$(HEADERS_PATH)
+LD_FLAGS :=  -lstdc++fs $(SODIUM_LIB)
+INC_FLAGS := -I$(HEADERS_PATH) $(SODIUM_INC)
 REQUIRED_CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -pedantic $(INC_FLAGS)
 
 DEBUG = 1
@@ -44,9 +42,8 @@ endif
 CXXFLAGS += $(REQUIRED_CXXFLAGS)
 
 NNTPCHAN_LIB = $(REPO)/libnntpchan.a
-MUSTACHE_LIB = $(REPO)/libmustache.a
 
-LIBS = $(NNTPCHAN_LIB) $(MUSTACHE_LIB)
+LIBS = $(NNTPCHAN_LIB)
 
 EXE = $(REPO)/nntpd
 
@@ -57,9 +54,6 @@ format:
 	clang-format -i $(SRCS)
 
 build: $(EXE) tools
-
-$(MUSTACHE_LIB): $(MUSTACHE_OBJ)
-	$(AR) -r $(MUSTACHE_LIB) $(MUSTACHE_OBJ)
 
 $(NNTPCHAN_LIB): $(NNTPCHAN_OBJ)
 	$(AR) -r $(NNTPCHAN_LIB) $(NNTPCHAN_OBJ)

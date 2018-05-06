@@ -118,12 +118,10 @@ void StaticFileFrontend::ProcessNewMessage(const fs::path &fpath)
       std::clog << "cannot find thread with root " << rootmsgid << std::endl;
       return;
     }
-    TemplateEngine::Args_t thread_args;
-    thread_args["posts"] = thread;
     if (m_TemplateEngine)
     {
       FileHandle_ptr out = OpenFile(threadFilePath, eWrite);
-      if (!out || !m_TemplateEngine->WriteTemplate("thread.mustache", thread_args, out))
+      if (!out || !m_TemplateEngine->WriteThreadPage(thread, out))
       {
         std::clog << "failed to write " << threadFilePath << std::endl;
         return;
@@ -135,27 +133,19 @@ void StaticFileFrontend::ProcessNewMessage(const fs::path &fpath)
       uint32_t pageno = 0;
       while (pageno < m_Pages)
       {
-        page.clear();
+        page.threads.clear();
         if (!m_MessageDB->LoadBoardPage(page, name, 10, m_Pages))
         {
           std::clog << "cannot load board page " << pageno << " for " << name << std::endl;
           break;
         }
-        TemplateEngine::Args_t page_args;
-        page_args["group"] = name;
-        page_args["threads"] = page;
-        page_args["pageno"] = std::to_string(pageno);
-        if (pageno)
-          page_args["prev_pageno"] = std::to_string(pageno - 1);
-        if (pageno + 1 < m_Pages)
-          page_args["next_pageno"] = std::to_string(pageno + 1);
         fs::path boardPageFilename(name + "-" + std::to_string(pageno) + ".html");
         if (m_TemplateEngine)
         {
           fs::path outfile = m_OutDir / boardPageFilename;
           FileHandle_ptr out = OpenFile(outfile, eWrite);
           if (out)
-            m_TemplateEngine->WriteTemplate("board.mustache", page_args, out);
+            m_TemplateEngine->WriteBoardPage(page, out);
           else
             std::clog << "failed to open board page " << outfile << std::endl;
         }

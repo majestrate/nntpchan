@@ -12,13 +12,16 @@ namespace nntpchan
 
 struct TemplateEngine
 {
-  typedef std::map<std::string, std::variant<nntpchan::model::Model, std::string>> Args_t;
-  virtual bool WriteTemplate(const fs::path &template_fpath, const Args_t &args, const FileHandle_ptr &out) = 0;
+  virtual ~TemplateEngine() {};
+  virtual bool WriteBoardPage(const nntpchan::model::BoardPage & page, const FileHandle_ptr &out) = 0;
+  virtual bool WriteThreadPage(const nntpchan::model::Thread & thread, const FileHandle_ptr &out) = 0;
 };
 
-TemplateEngine *CreateTemplateEngine(const std::string &dialect);
+
 
 typedef std::unique_ptr<TemplateEngine> TemplateEngine_ptr;
+
+TemplateEngine * CreateTemplateEngine(const std::string &dialect);
 }
 
 #endif

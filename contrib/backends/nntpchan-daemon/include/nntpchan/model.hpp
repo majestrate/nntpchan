@@ -26,7 +26,13 @@ typedef std::tuple<PostHeader, PostBody, Attachments> Post;
 // a thread (many posts in post order)
 typedef std::vector<Post> Thread;
 // a board page is many threads in bump order
-typedef std::vector<Thread> BoardPage;
+struct BoardPage
+{
+  std::vector<Thread> threads = {};
+  std::string name = "";
+  uint32_t pageno = 0;
+};
+
 
 static inline const std::string &GetFilename(const PostAttachment &att) { return std::get<0>(att); }
 
