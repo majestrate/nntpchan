@@ -3,6 +3,7 @@
 #include <sys/event.h>
 
 #include <cstring>
+#include <errno.h>
 
 namespace nntpchan 
 {
