@@ -219,53 +219,55 @@ onready(function() {
     ajax.send();
   };
   
-  var showhover = function(parent, url, id)
-  {
-    fetchpost(url, function(post) {
-      var wrapper = document.createElement("div");
-      var e = document.createElement("div");
-      e.innerHTML = post.PostMarkup || "post not found"
-      wrapper.setAttribute('id', id);
-      wrapper.setAttribute("class", "hover");
-      wrapper.appendChild(e);
-      var cl = document.createElement("div");
-      cl.innerHTML = "[X]";
-      cl.onclick = function() {
-        wrapper.remove();
-      };
-      wrapper.appendChild(cl);
-      parent.appendChild(wrapper);
-    });
-  };
-
-  var hidehover = function(parent, id)
-  {
-    var hover = document.getElementById(id);
-    if(hover) hover.remove();
-  };
-
   var elems = document.getElementsByClassName("backlink");
-  for(var idx = 0; idx < elems.length; idx ++)
+  var inj = function(elem)
   {
-    var elem = elems[idx];
+    var showhover = function(parent, url, id)
+    {
+      fetchpost(url, function(post) {
+        var wrapper = document.createElement("div");
+        var e = document.createElement("div");
+        e.innerHTML = post.PostMarkup || "post not found"
+        wrapper.setAttribute('id', id);
+        wrapper.setAttribute("class", "hover");
+        wrapper.appendChild(e);
+        var cl = document.createElement("div");
+        cl.innerHTML = "[X]";
+        cl.onclick = function() {
+          wrapper.remove();
+        };
+        wrapper.appendChild(cl);
+        parent.appendChild(wrapper);
+      });
+    };
+
+    var hidehover = function(parent, id)
+    {
+      var hover = document.getElementById(id);
+        if(hover) hover.remove();
+    };
+
+   
+    var parent = elem.parentNode.parentNode.id;
     var wrapper = document.createElement("div");
     elem.parentNode.insertBefore(wrapper, elem);
     var el = elem.cloneNode(true);
     elem.remove();
-    elem = el;
-    var h = elem.href.split("#")[1];
+    var parts = el.href.split("#");
     wrapper.appendChild(el);
-    var id = "hover_"+h;
-    
-    elem.onpointerenter = function() {
-      showhover(wrapper, elem.href, id); 
+
+    var id = "hover_"+parts[1]+"_"+parent;
+    console.log(id);
+    el.onpointerenter = function() {
+      showhover(wrapper, el.href, id); 
     };
 
-    elem.onpointerleave = function()
+    el.onpointerleave = function()
     {
       hidehover(wrapper, id);
     };
   }
+  for (var idx = 0 ; idx < elems.length ; idx++) inj(elems[idx]);
 });
 
 // rewrite all images to add inline expand
