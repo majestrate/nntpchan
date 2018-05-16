@@ -184,6 +184,90 @@ onready(function(){
   }
 });
 
+// inline reply expand
+onready(function() {
+
+  var fetchpost = function(url, cb)
+  {
+    var parts = url.split("#");
+    var base = parts[0];
+    var h = parts[1];
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function()
+    {
+      if(ajax.readyState == 4)
+      {
+        if(ajax.status == 200)
+        {
+          var j = JSON.parse(ajax.responseText);
+          for(var idx =0 ; idx < j.length; idx ++)
+          {
+            if (j[idx].HashLong == h)  {
+              cb(j[idx]);
+              return;
+            }
+          }
+          cb(null);
+        }
+        else
+        {
+          cb(null);
+        }
+      }
+    };
+    ajax.open("GET", base +"json");
+    ajax.send();
+  };
+  
+  var showhover = function(parent, url, id)
+  {
+    fetchpost(url, function(post) {
+      var wrapper = document.createElement("div");
+      var e = document.createElement("div");
+      e.innerHTML = post.PostMarkup || "post not found"
+      wrapper.setAttribute('id', id);
+      wrapper.setAttribute("class", "hover");
+      wrapper.appendChild(e);
+      var cl = document.createElement("div");
+      cl.innerHTML = "[X]";
+      cl.onclick = function() {
+        wrapper.remove();
+      };
+      wrapper.appendChild(cl);
+      parent.appendChild(wrapper);
+    });
+  };
+
+  var hidehover = function(parent, id)
+  {
+    var hover = document.getElementById(id);
+    if(hover) hover.remove();
+  };
+
+  var elems = document.getElementsByClassName("backlink");
+  for(var idx = 0; idx < elems.length; idx ++)
+  {
+    var elem = elems[idx];
+    var wrapper = document.createElement("div");
+    elem.parentNode.insertBefore(wrapper, elem);
+    var el = elem.cloneNode(true);
+    elem.remove();
+    elem = el;
+    var h = elem.href.split("#")[1];
+    wrapper.appendChild(el);
+    var id = "hover_"+h;
+    
+    elem.onpointerenter = function() {
+      showhover(wrapper, elem.href, id); 
+    };
+
+    elem.onpointerleave = function()
+    {
+      hidehover(wrapper, id);
+    };
+  }
+});
+
 // rewrite all images to add inline expand
 onready(function() {
 

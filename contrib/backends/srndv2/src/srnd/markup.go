@@ -47,7 +47,7 @@ func backlink(word, prefix string) (markup string) {
 			if len(parts) > 1 {
 				longhash = parts[1]
 			}
-			return `<a class='backlink' backlinkhash="` + longhash + `" href="` + url + `">&gt;&gt;` + link + "</a>"
+			return `<a class='backlink' data-backlinkhash="` + longhash + `" href="` + url + `">&gt;&gt;` + link + "</a>"
 		} else {
 			return escapeline(word)
 		}
