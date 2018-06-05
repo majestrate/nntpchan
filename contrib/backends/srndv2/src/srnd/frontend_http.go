@@ -680,6 +680,13 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		e(err)
 		return
 	}
+
+	if !hasAtLeastNWords(m, 3) {
+		err = errors.New("your message is too short")
+		e(err)
+		return
+	}
+
 	nntp := new(nntpArticle)
 	defer nntp.Reset()
 	var banned bool
