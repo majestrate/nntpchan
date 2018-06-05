@@ -620,13 +620,15 @@ func (self *PostgresDatabase) upgrade7to8() {
 }
 
 func (self *PostgresDatabase) upgrade8to9() {
-	_, err := self.conn.Exec("ALTER TABLE ArticlePosts ADD COLUMN IF NOT EXISTS frontendpubkey TEXT NOT NULL DEFAULT ''")
-	if err != nil {
-		log.Fatalf(err.Error())
+	cmds := []string {
+		"ALTER TABLE ArticlePosts ADD COLUMN IF NOT EXISTS frontendpubkey TEXT DEFAULT ''",
+		"CREATE TABLE IF NOT EXISTS nntpchan_pubkeys(status VARCHAR(16) NOT NULL, pubkey VARCHAR(64) PRIMARY KEY)",
 	}
-	_, err = self.conn.Exec("CREATE TABLE IF NOT EXISTS nntpchan_pubkeys(status VARCHAR(16) NOT NULL, pubkey VARCHAR(64) PRIMARY KEY)")
-	if err != nil {
-		log.Fatalf(err.Error())
+	for _, cmd := range cmds {
+		_, err := self.conn.Exec(cmd)
+		if err != nil {
+			log.Fatalf("%s: %s", cmd, err.Error())
+		}
 	}
 	self.setDBVersion(9)
 }
