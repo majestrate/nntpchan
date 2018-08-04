@@ -74,8 +74,12 @@ func (self *catalogModel) Navbar() string {
 	param["name"] = fmt.Sprintf("Catalog for %s", self.board)
 	param["frontend"] = self.frontend
 	var links []LinkModel
+	var sfw int
+	if self.SFW {
+		sfw = 1
+	}
 	links = append(links, linkModel{
-		link: fmt.Sprintf("%sb/%s/?lang=%s", self.prefix, self.board, self._i18n.Name),
+		link: fmt.Sprintf("%sb/%s/?lang=%s&sfw=%d", self.prefix, self.board, self._i18n.Name, sfw),
 		text: "Board index",
 	})
 	param["prefix"] = self.prefix
@@ -191,6 +195,9 @@ func (self *boardModel) PageList() []LinkModel {
 		board := fmt.Sprintf("%sb/%s/%d/?lang=%s", self.prefix, self.board, i, self._i18n.Name)
 		if i == 0 {
 			board = fmt.Sprintf("%sb/%s/?lang=%s", self.prefix, self.board, self._i18n.Name)
+		}
+		if self.SFW {
+			board += "&sfw=1"
 		}
 		links = append(links, linkModel{
 			link: board,
@@ -525,7 +532,12 @@ func (self *post) PostURL() string {
 	if i18n == nil {
 		i18n = I18nProvider
 	}
-	return fmt.Sprintf("%st/%s/?lang=%s#%s", self.Prefix(), HashMessageID(self.Parent), i18n.Name, self.PostHash())
+	u := fmt.Sprintf("%st/%s/?lang=%s", self.Prefix(), HashMessageID(self.Parent), i18n.Name)
+	if self.SFW {
+		u += "&sfw=1"
+	}
+	u += "#" + self.PostHash()
+	return u
 }
 
 func (self *post) Prefix() string {
@@ -683,7 +695,11 @@ func (self *thread) BoardURL() string {
 	if i18n == nil {
 		i18n = I18nProvider
 	}
-	return fmt.Sprintf("%sb/%s/?lang=%s", self.Prefix(), self.Board(), i18n.Name)
+	u := fmt.Sprintf("%sb/%s/?lang=%s", self.Prefix(), self.Board(), i18n.Name)
+	if self.SFW {
+		u += "&sfw=1"
+	}
+	return u
 }
 
 func (self *thread) PostCount() int {
@@ -725,6 +741,7 @@ func (self *thread) Replies() []PostModel {
 		for idx, post := range self.Posts[1:] {
 			if post != nil {
 				post.SetIndex(idx + 1)
+				post.MarkSFW(self.SFW)
 				replies = append(replies, post)
 			}
 		}
@@ -756,6 +773,7 @@ func (self *thread) Truncate() ThreadModel {
 		for _, p := range t.Posts {
 			imgs += p.NumAttachments()
 		}
+		t.SFW = self.SFW
 		t.truncatedPostCount = len(self.Posts) - trunc
 		t.truncatedImageCount = self.ImageCount() - imgs
 		return t
@@ -789,6 +807,7 @@ func (self *thread) BumpLock() bool {
 func (self *thread) Update(db Database) {
 	root := self.Posts[0].MessageID()
 	self.Posts = append([]PostModel{self.Posts[0]}, db.GetThreadReplyPostModels(self.prefix, root, 0, 0)...)
+	self.MarkSFW(self.SFW)
 	self.dirty = false
 }
 
