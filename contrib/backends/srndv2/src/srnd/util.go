@@ -801,7 +801,6 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 	return
 }
 
-
 func hasAtLeastNWords(str string, n int) bool {
 	parts := strings.Split(str, " ")
 	return len(parts) > n

@@ -46,6 +46,12 @@ func (self *thread) I18N(i *I18N) {
 	}
 }
 
+func (self *boardModel) MarkSFW(sfw bool) {
+	for idx := range self.threads {
+		self.threads[idx].MarkSFW(sfw)
+	}
+}
+
 func (self *boardModel) I18N(i *I18N) {
 	self._i18n = i
 	for idx := range self.threads {
@@ -55,6 +61,12 @@ func (self *boardModel) I18N(i *I18N) {
 
 func (self *attachment) I18N(i *I18N) {
 	self._i18n = i
+}
+
+func (self *catalogModel) MarkSFW(sfw bool) {
+	for idx := range self.threads {
+		self.threads[idx].MarkSFW(sfw)
+	}
 }
 
 func (self *catalogModel) Navbar() string {
@@ -97,6 +109,10 @@ func (self *catalogModel) Threads() []CatalogItemModel {
 
 func (self *catalogItemModel) OP() PostModel {
 	return self.op
+}
+
+func (self *catalogItemModel) MarkSFW(sfw bool) {
+	self.op.MarkSFW(sfw)
 }
 
 func (self *catalogItemModel) Page() string {
@@ -239,6 +255,7 @@ func (self *boardModel) Update(db Database) {
 
 type post struct {
 	_i18n             *I18N
+	SFW               bool
 	truncated         bool
 	prefix            string
 	board             string
@@ -322,6 +339,7 @@ type attachment struct {
 	Name        string
 	ThumbWidth  int
 	ThumbHeight int
+	SFW         bool
 }
 
 func (self *attachment) MarshalJSON() (b []byte, err error) {
@@ -341,6 +359,10 @@ func (self *attachment) Hash() string {
 	return strings.Split(self.Path, ".")[0]
 }
 
+func (self *attachment) MarkSFW(sfw bool) {
+	self.SFW = sfw
+}
+
 func (self *attachment) ThumbInfo() ThumbInfo {
 	return ThumbInfo{
 		Width:  self.ThumbWidth,
@@ -353,6 +375,9 @@ func (self *attachment) Prefix() string {
 }
 
 func (self *attachment) Thumbnail() string {
+	if self.SFW {
+		return self.prefix + "static/placeholder.png"
+	}
 	return self.prefix + "thm/" + self.Path + ".jpg"
 }
 
@@ -407,6 +432,13 @@ func (self *post) Reference() string {
 
 func (self *post) ShortHash() string {
 	return ShortHashMessageID(self.MessageID())
+}
+
+func (self *post) MarkSFW(sfw bool) {
+	self.SFW = sfw
+	for idx := range self.Files {
+		self.Files[idx].MarkSFW(sfw)
+	}
 }
 
 func (self *post) PubkeyHex() string {
@@ -564,6 +596,7 @@ func (self *post) Truncate() PostModel {
 		Parent:      self.Parent,
 		sage:        self.sage,
 		Key:         self.Key,
+		SFW:         self.SFW,
 		// TODO: copy?
 		Files:             self.Files,
 		FrontendPublicKey: self.FrontendPublicKey,
@@ -592,9 +625,17 @@ type thread struct {
 	prefix              string
 	links               []LinkModel
 	Posts               []PostModel
+	SFW                 bool
 	dirty               bool
 	truncatedPostCount  int
 	truncatedImageCount int
+}
+
+func (self *thread) MarkSFW(sfw bool) {
+	for idx := range self.Posts {
+		self.Posts[idx].MarkSFW(sfw)
+	}
+	self.SFW = sfw
 }
 
 func (self *thread) MarshalJSON() (b []byte, err error) {

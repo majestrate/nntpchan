@@ -62,6 +62,7 @@ func (self *nullHandler) GetI18N(r *http.Request) *I18N {
 
 func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
+	sfw := strings.Count(r.URL.RawQuery, "sfw=1") > 0
 	i18n := self.GetI18N(r)
 
 	path := r.URL.Path
@@ -80,7 +81,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				goto notfound
 			}
 
-			template.genThread(self.attachments, self.requireCaptcha, msg, self.prefix, self.name, w, self.database, isjson, i18n)
+			template.genThread(self.attachments, self.requireCaptcha, msg, self.prefix, self.name, w, self.database, isjson, i18n, sfw)
 			return
 		} else {
 			goto notfound
@@ -88,7 +89,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	if strings.Trim(path, "/") == "overboard" {
 		// generate ukko aka overboard
-		template.genUkko(self.prefix, self.name, w, self.database, isjson, i18n, self.invertPagination)
+		template.genUkko(self.prefix, self.name, w, self.database, isjson, i18n, self.invertPagination, sfw)
 		return
 	}
 
@@ -124,7 +125,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			goto notfound
 		}
 
-		template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, group, int(pages), page, w, self.database, isjson, i18n, self.invertPagination)
+		template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, group, int(pages), page, w, self.database, isjson, i18n, self.invertPagination, sfw)
 		return
 	}
 
@@ -144,7 +145,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				page = int(pages)
 			}
 		}
-		template.genUkkoPaginated(self.prefix, self.name, w, self.database, int(pages), page, isjson, i18n, self.invertPagination)
+		template.genUkkoPaginated(self.prefix, self.name, w, self.database, int(pages), page, isjson, i18n, self.invertPagination, sfw)
 		return
 	}
 
@@ -173,18 +174,18 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if strings.HasPrefix(file, "ukko.html") {
-		template.genUkko(self.prefix, self.name, w, self.database, false, i18n, self.invertPagination)
+		template.genUkko(self.prefix, self.name, w, self.database, false, i18n, self.invertPagination, sfw)
 		return
 	}
 	if strings.HasPrefix(file, "ukko.json") {
-		template.genUkko(self.prefix, self.name, w, self.database, true, i18n, self.invertPagination)
+		template.genUkko(self.prefix, self.name, w, self.database, true, i18n, self.invertPagination, sfw)
 		return
 	}
 
 	if strings.HasPrefix(file, "ukko-") {
 		page := getUkkoPage(file)
 		pages, _ := self.database.GetUkkoPageCount(10)
-		template.genUkkoPaginated(self.prefix, self.name, w, self.database, int(pages), page, isjson, i18n, self.invertPagination)
+		template.genUkkoPaginated(self.prefix, self.name, w, self.database, int(pages), page, isjson, i18n, self.invertPagination, sfw)
 		return
 	}
 	if strings.HasPrefix(file, "thread-") {
@@ -202,7 +203,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			goto notfound
 		}
 
-		template.genThread(self.attachments, self.requireCaptcha, msg, self.prefix, self.name, w, self.database, isjson, i18n)
+		template.genThread(self.attachments, self.requireCaptcha, msg, self.prefix, self.name, w, self.database, isjson, i18n, sfw)
 		return
 	}
 	if strings.HasPrefix(file, "catalog-") {
@@ -214,7 +215,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if !hasgroup {
 			goto notfound
 		}
-		template.genCatalog(self.prefix, self.name, group, w, self.database, i18n)
+		template.genCatalog(self.prefix, self.name, group, w, self.database, i18n, sfw)
 		return
 	} else {
 		group, page := getGroupAndPage(file)
@@ -229,7 +230,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if page >= int(pages) {
 			goto notfound
 		}
-		template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, group, int(pages), page, w, self.database, isjson, i18n, self.invertPagination)
+		template.genBoardPage(self.attachments, self.requireCaptcha, self.prefix, self.name, group, int(pages), page, w, self.database, isjson, i18n, self.invertPagination, sfw)
 		return
 	}
 
