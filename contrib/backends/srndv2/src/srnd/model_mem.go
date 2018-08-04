@@ -15,6 +15,7 @@ import (
 )
 
 type catalogModel struct {
+	SFW      bool
 	frontend string
 	prefix   string
 	board    string
@@ -50,6 +51,7 @@ func (self *boardModel) MarkSFW(sfw bool) {
 	for idx := range self.threads {
 		self.threads[idx].MarkSFW(sfw)
 	}
+	self.SFW = sfw
 }
 
 func (self *boardModel) I18N(i *I18N) {
@@ -67,6 +69,7 @@ func (self *catalogModel) MarkSFW(sfw bool) {
 	for idx := range self.threads {
 		self.threads[idx].MarkSFW(sfw)
 	}
+	self.SFW = sfw
 }
 
 func (self *catalogModel) Navbar() string {
@@ -135,6 +138,7 @@ type boardModel struct {
 	board      string
 	page       int
 	pages      int
+	SFW        bool
 	threads    []ThreadModel
 }
 
