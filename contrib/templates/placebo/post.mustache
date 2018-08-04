@@ -30,7 +30,7 @@
     {{#post.Attachments}}
     <a href="{{Source}}" class="image_link" target="_blank" title="{{Filename}}"><img src="{{Thumbnail}}" class="image" /></a>
     {{/post.Attachments}}
-    <a name="{{post.PostHash}}"></a><span class="topicline"><b data-subject="{{post.Subject}}" class="subject">{{post.Subject}}</b> {{post.Name}} <span class="published">Posted from {{post.Frontend}}" on {{post.Date}}</span> {{{post.Pubkey}}} <a href="{{post.PostURL}}">&#8470;</a>
+    <a name="{{post.PostHash}}"></a><span class="topicline"><b data-subject="{{post.Subject}}" class="subject">{{post.Subject}}</b> {{post.Name}} <span class="published">Posted from {{post.Frontend}} on {{post.Date}}</span> {{{post.Pubkey}}} <a href="{{post.PostURL}}">&#8470;</a>
     <a href="#" onclick="return quickreply('{{post.ShortHash}}', '{{post.PostHash}}', '{{post.PostURL}}');"> {{post.ShortHash}}</a>
     </span>
     <br /><br />
