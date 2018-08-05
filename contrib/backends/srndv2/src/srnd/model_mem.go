@@ -639,7 +639,7 @@ type thread struct {
 	_i18n               *I18N
 	allowFiles          bool
 	prefix              string
-	links               []LinkModel
+	links               []linkModel
 	Posts               []PostModel
 	SFW                 bool
 	dirty               bool
@@ -685,6 +685,11 @@ func (self *thread) Navbar() string {
 	param := make(map[string]interface{})
 	param["name"] = fmt.Sprintf("Thread %s", self.Posts[0].ShortHash())
 	param["frontend"] = self.Board()
+
+	for idx := range self.links {
+		self.links[idx].link += "?sfw=1"
+	}
+
 	param["links"] = self.links
 	param["prefix"] = self.prefix
 	return template.renderTemplate("navbar", param, self._i18n)
@@ -725,7 +730,7 @@ func createThreadModel(posts ...PostModel) ThreadModel {
 		dirty:  true,
 		prefix: prefix,
 		Posts:  posts,
-		links: []LinkModel{
+		links: []linkModel{
 			linkModel{
 				text: group,
 				link: fmt.Sprintf("%sb/%s/", prefix, group),
