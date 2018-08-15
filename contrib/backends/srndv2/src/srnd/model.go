@@ -11,6 +11,9 @@ import (
 // base model type
 type BaseModel interface {
 
+	// set sfw flag
+	MarkSFW(sfw bool)
+
 	// site url prefix
 	Prefix() string
 
@@ -185,6 +188,7 @@ type CatalogItemModel interface {
 	OP() PostModel
 	ReplyCount() string
 	Page() string
+	MarkSFW(sfw bool)
 }
 
 type LinkModel interface {

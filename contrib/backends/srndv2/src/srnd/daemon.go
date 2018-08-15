@@ -443,7 +443,7 @@ func (self *NNTPDaemon) persistFeed(conf *FeedConfig, mode string, n int) {
 
 			if mode == "sync" {
 				// yeh, do it
-				self.syncPull(conf.proxy_type, conf.proxy_addr, conf.Addr)
+				self.syncPull(conf)
 				// sleep for the sleep interval and continue
 				log.Println(conf.Name, "waiting for", conf.sync_interval, "before next sync")
 				time.Sleep(conf.sync_interval)
@@ -492,15 +492,16 @@ func (self *NNTPDaemon) persistFeed(conf *FeedConfig, mode string, n int) {
 }
 
 // do a oneshot pull based sync with another server
-func (self *NNTPDaemon) syncPull(proxy_type, proxy_addr, remote_addr string) {
-	c, err := self.dialOut(proxy_type, proxy_addr, remote_addr)
+func (self *NNTPDaemon) syncPull(conf *FeedConfig) {
+	c, err := self.dialOut(conf.proxy_type, conf.proxy_addr, conf.Addr)
 	if err == nil {
 		conn := textproto.NewConn(c)
 		// we connected
-		nntp := createNNTPConnection(remote_addr)
-		nntp.name = remote_addr + "-sync"
+		nntp := createNNTPConnection(conf.Addr)
+		nntp.name = conf.Addr + "-sync"
+		nntp.feedname = conf.Name
 		// do handshake
-		_, reader, _, err := nntp.outboundHandshake(conn, nil)
+		_, reader, _, err := nntp.outboundHandshake(conn, conf)
 
 		if err != nil {
 			log.Println("failed to scrape server", err)

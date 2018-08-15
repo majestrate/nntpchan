@@ -25,7 +25,12 @@
         <meta property="og:type" content="website"/>
         <meta property="og:title" content="{{board.Board}}"/>
         <meta property="og:description" content="thread no. {{thread.OP.PostHash}} on changolia"/>
+        {{#sfw}}
+        <meta property="og:url" content="{{prefix}}t/{{thread.OP.PostHash}}/?lang={{i18n.Name}}&sfw=1"/>
+        {{/sfw}}
+        {{^sfw}}
         <meta property="og:url" content="{{prefix}}t/{{thread.OP.PostHash}}/?lang={{i18n.Name}}"/>
+        {{/sfw}}
         <meta property="og:image"
               content="{{prefix}}static/changolia-logo.png"/>
     </head>
@@ -33,7 +38,12 @@
         {{{thread.Navbar}}}
         <hr />
         <div class="sitetitle">
+            {{#sfw}}
+            <h2><a href="{{thread.Prefix}}?lang={{i18n.Name}}&sfw=1">CHANGOLIA</a></h2>
+            {{/sfw}}
+            {{^sfw}}
             <h2><a href="{{thread.Prefix}}?lang={{i18n.Name}}">CHANGOLIA</a></h2>
+            {{/sfw}}
             <b>Most of the rest of the wild west.</b>
         </div>
         <center><b><a href="{{thread.BoardURL}}">{{thread.Board}}</a></b></center>

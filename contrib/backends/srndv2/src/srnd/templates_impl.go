@@ -222,24 +222,25 @@ func (self *templateEngine) obtainBoard(prefix, frontend, group string, db Datab
 	return
 }
 
-func (self *templateEngine) genCatalog(prefix, frontend, group string, wr io.Writer, db Database, i18n *I18N) {
+func (self *templateEngine) genCatalog(prefix, frontend, group string, wr io.Writer, db Database, i18n *I18N, sfw bool) {
 	board := self.obtainBoard(prefix, frontend, group, db)
 	catalog := new(catalogModel)
 	catalog.prefix = prefix
 	catalog.frontend = frontend
 	catalog.board = group
 	catalog.I18N(i18n)
+	catalog.MarkSFW(sfw)
 	for page, bm := range board {
 		for _, th := range bm.Threads() {
 			th.Update(db)
 			catalog.threads = append(catalog.threads, &catalogItemModel{op: th.OP(), page: page, replycount: len(th.Replies())})
 		}
 	}
-	self.writeTemplate("catalog", map[string]interface{}{"board": catalog}, wr, i18n)
+	self.writeTemplate("catalog", map[string]interface{}{"board": catalog, "sfw": sfw}, wr, i18n)
 }
 
 // generate a board page
-func (self *templateEngine) genBoardPage(allowFiles, requireCaptcha bool, prefix, frontend, newsgroup string, pages, page int, wr io.Writer, db Database, json bool, i18n *I18N, invertPagination bool) {
+func (self *templateEngine) genBoardPage(allowFiles, requireCaptcha bool, prefix, frontend, newsgroup string, pages, page int, wr io.Writer, db Database, json bool, i18n *I18N, invertPagination, sfw bool) {
 	// get the board page model
 	perpage, _ := db.GetThreadsPerPage(newsgroup)
 	var boardPage BoardModel
@@ -250,29 +251,30 @@ func (self *templateEngine) genBoardPage(allowFiles, requireCaptcha bool, prefix
 	}
 	boardPage.Update(db)
 	boardPage.I18N(i18n)
+	boardPage.MarkSFW(sfw)
 	// render it
 	if json {
 		self.renderJSON(wr, boardPage)
 	} else {
 		form := renderPostForm(prefix, newsgroup, "", allowFiles, requireCaptcha, i18n)
-		self.writeTemplate("board", map[string]interface{}{"board": boardPage, "page": page, "form": form}, wr, i18n)
+		self.writeTemplate("board", map[string]interface{}{"board": boardPage, "page": page, "form": form, "sfw": sfw}, wr, i18n)
 	}
 }
 
-func (self *templateEngine) genUkko(prefix, frontend string, wr io.Writer, database Database, json bool, i18n *I18N, invertPagination bool) {
+func (self *templateEngine) genUkko(prefix, frontend string, wr io.Writer, database Database, json bool, i18n *I18N, invertPagination, sfw bool) {
 	var page int64
 	pages, err := database.GetUkkoPageCount(10)
 	if invertPagination {
 		page = pages
 	}
 	if err == nil {
-		self.genUkkoPaginated(prefix, frontend, wr, database, int(pages), int(page), json, i18n, invertPagination)
+		self.genUkkoPaginated(prefix, frontend, wr, database, int(pages), int(page), json, i18n, invertPagination, sfw)
 	} else {
 		log.Println("genUkko()", err.Error())
 	}
 }
 
-func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writer, database Database, pages, page int, json bool, i18n *I18N, invertPagination bool) {
+func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writer, database Database, pages, page int, json bool, i18n *I18N, invertPagination, sfw bool) {
 	var threads []ThreadModel
 	var articles []ArticleEntry
 	if invertPagination {
@@ -285,10 +287,11 @@ func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writ
 		thread, err := database.GetThreadModel(prefix, root)
 		if err == nil {
 			thread.I18N(i18n)
+			thread.MarkSFW(sfw)
 			threads = append(threads, thread)
 		}
 	}
-	obj := map[string]interface{}{"prefix": prefix, "threads": threads, "page": page}
+	obj := map[string]interface{}{"prefix": prefix, "threads": threads, "page": page, "sfw": sfw}
 	if page > 0 {
 		obj["prev"] = map[string]interface{}{"no": page - 1}
 	}
@@ -310,7 +313,7 @@ func (self *templateEngine) genUkkoPaginated(prefix, frontend string, wr io.Writ
 	}
 }
 
-func (self *templateEngine) genThread(allowFiles, requireCaptcha bool, root ArticleEntry, prefix, frontend string, wr io.Writer, db Database, json bool, i18n *I18N) {
+func (self *templateEngine) genThread(allowFiles, requireCaptcha bool, root ArticleEntry, prefix, frontend string, wr io.Writer, db Database, json bool, i18n *I18N, sfw bool) {
 	newsgroup := root.Newsgroup()
 	msgid := root.MessageID()
 
@@ -322,12 +325,13 @@ func (self *templateEngine) genThread(allowFiles, requireCaptcha bool, root Arti
 	*/
 	t, err := db.GetThreadModel(prefix, msgid)
 	if err == nil {
+		t.MarkSFW(sfw)
 		if json {
 			self.renderJSON(wr, t)
 		} else {
 			t.I18N(i18n)
 			form := renderPostForm(prefix, newsgroup, msgid, allowFiles, requireCaptcha, i18n)
-			self.writeTemplate("thread", map[string]interface{}{"thread": t, "board": map[string]interface{}{"Name": newsgroup, "Frontend": frontend, "AllowFiles": allowFiles}, "form": form, "prefix": prefix}, wr, i18n)
+			self.writeTemplate("thread", map[string]interface{}{"sfw": sfw, "thread": t, "board": map[string]interface{}{"Name": newsgroup, "Frontend": frontend, "AllowFiles": allowFiles}, "form": form, "prefix": prefix}, wr, i18n)
 		}
 	} else {
 		log.Println("templates: error getting thread for ", msgid, err.Error())
@@ -476,6 +480,11 @@ func (self *templateEngine) genBoardList(prefix, name string, wr io.Writer, db D
 	// for each group
 	groups := db.GetAllNewsgroups()
 	for _, group := range groups {
+		// exclude banned
+		banned, _ := db.NewsgroupBanned(group)
+		if banned {
+			continue
+		}
 		// posts this hour
 		hour := db.CountPostsInGroup(group, 3600)
 		// posts today

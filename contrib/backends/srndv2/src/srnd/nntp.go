@@ -1484,10 +1484,10 @@ func (self *nntpConnection) scrapeServer(daemon *NNTPDaemon, conn *textproto.Con
 					line := sc.Text()
 					idx := strings.IndexAny(line, " \t")
 					if idx > 0 {
-						//log.Println(self.name, "got newsgroup", line[:idx])
+						log.Println(self.name, "got newsgroup", line[:idx])
 						groups = append(groups, line[:idx])
 					} else if idx < 0 {
-						//log.Println(self.name, "got newsgroup", line)
+						log.Println(self.name, "got newsgroup", line)
 						groups = append(groups, line)
 					} else {
 						// can't have it starting with WS

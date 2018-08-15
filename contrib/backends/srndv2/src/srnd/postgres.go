@@ -620,7 +620,7 @@ func (self *PostgresDatabase) upgrade7to8() {
 }
 
 func (self *PostgresDatabase) upgrade8to9() {
-	cmds := []string {
+	cmds := []string{
 		"ALTER TABLE ArticlePosts ADD COLUMN frontendpubkey TEXT",
 		"CREATE TABLE IF NOT EXISTS nntpchan_pubkeys(status VARCHAR(16) NOT NULL, pubkey VARCHAR(64) PRIMARY KEY)",
 	}

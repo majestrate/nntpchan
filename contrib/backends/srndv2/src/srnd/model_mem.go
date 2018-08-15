@@ -15,6 +15,7 @@ import (
 )
 
 type catalogModel struct {
+	SFW      bool
 	frontend string
 	prefix   string
 	board    string
@@ -46,6 +47,13 @@ func (self *thread) I18N(i *I18N) {
 	}
 }
 
+func (self *boardModel) MarkSFW(sfw bool) {
+	for idx := range self.threads {
+		self.threads[idx].MarkSFW(sfw)
+	}
+	self.SFW = sfw
+}
+
 func (self *boardModel) I18N(i *I18N) {
 	self._i18n = i
 	for idx := range self.threads {
@@ -57,13 +65,24 @@ func (self *attachment) I18N(i *I18N) {
 	self._i18n = i
 }
 
+func (self *catalogModel) MarkSFW(sfw bool) {
+	for idx := range self.threads {
+		self.threads[idx].MarkSFW(sfw)
+	}
+	self.SFW = sfw
+}
+
 func (self *catalogModel) Navbar() string {
 	param := make(map[string]interface{})
 	param["name"] = fmt.Sprintf("Catalog for %s", self.board)
 	param["frontend"] = self.frontend
 	var links []LinkModel
+	var sfw int
+	if self.SFW {
+		sfw = 1
+	}
 	links = append(links, linkModel{
-		link: fmt.Sprintf("%sb/%s/?lang=%s", self.prefix, self.board, self._i18n.Name),
+		link: fmt.Sprintf("%sb/%s/?lang=%s&sfw=%d", self.prefix, self.board, self._i18n.Name, sfw),
 		text: "Board index",
 	})
 	param["prefix"] = self.prefix
@@ -99,6 +118,10 @@ func (self *catalogItemModel) OP() PostModel {
 	return self.op
 }
 
+func (self *catalogItemModel) MarkSFW(sfw bool) {
+	self.op.MarkSFW(sfw)
+}
+
 func (self *catalogItemModel) Page() string {
 	return strconv.Itoa(self.page)
 }
@@ -115,6 +138,7 @@ type boardModel struct {
 	board      string
 	page       int
 	pages      int
+	SFW        bool
 	threads    []ThreadModel
 }
 
@@ -175,6 +199,9 @@ func (self *boardModel) PageList() []LinkModel {
 		board := fmt.Sprintf("%sb/%s/%d/?lang=%s", self.prefix, self.board, i, self._i18n.Name)
 		if i == 0 {
 			board = fmt.Sprintf("%sb/%s/?lang=%s", self.prefix, self.board, self._i18n.Name)
+		}
+		if self.SFW {
+			board += "&sfw=1"
 		}
 		links = append(links, linkModel{
 			link: board,
@@ -239,6 +266,7 @@ func (self *boardModel) Update(db Database) {
 
 type post struct {
 	_i18n             *I18N
+	SFW               bool
 	truncated         bool
 	prefix            string
 	board             string
@@ -322,6 +350,7 @@ type attachment struct {
 	Name        string
 	ThumbWidth  int
 	ThumbHeight int
+	SFW         bool
 }
 
 func (self *attachment) MarshalJSON() (b []byte, err error) {
@@ -341,6 +370,10 @@ func (self *attachment) Hash() string {
 	return strings.Split(self.Path, ".")[0]
 }
 
+func (self *attachment) MarkSFW(sfw bool) {
+	self.SFW = sfw
+}
+
 func (self *attachment) ThumbInfo() ThumbInfo {
 	return ThumbInfo{
 		Width:  self.ThumbWidth,
@@ -353,6 +386,9 @@ func (self *attachment) Prefix() string {
 }
 
 func (self *attachment) Thumbnail() string {
+	if self.SFW {
+		return self.prefix + "static/placeholder.png"
+	}
 	return self.prefix + "thm/" + self.Path + ".jpg"
 }
 
@@ -407,6 +443,13 @@ func (self *post) Reference() string {
 
 func (self *post) ShortHash() string {
 	return ShortHashMessageID(self.MessageID())
+}
+
+func (self *post) MarkSFW(sfw bool) {
+	self.SFW = sfw
+	for idx := range self.Files {
+		self.Files[idx].MarkSFW(sfw)
+	}
 }
 
 func (self *post) PubkeyHex() string {
@@ -493,7 +536,12 @@ func (self *post) PostURL() string {
 	if i18n == nil {
 		i18n = I18nProvider
 	}
-	return fmt.Sprintf("%st/%s/?lang=%s#%s", self.Prefix(), HashMessageID(self.Parent), i18n.Name, self.PostHash())
+	u := fmt.Sprintf("%st/%s/?lang=%s", self.Prefix(), HashMessageID(self.Parent), i18n.Name)
+	if self.SFW {
+		u += "&sfw=1"
+	}
+	u += "#" + self.PostHash()
+	return u
 }
 
 func (self *post) Prefix() string {
@@ -564,6 +612,7 @@ func (self *post) Truncate() PostModel {
 		Parent:      self.Parent,
 		sage:        self.sage,
 		Key:         self.Key,
+		SFW:         self.SFW,
 		// TODO: copy?
 		Files:             self.Files,
 		FrontendPublicKey: self.FrontendPublicKey,
@@ -590,11 +639,19 @@ type thread struct {
 	_i18n               *I18N
 	allowFiles          bool
 	prefix              string
-	links               []LinkModel
+	links               []linkModel
 	Posts               []PostModel
+	SFW                 bool
 	dirty               bool
 	truncatedPostCount  int
 	truncatedImageCount int
+}
+
+func (self *thread) MarkSFW(sfw bool) {
+	for idx := range self.Posts {
+		self.Posts[idx].MarkSFW(sfw)
+	}
+	self.SFW = sfw
 }
 
 func (self *thread) MarshalJSON() (b []byte, err error) {
@@ -628,6 +685,11 @@ func (self *thread) Navbar() string {
 	param := make(map[string]interface{})
 	param["name"] = fmt.Sprintf("Thread %s", self.Posts[0].ShortHash())
 	param["frontend"] = self.Board()
+
+	for idx := range self.links {
+		self.links[idx].link += "?sfw=1"
+	}
+
 	param["links"] = self.links
 	param["prefix"] = self.prefix
 	return template.renderTemplate("navbar", param, self._i18n)
@@ -642,7 +704,11 @@ func (self *thread) BoardURL() string {
 	if i18n == nil {
 		i18n = I18nProvider
 	}
-	return fmt.Sprintf("%sb/%s/?lang=%s", self.Prefix(), self.Board(), i18n.Name)
+	u := fmt.Sprintf("%sb/%s/?lang=%s", self.Prefix(), self.Board(), i18n.Name)
+	if self.SFW {
+		u += "&sfw=1"
+	}
+	return u
 }
 
 func (self *thread) PostCount() int {
@@ -664,7 +730,7 @@ func createThreadModel(posts ...PostModel) ThreadModel {
 		dirty:  true,
 		prefix: prefix,
 		Posts:  posts,
-		links: []LinkModel{
+		links: []linkModel{
 			linkModel{
 				text: group,
 				link: fmt.Sprintf("%sb/%s/", prefix, group),
@@ -684,6 +750,7 @@ func (self *thread) Replies() []PostModel {
 		for idx, post := range self.Posts[1:] {
 			if post != nil {
 				post.SetIndex(idx + 1)
+				post.MarkSFW(self.SFW)
 				replies = append(replies, post)
 			}
 		}
@@ -715,6 +782,7 @@ func (self *thread) Truncate() ThreadModel {
 		for _, p := range t.Posts {
 			imgs += p.NumAttachments()
 		}
+		t.SFW = self.SFW
 		t.truncatedPostCount = len(self.Posts) - trunc
 		t.truncatedImageCount = self.ImageCount() - imgs
 		return t
@@ -748,6 +816,7 @@ func (self *thread) BumpLock() bool {
 func (self *thread) Update(db Database) {
 	root := self.Posts[0].MessageID()
 	self.Posts = append([]PostModel{self.Posts[0]}, db.GetThreadReplyPostModels(self.prefix, root, 0, 0)...)
+	self.MarkSFW(self.SFW)
 	self.dirty = false
 }
 
