@@ -31,9 +31,10 @@
         {{^sfw}}
         <meta property="og:url" content="{{prefix}}t/{{thread.OP.PostHash}}/?lang={{i18n.Name}}"/>
         {{/sfw}}
-        <meta property="og:image"
-              content="{{prefix}}static/changolia-logo.png"/>
-    </head>
+        {{#thread.OP.Attachments}}
+        <meta property="og:image" content={{Thumbnail}}" />
+        {{/thread.OP.Attachments}}
+        </head>
     <body class="threadpage">
         {{{thread.Navbar}}}
         <hr />
