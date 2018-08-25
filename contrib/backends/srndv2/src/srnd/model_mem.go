@@ -305,6 +305,13 @@ func (self *post) Index() int {
 	return self.index + 1
 }
 
+func (self *post) Brief() string {
+	if len(self.PostMessage) > 140 {
+		return self.PostMessage[:140]
+	}
+	return self.PostMessage
+}
+
 func (self *post) NumImages() int {
 	return len(self.Files)
 }

@@ -47,6 +47,7 @@ type AttachmentModel interface {
 type PostModel interface {
 	BaseModel
 
+	Brief() string
 	CSSClass() string
 	FrontendPubkey() string
 	MessageID() string
