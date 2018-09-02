@@ -177,7 +177,7 @@ func GenSRNdConfig() *configparser.Configuration {
 	// nntp related section
 	sect := conf.NewSection("nntp")
 	sect.Add("instance_name", "test.srndv2.tld")
-	sect.Add("bind", "127.0.0.1:1199")
+	sect.Add("bind", ":1199")
 	sect.Add("sync_on_start", "1")
 	sect.Add("allow_anon", "0")
 	sect.Add("allow_anon_attachments", "0")
