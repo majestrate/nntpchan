@@ -848,3 +848,8 @@ th > label {
       .spoiler:hover a:hover {
         color: #0066FF;
       }
+
+
+      :target {
+          background-color: #493769;
+      }
