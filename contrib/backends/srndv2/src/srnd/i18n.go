@@ -7,6 +7,7 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
+	"errors"
 )
 
 type I18N struct {
@@ -22,6 +23,7 @@ type I18N struct {
 }
 
 var I18nProvider *I18N = nil
+var ErrNoLang = errors.New("no such language")
 
 //Read all .ini files in dir, where the filenames are BCP 47 tags
 //Use the language matcher to get the best match for the locale preference
@@ -41,17 +43,23 @@ func NewI18n(locale, dir string) (*I18N, error) {
 		return nil, err
 	}
 
+	found:= false
 	serverLangs := make([]language.Tag, 1)
-	serverLangs[0] = language.AmericanEnglish // en-US fallback
+	//	serverLangs[0] = language.AmericanEnglish // en-US fallback
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".ini" {
 			name := strings.TrimSuffix(file.Name(), ".ini")
 			tag, err := language.Parse(name)
 			if err == nil {
 				serverLangs = append(serverLangs, tag)
+				found = true;
 			}
 		}
 	}
+	if !found {
+		return nil, ErrNoLang
+	}
+	
 	matcher := language.NewMatcher(serverLangs)
 	tag, _, _ := matcher.Match(pref)
 
