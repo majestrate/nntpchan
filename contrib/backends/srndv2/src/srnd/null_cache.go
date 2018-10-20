@@ -66,7 +66,7 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	sfw := strings.Count(r.URL.RawQuery, "sfw=1") > 0
 	i18n := self.GetI18N(r)
 	if i18n == nil {
-		http.Redirect(w, r, r.URL.Path, http.StatusFound)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 	path := r.URL.Path
