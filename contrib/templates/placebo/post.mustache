@@ -30,8 +30,8 @@
     {{#post.Attachments}}
     <a href="{{Source}}" class="image_link" target="_blank" title="{{Filename}}"><img src="{{Thumbnail}}" class="image" /></a>
     {{/post.Attachments}}
-    <a href="#" onclick="nntpchan_mod_delete('{{post.PostHash}}');">[Delete]</a>
     <a name="{{post.PostHash}}"></a><span class="topicline"><b data-subject="{{post.Subject}}" class="subject">{{post.Subject}}</b> {{post.Name}} <span class="published">{{post.Frontend}} || {{post.Date}}</span> {{{post.Pubkey}}} <a href="{{post.PostURL}}">&#8470;</a>
+    <a href="#" onclick="nntpchan_mod_delete('{{post.PostHash}}');">[Delete]</a>
     <a href="#" onclick="return quickreply('{{post.ShortHash}}', '{{post.PostHash}}', '{{post.PostURL}}');"> {{post.ShortHash}}</a>
     </span>
     <br /><br />
