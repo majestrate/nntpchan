@@ -9,7 +9,7 @@ var ready = function() {
   for(var idx = 0; idx < _onreadyfuncs.length; idx++) _onreadyfuncs[idx]();
 };
 
-var nntpchan_mod_delete = function(lonhash) {
+var nntpchan_mod_delete = function(longhash) {
   var elem = document.getElementById(longhash);
   var ajax = new XMLHttpRequest();
   ajax.onreadystatechange = function() {
