@@ -538,3 +538,16 @@ background-repeat: repeat;
     border: solid #333 1px;
     padding-left: 1em;
 }
+
+
+
+:target {
+    background-color: #493769;
+}
+
+body {
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    flex-flow: wrap;
+}

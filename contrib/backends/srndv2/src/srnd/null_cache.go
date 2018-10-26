@@ -51,6 +51,7 @@ func (self *nullHandler) GetI18N(r *http.Request) *I18N {
 		i, err = NewI18n(lang, self.translations)
 		if err != nil {
 			log.Println(err)
+			return nil
 		}
 		if i != nil {
 			self.i18n[lang] = i
@@ -64,7 +65,10 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	sfw := strings.Count(r.URL.RawQuery, "sfw=1") > 0
 	i18n := self.GetI18N(r)
-
+	if i18n == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
 	path := r.URL.Path
 	_, file := filepath.Split(path)
 
