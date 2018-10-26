@@ -21,7 +21,7 @@ var nntpchan_mod_delete = function(longhash) {
         var j = JSON.parse(ajax.responseText);
         if(j.deleted.length > 0)
         {
-          elem.appendChild(document.createTextNode(j.deleted.join(",")));
+          elem.appendChild(document.createTextNode("deleted: " + j.deleted.join(",")));
         }
       }
       else 
