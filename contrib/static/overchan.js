@@ -9,6 +9,35 @@ var ready = function() {
   for(var idx = 0; idx < _onreadyfuncs.length; idx++) _onreadyfuncs[idx]();
 };
 
+var nntpchan_mod_delete = function(lonhash) {
+  var elem = document.getElementById(longhash);
+  var ajax = new XMLHttpRequest();
+  ajax.onreadystatechange = function() {
+    if(ajax.readyState == 4)
+    {
+      if(ajax.status == 200)
+      {
+        // success (?)
+        var j = JSON.parse(ajax.responseText);
+        if(j.deleted)
+        {
+          elem.appendChild(document.createTextNode(j.deleted));
+        }
+        else (j.error)
+        {
+          elem.innerHTML = "an error occured: " + j.error ;
+        }
+      }
+      else 
+      {
+        elem.innerHTML = "post not deleted from server: "+ ajax.statusText;
+      }
+    }
+  };
+  ajax.open("GET", "/mod/del/"+longhash);
+  ajax.send();
+  elem.innerHTML = "";
+};
 
 var quickreply = function(shorthash, longhash, url) {
   if (!window.location.pathname.startsWith("/t/"))
