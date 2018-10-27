@@ -760,7 +760,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					}
 				}
 				if ValidMessageID(msgid) {
-					if daemon.database.IsBanned(msgid) {
+					if daemon.database.ArticleBanned(msgid) {
 						// article banned
 						conn.PrintfLine("439 %s article banned from server", msgid)
 					} else if daemon.store.HasArticle(msgid) {
