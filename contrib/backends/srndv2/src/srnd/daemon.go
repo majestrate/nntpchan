@@ -537,11 +537,9 @@ func (self *NNTPDaemon) ExpireAll() {
 
 func (self *NNTPDaemon) MarkSpam(msgid string) {
 	if ValidMessageID(msgid) {
-		if self.mod != nil {
-			err:= self.mod.MarkSpam(msgid)
-			if err != nil {
-				log.Println(err)
-			}
+		err := self.mod.MarkSpam(msgid)
+		if err != nil {
+			log.Println(err)
 		}
 	}
 }
