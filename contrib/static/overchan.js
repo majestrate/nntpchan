@@ -24,7 +24,7 @@ var nntpchan_mod_commit_spam = function(elem) {
   {
     if(posts[idx].dataset.spam == "yes")
     {
-      spams.push_back(posts[idx].dataset.msgid);
+      spams.push(posts[idx].dataset.msgid);
     }
   }
   formdata.set("spam", spams.join(","));
