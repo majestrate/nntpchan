@@ -35,8 +35,8 @@ type httpModUI struct {
 	cache            CacheHandler
 }
 
-func createHttpModUI(frontend *httpFrontend) httpModUI {
-	return httpModUI{frontend.regenAll, frontend.Regen, frontend.RegenerateBoard, frontend.deleteThreadMarkup, frontend.deleteBoardMarkup, make(chan NNTPMessage), frontend.daemon, frontend.daemon.store, frontend.store, frontend.prefix, frontend.prefix + "mod/", frontend.GetCacheHandler()}
+func createHttpModUI(frontend *httpFrontend) *httpModUI {
+	return &httpModUI{frontend.regenAll, frontend.Regen, frontend.RegenerateBoard, frontend.deleteThreadMarkup, frontend.deleteBoardMarkup, make(chan NNTPMessage), frontend.daemon, frontend.daemon.store, frontend.store, frontend.prefix, frontend.prefix + "mod/", frontend.GetCacheHandler()}
 
 }
 
@@ -44,7 +44,7 @@ func extractGroup(param map[string]interface{}) string {
 	return extractParam(param, "newsgroup")
 }
 
-func (self httpModUI) getAdminFunc(funcname string) AdminFunc {
+func (self *httpModUI) getAdminFunc(funcname string) AdminFunc {
 	if funcname == "template.reload" {
 		return func(param map[string]interface{}) (interface{}, error) {
 			tname, ok := param["template"]
@@ -390,7 +390,7 @@ func (self httpModUI) HandleAdminCommand(wr http.ResponseWriter, r *http.Request
 	}, wr, r)
 }
 
-func (self httpModUI) CheckPubkey(pubkey, scope string) (bool, error) {
+func (self *httpModUI) CheckPubkey(pubkey, scope string) (bool, error) {
 	is_admin, err := self.daemon.database.CheckAdminPubkey(pubkey)
 	if is_admin {
 		// admin can do what they want
@@ -413,7 +413,7 @@ func (self httpModUI) CheckPubkey(pubkey, scope string) (bool, error) {
 	return false, err
 }
 
-func (self httpModUI) CheckKey(privkey, scope string) (bool, error) {
+func (self *httpModUI) CheckKey(privkey, scope string) (bool, error) {
 	privkey_bytes, err := hex.DecodeString(privkey)
 	if err == nil {
 		pk, _ := naclSeedToKeyPair(privkey_bytes)
@@ -424,17 +424,17 @@ func (self httpModUI) CheckKey(privkey, scope string) (bool, error) {
 	return false, err
 }
 
-func (self httpModUI) MessageChan() chan NNTPMessage {
+func (self *httpModUI) MessageChan() chan NNTPMessage {
 	return self.modMessageChan
 }
 
-func (self httpModUI) getSession(r *http.Request) *sessions.Session {
+func (self *httpModUI) getSession(r *http.Request) *sessions.Session {
 	s, _ := self.store.Get(r, "nntpchan-mod")
 	return s
 }
 
 // get the session's private key as bytes or nil if we don't have it
-func (self httpModUI) getSessionPrivkeyBytes(r *http.Request) []byte {
+func (self *httpModUI) getSessionPrivkeyBytes(r *http.Request) []byte {
 	s := self.getSession(r)
 	k, ok := s.Values["privkey"]
 	if ok {
@@ -451,7 +451,7 @@ func (self httpModUI) getSessionPrivkeyBytes(r *http.Request) []byte {
 
 // returns true if the session is okay for a scope
 // otherwise redirect to login page
-func (self httpModUI) checkSession(r *http.Request, scope string) bool {
+func (self *httpModUI) checkSession(r *http.Request, scope string) bool {
 	s := self.getSession(r)
 	k, ok := s.Values["privkey"]
 	if ok {
@@ -464,11 +464,11 @@ func (self httpModUI) checkSession(r *http.Request, scope string) bool {
 	return false
 }
 
-func (self httpModUI) writeTemplate(wr http.ResponseWriter, r *http.Request, name string) {
+func (self *httpModUI) writeTemplate(wr http.ResponseWriter, r *http.Request, name string) {
 	self.writeTemplateParam(wr, r, name, nil)
 }
 
-func (self httpModUI) writeTemplateParam(wr http.ResponseWriter, r *http.Request, name string, param map[string]interface{}) {
+func (self *httpModUI) writeTemplateParam(wr http.ResponseWriter, r *http.Request, name string, param map[string]interface{}) {
 	if param == nil {
 		param = make(map[string]interface{})
 	}
@@ -481,7 +481,7 @@ func (self httpModUI) writeTemplateParam(wr http.ResponseWriter, r *http.Request
 
 // do a function as authenticated
 // pass in the request path to the handler
-func (self httpModUI) asAuthed(scope string, handler func(string), wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) asAuthed(scope string, handler func(string), wr http.ResponseWriter, r *http.Request) {
 	if self.checkSession(r, scope) {
 		handler(r.URL.Path)
 	} else {
@@ -490,7 +490,7 @@ func (self httpModUI) asAuthed(scope string, handler func(string), wr http.Respo
 }
 
 // do stuff to a certain message if with have it and are authed
-func (self httpModUI) asAuthedWithMessage(scope string, handler func(ArticleEntry, *http.Request) map[string]interface{}, wr http.ResponseWriter, req *http.Request) {
+func (self *httpModUI) asAuthedWithMessage(scope string, handler func(ArticleEntry, *http.Request) map[string]interface{}, wr http.ResponseWriter, req *http.Request) {
 	self.asAuthed(scope, func(path string) {
 		// get the long hash
 		if strings.Count(path, "/") > 2 {
@@ -523,7 +523,7 @@ func (self httpModUI) asAuthedWithMessage(scope string, handler func(ArticleEntr
 	}, wr, req)
 }
 
-func (self httpModUI) HandlePostSpam(wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) HandlePostSpam(wr http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		wr.WriteHeader(405)
 		return
@@ -557,13 +557,13 @@ func (self httpModUI) HandlePostSpam(wr http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(wr).Encode(resp)
 }
 
-func (self httpModUI) HandleAddPubkey(wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) HandleAddPubkey(wr http.ResponseWriter, r *http.Request) {
 }
 
-func (self httpModUI) HandleDelPubkey(wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) HandleDelPubkey(wr http.ResponseWriter, r *http.Request) {
 }
 
-func (self httpModUI) HandleUnbanAddress(wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) HandleUnbanAddress(wr http.ResponseWriter, r *http.Request) {
 	self.asAuthed("ban", func(path string) {
 		// extract the ip address
 		// TODO: ip ranges and prefix detection
@@ -593,7 +593,7 @@ func (self httpModUI) HandleUnbanAddress(wr http.ResponseWriter, r *http.Request
 }
 
 // handle ban logic
-func (self httpModUI) handleBanAddress(msg ArticleEntry, r *http.Request) map[string]interface{} {
+func (self *httpModUI) handleBanAddress(msg ArticleEntry, r *http.Request) map[string]interface{} {
 	// get the article headers
 	resp := make(map[string]interface{})
 	msgid := msg.MessageID()
@@ -657,7 +657,7 @@ func (self httpModUI) handleBanAddress(msg ArticleEntry, r *http.Request) map[st
 	return resp
 }
 
-func (self httpModUI) handleDeletePost(msg ArticleEntry, r *http.Request) map[string]interface{} {
+func (self *httpModUI) handleDeletePost(msg ArticleEntry, r *http.Request) map[string]interface{} {
 	var mm ModMessage
 	resp := make(map[string]interface{})
 	msgid := msg.MessageID()
@@ -706,16 +706,16 @@ func (self httpModUI) handleDeletePost(msg ArticleEntry, r *http.Request) map[st
 }
 
 // ban the address of a poster
-func (self httpModUI) HandleBanAddress(wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) HandleBanAddress(wr http.ResponseWriter, r *http.Request) {
 	self.asAuthedWithMessage("ban", self.handleBanAddress, wr, r)
 }
 
 // delete a post
-func (self httpModUI) HandleDeletePost(wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) HandleDeletePost(wr http.ResponseWriter, r *http.Request) {
 	self.asAuthedWithMessage("login", self.handleDeletePost, wr, r)
 }
 
-func (self httpModUI) HandleLogin(wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) HandleLogin(wr http.ResponseWriter, r *http.Request) {
 	privkey := r.FormValue("privkey")
 	msg := "failed login: "
 	if len(privkey) == 0 {
@@ -736,13 +736,13 @@ func (self httpModUI) HandleLogin(wr http.ResponseWriter, r *http.Request) {
 	self.writeTemplateParam(wr, r, "modlogin_result", map[string]interface{}{"message": msg, csrf.TemplateTag: csrf.TemplateField(r)})
 }
 
-func (self httpModUI) HandleKeyGen(wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) HandleKeyGen(wr http.ResponseWriter, r *http.Request) {
 	pk, sk := newNaclSignKeypair()
 	tripcode := makeTripcode(pk)
 	self.writeTemplateParam(wr, r, "keygen", map[string]interface{}{"public": pk, "secret": sk, "tripcode": tripcode})
 }
 
-func (self httpModUI) ServeModPage(wr http.ResponseWriter, r *http.Request) {
+func (self *httpModUI) ServeModPage(wr http.ResponseWriter, r *http.Request) {
 	if self.checkSession(r, "login") {
 		wr.Header().Set("X-CSRF-Token", csrf.Token(r))
 		// we are logged in
