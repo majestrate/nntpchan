@@ -28,32 +28,48 @@ var nntpchan_mod_commit_spam = function(elem) {
     }
   }
   formdata.set("spam", spams.join(","));
-  var ajax = new XMLHttpRequest();
-  ajax.onreadystatechange = function() {
-    if(ajax.readyState == 4)
+  var jax = new XMLHttpRequest();
+  jax.onreadystatechange = function() {
+    if(jax.readyState == 4)
     {
-      if(ajax.status == 200)
+      if(jax.status == 200)
       {
-        // success (?)
-        var j = JSON.parse(ajax.responseText);
-        if(j.error)
-        {
-          elem.innerText = "could not mark as spam: " + j.error;
-        }
-        else
-        {
-          elem.innerText = "OK: marked as spam";
-        }
+        
+        var ajax = new XMLHttpRequest();
+        ajax.setRequestHeader("X-CSRF-Token", jax.getResponseHeader("X-CSRF-Token"));
+        ajax.onreadystatechange = function() {
+        if(ajax.readyState == 4)
+          {
+            if(ajax.status == 200)
+            {
+              // success (?)
+              var j = JSON.parse(ajax.responseText);
+              if(j.error)
+              {
+                elem.innerText = "could not mark as spam: " + j.error;
+              }
+              else
+              {
+                elem.innerText = "OK: marked as spam";
+              }
+            }
+            else 
+            {
+              elem.innerText = "post not marked as spam on server: "+ ajax.statusText;
+            }
+          }
+        };
+        ajax.open("POST", "/mod/spam")
+        ajax.send(formdata);
       }
-      else 
+      else
       {
-        elem.innerText = "post not marked as spam on server: "+ ajax.statusText;
+        elem.innerText = "failed to moderate, not logged in";
       }
     }
   };
-  ajax.open("POST", "/mod/spam")
-  ajax.send(formdata);
-
+  jax.open("GET", "/mod/");
+  jax.send();
 };
 
 var nntpchan_mod_delete = function(longhash) {
