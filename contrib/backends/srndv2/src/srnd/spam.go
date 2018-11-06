@@ -49,7 +49,7 @@ func (sp *SpamFilter) MarkSpam(msg io.Reader) (err error) {
 		return
 	}
 	defer conn.Close()
-	fmt.Fprintf(conn, "TELL SPAMC/1.5\r\nUser: %s\r\nMessage-class: spam\r\nSet: local,remote\r\n\r\n", u.Username)
+	fmt.Fprintf(conn, "TELL SPAMC/1.5\r\nUser: %s\r\nMessage-class: spam\r\nSet: local\r\n\r\n", u.Username)
 	io.CopyBuffer(conn, msg, buf[:])
 	conn.CloseWrite()
 	r := bufio.NewReader(conn)
