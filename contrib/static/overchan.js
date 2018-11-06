@@ -36,7 +36,6 @@ var nntpchan_mod_commit_spam = function(elem) {
       {
         
         var ajax = new XMLHttpRequest();
-        ajax.setRequestHeader("X-CSRF-Token", jax.getResponseHeader("X-CSRF-Token"));
         ajax.onreadystatechange = function() {
         if(ajax.readyState == 4)
           {
@@ -60,6 +59,7 @@ var nntpchan_mod_commit_spam = function(elem) {
           }
         };
         ajax.open("POST", "/mod/spam")
+        ajax.setRequestHeader("X-CSRF-Token", jax.getResponseHeader("X-CSRF-Token"));
         ajax.send(formdata);
       }
       else
