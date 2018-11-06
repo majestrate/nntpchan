@@ -523,6 +523,39 @@ func (self httpModUI) asAuthedWithMessage(scope string, handler func(ArticleEntr
 	}, wr, req)
 }
 
+func (self httpModUI) HandlePostSpam(wr http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		wr.WriteHeader(405)
+		return
+	}
+	resp := make(map[string]interface{})
+	self.asAuthed("spam", func(path string) {
+		var mm ModMessage
+		keys := string.Split(r.FormValue("spam"), ",")
+		for _, k := range keys {
+			k =  strings.TrimSpace(k)
+			go self.daemon.MarkSpam(k)
+			mm = append(mm, modMarkSpam(k)) 
+		}
+		privkey_bytes := self.getSessionPrivkeyBytes(r)
+		if privkey_bytes == nil {
+			// this should not happen
+			log.Println("failed to get privkey bytes from session")
+			resp["error"] = "failed to get private key from session. wtf?"
+		} else {
+			// wrap and sign
+			nntp := wrapModMessage(mm)
+			nntp, err = signArticle(nntp, privkey_bytes)
+			if err == nil {
+				// federate
+				self.modMessageChan <- nntp
+			}
+			resp["error"] = err
+		}
+	})
+	json.NewEncoder(wr).Encode(resp)
+}
+
 func (self httpModUI) HandleAddPubkey(wr http.ResponseWriter, r *http.Request) {
 }
 

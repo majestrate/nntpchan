@@ -44,6 +44,10 @@ type ModUI interface {
 	HandleKeyGen(wr http.ResponseWriter, r *http.Request)
 	// handle admin command
 	HandleAdminCommand(wr http.ResponseWriter, r *http.Request)
+	// handle mark a post as spam
+	HandlePostSpam(wr http.ResponseWriter, r *http.Request)
+
+	
 	// get outbound message channel
 	MessageChan() chan NNTPMessage
 }
@@ -57,6 +61,8 @@ const ModStick = ModAction("overchan-stick")
 const ModLock = ModAction("overchan-lock")
 const ModHide = ModAction("overchan-hide")
 const ModSage = ModAction("overchan-sage")
+const ModSpam = ModAction("spam")
+const ModHam = ModAction("ham")
 const ModDeleteAlt = ModAction("delete")
 
 type ModEvent interface {
@@ -81,11 +87,15 @@ func (self simpleModEvent) String() string {
 }
 
 func (self simpleModEvent) Action() ModAction {
-	switch strings.Split(string(self), " ")[0] {
+	switch strings.ToLower(strings.Split(string(self), " ")[0]) {
 	case "delete":
 		return ModDelete
 	case "overchan-inet-ban":
 		return ModInetBan
+	case "spam":
+		return ModSpam
+	case "ham":
+		return ModHam
 	}
 	return ""
 }
@@ -120,6 +130,11 @@ func overchanDelete(msgid string) ModEvent {
 // create an overchan-inet-ban mod event
 func overchanInetBan(encAddr, key string, expire int64) ModEvent {
 	return simpleModEvent(fmt.Sprintf("overchan-inet-ban %s:%s:%d", encAddr, key, expire))
+}
+
+// create a mark as spam event
+func modMarkSpam(msgid string) ModEvent {
+	return simpleModEvent(fmt.Sprintf("spam %s", msgid))
 }
 
 // moderation message
@@ -171,6 +186,8 @@ type ModEngine interface {
 	HandleMessage(msgid string)
 	// delete post of a poster
 	DeletePost(msgid string) error
+	// mark message as spam
+	MarkSpam(msgid string) error
 	// ban a cidr
 	BanAddress(cidr string) error
 	// do we allow this public key to delete this message-id ?
@@ -190,7 +207,21 @@ type ModEngine interface {
 type modEngine struct {
 	database Database
 	store    ArticleStore
+	spam     *SpamFilter
 	regen    RegenFunc
+}
+
+func (self *modEngine) MarkSpam(msgid string) (err error) {
+	if self.spam == nil {
+		err = self.store.MarkSpam(msgid)
+	} else {
+		f, err = self.store.OpenMessage(msgid)
+		if err == nil {
+			err = self.spam.MarkSpam(f)
+			f.Close()
+		}
+	}
+	return
 }
 
 func (self *modEngine) LoadMessage(msgid string) NNTPMessage {
@@ -394,6 +425,10 @@ func (mod *modEngine) Do(ev ModEvent) {
 		} else {
 			log.Printf("invalid overchan-inet-ban: target=%s", target)
 		}
+	} else if action == ModSpam {
+		if ValidMessageID(target) {
+			mod.MarkSpam(target)
+		}
 	} else if action == ModHide {
 		// TODO: implement
 	} else if action == ModLock {
@@ -434,6 +469,11 @@ func (mod *modEngine) Execute(ev ModEvent, pubkey string) {
 			mod.Do(ev)
 		}
 		return
+	case ModSpam:
+		if mod.AllowJanitor(pubkey) {
+			mod.Do(ev)
+		}
+		return
 	case ModHide:
 	case ModLock:
 	case ModSage:
@@ -442,6 +482,7 @@ func (mod *modEngine) Execute(ev ModEvent, pubkey string) {
 		if mod.AllowJanitor(pubkey) {
 			mod.Do(ev)
 		}
+		return
 	default:
 		// invalid action
 	}

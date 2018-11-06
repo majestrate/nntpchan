@@ -34,20 +34,44 @@ type SpamResult struct {
 	IsSpam bool
 }
 
+// feed spam subsystem a spam post
+func (sp *SpamFilter) MarkSpam(msg io.Reader) (err error) {
+	var buff [65636]byte
+
+	var u *user.User
+	u, err = user.Current()
+	if err != nil {
+		return
+	}
+	var conn *net.TCPConn
+	conn, err = sp.openConn()
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+	fmt.Fprintf(conn, "TELL SPAMC/1.5\r\nUser: %s\r\nMessage-class: spam\r\nSet: local\r\n", u.Username)
+	io.CopyBuffer(conn, buf[:], msg)
+	conn.CloseWrite()
+	r := bufio.NewReader(conn)
+}
+
+func (sp *SpamFilter) openConn() (*net.TCPConn, error) {
+	addr, err := net.ResolveTCPAddr("tcp", sp.addr)
+	if err != nil {
+		return nil, err
+	}
+	return net.DialTCP("tcp", nil, addr)
+}
+
 func (sp *SpamFilter) Rewrite(msg io.Reader, out io.WriteCloser, group string) (result SpamResult) {
 	var buff [65636]byte
 	if !sp.Enabled(group) {
 		result.Err = ErrSpamFilterNotEnabled
 		return
 	}
-	var addr *net.TCPAddr
-	var c *net.TCPConn
 	var u *user.User
-	addr, result.Err = net.ResolveTCPAddr("tcp", sp.addr)
-	if result.Err != nil {
-		return
-	}
-	c, result.Err = net.DialTCP("tcp", nil, addr)
+	var c *net.TCPConn
+	c, result.Err = sp.openConn()
 	if result.Err != nil {
 		return
 	}
