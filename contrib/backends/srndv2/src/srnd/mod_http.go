@@ -531,7 +531,8 @@ func (self httpModUI) HandlePostSpam(wr http.ResponseWriter, r *http.Request) {
 	resp := make(map[string]interface{})
 	self.asAuthed("spam", func(path string) {
 		var mm ModMessage
-		keys := string.Split(r.FormValue("spam"), ",")
+		var err error
+		keys := strings.Split(r.FormValue("spam"), ",")
 		for _, k := range keys {
 			k =  strings.TrimSpace(k)
 			go self.daemon.MarkSpam(k)
@@ -552,7 +553,7 @@ func (self httpModUI) HandlePostSpam(wr http.ResponseWriter, r *http.Request) {
 			}
 			resp["error"] = err
 		}
-	})
+	}, wr, r)
 	json.NewEncoder(wr).Encode(resp)
 }
 

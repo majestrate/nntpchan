@@ -215,6 +215,7 @@ func (self *modEngine) MarkSpam(msgid string) (err error) {
 	if self.spam == nil {
 		err = self.store.MarkSpam(msgid)
 	} else {
+		var f io.ReadCloser
 		f, err = self.store.OpenMessage(msgid)
 		if err == nil {
 			err = self.spam.MarkSpam(f)

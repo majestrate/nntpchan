@@ -95,12 +95,6 @@ type ArticleStore interface {
 	// get filepath for spam file via msgid
 	SpamFile(msgid string) string
 
-	MarkHam(msgid string) error
-	UnmarkHam(msgid string) error
-	
-	// get filepath for ham
-	HamFile(msgid string) string
-	
 	// iterate over all spam messages
 	IterSpam(func(string) error) error
 

@@ -36,7 +36,7 @@ type SpamResult struct {
 
 // feed spam subsystem a spam post
 func (sp *SpamFilter) MarkSpam(msg io.Reader) (err error) {
-	var buff [65636]byte
+	var buf [65636]byte
 
 	var u *user.User
 	u, err = user.Current()
@@ -50,9 +50,11 @@ func (sp *SpamFilter) MarkSpam(msg io.Reader) (err error) {
 	}
 	defer conn.Close()
 	fmt.Fprintf(conn, "TELL SPAMC/1.5\r\nUser: %s\r\nMessage-class: spam\r\nSet: local\r\n", u.Username)
-	io.CopyBuffer(conn, buf[:], msg)
+	io.CopyBuffer(conn, msg, buf[:])
 	conn.CloseWrite()
 	r := bufio.NewReader(conn)
+	io.Copy(Discard, r)
+	return
 }
 
 func (sp *SpamFilter) openConn() (*net.TCPConn, error) {
