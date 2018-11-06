@@ -759,18 +759,23 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 						}
 					}
 				}
-				if ValidMessageID(msgid) && daemon.store.HasArticle(msgid) {
-					// we have it yeh
-					f, err := daemon.store.OpenMessage(msgid)
-					if err == nil {
-						conn.PrintfLine("220 %s", msgid)
-						dw := conn.DotWriter()
-						_, err = io.Copy(dw, f)
-						dw.Close()
-						f.Close()
-					} else {
-						// wtf?!
-						conn.PrintfLine("503 idkwtf happened: %s", err.Error())
+				if ValidMessageID(msgid) {
+					if daemon.database.ArticleBanned(msgid) {
+						// article banned
+						conn.PrintfLine("439 %s article banned from server", msgid)
+					} else if daemon.store.HasArticle(msgid) {
+						// we have it yeh
+						f, err := daemon.store.OpenMessage(msgid)
+						if err == nil {
+							conn.PrintfLine("220 %s", msgid)
+							dw := conn.DotWriter()
+							_, err = io.Copy(dw, f)
+							dw.Close()
+							f.Close()
+						} else {
+							// wtf?!
+							conn.PrintfLine("503 idkwtf happened: %s", err.Error())
+						}
 					}
 				} else {
 					// we dont got it
