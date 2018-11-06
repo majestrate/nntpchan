@@ -1155,7 +1155,7 @@ func (self *NNTPDaemon) Setup() {
 	self.spamFilter.Configure(self.conf.spamconf)
 
 	self.mod = &modEngine{
-		spam:     &self.spamFilter,
+		//spam:     &self.spamFilter,
 		store:    self.store,
 		database: self.database,
 		regen:    self.frontend.RegenOnModEvent,
