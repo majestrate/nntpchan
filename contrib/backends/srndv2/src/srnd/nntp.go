@@ -854,7 +854,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 						if err == nil {
 							hi, lo, err = daemon.database.GetLastAndFirstForGroup(group)
 							if err == nil {
-								conn.PrintfLine("211 %d %d %d %s list follows", count, lo, hi, group)
+								conn.PrintfLine("211 %d %d %d %s list follows", count, hi, lo, group)
 								dw := conn.DotWriter()
 								idx := lo
 								for idx <= hi {
@@ -1002,7 +1002,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					hi, low, err := daemon.database.GetLastAndFirstForGroup(group)
 					if err == nil {
 						// we gud
-						conn.PrintfLine("211 %d %d %d %s", number, low, hi, group)
+						conn.PrintfLine("211 %d %d %d %s", number, hi, low, group)
 					} else {
 						// wtf error
 						log.Println(self.name, "error in GROUP command", err)
@@ -1327,7 +1327,7 @@ func (self *nntpConnection) scrapeGroup(daemon *NNTPDaemon, conn *textproto.Conn
 		// check code
 		if code == 211 {
 			// success
-			es, lo, hi, _ := interpretGroupResult(ret)
+			es, hi, lo, _ := interpretGroupResult(ret)
 			for {
 				if lo > hi {
 					// server indicated empty group
