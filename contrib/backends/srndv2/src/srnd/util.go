@@ -789,14 +789,11 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 	} else {
 		log.Println("error processing message body", err)
 	}
-	if err != nil {
-		// clean up
-		if ValidMessageID(msgid) {
-			fname := daemon.store.GetFilenameTemp(msgid)
-			log.Println("clean up", fname)
-			DelFile(fname)
-		}
-		log.Println("error processing message", err)
+
+	// clean up
+	if ValidMessageID(msgid) {
+		fname := daemon.store.GetFilenameTemp(msgid)
+		DelFile(fname)
 	}
 	return
 }

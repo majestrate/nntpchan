@@ -9,6 +9,69 @@ var ready = function() {
   for(var idx = 0; idx < _onreadyfuncs.length; idx++) _onreadyfuncs[idx]();
 };
 
+var nntpchan_mod_mark_spam = function(longhash) {
+  var elem = document.getElementById(longhash);
+  if(!elem) return;
+  elem.dataset.spam = "yes";
+  elem.innerText = "spam";
+};
+
+var nntpchan_mod_commit_spam = function(elem) {
+  var formdata = new FormData();
+  var posts = document.getElementsByClassName("post");
+  var spams = [];
+  for (var idx = 0; idx < posts.length; idx ++)
+  {
+    if(posts[idx].dataset.spam == "yes")
+    {
+      spams.push(posts[idx].dataset.msgid);
+    }
+  }
+  formdata.set("spam", spams.join(","));
+  var jax = new XMLHttpRequest();
+  jax.onreadystatechange = function() {
+    if(jax.readyState == 4)
+    {
+      if(jax.status == 200)
+      {
+        
+        var ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function() {
+        if(ajax.readyState == 4)
+          {
+            if(ajax.status == 200)
+            {
+              // success (?)
+              var j = JSON.parse(ajax.responseText);
+              if(j.error)
+              {
+                elem.innerText = "could not mark as spam: " + j.error;
+              }
+              else
+              {
+                elem.innerText = "OK: marked as spam";
+              }
+            }
+            else 
+            {
+              elem.innerText = "post not marked as spam on server: "+ ajax.statusText;
+            }
+          }
+        };
+        ajax.open("POST", "/mod/spam")
+        ajax.setRequestHeader("X-CSRF-Token", jax.getResponseHeader("X-CSRF-Token"));
+        ajax.send(formdata);
+      }
+      else
+      {
+        elem.innerText = "failed to moderate, not logged in";
+      }
+    }
+  };
+  jax.open("GET", "/mod/");
+  jax.send();
+};
+
 var nntpchan_mod_delete = function(longhash) {
   var elem = document.getElementById(longhash);
   var ajax = new XMLHttpRequest();

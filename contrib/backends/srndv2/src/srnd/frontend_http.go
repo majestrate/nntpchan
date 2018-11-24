@@ -1405,6 +1405,7 @@ func (self *httpFrontend) Mainloop() {
 	m.Path("/mod/feeds").HandlerFunc(self.modui.ServeModPage).Methods("GET")
 	m.Path("/mod/keygen").HandlerFunc(self.modui.HandleKeyGen).Methods("GET")
 	m.Path("/mod/login").HandlerFunc(self.modui.HandleLogin).Methods("POST")
+	m.Path("/mod/spam").HandlerFunc(self.modui.HandlePostSpam).Methods("POST")
 	m.Path("/mod/del/{article_hash}").HandlerFunc(self.modui.HandleDeletePost).Methods("GET")
 	m.Path("/mod/ban/{address}").HandlerFunc(self.modui.HandleBanAddress).Methods("GET")
 	m.Path("/mod/unban/{address}").HandlerFunc(self.modui.HandleUnbanAddress).Methods("GET")

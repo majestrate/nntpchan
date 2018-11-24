@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -115,6 +116,7 @@ type articleStore struct {
 	identify_path string
 	placeholder   string
 	spamdir       string
+	hamdir        string
 	compression   bool
 	compWriter    *gzip.Writer
 	spamd         *SpamFilter
@@ -136,6 +138,8 @@ func createArticleStore(config map[string]string, thumbConfig *ThumbnailConfig, 
 		compression:   config["compression"] == "1",
 		spamd:         spamd,
 		spamdir:       filepath.Join(config["store_dir"], "spam"),
+		hamdir: filepath.Join(config["store_dir"], "ham"),
+			
 		thumbnails:    thumbConfig,
 	}
 	store.Init()
@@ -781,7 +785,11 @@ func (self *articleStore) AcceptTempArticle(msgid string) (err error) {
 			} else {
 				err = os.Rename(temp, store)
 			}
+		} else {
+			err = fmt.Errorf("no such inbound article %s", temp)
 		}
+	} else {
+		err = fmt.Errorf("invalid message id %s", msgid)
 	}
 	return
 }

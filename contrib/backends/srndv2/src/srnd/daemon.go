@@ -535,9 +535,17 @@ func (self *NNTPDaemon) ExpireAll() {
 	self.expire.ExpireOrphans()
 }
 
+func (self *NNTPDaemon) MarkSpam(msgid string) {
+	if ValidMessageID(msgid) {
+		err := self.mod.MarkSpam(msgid)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+}
+
 // run daemon
 func (self *NNTPDaemon) Run() {
-	self.spamFilter.Configure(self.conf.spamconf)
 	self.bind_addr = self.conf.daemon["bind"]
 
 	listener, err := net.Listen("tcp", self.bind_addr)
@@ -1143,8 +1151,11 @@ func (self *NNTPDaemon) Setup() {
 
 		self.frontend = NewHTTPFrontend(self, self.cache, self.conf.frontend, self.conf.worker["url"])
 	}
+	
+	self.spamFilter.Configure(self.conf.spamconf)
 
 	self.mod = &modEngine{
+		//spam:     &self.spamFilter,
 		store:    self.store,
 		database: self.database,
 		regen:    self.frontend.RegenOnModEvent,
