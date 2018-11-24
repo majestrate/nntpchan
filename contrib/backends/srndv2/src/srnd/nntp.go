@@ -1175,7 +1175,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					dw := conn.DotWriter()
 					for _, entry := range list {
 						if ValidNewsgroup(entry[0]) {
-							io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[1], entry[2]))
+							io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[2], entry[1]))
 						}
 					}
 					dw.Close()
