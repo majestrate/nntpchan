@@ -224,6 +224,8 @@ type boardPageRow struct {
 	Hour  int64
 	Day   int64
 	All   int64
+	Hi    int64
+	Lo    int64
 }
 
 type boardPageRows []boardPageRow
@@ -241,6 +243,7 @@ func (self boardPageRows) Less(i, j int) bool {
 func (self boardPageRows) Swap(i, j int) {
 	self[i], self[j] = self[j], self[i]
 }
+
 
 type postsGraphRow struct {
 	day time.Time
