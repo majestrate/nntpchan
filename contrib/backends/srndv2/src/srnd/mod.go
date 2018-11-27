@@ -88,6 +88,8 @@ func (self simpleModEvent) String() string {
 
 func (self simpleModEvent) Action() ModAction {
 	switch strings.ToLower(strings.Split(string(self), " ")[0]) {
+	case "remove":
+		return ModRemove
 	case "delete":
 		return ModDelete
 	case "overchan-inet-ban":
