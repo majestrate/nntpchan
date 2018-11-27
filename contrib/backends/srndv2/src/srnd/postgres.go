@@ -113,6 +113,7 @@ const HasArticleLocal = "HasArticleLocal"
 const GetPostAttachments = "GetPostAttachments"
 const GetThreadAttachments = "GetThreadAttachments"
 const GetPostAttachmentModels = "GetPostAttachmentModels"
+const RegisterArticle_GetLastBump = "RegisterArticle_GetLastBump"
 const RegisterArticle_1 = "RegisterArticle_1"
 const RegisterArticle_2 = "RegisterArticle_2"
 const RegisterArticle_3 = "RegisterArticle_3"
@@ -184,6 +185,7 @@ func (self *PostgresDatabase) prepareStatements() {
 		GetPostAttachments:              "SELECT filepath FROM ArticleAttachments WHERE message_id = $1",
 		GetThreadAttachments:            "SELECT filepath FROM ArticleAttachments WHERE message_id IN ( SELECT message_id FROM ArticlePosts WHERE ref_id = $1 OR message_id = $1)",
 		GetPostAttachmentModels:         "SELECT filepath, filename FROM ArticleAttachments WHERE message_id = $1",
+		RegisterArticle_GetLastBump:     "SELECT last_bump FROM ArticleThreads WHERE root_message_id = $1",
 		RegisterArticle_1:               "INSERT INTO Articles (message_id, message_id_hash, message_newsgroup, time_obtained, message_ref_id) VALUES($1, $2, $3, $4, $5)",
 		RegisterArticle_2:               "UPDATE Newsgroups SET last_post = $1 WHERE name = $2",
 		RegisterArticle_3:               "INSERT INTO ArticlePosts(newsgroup, message_id, ref_id, name, subject, path, time_posted, message, addr, frontendpubkey) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
@@ -1507,13 +1509,23 @@ func (self *PostgresDatabase) RegisterArticle(message NNTPMessage) (err error) {
 		}
 	} else {
 		ref := message.Reference()
+		postedAt := message.Posted()
+		var other int64
+		err = self.conn.QueryRow(self.stmt[RegisterArticle_GetLastBump], ref).Scan(&other)
+		if err == nil && other > postedAt {
+			postedAt = other
+		}
+		now := timeNow()
+		if postedAt > now {
+			postedAt = now
+		}
 		if !message.Sage() {
 			// TODO: this could be 1 query possibly?
 			var posts int64
 			err = self.conn.QueryRow(self.stmt[RegisterArticle_5], ref).Scan(&posts)
 			if err == nil && posts <= BumpLimit {
 				// bump it nigguh
-				_, err = self.conn.Exec(self.stmt[RegisterArticle_6], ref, message.Posted())
+				_, err = self.conn.Exec(self.stmt[RegisterArticle_6], ref, postedAt)
 			}
 			if err != nil {
 				log.Println("failed to bump thread", ref, err)
@@ -1521,7 +1533,7 @@ func (self *PostgresDatabase) RegisterArticle(message NNTPMessage) (err error) {
 			}
 		}
 		// update last posted
-		_, err = self.conn.Exec(self.stmt[RegisterArticle_7], ref, message.Posted())
+		_, err = self.conn.Exec(self.stmt[RegisterArticle_7], ref, postedAt)
 		if err != nil {
 			log.Println("failed to update post time for", ref, err)
 			return

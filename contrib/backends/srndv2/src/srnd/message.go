@@ -15,9 +15,9 @@ import (
 	"log"
 	"mime"
 	"mime/multipart"
+	"net/mail"
 	"net/textproto"
 	"strings"
-	"time"
 )
 
 type ArticleHeaders map[string][]string
@@ -342,7 +342,7 @@ func (self *nntpArticle) Subject() string {
 
 func (self *nntpArticle) Posted() int64 {
 	posted := self.headers.Get("Date", "")
-	t, err := time.Parse(time.RFC1123Z, posted)
+	t, err := mail.ParseDate(posted)
 	if err == nil {
 		return t.Unix()
 	}
