@@ -442,10 +442,11 @@ func (mod *modEngine) Do(ev ModEvent) {
 		// TODP: implement
 	} else if action == ModRemove {
 		if ValidMessageID(target) {
-			err := mod.database.DeleteArticle(target)
-			if err == nil {
-				err = mod.store.Remove(target)
+			err := mod.database.RemoveArticle(target)
+			if err != nil {
+				log.Println("failed to forget", target, "because:", err)
 			}
+			err = mod.store.Remove(target)
 			if err == nil {
 				log.Println("removed", target)
 			} else {

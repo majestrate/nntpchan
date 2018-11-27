@@ -153,10 +153,11 @@ const GetYearlyPostHistory = "GetYearlyPostHistory"
 const GetNewsgroupList = "GetNewsgroupList"
 const CountUkko = "CountUkko"
 const GetNewsgroupStats = "GetNewsgroupStats"
+const RemoveArticle = "RemoveArticle"
 
 func (self *PostgresDatabase) prepareStatements() {
 	self.stmt = map[string]string{
-		GetNewsgroupStats: "SELECT COUNT(message_id), newsgroup FROM articleposts WHERE time_posted > (EXTRACT(epoch FROM NOW()) - (24*3600)) GROUP BY newsgroup",
+		GetNewsgroupStats:               "SELECT COUNT(message_id), newsgroup FROM articleposts WHERE time_posted > (EXTRACT(epoch FROM NOW()) - (24*3600)) GROUP BY newsgroup",
 		NewsgroupBanned:                 "SELECT 1 FROM BannedGroups WHERE newsgroup = $1",
 		ArticleBanned:                   "SELECT 1 FROM BannedArticles WHERE message_id = $1",
 		GetAllNewsgroups:                "SELECT name FROM Newsgroups WHERE name NOT IN ( SELECT newsgroup FROM BannedGroups )",
@@ -226,6 +227,7 @@ func (self *PostgresDatabase) prepareStatements() {
 		GetCitesByPostHashLike:          "SELECT message_id, message_ref_id FROM Articles WHERE message_id_hash LIKE $1",
 		GetYearlyPostHistory:            "WITH times(endtime, begintime) AS ( SELECT CAST(EXTRACT(epoch from i) AS BIGINT) AS endtime, CAST(EXTRACT(epoch from i - interval '1 month') AS BIGINT) AS begintime FROM generate_series(now() - interval '10 year', now(), '1 month'::interval) i ) SELECT begintime, endtime, ( SELECT count(*) FROM ArticlePosts WHERE time_posted > begintime AND time_posted < endtime) FROM times",
 		CountUkko:                       "SELECT COUNT(message_id) FROM ArticlePosts WHERE newsgroup != 'ctl' AND ref_id = '' OR ref_id = message_id",
+		RemoveArticle:                   "DELETE FROM Articles WHERE message_id = $1",
 	}
 
 }
@@ -1245,6 +1247,14 @@ func (self *PostgresDatabase) DeleteArticle(msgid string) (err error) {
 	*/
 	_, err = self.conn.Exec(self.stmt[DeleteArticleV8], msgid)
 	return
+
+}
+func (self *PostgresDatabase) RemoveArticle(msgid string) (err error) {
+	_, err = self.conn.Exec(self.stmt[DeleteArticleV8], msgid)
+	if err == nil {
+		_, err = self.conn.Exec(self.stmt[RemoveArticle], msgid)
+	}
+	return
 }
 
 func (self *PostgresDatabase) GetThreadReplyPostModels(prefix, rootpost string, start, limit int) (repls []PostModel) {
@@ -2053,7 +2063,7 @@ func (self *PostgresDatabase) GetUkkoPageCount(perpage int) (count int64, err er
 	return
 }
 
-func (self *PostgresDatabase)	GetNewsgroupStats() (stats []NewsgroupStats, err error) {
+func (self *PostgresDatabase) GetNewsgroupStats() (stats []NewsgroupStats, err error) {
 	var rows *sql.Rows
 	rows, err = self.conn.Query(self.stmt[GetNewsgroupStats])
 	if err == nil {
@@ -2066,7 +2076,6 @@ func (self *PostgresDatabase)	GetNewsgroupStats() (stats []NewsgroupStats, err e
 	}
 	return
 }
-
 
 func (self *PostgresDatabase) FindHeaders(group, headername string, lo, hi int64) (hdr ArticleHeaders, err error) {
 	hdr = make(ArticleHeaders)

@@ -49,11 +49,10 @@ func (self PostEntry) Count() int64 {
 
 type PostEntryList []PostEntry
 
-
 // stats about newsgroup postings
 type NewsgroupStats struct {
-	PPD    int64
-	Name   string
+	PPD  int64
+	Name string
 }
 
 type PostingStatsEntry struct {
@@ -69,8 +68,6 @@ type NewsgroupListEntry [3]string
 
 type NewsgroupList []NewsgroupListEntry
 
-
-
 type Database interface {
 	Close()
 	CreateTables()
@@ -82,7 +79,7 @@ type Database interface {
 	GetAllArticlesInGroup(group string, send chan ArticleEntry)
 	CountAllArticlesInGroup(group string) (int64, error)
 	GetAllArticles() []ArticleEntry
-	
+
 	SetConnectionLifetime(seconds int)
 	SetMaxOpenConns(n int)
 	SetMaxIdleConns(n int)
@@ -246,6 +243,9 @@ type Database interface {
 
 	// delete an article from the database
 	DeleteArticle(msg_id string) error
+
+	// remove an article from the database
+	RemoveArticle(msg_id string) error
 
 	// detele the existance of a thread from the threads table, does NOT remove replies
 	DeleteThread(root_msg_id string) error
