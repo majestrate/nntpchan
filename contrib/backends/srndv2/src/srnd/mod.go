@@ -47,7 +47,6 @@ type ModUI interface {
 	// handle mark a post as spam
 	HandlePostSpam(wr http.ResponseWriter, r *http.Request)
 
-	
 	// get outbound message channel
 	MessageChan() chan NNTPMessage
 }
@@ -56,6 +55,7 @@ type ModAction string
 
 const ModInetBan = ModAction("overchan-inet-ban")
 const ModDelete = ModAction("delete")
+const ModRemove = ModAction("remove")
 const ModRemoveAttachment = ModAction("overchan-del-attachment")
 const ModStick = ModAction("overchan-stick")
 const ModLock = ModAction("overchan-lock")
@@ -437,7 +437,19 @@ func (mod *modEngine) Do(ev ModEvent) {
 	} else if action == ModSage {
 		// TODO: implement
 	} else if action == ModStick {
-		// TODO: implement
+		// TODP: implement
+	} else if action == ModRemove {
+		if ValidMessageID(target) {
+			err := mod.database.DeleteArticle(target)
+			if err == nil {
+				err = mod.store.Remove(target)
+			}
+			if err == nil {
+				log.Println("removed", target)
+			} else {
+				log.Println(action, target, "failed:", err)
+			}
+		}
 	} else if action == ModRemoveAttachment {
 		var delfiles []string
 		atts := mod.database.GetPostAttachments(target)
