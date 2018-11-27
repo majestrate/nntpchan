@@ -97,6 +97,12 @@ func (self *nullHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// board list page
+	if strings.ToLower(path) == "/b/" {
+		template.genBoardList(self.prefix, self.name, w, self.database, i18n)
+		return
+	}
+	
 	if strings.HasPrefix(path, "/b/") {
 		// board handler
 		parts := strings.Split(path[3:], "/")

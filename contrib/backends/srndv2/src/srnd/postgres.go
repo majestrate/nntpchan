@@ -152,9 +152,11 @@ const GetCitesByPostHashLike = "GetCitesByPostHashLike"
 const GetYearlyPostHistory = "GetYearlyPostHistory"
 const GetNewsgroupList = "GetNewsgroupList"
 const CountUkko = "CountUkko"
+const GetNewsgroupStats = "GetNewsgroupStats"
 
 func (self *PostgresDatabase) prepareStatements() {
 	self.stmt = map[string]string{
+		GetNewsgroupStats: "SELECT COUNT(message_id), newsgroup FROM articleposts WHERE time_posted > (EXTRACT(epoch FROM NOW()) - (24*3600)) GROUP BY newsgroup",
 		NewsgroupBanned:                 "SELECT 1 FROM BannedGroups WHERE newsgroup = $1",
 		ArticleBanned:                   "SELECT 1 FROM BannedArticles WHERE message_id = $1",
 		GetAllNewsgroups:                "SELECT name FROM Newsgroups WHERE name NOT IN ( SELECT newsgroup FROM BannedGroups )",
@@ -2050,6 +2052,21 @@ func (self *PostgresDatabase) GetUkkoPageCount(perpage int) (count int64, err er
 	count /= int64(perpage)
 	return
 }
+
+func (self *PostgresDatabase)	GetNewsgroupStats() (stats []NewsgroupStats, err error) {
+	var rows *sql.Rows
+	rows, err = self.conn.Query(self.stmt[GetNewsgroupStats])
+	if err == nil {
+		for rows.Next() {
+			var s NewsgroupStats
+			rows.Scan(&s.PPD, &s.Name)
+			stats = append(stats, s)
+		}
+		rows.Close()
+	}
+	return
+}
+
 
 func (self *PostgresDatabase) FindHeaders(group, headername string, lo, hi int64) (hdr ArticleHeaders, err error) {
 	hdr = make(ArticleHeaders)

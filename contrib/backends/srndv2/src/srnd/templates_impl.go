@@ -475,36 +475,29 @@ func (self *templateEngine) genGraphs(prefix string, wr io.Writer, db Database, 
 
 func (self *templateEngine) genBoardList(prefix, name string, wr io.Writer, db Database, i18n *I18N) {
 	// the graph for the front page
-	var frontpage_graph boardPageRows
+	var graph boardPageRows
 
-	// for each group
-	groups := db.GetAllNewsgroups()
-	for _, group := range groups {
-		// exclude banned
-		banned, _ := db.NewsgroupBanned(group)
-		if banned {
-			continue
-		}
-		// posts this hour
-		hour := db.CountPostsInGroup(group, 3600)
-		// posts today
-		day := db.CountPostsInGroup(group, 86400)
-		// posts total
-		all := db.CountPostsInGroup(group, 0)
-		frontpage_graph = append(frontpage_graph, boardPageRow{
-			All:   all,
-			Day:   day,
-			Hour:  hour,
-			Board: group,
+	stats, err := db.GetNewsgroupStats()
+	if err != nil {
+		log.Println("error getting board list", err)
+		io.WriteString(wr, err.Error())
+		return
+	}
+
+	for idx := range stats {
+		graph = append(graph, boardPageRow{
+			Board: stats[idx].Name,
+			Day: stats[idx].PPD,
 		})
 	}
+	
 	param := map[string]interface{}{
 		"prefix":   prefix,
 		"frontend": name,
 	}
-	sort.Sort(frontpage_graph)
-	param["graph"] = frontpage_graph
-	_, err := io.WriteString(wr, self.renderTemplate("boardlist", param, i18n))
+	sort.Sort(graph)
+	param["graph"] = graph
+	_, err = io.WriteString(wr, self.renderTemplate("boardlist", param, i18n))
 	if err != nil {
 		log.Println("error writing board list page", err)
 	}

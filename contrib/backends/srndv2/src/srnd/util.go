@@ -60,10 +60,34 @@ func EnsureDir(dirname string) {
 	}
 }
 
-var exp_valid_message_id = regexp.MustCompilePOSIX(`^<[a-zA-Z0-9$.]{2,128}@[a-zA-Z0-9\-.]{2,63}>$`)
+// printableASCII tells whether string is made of US-ASCII printable characters
+// except of specified one.
+func printableASCII(s string, e byte) bool {
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		// NOTE: doesn't include space, which is neither printable nor control
+		if c <= 32 || c >= 127 || c == e {
+			return false
+		}
+	}
+	return true
+}
 
 func ValidMessageID(id string) bool {
-	return exp_valid_message_id.MatchString(id)
+	/*
+	   {RFC 3977}
+	   o  A message-id MUST begin with "<", end with ">", and MUST NOT
+	      contain the latter except at the end.
+	   o  A message-id MUST be between 3 and 250 octets in length.
+	   o  A message-id MUST NOT contain octets other than printable US-ASCII
+	      characters.
+
+	   additionally, we check path characters, they may be dangerous
+	*/
+	return len(id) >= 3 && len(id) <= 250 &&
+		id[0] == '<' && id[len(id)-1] == '>' &&
+		printableASCII(id[1:len(id)-1], '>') &&
+		strings.IndexAny(id[1:len(id)-1], "/\\") < 0
 }
 
 // message id hash
@@ -482,7 +506,7 @@ func IPNet2MinMax(inet *net.IPNet) (min, max net.IP) {
 	maskb := []byte(inet.Mask)
 	maxb := make([]byte, len(netb))
 
-	for i, _ := range maxb {
+	for i := range maxb {
 		maxb[i] = netb[i] | (^maskb[i])
 	}
 	min = net.IP(netb)

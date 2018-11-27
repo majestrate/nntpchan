@@ -776,10 +776,13 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 							// wtf?!
 							conn.PrintfLine("503 idkwtf happened: %s", err.Error())
 						}
+					} else {
+						// we dont got it (by msgid)
+						conn.PrintfLine("430 %s", msgid)
 					}
 				} else {
-					// we dont got it
-					conn.PrintfLine("430 %s", msgid)
+					// we dont got it (by num)
+					conn.PrintfLine("423 %s", msgid)
 				}
 			} else if cmd == "IHAVE" {
 				if !self.authenticated {
@@ -1175,7 +1178,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 					dw := conn.DotWriter()
 					for _, entry := range list {
 						if ValidNewsgroup(entry[0]) {
-							io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[1], entry[2]))
+							io.WriteString(dw, fmt.Sprintf("%s %s %s y\r\n", entry[0], entry[2], entry[1]))
 						}
 					}
 					dw.Close()

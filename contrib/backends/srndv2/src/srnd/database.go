@@ -47,13 +47,12 @@ func (self PostEntry) Count() int64 {
 	return self[1]
 }
 
+type PostEntryList []PostEntry
+
+
 // stats about newsgroup postings
 type NewsgroupStats struct {
-	Posted []PostEntry
-	Delted []PostEntry
-	Hits   []PostEntry
-	Start  time.Time
-	End    time.Time
+	PPD    int64
 	Name   string
 }
 
@@ -70,6 +69,8 @@ type NewsgroupListEntry [3]string
 
 type NewsgroupList []NewsgroupListEntry
 
+
+
 type Database interface {
 	Close()
 	CreateTables()
@@ -81,7 +82,7 @@ type Database interface {
 	GetAllArticlesInGroup(group string, send chan ArticleEntry)
 	CountAllArticlesInGroup(group string) (int64, error)
 	GetAllArticles() []ArticleEntry
-
+	
 	SetConnectionLifetime(seconds int)
 	SetMaxOpenConns(n int)
 	SetMaxIdleConns(n int)
@@ -123,6 +124,9 @@ type Database interface {
 	// get the number of posts in a certain newsgroup since N seconds ago
 	// if N <= 0 then count all we have now
 	CountPostsInGroup(group string, time_frame int64) int64
+
+	// get the stats for the overview page
+	GetNewsgroupStats() ([]NewsgroupStats, error)
 
 	// get all replies to a thread
 	// if last > 0 then get that many of the last replies
