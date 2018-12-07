@@ -295,12 +295,20 @@ func (self *nntpArticle) Newsgroup() string {
 }
 
 func (self *nntpArticle) Name() string {
-	from := self.headers.Get("From", "anonymous <a@no.n>")
-	idx := strings.Index(from, "<")
-	if idx > 1 {
-		return from[:idx]
+	const defname = "Anonymous"
+	from := strings.TrimSpace(self.headers.Get("From", ""))
+	if from == "" {
+		return defname
 	}
-	return "[Invalid From header]"
+	a, e := mail.ParseAddress(from)
+	if e != nil {
+		return fmt.Sprintf("[Invalid From header: %v]", e)
+	}
+	name := strings.TrimSpace(a.Name)
+	if name == "" {
+		return defname
+	}
+	return name
 }
 
 func (self *nntpArticle) Addr() (addr string) {
@@ -327,13 +335,15 @@ func (self *nntpArticle) Addr() (addr string) {
 }
 
 func (self *nntpArticle) Email() string {
-	from := self.headers.Get("From", "anonymous <a@no.n>")
-	idx := strings.Index(from, "<")
-	if idx > 2 {
-		return from[:idx-2]
+	from := strings.TrimSpace(self.headers.Get("From", ""))
+	if from == "" {
+		return ""
 	}
-	return "[Invalid From header]"
-
+	a, e := mail.ParseAddress(from)
+	if e != nil {
+		return fmt.Sprintf("[Invalid From header: %v]", e)
+	}
+	return a.Address
 }
 
 func (self *nntpArticle) Subject() string {
