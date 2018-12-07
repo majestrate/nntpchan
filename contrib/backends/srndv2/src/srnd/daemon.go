@@ -1151,14 +1151,18 @@ func (self *NNTPDaemon) Setup() {
 
 		self.frontend = NewHTTPFrontend(self, self.cache, self.conf.frontend, self.conf.worker["url"])
 	}
-	
+
 	self.spamFilter.Configure(self.conf.spamconf)
 
+	regen := func(string, string, string, int) {}
+	if self.frontend != nil {
+		regen = self.frontend.RegenOnModEvent
+	}
 	self.mod = &modEngine{
 		//spam:     &self.spamFilter,
 		store:    self.store,
 		database: self.database,
-		regen:    self.frontend.RegenOnModEvent,
+		regen:    regen,
 	}
 	// inject DB into template engine
 	template.DB = self.database
