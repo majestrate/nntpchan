@@ -801,8 +801,8 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 	go func() {
 		var buff [65536]byte
 		writeMIMEHeader(pw, hdr)
-		io.CopyBuffer(pw, body, buff[:])
-		pw.Close()
+		_, e := io.CopyBuffer(pw, body, buff[:])
+		pw.CloseWithError(e)
 	}()
 	err = daemon.store.ProcessMessage(f, pr, daemon.CheckText, hdr.Get("Newsgroups"))
 	pr.Close()
