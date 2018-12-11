@@ -550,13 +550,6 @@ func (self *nntpConnection) checkMIMEHeaderNoAuth(daemon *NNTPDaemon, hdr textpr
 	return
 }
 
-var overReplacer = strings.NewReplacer("\t", " ", "\n", " ", "\r", "", "\000", "")
-
-// safeOver cleans string for OVER/XOVER output
-func safeOver(s string) string {
-	return strings.TrimSpace(overReplacer.Replace(s))
-}
-
 func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string, conn *textproto.Conn) (err error) {
 	parts := strings.Split(line, " ")
 	var msgid string
@@ -922,24 +915,24 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 							if model != nil {
 								if err == nil {
 									/*
-									The first 8 fields MUST be the following, in order:
-									     "0" or article number (see below)
-									     Subject header content
-									     From header content
-									     Date header content
-									     Message-ID header content
-									     References header content
-									     :bytes metadata item
-									     :lines metadata item
+										The first 8 fields MUST be the following, in order:
+										     "0" or article number (see below)
+										     Subject header content
+										     From header content
+										     Date header content
+										     Message-ID header content
+										     References header content
+										     :bytes metadata item
+										     :lines metadata item
 									*/
 									fmt.Fprintf(dw,
 										"%.6d\t%s\t\"%s\" <%s@%s>\t%s\t%s\t%s\r\n",
 										model.NNTPID(),
-										safeOver(model.Subject()),
-										safeOver(model.Name()), safeOver(model.Name()), safeOver(model.Frontend()),
-										safeOver(model.Date()),
-										safeOver(model.MessageID()),
-										safeOver(model.Reference()))
+										safeHeader(model.Subject()),
+										safeHeader(model.Name()), safeHeader(model.Name()), safeHeader(model.Frontend()),
+										safeHeader(model.Date()),
+										safeHeader(model.MessageID()),
+										safeHeader(model.Reference()))
 								}
 							}
 						}
