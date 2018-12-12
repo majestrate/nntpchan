@@ -156,10 +156,7 @@ func newPlaintextArticle(message, email, subject, name, instance, message_id, ne
 	nntp := &nntpArticle{
 		headers: make(ArticleHeaders),
 	}
-	nntp.headers.Set("From", (&mail.Address{
-		Name:    name,
-		Address: email,
-	}).String())
+	nntp.headers.Set("From", formatAddress(name, email))
 	nntp.headers.Set("Subject", subject)
 	if isSage(subject) {
 		nntp.headers.Set("X-Sage", "1")

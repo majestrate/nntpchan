@@ -19,7 +19,6 @@ import (
 	"log"
 	"mime"
 	"net/http"
-	"net/mail"
 	"strings"
 	"time"
 )
@@ -785,10 +784,10 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		return
 	}
 
-	subject := pr.Subject
+	subject := strings.TrimSpace(pr.Subject)
 
 	// set subject
-	if len(subject) == 0 {
+	if subject == "" {
 		subject = "None"
 	} else if len(subject) > 256 {
 		// subject too big
@@ -796,28 +795,20 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		return
 	}
 
-	nntp.headers.Set("Subject", subject)
+	nntp.headers.Set("Subject", safeHeader(subject))
 	if isSage(subject) {
 		nntp.headers.Set("X-Sage", "1")
 	}
 
-	name := pr.Name
-
+	name := strings.TrimSpace(pr.Name)
 	var tripcode_privkey []byte
-
-	// set name
-	if len(name) == 0 {
+	// tripcode
+	if idx := strings.IndexByte(name, '#'); idx >= 0 {
+		tripcode_privkey = parseTripcodeSecret(name[idx+1:])
+		name = strings.TrimSpace(name[:idx])
+	}
+	if name == "" {
 		name = "Anonymous"
-	} else {
-		idx := strings.Index(name, "#")
-		// tripcode
-		if idx >= 0 {
-			tripcode_privkey = parseTripcodeSecret(name[idx+1:])
-			name = strings.Trim(name[:idx], "\t ")
-			if name == "" {
-				name = "Anonymous"
-			}
-		}
 	}
 	if len(name) > 128 {
 		// name too long
@@ -830,10 +821,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		msgid = genMessageID(pr.Frontend)
 	}
 
-	nntp.headers.Set("From", (&mail.Address{
-		Name:    name,
-		Address: "poster@" + pr.Frontend,
-	}).String())
+	nntp.headers.Set("From", formatAddress(safeHeader(name), "poster@" + pr.Frontend))
 	nntp.headers.Set("Message-ID", msgid)
 
 	// set message
