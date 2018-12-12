@@ -19,6 +19,7 @@ import (
 	"log"
 	"mime"
 	"net/http"
+	"net/mail"
 	"strings"
 	"time"
 )
@@ -829,7 +830,10 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		msgid = genMessageID(pr.Frontend)
 	}
 
-	nntp.headers.Set("From", nntpSanitize(fmt.Sprintf("%s <poster@%s>", name, pr.Frontend)))
+	nntp.headers.Set("From", (&mail.Address{
+		Name:    name,
+		Address: "poster@" + pr.Frontend,
+	}).String())
 	nntp.headers.Set("Message-ID", msgid)
 
 	// set message

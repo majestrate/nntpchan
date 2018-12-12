@@ -26,6 +26,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 )
 
 func DelFile(fname string) {
@@ -159,6 +160,18 @@ func nntpSanitize(data string) (ret string) {
 		}
 	}
 	return ret
+}
+
+var safeHeaderReplacer = strings.NewReplacer(
+	"\t", " ",
+	"\n", string(unicode.ReplacementChar),
+	"\r", string(unicode.ReplacementChar),
+	"\000", string(unicode.ReplacementChar))
+
+// safeHeader replaces dangerous stuff from header,
+// also replaces space with tab for XOVER/OVER output
+func safeHeader(s string) string {
+	return strings.TrimSpace(safeHeaderReplacer.Replace(s))
 }
 
 type int64Sorter []int64
