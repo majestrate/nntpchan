@@ -743,7 +743,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 	}
 
 	ref := pr.Reference
-	if len(ref) > 0 {
+	if ref != "" {
 		if ValidMessageID(ref) {
 			if self.daemon.database.HasArticleLocal(ref) {
 				nntp.headers.Set("References", ref)
@@ -796,7 +796,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 	}
 
 	nntp.headers.Set("Subject", safeHeader(subject))
-	if isSage(subject) {
+	if isSage(subject) && ref != "" {
 		nntp.headers.Set("X-Sage", "1")
 	}
 
@@ -821,7 +821,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		msgid = genMessageID(pr.Frontend)
 	}
 
-	nntp.headers.Set("From", formatAddress(safeHeader(name), "poster@" + pr.Frontend))
+	nntp.headers.Set("From", formatAddress(safeHeader(name), "poster@"+pr.Frontend))
 	nntp.headers.Set("Message-ID", msgid)
 
 	// set message
@@ -834,7 +834,21 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 	}
 
 	if len(cites) > 0 {
-		nntp.headers.Set("Reply-To", strings.Join(cites, " "))
+		if ref == "" && len(cites) == 1 {
+			/*
+				this is workaround for:
+
+				{RFC 5322}
+				If the parent message does not contain
+				a "References:" field but does have an "In-Reply-To:" field
+				containing a single message identifier, then the "References:" field
+				will contain the contents of the parent's "In-Reply-To:" field
+				followed by the contents of the parent's "Message-ID:" field (if
+				any).
+			*/
+			cites = append(cites, "<0>")
+		}
+		nntp.headers.Set("In-Reply-To", strings.Join(cites, " "))
 	}
 
 	// set date

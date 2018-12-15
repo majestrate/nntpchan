@@ -92,6 +92,10 @@ func ValidMessageID(id string) bool {
 		strings.IndexAny(id[1:len(id)-1], "/\\") < 0
 }
 
+func ReservedMessageID(id string) bool {
+	return id == "<0>" || id == "<keepalive@dummy.tld>"
+}
+
 // message id hash
 func HashMessageID(msgid string) string {
 	return fmt.Sprintf("%x", sha1.Sum([]byte(msgid)))
@@ -898,7 +902,7 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 		log.Println("dropping message with invalid mime header, no message-id")
 		_, err = io.Copy(Discard, body)
 		return
-	} else if ValidMessageID(msgid) {
+	} else if ValidMessageID(msgid) && !ReservedMessageID(msgid) {
 		f = daemon.store.CreateFile(msgid)
 	} else {
 		// invalid message-id
@@ -914,9 +918,9 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 	}
 
 	// ask for replies
-	replyTos := strings.Split(hdr.Get("Reply-To"), " ")
+	replyTos := strings.Split(hdr.Get("In-Reply-To"), " ")
 	for _, reply := range replyTos {
-		if ValidMessageID(reply) {
+		if ValidMessageID(reply) && !ReservedMessageID(reply) {
 			if !daemon.store.HasArticle(reply) {
 				go daemon.askForArticle(reply)
 			}
