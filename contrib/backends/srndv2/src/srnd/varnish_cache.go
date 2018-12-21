@@ -13,6 +13,7 @@ type VarnishCache struct {
 	prefix           string
 	handler          *nullHandler
 	client           *http.Client
+	transport        *http.Transport
 	workers          int
 	threadsRegenChan chan ArticleEntry
 	invalidateChan   chan *url.URL
@@ -52,6 +53,7 @@ func (self *VarnishCache) doRequest(u *url.URL) {
 	} else {
 		log.Println("varnish cache error", err)
 	}
+	self.transport.CloseIdleConnections()
 }
 
 func (self *VarnishCache) DeleteBoardMarkup(group string) {
@@ -178,18 +180,20 @@ func NewVarnishCache(varnish_url, bind_addr, prefix, webroot, name, translations
 	if err != nil {
 		log.Fatalf("failed to resolve %s for varnish cache: %s", bind_addr, err)
 	}
-	cache.client = &http.Client{
-		Transport: &http.Transport{
-			Dial: func(network, addr string) (c net.Conn, err error) {
-				var remote_addr *net.TCPAddr
-				remote_addr, err = net.ResolveTCPAddr(network, addr)
-				if err == nil {
-					c, err = net.DialTCP(network, local_addr, remote_addr)
-				}
-				return
-			},
+	cache.transport = &http.Transport{
+		Dial: func(network, addr string) (c net.Conn, err error) {
+			var remote_addr *net.TCPAddr
+			remote_addr, err = net.ResolveTCPAddr(network, addr)
+			if err == nil {
+				c, err = net.DialTCP(network, local_addr, remote_addr)
+			}
+			return
 		},
 	}
+	cache.client = &http.Client{
+		Transport: cache.transport,
+	}
+
 	cache.prefix = "/"
 	cache.handler = &nullHandler{
 		prefix:         prefix,
