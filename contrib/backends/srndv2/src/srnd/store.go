@@ -547,8 +547,8 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 			if e != nil {
 				log.Println("failed to read entire message", e)
 			}
-			pw_in.Close()
-			pr_in.Close()
+			pw_in.CloseWithError(e)
+			pr_in.CloseWithError(e)
 		}()
 		r := bufio.NewReader(pr_out)
 		m, e := readMIMEHeader(r)
@@ -579,7 +579,7 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 			return
 		}
 		writeMIMEHeader(wr, m.Header)
-		read_message_body(m.Body, m.Header, self, wr, false, process)
+		err = read_message_body(m.Body, m.Header, self, wr, false, process)
 	}
 	return
 }
@@ -632,7 +632,7 @@ func read_message_body(body io.Reader, hdr map[string][]string, store ArticleSto
 		body = io.TeeReader(body, wr)
 	}
 	boundary, ok := params["boundary"]
-	if ok || content_type == "multipart/mixed" {
+	if strings.HasPrefix(media_type, "multipart/") && ok {
 		partReader := multipart.NewReader(body, boundary)
 		for {
 			part, err := partReader.NextPart()

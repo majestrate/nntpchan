@@ -743,7 +743,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 	}
 
 	ref := pr.Reference
-	if len(ref) > 0 {
+	if ref != "" {
 		if ValidMessageID(ref) {
 			if self.daemon.database.HasArticleLocal(ref) {
 				nntp.headers.Set("References", ref)
@@ -784,10 +784,10 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		return
 	}
 
-	subject := pr.Subject
+	subject := strings.TrimSpace(pr.Subject)
 
 	// set subject
-	if len(subject) == 0 {
+	if subject == "" {
 		subject = "None"
 	} else if len(subject) > 256 {
 		// subject too big
@@ -795,28 +795,20 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		return
 	}
 
-	nntp.headers.Set("Subject", subject)
-	if isSage(subject) {
+	nntp.headers.Set("Subject", safeHeader(subject))
+	if isSage(subject) && ref != "" {
 		nntp.headers.Set("X-Sage", "1")
 	}
 
-	name := pr.Name
-
+	name := strings.TrimSpace(pr.Name)
 	var tripcode_privkey []byte
-
-	// set name
-	if len(name) == 0 {
+	// tripcode
+	if idx := strings.IndexByte(name, '#'); idx >= 0 {
+		tripcode_privkey = parseTripcodeSecret(name[idx+1:])
+		name = strings.TrimSpace(name[:idx])
+	}
+	if name == "" {
 		name = "Anonymous"
-	} else {
-		idx := strings.Index(name, "#")
-		// tripcode
-		if idx >= 0 {
-			tripcode_privkey = parseTripcodeSecret(name[idx+1:])
-			name = strings.Trim(name[:idx], "\t ")
-			if name == "" {
-				name = "Anonymous"
-			}
-		}
 	}
 	if len(name) > 128 {
 		// name too long
@@ -829,7 +821,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		msgid = genMessageID(pr.Frontend)
 	}
 
-	nntp.headers.Set("From", nntpSanitize(fmt.Sprintf("%s <poster@%s>", name, pr.Frontend)))
+	nntp.headers.Set("From", formatAddress(safeHeader(name), "poster@"+pr.Frontend))
 	nntp.headers.Set("Message-ID", msgid)
 
 	// set message
@@ -842,7 +834,21 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 	}
 
 	if len(cites) > 0 {
-		nntp.headers.Set("Reply-To", strings.Join(cites, " "))
+		if ref == "" && len(cites) == 1 {
+			/*
+				this is workaround for:
+
+				{RFC 5322}
+				If the parent message does not contain
+				a "References:" field but does have an "In-Reply-To:" field
+				containing a single message identifier, then the "References:" field
+				will contain the contents of the parent's "In-Reply-To:" field
+				followed by the contents of the parent's "Message-ID:" field (if
+				any).
+			*/
+			cites = append(cites, "<0>")
+		}
+		nntp.headers.Set("In-Reply-To", strings.Join(cites, " "))
 	}
 
 	// set date

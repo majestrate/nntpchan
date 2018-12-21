@@ -135,7 +135,7 @@ func (self *nntpArticle) Reset() {
 	self.boundary = ""
 	self.message = ""
 	if self.attachments != nil {
-		for idx, _ := range self.attachments {
+		for idx := range self.attachments {
 			self.attachments[idx].Reset()
 			self.attachments[idx] = nil
 		}
@@ -156,7 +156,7 @@ func newPlaintextArticle(message, email, subject, name, instance, message_id, ne
 	nntp := &nntpArticle{
 		headers: make(ArticleHeaders),
 	}
-	nntp.headers.Set("From", fmt.Sprintf("%s <%s>", name, email))
+	nntp.headers.Set("From", formatAddress(name, email))
 	nntp.headers.Set("Subject", subject)
 	if isSage(subject) {
 		nntp.headers.Set("X-Sage", "1")
@@ -296,18 +296,30 @@ func (self *nntpArticle) Newsgroup() string {
 
 func (self *nntpArticle) Name() string {
 	const defname = "Anonymous"
+
 	from := strings.TrimSpace(self.headers.Get("From", ""))
 	if from == "" {
 		return defname
 	}
+
 	a, e := mail.ParseAddress(from)
+	var name string
 	if e != nil {
-		return fmt.Sprintf("[Invalid From header: %v]", e)
+		// try older method - some nodes generate non-compliant stuff
+		if i := strings.IndexByte(from, '<'); i > 1 {
+			name = from[:i]
+		} else {
+			return "[Invalid From header]"
+		}
+	} else {
+		name = a.Name
 	}
-	name := strings.TrimSpace(a.Name)
+
+	name = safeHeader(name)
 	if name == "" {
 		return defname
 	}
+
 	return name
 }
 

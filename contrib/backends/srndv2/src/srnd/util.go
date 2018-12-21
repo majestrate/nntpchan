@@ -15,6 +15,7 @@ import (
 	"golang.org/x/crypto/ed25519"
 	"io"
 	"log"
+	"mime"
 	"net"
 	"net/http"
 	"net/mail"
@@ -26,6 +27,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 )
 
 func DelFile(fname string) {
@@ -88,6 +90,10 @@ func ValidMessageID(id string) bool {
 		id[0] == '<' && id[len(id)-1] == '>' &&
 		printableASCII(id[1:len(id)-1], '>') &&
 		strings.IndexAny(id[1:len(id)-1], "/\\") < 0
+}
+
+func ReservedMessageID(id string) bool {
+	return id == "<0>" || id == "<keepalive@dummy.tld>"
 }
 
 // message id hash
@@ -160,6 +166,133 @@ func nntpSanitize(data string) (ret string) {
 	}
 	return ret
 }
+
+var safeHeaderReplacer = strings.NewReplacer(
+	"\t", " ",
+	"\n", string(unicode.ReplacementChar),
+	"\r", string(unicode.ReplacementChar),
+	"\000", string(unicode.ReplacementChar))
+
+// safeHeader replaces dangerous stuff from header,
+// also replaces space with tab for XOVER/OVER output
+func safeHeader(s string) string {
+	return strings.TrimSpace(safeHeaderReplacer.Replace(s))
+}
+
+func isVchar(r rune) bool {
+	// RFC 5234 B.1: VCHAR =  %x21-7E ; visible (printing) characters
+	// RFC 6532 3.2: VCHAR =/ UTF8-non-ascii
+	return (r >= 0x21 && r <= 0x7E) || r >= 0x80
+}
+
+func isAtext(r rune) bool {
+	// RFC 5322: Printable US-ASCII characters not including specials.  Used for atoms.
+	switch r {
+	case '(', ')', '<', '>', '[', ']', ':', ';', '@', '\\', ',', '.', '"':
+		return false
+	}
+	return isVchar(r)
+}
+
+func isWSP(r rune) bool { return r == ' ' || r == '\t' }
+
+func isQtext(r rune) bool {
+	if r == '\\' || r == '"' {
+		return false
+	}
+	return isVchar(r)
+}
+
+func writeQuoted(b *strings.Builder, s string) {
+	b.WriteByte('"')
+	for _, r := range s {
+		if isQtext(r) || isWSP(r) {
+			b.WriteRune(r)
+		} else {
+			b.WriteByte('\\')
+			b.WriteRune(r)
+		}
+	}
+	b.WriteByte('"')
+}
+
+func formatAddress(name, email string) string {
+	// somewhat based on stdlib' mail.Address.String()
+
+	b := &strings.Builder{}
+
+	if name != "" {
+		needsEncoding := false
+		needsQuoting := false
+		for i, r := range name {
+			if r >= 0x80 || (!isWSP(r) && !isVchar(r)) {
+				needsEncoding = true
+				break
+			}
+			if isAtext(r) {
+				continue
+			}
+			if r == ' ' && i > 0 && name[i-1] != ' ' && i < len(name)-1 {
+				// allow spaces but only surrounded by non-spaces
+				// otherwise they will be removed by receiver
+				continue
+			}
+			needsQuoting = true
+		}
+
+		if needsEncoding {
+			// Text in an encoded-word in a display-name must not contain certain
+			// characters like quotes or parentheses (see RFC 2047 section 5.3).
+			// When this is the case encode the name using base64 encoding.
+			if strings.ContainsAny(name, "\"#$%&'(),.:;<>@[]^`{|}~") {
+				b.WriteString(mime.BEncoding.Encode("utf-8", name))
+			} else {
+				b.WriteString(mime.QEncoding.Encode("utf-8", name))
+			}
+		} else if needsQuoting {
+			writeQuoted(b, name)
+		} else {
+			b.WriteString(name)
+		}
+
+		b.WriteByte(' ')
+	}
+
+	at := strings.LastIndex(email, "@")
+	var local, domain string
+	if at >= 0 {
+		local, domain = email[:at], email[at+1:]
+	} else {
+		local = email
+	}
+
+	quoteLocal := false
+	for i, r := range local {
+		if isAtext(r) {
+			// if atom then okay
+			continue
+		}
+		if r == '.' && r > 0 && local[i-1] != '.' && i < len(local)-1 {
+			// dots are okay but only if surrounded by non-dots
+			continue
+		}
+		quoteLocal = true
+		break
+	}
+
+	b.WriteByte('<')
+	if !quoteLocal {
+		b.WriteString(local)
+	} else {
+		writeQuoted(b, local)
+	}
+	b.WriteByte('@')
+	b.WriteString(domain)
+	b.WriteByte('>')
+
+	return b.String()
+}
+
 
 type int64Sorter []int64
 
@@ -769,7 +902,7 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 		log.Println("dropping message with invalid mime header, no message-id")
 		_, err = io.Copy(Discard, body)
 		return
-	} else if ValidMessageID(msgid) {
+	} else if ValidMessageID(msgid) && !ReservedMessageID(msgid) {
 		f = daemon.store.CreateFile(msgid)
 	} else {
 		// invalid message-id
@@ -785,9 +918,9 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 	}
 
 	// ask for replies
-	replyTos := strings.Split(hdr.Get("Reply-To"), " ")
+	replyTos := strings.Split(hdr.Get("In-Reply-To"), " ")
 	for _, reply := range replyTos {
-		if ValidMessageID(reply) {
+		if ValidMessageID(reply) && !ReservedMessageID(reply) {
 			if !daemon.store.HasArticle(reply) {
 				go daemon.askForArticle(reply)
 			}
@@ -801,8 +934,8 @@ func storeMessage(daemon *NNTPDaemon, hdr textproto.MIMEHeader, body io.Reader) 
 	go func() {
 		var buff [65536]byte
 		writeMIMEHeader(pw, hdr)
-		io.CopyBuffer(pw, body, buff[:])
-		pw.Close()
+		_, e := io.CopyBuffer(pw, body, buff[:])
+		pw.CloseWithError(e)
 	}()
 	err = daemon.store.ProcessMessage(f, pr, daemon.CheckText, hdr.Get("Newsgroups"))
 	pr.Close()
