@@ -189,6 +189,9 @@ func NewVarnishCache(varnish_url, bind_addr, prefix, webroot, name, translations
 			}
 			return
 		},
+		DisableKeepAlives:   true,
+		MaxIdleConnsPerHost: workers,
+		MaxIdleConns:        workers,
 	}
 	cache.client = &http.Client{
 		Transport: cache.transport,
