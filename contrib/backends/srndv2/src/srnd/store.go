@@ -642,7 +642,11 @@ func read_message_body(body io.Reader, hdr map[string][]string, store ArticleSto
 			} else if err == nil {
 				hdr := part.Header
 				// get content type of part
-				part_type := hdr.Get("Content-Type")
+				part_type := strings.TrimSpace(hdr.Get("Content-Type"))
+				if part_type == "" {
+					// default if unspecified
+					part_type = "text/plain"
+				}
 				// parse content type
 				media_type, _, err = mime.ParseMediaType(part_type)
 				if err == nil {
