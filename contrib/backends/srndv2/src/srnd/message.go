@@ -189,7 +189,7 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 		}
 	}
 	sha := sha512.New()
-	blake := blake2b.New256()
+	blake := blake2b.New512()
 	signed.signedPart = &nntpAttachment{}
 	// write body to sign buffer
 	mw := io.MultiWriter(sha, blake, signed.signedPart)
@@ -524,7 +524,7 @@ func verifyMessageBLAKE2B(pk, sig string, body io.Reader, innerHandler func(map[
 	log.Println("unwrapping signed message from", pk)
 	pk_bytes := unhex(pk)
 	sig_bytes := unhex(sig)
-	h := blake2b.New256()
+	h := blake2b.New512()
 	pr, pw := io.Pipe()
 	// read header
 	// handle inner body
