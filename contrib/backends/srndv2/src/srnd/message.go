@@ -182,7 +182,7 @@ func signArticle(nntp NNTPMessage, seed []byte) (signed *nntpArticle, err error)
 		if k == "X-PubKey-Ed25519" || k == "X-Signature-Ed25519-SHA512" || k == "X-Signature-Ed25519-BLAKE2B" {
 			// don't set signature or pubkey header
 		} else if k == "Content-Type" {
-			signed.headers.Set(k, "message/rfc822; charset=UTF-8")
+			signed.headers.Set(k, "message/rfc822")
 		} else {
 			v := h[k][0]
 			signed.headers.Set(k, v)
