@@ -700,7 +700,14 @@ func read_message_body(body io.Reader, hdr map[string][]string, store ArticleSto
 		}
 		// process inner body
 		// verify message
-		f := func(h map[string][]string, innerBody io.Reader) {
+		f := func(h ArticleHeaders, innerBody io.Reader) {
+			// override some of headers of inner message
+			msgid := nntp.MessageID()
+			if msgid != "" {
+				h.Set("Message-Id", msgid)
+			}
+			h.Set("Path", nntp.headers.Get("Path", ""))
+			h.Set("X-Pubkey-Ed25519", pk)
 			// handle inner message
 			e := read_message_body(innerBody, h, store, nil, true, callback)
 			if e != nil {

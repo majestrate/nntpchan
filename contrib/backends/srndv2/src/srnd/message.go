@@ -262,7 +262,7 @@ func (self *nntpArticle) Pubkey() string {
 }
 
 func (self *nntpArticle) MessageID() (msgid string) {
-	for _, h := range []string{"Message-ID", "Messageid", "MessageID", "Message-Id"} {
+	for _, h := range []string{"Message-ID", "Message-Id"} {
 		mid := self.headers.Get(h, "")
 		if mid != "" {
 			msgid = string(mid)
@@ -485,7 +485,7 @@ func (self *nntpArticle) WriteBody(wr io.Writer, limit int64) (err error) {
 // verify a signed message's body
 // innerHandler must close reader when done
 // returns error if one happens while verifying article
-func verifyMessageSHA512(pk, sig string, body io.Reader, innerHandler func(map[string][]string, io.Reader)) (err error) {
+func verifyMessageSHA512(pk, sig string, body io.Reader, innerHandler func(ArticleHeaders, io.Reader)) (err error) {
 	log.Println("unwrapping signed message from", pk)
 	pk_bytes := unhex(pk)
 	sig_bytes := unhex(sig)
@@ -497,7 +497,7 @@ func verifyMessageSHA512(pk, sig string, body io.Reader, innerHandler func(map[s
 		r := bufio.NewReader(hdr_reader)
 		msg, err := readMIMEHeader(r)
 		if err == nil {
-			innerHandler(msg.Header, msg.Body)
+			innerHandler(ArticleHeaders(msg.Header), msg.Body)
 		}
 		hdr_reader.Close()
 	}(pr)
@@ -520,7 +520,7 @@ func verifyMessageSHA512(pk, sig string, body io.Reader, innerHandler func(map[s
 	return
 }
 
-func verifyMessageBLAKE2B(pk, sig string, body io.Reader, innerHandler func(map[string][]string, io.Reader)) (err error) {
+func verifyMessageBLAKE2B(pk, sig string, body io.Reader, innerHandler func(ArticleHeaders, io.Reader)) (err error) {
 	log.Println("unwrapping signed message from", pk)
 	pk_bytes := unhex(pk)
 	sig_bytes := unhex(sig)
@@ -532,7 +532,7 @@ func verifyMessageBLAKE2B(pk, sig string, body io.Reader, innerHandler func(map[
 		r := bufio.NewReader(hdr_reader)
 		msg, err := readMIMEHeader(r)
 		if err == nil {
-			innerHandler(msg.Header, msg.Body)
+			innerHandler(ArticleHeaders(msg.Header), msg.Body)
 		}
 		hdr_reader.Close()
 	}(pr)
