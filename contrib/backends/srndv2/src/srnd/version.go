@@ -7,7 +7,7 @@ package srnd
 import "fmt"
 
 const major_version = 3
-const minor_version = 0
+const minor_version = 1
 const patch_verson = 0
 const program_name = "srnd"
 
