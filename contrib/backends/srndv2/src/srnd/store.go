@@ -138,9 +138,9 @@ func createArticleStore(config map[string]string, thumbConfig *ThumbnailConfig, 
 		compression:   config["compression"] == "1",
 		spamd:         spamd,
 		spamdir:       filepath.Join(config["store_dir"], "spam"),
-		hamdir: filepath.Join(config["store_dir"], "ham"),
-			
-		thumbnails:    thumbConfig,
+		hamdir:        filepath.Join(config["store_dir"], "ham"),
+
+		thumbnails: thumbConfig,
 	}
 	store.Init()
 	return store
@@ -591,21 +591,14 @@ func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
 		br := bufio.NewReader(r)
 		msg, err := readMIMEHeader(br)
 		if err == nil {
-			chnl := make(chan NNTPMessage)
 			hdr := textproto.MIMEHeader(msg.Header)
 			err = read_message_body(msg.Body, hdr, nil, nil, true, func(n NNTPMessage) {
-				c := chnl
 				if n != nil {
 					// inject pubkey for mod
 					n.Headers().Set("X-PubKey-Ed25519", hdr.Get("X-PubKey-Ed25519"))
-					c <- n
 				}
+				nntp = n
 			})
-			if err == nil {
-				nntp = <-chnl
-			} else {
-				log.Println("GetMessage() failed to load", msgid, err)
-			}
 		}
 	}
 	return
