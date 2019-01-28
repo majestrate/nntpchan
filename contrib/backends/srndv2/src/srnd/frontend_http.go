@@ -125,7 +125,7 @@ func (lc *liveChan) SendBanned() {
 	msg, _ := json.Marshal(map[string]string{
 		"Type": "ban",
 		// TODO: real ban message
-		"Reason": "your an faget, your IP was: " + lc.IP,
+		"Reason": "your an fagt, your IP was: " + lc.IP,
 	})
 	if lc.datachnl != nil {
 		lc.datachnl <- msg
@@ -324,10 +324,10 @@ func (self *httpFrontend) poll_liveui() {
 								th := threads[c-idx-1]
 								th.Update(self.daemon.database)
 								// send root post
-								live.Inform(th.OP())
+								go live.Inform(th.OP())
 								// send replies
 								for _, post := range th.Replies() {
-									live.Inform(post)
+									go live.Inform(post)
 								}
 							}
 						}
@@ -392,15 +392,17 @@ func (self *httpFrontend) HandleNewPost(nntp frontendPost) {
 	if len(ref) > 0 {
 		msgid = ref
 	}
-	entry := ArticleEntry{msgid, group}
-	// regnerate thread
-	self.Regen(entry)
-	// regenerate all board pages if not archiving
-	if !self.archive {
-		self.RegenerateBoard(group)
-	}
-	// regen front page
-	self.RegenFrontPage()
+	go func() {
+		entry := ArticleEntry{msgid, group}
+		// regnerate thread
+		self.Regen(entry)
+		// regenerate all board pages if not archiving
+		if !self.archive {
+			self.RegenerateBoard(group)
+		}
+		// regen front page
+		self.RegenFrontPage()
+	}()
 }
 
 // create a new captcha, return as json object

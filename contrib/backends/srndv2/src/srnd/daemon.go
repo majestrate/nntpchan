@@ -903,21 +903,21 @@ func (self *NNTPDaemon) processMessage(msgid string) {
 		if self.expire != nil {
 			// expire posts
 			log.Println("expire", group, "for", rollover, "threads")
-			self.expire.ExpireGroup(group, rollover)
+			go self.expire.ExpireGroup(group, rollover)
 		}
 		// send to mod panel
 		if group == "ctl" {
 			log.Println("process mod message", msgid)
-			self.mod.HandleMessage(msgid)
+			go self.mod.HandleMessage(msgid)
 		}
 		// inform callback hooks
 		go self.informHooks(group, msgid, ref)
 		// federate
-		self.sendAllFeeds(ArticleEntry{msgid, group})
+		go self.sendAllFeeds(ArticleEntry{msgid, group})
 		// send to frontend
 		if self.frontend != nil {
 			if self.frontend.AllowNewsgroup(group) {
-				self.frontend.HandleNewPost(frontendPost{msgid, ref, group})
+				go self.frontend.HandleNewPost(frontendPost{msgid, ref, group})
 			}
 		}
 	}
