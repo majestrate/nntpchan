@@ -75,7 +75,7 @@ type ArticleStore interface {
 	// register signed message
 	RegisterSigned(msgid, pk string) error
 
-	GetMessage(msgid string) NNTPMessage
+	GetMessage(msgid string, visit func(NNTPMessage))
 
 	// get size of message on disk
 	GetMessageSize(msgid string) (int64, error)
@@ -584,7 +584,7 @@ func (self *articleStore) ProcessMessage(wr io.Writer, msg io.Reader, spamfilter
 	return
 }
 
-func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
+func (self *articleStore) GetMessage(msgid string, visit func(NNTPMessage)) {
 	r, err := self.OpenMessage(msgid)
 	if err == nil {
 		defer r.Close()
@@ -597,7 +597,7 @@ func (self *articleStore) GetMessage(msgid string) (nntp NNTPMessage) {
 					// inject pubkey for mod
 					n.Headers().Set("X-PubKey-Ed25519", hdr.Get("X-PubKey-Ed25519"))
 				}
-				nntp = n
+				visit(n)
 			})
 		}
 	}

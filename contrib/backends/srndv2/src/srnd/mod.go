@@ -198,8 +198,6 @@ type ModEngine interface {
 	AllowBan(pubkey string) bool
 	// allow janitor
 	AllowJanitor(pubkey string) bool
-	// load a mod message
-	LoadMessage(msgid string) NNTPMessage
 	// execute 1 mod action line by a mod with pubkey
 	Execute(ev ModEvent, pubkey string)
 	// do a mod event unconditionally
@@ -225,10 +223,6 @@ func (self *modEngine) MarkSpam(msgid string) (err error) {
 		}
 	}
 	return
-}
-
-func (self *modEngine) LoadMessage(msgid string) NNTPMessage {
-	return self.store.GetMessage(msgid)
 }
 
 func (self *modEngine) BanAddress(cidr string) (err error) {
@@ -345,22 +339,23 @@ func (self *modEngine) AllowDelete(pubkey, msgid string) (allow bool) {
 }
 
 func (mod *modEngine) HandleMessage(msgid string) {
-	nntp := mod.store.GetMessage(msgid)
-	if nntp == nil {
-		log.Println("failed to load", msgid, "in mod engine, missing message")
-		return
-	}
-	// sanity check
-	if nntp.Newsgroup() == "ctl" {
-		pubkey := nntp.Pubkey()
-		for _, line := range strings.Split(nntp.Message(), "\n") {
-			line = strings.Trim(line, "\r\t\n ")
-			if len(line) > 0 {
-				ev := ParseModEvent(line)
-				mod.Execute(ev, pubkey)
+	mod.store.GetMessage(msgid, func(nntp NNTPMessage) {
+		if nntp == nil {
+			log.Println("failed to load", msgid, "in mod engine, missing message")
+			return
+		}
+		// sanity check
+		if nntp.Newsgroup() == "ctl" {
+			pubkey := nntp.Pubkey()
+			for _, line := range strings.Split(nntp.Message(), "\n") {
+				line = strings.Trim(line, "\r\t\n ")
+				if len(line) > 0 {
+					ev := ParseModEvent(line)
+					mod.Execute(ev, pubkey)
+				}
 			}
 		}
-	}
+	})
 }
 
 func (mod *modEngine) Do(ev ModEvent) {
