@@ -297,6 +297,10 @@ type post struct {
 	FrontendPublicKey string
 }
 
+func (p *post) IsCtl() bool {
+	return p.board == "ctl"
+}
+
 func (self *post) NNTPID() int {
 	return self.nntp_id
 }

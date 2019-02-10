@@ -81,6 +81,9 @@ type PostModel interface {
 	// returns true if this post was truncated
 	IsTruncated() bool
 
+	// return true if this post is a mod message
+	IsCtl() bool
+
 	IsI2P() bool
 	IsTor() bool
 	IsClearnet() bool
@@ -243,7 +246,6 @@ func (self boardPageRows) Less(i, j int) bool {
 func (self boardPageRows) Swap(i, j int) {
 	self[i], self[j] = self[j], self[i]
 }
-
 
 type postsGraphRow struct {
 	day time.Time

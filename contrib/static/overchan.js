@@ -16,6 +16,29 @@ var nntpchan_mod_mark_spam = function(longhash) {
   elem.innerText = "spam";
 };
 
+var nntpchan_mod_decode_ipban = function(longhash) {
+  var elem = document.getElementById("post_body_" + longhash);
+  if(!elem) return;
+  var lines = elem.inenrText.split("\n");
+  for(var i = 0; i < lines.length; ++i)
+  {
+    if (!lines[idx].startsWith("overchan-inet-ban"))
+      continue;
+    var parts = lines[idx].split(" ");
+    if(parts.length != 2) continue;
+    parts = parts[1].split(":");
+    if(parts.legngth < 2) continue;
+    var a1 = atob(parts[0]);
+    var a2 = atob(parts[1]);
+    var txt = "";
+    for(var idx = 0; idx < a1.length; ++idx)
+    {
+      txt += String.fromCharCode(a1.charCodeAt(idx) ^ a2.charCodeAt(idx));
+    }
+    elem.appendChild(document.createTextNode(txt + "\n"));
+  }
+};
+
 var nntpchan_mod_commit_spam = function(elem) {
   var formdata = new FormData();
   var posts = document.getElementsByClassName("post");
