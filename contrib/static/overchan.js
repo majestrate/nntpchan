@@ -39,6 +39,82 @@ var nntpchan_mod_decode_ipban = function(longhash) {
   }
 };
 
+var nntpchan_mod_action = function(mod_action, elem) {
+
+  var csrf_ajax = new XMLHttpRequest();
+  csrf_ajax.onreadystatechange = function() {
+    if (csrf_ajax.readyState == XMLHttpRequest.DONE) {
+      // get csrf token
+      var csrf = csrf_ajax.getResponseHeader("X-CSRF-Token");
+      // fire off ajax
+      var ajax = new XMLHttpRequest();
+      ajax.onreadystatechange = function() {
+        if (ajax.readyState == XMLHttpRequest.DONE) {
+          var status = ajax.status;
+          // we gud?
+          if (status == 200) {
+            // yah
+            var txt = ajax.responseText;
+            var j = JSON.parse(txt);
+            if (j.error) {
+              var e = document.createTextNode(j.error);
+              elem.appendChild(e);
+            } else {
+              if (mod_action.handle) {
+                var result = mod_action.handle(j);
+                if (result) {
+                  elem.appendChild(result);
+                }
+              }
+            }
+          } else if (status) {
+            // nah
+            // http error
+            elem.innerHTML = "error: HTTP "+status;
+          }
+          // clear input
+          if (input) {
+            input.value = "";
+          }
+        }
+      }
+      if (mod_action.name) {
+        var url = "/mod/" + mod_action.name;
+        ajax.open(mod_action.method || "GET", url);
+        ajax.setRequestHeader("X-CSRF-Token", csrf);
+        var data = mod_action.data;
+        if (data) {
+          ajax.setRequestHeader("Content-type","text/json");
+          ajax.send(JSON.stringify(data));
+        } else {
+          ajax.send();
+        }
+      } else {
+        alert("mod action has no name");
+      }
+    }
+  }
+  csrf_ajax.open("GET", "/mod/");
+  csrf_ajax.send();
+};
+
+
+var nntpchan_do_admin = function(method, param, result_elem) {
+  nntpchan_mod_action({
+    name:"admin/"+method,
+    method: ( param && "POST" ) || "GET",
+    data: param
+  }, result_elem);
+};
+
+var nntpchan_mod_trust_mod = function(pubkey, elem) {
+  nntpchan_do_admin("pubkey.add", {pubkey: pubkey}, elem);
+};
+
+var nntpchan_mod_untrust_mod = function(pubkey, elem) {
+  nntpchan_do_admin("pubkey.del", {pubkey: pubkey}, elem);
+};
+
 var nntpchan_mod_commit_spam = function(elem) {
   var formdata = new FormData();
   var posts = document.getElementsByClassName("post");
