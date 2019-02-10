@@ -29,7 +29,7 @@ var nntpchan_mod_decode_ipban = function(longhash) {
       continue;
     console.log(lines[i]);
     var parts = lines[i].split(" ");
-    if(parts.length != 2) continue;
+    if(parts.length < 2) continue;
     parts = parts[1].split(":");
     if(parts.legngth < 2) continue;
     var a1 = atob(parts[0]);
