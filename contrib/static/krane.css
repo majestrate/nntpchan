@@ -551,3 +551,7 @@ body {
     flex-wrap: wrap;
     flex-flow: wrap;
 }
+
+.mod {
+    color: red;
+}

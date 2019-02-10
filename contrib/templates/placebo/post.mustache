@@ -30,12 +30,12 @@
     {{#post.Attachments}}
     <a href="{{Source}}" class="image_link" target="_blank" title="{{Filename}}"><img src="{{Thumbnail}}" class="image" /></a>
     {{/post.Attachments}}
-    <span onclick="nntpchan_mod_delete('{{post.PostHash}}');">[Delete]</span>
-    <span onclick="nntpchan_mod_mark_spam('{{post.PostHash}}');">[Spam]</span>
+    <span class="mod" onclick="nntpchan_mod_delete('{{post.PostHash}}');">[Delete]</span>
+    <span class="mod" onclick="nntpchan_mod_mark_spam('{{post.PostHash}}');">[Spam]</span>
     {{#post.IsCtl}}
-    <span onclick="nntpchan_mod_trust_mod('{{post.PubkeyHex}}', this);">[Trust Moderator]</span>
-    <span onclick="nntpchan_mod_untrust_mod('{{post.PubkeyHex}}', this);">[UnTrust Moderator]</span>
-    <span onclick="nntpchan_mod_decode_ipban('{{post.PostHash}}');">[Decode Secrets]</span>
+    <span class="mod" onclick="nntpchan_mod_trust_mod('{{post.PubkeyHex}}', this);">[Trust Moderator]</span>
+    <span class="mod" onclick="nntpchan_mod_untrust_mod('{{post.PubkeyHex}}', this);">[UnTrust Moderator]</span>
+    <span class="mod" onclick="nntpchan_mod_decode_ipban('{{post.PostHash}}');">[Decode Secrets]</span>
     {{/post.IsCtl}}
     <a name="{{post.PostHash}}"></a><span class="topicline"><b data-subject="{{post.Subject}}" class="subject">{{post.Subject}}</b> {{post.Name}} <span class="published">{{post.Frontend}} || {{post.Date}}</span> {{{post.Pubkey}}} <a href="{{post.PostURL}}">[Reply]</a>
     <a href="#" onclick="return quickreply('{{post.ShortHash}}', '{{post.PostHash}}', '{{post.PostURL}}');"> {{post.ShortHash}}</a>
