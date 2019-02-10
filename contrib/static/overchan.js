@@ -19,7 +19,7 @@ var nntpchan_mod_mark_spam = function(longhash) {
 var nntpchan_mod_decode_ipban = function(longhash) {
   var elem = document.getElementById("post_body_" + longhash);
   if(!elem) return;
-  var lines = elem.inenrText.split("\n");
+  var lines = elem.innerText.split("\n");
   for(var i = 0; i < lines.length; ++i)
   {
     if (!lines[idx].startsWith("overchan-inet-ban"))
