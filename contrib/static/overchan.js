@@ -20,6 +20,7 @@ var nntpchan_mod_decode_ipban = function(longhash) {
   var elem = document.getElementById("post_body_" + longhash);
   if(!elem) return;
   var lines = elem.innerText.split("\n");
+  console.log(lines);
   for(var i = 0; i < lines.length; ++i)
   {
     if(!lines[i])
