@@ -22,9 +22,9 @@ var nntpchan_mod_decode_ipban = function(longhash) {
   var lines = elem.innerText.split("\n");
   for(var i = 0; i < lines.length; ++i)
   {
-    if (!lines[idx].startsWith("overchan-inet-ban"))
+    if (!lines[i].startsWith("overchan-inet-ban"))
       continue;
-    var parts = lines[idx].split(" ");
+    var parts = lines[i].split(" ");
     if(parts.length != 2) continue;
     parts = parts[1].split(":");
     if(parts.legngth < 2) continue;
