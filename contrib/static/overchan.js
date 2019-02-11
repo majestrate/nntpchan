@@ -377,7 +377,7 @@ onready(function(){
 
 // inline reply expand
 onready(function() {
-
+  return;
   var fetchpost = function(url, cb)
   {
     var parts = url.split("#");
