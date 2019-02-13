@@ -581,7 +581,7 @@ func (self *NNTPDaemon) Run() {
 
 	self.register_connection = make(chan *nntpConnection)
 	self.deregister_connection = make(chan *nntpConnection)
-	self.send_all_feeds = make(chan ArticleEntry)
+	self.send_all_feeds = make(chan ArticleEntry, 128)
 	self.activeConnections = make(map[string]*nntpConnection)
 	self.loadedFeeds = make(map[string]*feedState)
 	self.register_feed = make(chan FeedConfig)
@@ -589,7 +589,7 @@ func (self *NNTPDaemon) Run() {
 	self.get_feeds = make(chan chan []*feedStatus)
 	self.get_feed = make(chan *feedStatusQuery)
 	self.modify_feed_policy = make(chan *modifyFeedPolicyEvent)
-	self.ask_for_article = make(chan string)
+	self.ask_for_article = make(chan string, 128)
 
 	self.pump_ticker = time.NewTicker(time.Millisecond * 100)
 	if self.conf.daemon["archive"] == "1" {
@@ -917,7 +917,7 @@ func (self *NNTPDaemon) processMessage(msgid string) {
 		// send to frontend
 		if self.frontend != nil {
 			if self.frontend.AllowNewsgroup(group) {
-				go self.frontend.HandleNewPost(frontendPost{msgid, ref, group})
+				self.frontend.HandleNewPost(frontendPost{msgid, ref, group})
 			}
 		}
 	}

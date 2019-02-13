@@ -324,10 +324,10 @@ func (self *httpFrontend) poll_liveui() {
 								th := threads[c-idx-1]
 								th.Update(self.daemon.database)
 								// send root post
-								go live.Inform(th.OP())
+								live.Inform(th.OP())
 								// send replies
 								for _, post := range th.Replies() {
-									go live.Inform(post)
+									live.Inform(post)
 								}
 							}
 						}
@@ -392,17 +392,17 @@ func (self *httpFrontend) HandleNewPost(nntp frontendPost) {
 	if len(ref) > 0 {
 		msgid = ref
 	}
-	go func() {
-		entry := ArticleEntry{msgid, group}
-		// regnerate thread
-		self.Regen(entry)
-		// regenerate all board pages if not archiving
-		if !self.archive {
-			self.RegenerateBoard(group)
-		}
-		// regen front page
-		self.RegenFrontPage()
-	}()
+
+	entry := ArticleEntry{msgid, group}
+	// regnerate thread
+	self.Regen(entry)
+	// regenerate all board pages if not archiving
+	if !self.archive {
+		self.RegenerateBoard(group)
+	}
+	// regen front page
+	self.RegenFrontPage()
+
 }
 
 // create a new captcha, return as json object
@@ -1098,6 +1098,7 @@ func (self *httpFrontend) handle_api_find(wr http.ResponseWriter, r *http.Reques
 	} else {
 		self.daemon.database.SearchQuery(self.prefix, g, s, chnl)
 	}
+	chnl <- nil
 	<-donechnl
 	close(donechnl)
 	io.WriteString(wr, " null ]")
@@ -1541,9 +1542,9 @@ func NewHTTPFrontend(daemon *NNTPDaemon, cache CacheInterface, config map[string
 
 	// liveui related members
 	front.liveui_chnl = make(chan PostModel, 128)
-	front.liveui_register = make(chan *liveChan)
-	front.liveui_deregister = make(chan *liveChan)
-	front.liveui_chans = make(map[string]*liveChan)
+	front.liveui_register = make(chan *liveChan, 128)
+	front.liveui_deregister = make(chan *liveChan, 128)
+	front.liveui_chans = make(map[string]*liveChan, 128)
 	front.end_liveui = make(chan bool)
 	return front
 }
