@@ -36,9 +36,6 @@ func InitI18n(locale, dir string) {
 }
 
 func NewI18n(locale, dir string) (*I18N, error) {
-	if locale == "und" {
-		locale = "en"
-	}
 	log.Println("get locale", locale)
 	pref := language.Make(locale) // falls back to en-US on parse error
 	files, err := ioutil.ReadDir(dir)
@@ -48,7 +45,7 @@ func NewI18n(locale, dir string) (*I18N, error) {
 
 	found := false
 	serverLangs := make([]language.Tag, 1)
-	//	serverLangs[0] = language.AmericanEnglish // en-US fallback
+	serverLangs[0] = language.AmericanEnglish // en-US fallback
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".ini" {
 			name := strings.TrimSuffix(file.Name(), ".ini")
