@@ -1,13 +1,13 @@
 package srnd
 
 import (
+	"errors"
 	"github.com/majestrate/configparser"
 	"golang.org/x/text/language"
 	"io/ioutil"
 	"log"
 	"path/filepath"
 	"strings"
-	"errors"
 )
 
 type I18N struct {
@@ -36,6 +36,9 @@ func InitI18n(locale, dir string) {
 }
 
 func NewI18n(locale, dir string) (*I18N, error) {
+	if locale == "und" {
+		locale = "en"
+	}
 	log.Println("get locale", locale)
 	pref := language.Make(locale) // falls back to en-US on parse error
 	files, err := ioutil.ReadDir(dir)
@@ -43,7 +46,7 @@ func NewI18n(locale, dir string) (*I18N, error) {
 		return nil, err
 	}
 
-	found:= false
+	found := false
 	serverLangs := make([]language.Tag, 1)
 	//	serverLangs[0] = language.AmericanEnglish // en-US fallback
 	for _, file := range files {
@@ -52,14 +55,14 @@ func NewI18n(locale, dir string) (*I18N, error) {
 			tag, err := language.Parse(name)
 			if err == nil {
 				serverLangs = append(serverLangs, tag)
-				found = true;
+				found = true
 			}
 		}
 	}
 	if !found {
 		return nil, ErrNoLang
 	}
-	
+
 	matcher := language.NewMatcher(serverLangs)
 	tag, _, _ := matcher.Match(pref)
 
