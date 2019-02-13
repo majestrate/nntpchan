@@ -545,13 +545,6 @@ background-repeat: repeat;
     background-color: #493769;
 }
 
-body {
-    display: inline-flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    flex-flow: wrap;
-}
-
 .mod {
     color: red;
 }
