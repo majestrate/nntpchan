@@ -15,7 +15,7 @@ TL;DR edition:
 
 
     $ sudo apt update
-    $ sudo apt install --no-install-recommends install imagemagick ffmpeg sox build-essential git ca-certificates postgresql postgresql-client
+    $ sudo apt install --no-install-recommends install imagemagick ffmpeg sox build-essential git ca-certificates postgresql postgresql-client golang
     $ git clone https://github.com/majestrate/nntpchan
     $ cd nntpchan
     $ make
