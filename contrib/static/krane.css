@@ -90,7 +90,8 @@
         width: 400px;
         height: 20px;
         border: 1px solid #363636;
-        background: #ffffff;
+        background-color:#111;
+        color:#ddd;
       }
       .postbutton {
         width: 100px;
