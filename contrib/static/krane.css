@@ -104,7 +104,8 @@
         width: 400px;
         height: 48px;
         border: 1px solid #363636;
-        background: #ffffff;
+        background-color:#111;
+        color:#ddd;
         padding: 0px;
         margin: 0px;
       }
