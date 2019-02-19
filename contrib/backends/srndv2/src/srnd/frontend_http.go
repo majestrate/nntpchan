@@ -555,7 +555,7 @@ func (self *httpFrontend) handle_postform(wr http.ResponseWriter, r *http.Reques
 		}
 		sess.Values["captcha_id"] = ""
 	}
-
+	log.Println("captcha", captcha_id, "try '", captcha_solution, "'")
 	if checkCaptcha && !captcha.VerifyString(captcha_id, captcha_solution) {
 		// captcha is not valid
 		captcha_retry = true
