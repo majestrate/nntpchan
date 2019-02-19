@@ -407,10 +407,17 @@ func (self *httpFrontend) HandleNewPost(nntp frontendPost) {
 
 // create a new captcha, return as json object
 func (self *httpFrontend) new_captcha_json(wr http.ResponseWriter, r *http.Request) {
+	s, err := self.store.Get(r, self.name)
+	if err != nil {
+		http.Error(wr, err.Error(), 500)
+		return
+	}
 	captcha_id := captcha.New()
 	resp := make(map[string]string)
 	// the captcha id
 	resp["id"] = captcha_id
+	s.Values["captcha_id"] = captcha_id
+	s.Save(r, wr)
 	// url of the image
 	resp["url"] = fmt.Sprintf("%scaptcha/%s.png", self.prefix, captcha_id)
 	wr.Header().Set("Content-Type", "text/json; encoding=UTF-8")
