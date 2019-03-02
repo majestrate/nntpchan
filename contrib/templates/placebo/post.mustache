@@ -42,5 +42,27 @@
     </span>
     <br /><br />
     <span id="post_body_{{post.PostHash}}" class="message_span">{{{post.RenderBody}}}</span>
+    {{#post.OP}}
+    <script type="text/javascript">
+      var j = fetch("/api/find?id={{post.MessageID}}").then(function(resp) {
+          return resp.json();
+      }).catch(function(resp) {
+          return [];
+      });
+      if (j.legnth) {
+         var e = document.getElementById("post_body_{{post.PostHash}}");
+         if(e) {
+             var link = document.createElement("a");
+             var u = new URL(j[0].ReferencedURI);
+             if(u.protocol === "https" || u.protocol === "http") {
+                 link.href = u.toString();
+                 link.innerText = "[Link]";
+                 e.appendChild(txt);
+             }
+         }
+      } 
+    </script>
+    {{/post.OP}}
     <br style="clear: both;" />
+    
 </div>

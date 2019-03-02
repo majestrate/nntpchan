@@ -1062,27 +1062,30 @@ func (self httpFrontend) handle_authed_api(wr http.ResponseWriter, r *http.Reque
 func (self *httpFrontend) handle_api_find(wr http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	h := q.Get("hash")
+	msgid := q.Get("id")
 	if len(h) > 0 {
-		msgid := q.Get("id")
-		if len(h) > 0 {
-			e, err := self.daemon.database.GetMessageIDByHash(h)
-			if err == nil {
-				msgid = e.MessageID()
-			}
+		e, err := self.daemon.database.GetMessageIDByHash(h)
+		if err == nil {
+			msgid = e.MessageID()
 		}
-		if len(msgid) > 0 {
-			// found it (probaly)
-			model := self.daemon.database.GetPostModel(self.prefix, msgid)
-			if model == nil {
-				// no model
+	}
+
+	if !ValidMessageID(msgid) {
+		msgid = ""
+	}
+
+	if len(msgid) > 0 {
+		self.daemon.store.GetMessage(msgid, func(nntp NNTPMessage) {
+			if nntp == nil {
 				wr.WriteHeader(404)
-			} else {
-				// we found it
-				wr.Header().Add("Content-Type", "text/json; encoding=UTF-8")
-				json.NewEncoder(wr).Encode([]PostModel{model})
+				return
 			}
-			return
-		}
+			model := PostModelFromMessage(self.prefix, nntp)
+			// we found it
+			wr.Header().Add("Content-Type", "text/json; encoding=UTF-8")
+			json.NewEncoder(wr).Encode([]PostModel{model})
+		})
+		return
 	}
 	s := q.Get("text")
 	g := q.Get("group")

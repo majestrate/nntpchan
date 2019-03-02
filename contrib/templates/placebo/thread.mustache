@@ -57,10 +57,10 @@
             {{^thread.BumpLock}}
             <div class="thread" id="thread_{{thread.OP.PostHash}}">
             {{/thread.BumpLock}}
-                {{{thread.OP.RenderPost}}}
-                {{#thread.Replies}}
-                    {{{RenderPost}}}
-                {{/thread.Replies}}
+            {{{thread.OP.RenderPost}}}
+            {{#thread.Replies}}
+                {{{RenderPost}}}
+            {{/thread.Replies}}
             </div>
             <hr style="clear: both;">
         <footer>
