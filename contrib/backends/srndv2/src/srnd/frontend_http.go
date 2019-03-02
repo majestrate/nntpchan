@@ -437,6 +437,7 @@ func (self *httpFrontend) handle_postform(wr http.ResponseWriter, r *http.Reques
 
 	// the post we will turn into an nntp article
 	pr := new(postRequest)
+	pr.ExtraHeaders = make(map[string]string)
 
 	if sendJson {
 		wr.Header().Add("Content-Type", "text/json; encoding=UTF-8")
@@ -520,6 +521,11 @@ func (self *httpFrontend) handle_postform(wr http.ResponseWriter, r *http.Reques
 				captcha_solution = part_buff.String()
 			} else if partname == "dubs" {
 				pr.Dubs = part_buff.String() == "on"
+			} else if partname == "uri" {
+				str := part_buff.String()
+				if len(str) > 0 {
+					pr.ExtraHeaders["X-References-Uri"] = safeHeader(str)
+				}
 			}
 
 			// we done
@@ -552,6 +558,8 @@ func (self *httpFrontend) handle_postform(wr http.ResponseWriter, r *http.Reques
 		cid, ok := sess.Values["captcha_id"]
 		if ok {
 			captcha_id = cid.(string)
+		} else {
+			log.Println("no captcha id in session?")
 		}
 		sess.Values["captcha_id"] = ""
 	}
@@ -974,6 +982,7 @@ func (self *httpFrontend) serve_captcha(wr http.ResponseWriter, r *http.Request)
 	if err == nil {
 		captcha_id := captcha.New()
 		s.Values["captcha_id"] = captcha_id
+		log.Println("captcha_id", captcha_id)
 		s.Save(r, wr)
 		redirect_url := fmt.Sprintf("%scaptcha/%s.png", self.prefix, captcha_id)
 		// redirect to the image
@@ -1543,7 +1552,7 @@ func NewHTTPFrontend(daemon *NNTPDaemon, cache CacheInterface, config map[string
 	front.store = sessions.NewCookieStore([]byte(front.secret))
 	front.store.Options = &sessions.Options{
 		// TODO: detect http:// etc in prefix
-		Path:   front.prefix,
+		Path:   "/",
 		MaxAge: 600,
 	}
 
