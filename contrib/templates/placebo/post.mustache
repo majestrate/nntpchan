@@ -48,7 +48,7 @@
              return resp.json();
          }).then(function(j) {
              console.log(j);
-             if (j.legnth) {
+             if (j.length) {
                  var e = document.getElementById("post_body_{{post.PostHash}}");
                  if(e) {
                      var u = new URL(j[0].ReferencedURI);
