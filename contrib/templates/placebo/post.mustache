@@ -44,7 +44,7 @@
     <span id="post_body_{{post.PostHash}}" class="message_span">{{{post.RenderBody}}}</span>
     {{#post.OP}}
     <script type="text/javascript">
-      var j = fetch("/api/find?h={{post.PostHash}}").then(function(resp) {
+      var j = fetch("/api/find?hash={{post.PostHash}}").then(function(resp) {
           return resp.json();
       }).catch(function(resp) {
           return [];
