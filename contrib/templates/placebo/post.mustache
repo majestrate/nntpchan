@@ -52,11 +52,12 @@
                  var e = document.getElementById("post_body_{{post.PostHash}}");
                  if(e) {
                      var u = new URL(j[0].ReferencedURI);
+                     console.log(u);
                      if(u.protocol === "https:" || u.protocol === "http:") {
                          var link = document.createElement("a");
                          link.href = u.toString();
                          link.innerText = "[Link]";
-                         e.appendChild(txt);
+                         e.appendChild(link);
                      }
                  }
                  else throw "wut";
