@@ -427,7 +427,7 @@ func PostModelFromMessage(prefix string, nntp NNTPMessage) PostModel {
 	p.addr = nntp.Addr()
 	p.sage = nntp.Sage()
 	p.Key = nntp.Pubkey()
-	p.ReferencedURI = nntp.Headers().Get("X-Referenced-Uri", "")
+	p.ReferencedURI = nntp.Headers().Get("X-References-Uri", "")
 	p.FrontendPublicKey = nntp.FrontendPubkey()
 	for _, att := range nntp.Attachments() {
 		p.Files = append(p.Files, att.ToModel(prefix))
