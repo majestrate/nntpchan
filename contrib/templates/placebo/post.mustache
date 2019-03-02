@@ -44,24 +44,24 @@
     <span id="post_body_{{post.PostHash}}" class="message_span">{{{post.RenderBody}}}</span>
     {{#post.OP}}
         <script type="text/javascript">
-         var j = fetch("/api/find?hash={{post.PostHash}}").then(function(resp) {
-             return resp.json();
-         }).catch(function(resp) {
-             return [];
-         });
-         console.log(j);
-         if (j.legnth) {
-             var e = document.getElementById("post_body_{{post.PostHash}}");
-             if(e) {
-                 var u = new URL(j[0].ReferencedURI);
-                 if(u.protocol === "https" || u.protocol === "http") {
-                     var link = document.createElement("a");
-                     link.href = u.toString();
-                     link.innerText = "[Link]";
-                     e.appendChild(txt);
+         fetch("/api/find?hash={{post.PostHash}}").then(function(resp) {
+             var j=  resp.json();
+             console.log(j);
+             if (j.legnth) {
+                 var e = document.getElementById("post_body_{{post.PostHash}}");
+                 if(e) {
+                     var u = new URL(j[0].ReferencedURI);
+                     if(u.protocol === "https" || u.protocol === "http") {
+                         var link = document.createElement("a");
+                         link.href = u.toString();
+                         link.innerText = "[Link]";
+                         e.appendChild(txt);
+                     }
                  }
-             }
-         } 
+             } 
+         }).catch(function(resp) {
+             
+         });
         </script>
     {{/post.OP}}
     <br style="clear: both;" />
