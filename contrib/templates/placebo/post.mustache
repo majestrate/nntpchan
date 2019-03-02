@@ -45,7 +45,8 @@
     {{#post.OP}}
         <script type="text/javascript">
          fetch("/api/find?hash={{post.PostHash}}").then(function(resp) {
-             var j=  resp.json();
+             return resp.json();
+         }).then(function(j) {
              console.log(j);
              if (j.legnth) {
                  var e = document.getElementById("post_body_{{post.PostHash}}");
