@@ -323,10 +323,10 @@ type Database interface {
 	GetPostingStats(granularity, begin, end int64) (PostingStats, error)
 
 	// peform search query
-	SearchQuery(prefix, group, text string, chnl chan PostModel) error
+	SearchQuery(prefix, group, text string, chnl chan PostModel, limit int) error
 
 	// find posts with similar hash
-	SearchByHash(prefix, group, posthash string, chnl chan PostModel) error
+	SearchByHash(prefix, group, posthash string, chnl chan PostModel, limit int) error
 
 	// get full thread model
 	GetThreadModel(prefix, root_msgid string) (ThreadModel, error)
