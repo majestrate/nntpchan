@@ -1114,13 +1114,12 @@ func (self *httpFrontend) handle_api_find(wr http.ResponseWriter, r *http.Reques
 	}(wr)
 	limit := 50
 	if len(h) > 0 {
-		self.daemon.database.SearchByHash(self.prefix, g, h, chnl, limit)
+		go self.daemon.database.SearchByHash(self.prefix, g, h, chnl, limit)
 	} else {
-		self.daemon.database.SearchQuery(self.prefix, g, s, chnl, limit)
+		go self.daemon.database.SearchQuery(self.prefix, g, s, chnl, limit)
 	}
 	chnl <- nil
 	<-donechnl
-	close(donechnl)
 	io.WriteString(wr, " null ]")
 	return
 }
