@@ -57,6 +57,8 @@
                          var link = document.createElement("a");
                          link.href = u.toString();
                          link.innerText = "[Link]";
+                         link.setAttribute("target", "_blank");
+                         link.setAttribute("class", "post-link")
                          e.appendChild(document.createElement("hr"));
                          e.appendChild(link);
                      }
