@@ -718,7 +718,7 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 				if len(reason) > 0 {
 					// discard, we do not want
 					log.Println(self.name, "rejected", msgid, reason)
-					conn.PrintfLine("439 %s %s", code, msgid, reason)
+					conn.PrintfLine("439 %s %s", msgid, reason)
 					_, err = io.Copy(ioutil.Discard, msg.Body)
 					if ban {
 						err = daemon.database.BanArticle(msgid, reason)
