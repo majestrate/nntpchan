@@ -15,7 +15,7 @@ Dependancies:
 * imagemagick
 * ffmpeg
 * sox
-* go 1.9
+* go 
 * GNU make
 
 ## Debian instructions
@@ -24,7 +24,7 @@ These are installation instructions for Debian.
 
 ### Install Go
 
-Install the Go programming language version _1.9_ from the [Go website](https://golang.org/dl/).
+Install the latest version of the Go programming language from the [Go website](https://golang.org/dl/).
 
 ### Install the dependancies
 
