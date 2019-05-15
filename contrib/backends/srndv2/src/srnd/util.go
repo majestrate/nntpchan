@@ -477,28 +477,47 @@ func newNaclSignKeypair() (string, string) {
 	return hex.EncodeToString(pk), hex.EncodeToString(sk)
 }
 
+func makeTripcodeLen(pubkey string, length int) string {
+	var b strings.Builder
+
+	data, err := hex.DecodeString(pubkey)
+	if err != nil {
+		return "[invalid]"
+	}
+
+	if length <= 0 || length > len(data) {
+		length = len(data)
+	}
+
+	// originally srnd (and srndv2) used 9600==0x2580
+	// however, range shifted by 0x10 looks better to me (cathugger)
+	// (instead of `▀▁▂▃▄▅▆▇█▉▊▋▌▍▎▏` it'll use `⚀⚁⚂⚃⚄⚅⚆⚇⚈⚉⚊⚋⚌⚍⚎⚏`)
+	// and display equaly good both in torbrowser+DejaVuSans and phone
+	// since jeff ack'd it (he doesn't care probably), I'll just use it
+	const rstart = 0x2590
+	// 0x2500 can display with TBB font whitelist, but looks too cryptic.
+	// startin from 0x2600 needs more than DejaVuSans so I'll avoid it
+
+	// logic (same as in srnd):
+	// it first writes length/2 chars of begining
+	// and then length/2 chars of ending
+	// if length==len(data), that essentially means just using whole
+	i := 0
+	for ; i < length/2; i++ {
+		b.WriteRune(rstart + rune(data[i]))
+		b.WriteRune(0xFE0E) // text style variant
+	}
+	for ; i < length; i++ {
+		b.WriteRune(rstart + rune(data[len(data)-length+i]))
+		b.WriteRune(0xFE0E) // text style variant
+	}
+
+	return b.String()
+}
+
 // make a utf-8 tripcode
 func makeTripcode(pk string) string {
-	data, err := hex.DecodeString(pk)
-	if err == nil {
-		tripcode := ""
-		//  here is the python code this is based off of
-		//  i do something slightly different but this is the base
-		//
-		//  for x in range(0, length / 2):
-		//    pub_short += '&#%i;' % (9600 + int(full_pubkey_hex[x*2:x*2+2], 16))
-		//  length -= length / 2
-		//  for x in range(0, length):
-		//    pub_short += '&#%i;' % (9600 + int(full_pubkey_hex[-(length*2):][x*2:x*2+2], 16))
-		//
-		for _, c := range data {
-			ch := 9600
-			ch += int(c)
-			tripcode += fmt.Sprintf("&#%04d;", ch)
-		}
-		return tripcode
-	}
-	return "[invalid]"
+	return makeTripcodeLen(pk, 0)
 }
 
 // generate a new message id with base name
