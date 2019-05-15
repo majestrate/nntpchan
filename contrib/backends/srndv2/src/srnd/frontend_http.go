@@ -736,8 +736,7 @@ func (self *httpFrontend) handle_postRequest(pr *postRequest, b bannedFunc, e er
 		}
 	}
 
-	// always lower case newsgroups
-	board := strings.ToLower(pr.Group)
+	board := pr.Group
 
 	// post fail message
 	banned, err = self.daemon.database.NewsgroupBanned(board)
