@@ -553,7 +553,16 @@ func (self *httpFrontend) handle_postform(wr http.ResponseWriter, r *http.Reques
 		}
 	}
 
-	sess, _ := self.store.Get(r, self.name)
+	sess, err := self.store.Get(r, self.name)
+	if err != nil {
+		errmsg := fmt.Sprintf("session store error: %s", err.Error())
+		if sendJson {
+			json.NewEncoder(wr).Encode(map[string]interface{}{"error": errmsg})
+		} else {
+			io.WriteString(wr, errmsg)
+		}
+		return
+	}
 	if checkCaptcha && len(captcha_id) == 0 {
 		cid, ok := sess.Values["captcha_id"]
 		if ok {
