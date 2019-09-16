@@ -76,10 +76,6 @@ var nntpchan_mod_action = function(mod_action, elem) {
             // http error
             elem.innerHTML = "error: HTTP "+status;
           }
-          // clear input
-          if (input) {
-            input.value = "";
-          }
         }
       }
       if (mod_action.name) {
