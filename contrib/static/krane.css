@@ -555,3 +555,7 @@ background-repeat: repeat;
     font-size: 24pt;
     float: right;
 }
+
+.mod {
+  display: none;
+}
