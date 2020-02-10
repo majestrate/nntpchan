@@ -853,3 +853,8 @@ th > label {
       :target {
           background-color: #493769;
       }
+
+
+      .mod {
+        display: none;
+      }

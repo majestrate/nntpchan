@@ -26,8 +26,17 @@ import (
 
 var ErrOversizedMessage = errors.New("oversized message")
 
-// ~ 10 MB unbased64'd
-const DefaultMaxMessageSize = 1024 * 1024 * 10
+// (cathugger)
+// my test showed that 8MiB of attachments split in 5 parts
+// plus some text produce something close to typhical big message
+// resulted in 11483923 bytes.
+// that's consistent with rough size calculation mentioned in
+// <https://en.wikipedia.org/wiki/Base64#MIME>
+// ((origlen * 1.37) + 814)
+// which resulted in 11493206 bytes for 8MiB of data.
+// previous default of 10MiB (10485760) was too low in practice.
+// use 11MiB (11534336) to leave some space for longer than usual texts.
+const DefaultMaxMessageSize = 11 * 1024 * 1024
 
 // HARD max message size
 const MaxMessageSize = 1024 * 1024 * 1024

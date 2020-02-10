@@ -204,7 +204,7 @@ func (self *PostgresDatabase) prepareStatements() {
 		GetMessageIDByHash:              "SELECT message_id, message_newsgroup FROM Articles WHERE message_id_hash = $1 LIMIT 1",
 		CheckEncIPBanned:                "SELECT 1 FROM EncIPBans WHERE encaddr = $1",
 		GetFirstAndLastForGroup:         "WITH x(min_no, max_no) AS ( SELECT MIN(message_no) AS min_no, MAX(message_no) AS max_no FROM ArticleNumbers WHERE newsgroup = $1) SELECT CASE WHEN min_no IS NULL THEN 0 ELSE min_no END AS min_no FROM x UNION SELECT CASE WHEN max_no IS NULL THEN 1 ELSE max_no END AS max_no FROM x",
-		GetNewsgroupList:                "SELECT newsgroup, min(message_no), max(message_no) FROM ArticleNumbers GROUP BY newsgroup ORDER BY newsgroup",
+		GetNewsgroupList:                "SELECT newsgroup, min(message_no), max(message_no) FROM ArticleNumbers WHERE newsgroup NOT IN ( SELECT newsgroup FROM bannedgroups ) GROUP BY newsgroup ORDER BY newsgroup",
 		GetMessageIDForNNTPID:           "SELECT message_id FROM ArticleNumbers WHERE newsgroup = $1 AND message_no = $2 LIMIT 1",
 		GetNNTPIDForMessageID:           "SELECT message_no FROM ArticleNumbers WHERE newsgroup = $1 AND message_id = $2 LIMIT 1",
 		IsExpired:                       "WITH x(msgid) AS ( SELECT message_id FROM Articles WHERE message_id = $1 INTERSECT ( SELECT message_id FROM ArticlePosts WHERE message_id = $1 ) ) SELECT COUNT(*) FROM x",
