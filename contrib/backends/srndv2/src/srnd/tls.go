@@ -54,6 +54,7 @@ func HandleStartTLS(conn net.Conn, config *tls.Config) (econn *textproto.Conn, s
 					}
 				}
 				tconn.Close()
+				conn.Close()
 			}
 		}
 	}
