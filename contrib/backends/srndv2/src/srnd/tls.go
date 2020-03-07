@@ -42,6 +42,7 @@ func HandleStartTLS(conn net.Conn, config *tls.Config) (econn *textproto.Conn, s
 				econn = textproto.NewConn(tconn)
 				return
 			} else {
+				log.Println("tls handshake error: ", err.Error())
 				certs := state.PeerCertificates
 				if len(certs) == 0 {
 					log.Println("starttls failed, no peer certs provided")
