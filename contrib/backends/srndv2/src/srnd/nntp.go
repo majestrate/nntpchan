@@ -1240,10 +1240,14 @@ func (self *nntpConnection) handleLine(daemon *NNTPDaemon, code int, line string
 										log.Println(self.name, "got reply to", reference, "but we don't have it")
 										go daemon.askForArticle(reference)
 									} else {
-										h := daemon.store.GetMIMEHeader(reference)
-										if strings.Trim(h.Get("References"), " ") == "" {
-											hdr.Set("References", getMessageID(h))
+										// get rootiest post
+										ref := reference
+										var h textproto.MIMEHeader	
+										for ref != "" {
+											h = daemon.store.GetMIMEHeader(ref)
+											ref = strings.Trim(h.Get("References"), " ")
 										}
+										hdr.Set("References", getMessageID(h))
 									}
 								} else if reference != "" {
 									// bad message id
